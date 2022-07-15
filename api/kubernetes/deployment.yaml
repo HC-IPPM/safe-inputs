@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api
+  name: api
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:000000-1657915692
+        securityContext:
+          # No new privs for process or it's children
+          # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
+          allowPrivilegeEscalation: false
+        resources:
+          limits:
+            cpu: 300m
+            memory: 70Mi
+          requests:
+            cpu: 300m
+            memory: 70Mi
+status: {}
