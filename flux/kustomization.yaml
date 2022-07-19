@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - crds.yaml
 - sync-config.yaml
+- deployment-config.yaml
