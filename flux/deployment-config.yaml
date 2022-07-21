@@ -1,3 +1,26 @@
+apiVersion: image.toolkit.fluxcd.io/v1alpha2
+kind: ImageRepository
+metadata:
+  name: api
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: api
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: api
+  policy:
+    numerical:
+      order: asc
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha2
 kind: ImageRepository
