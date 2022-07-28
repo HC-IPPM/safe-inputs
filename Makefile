@@ -34,7 +34,7 @@ deploy-keys:
 		  - identity
 		  - identity.pub
 		  - known_hosts
-		  name: flux-credentials
+		  name: flux-system
 		  namespace: flux-system
 		generatorOptions:
 		  disableNameSuffixHash: true
