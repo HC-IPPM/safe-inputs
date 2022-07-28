@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:main-a4b2e7b-1658437498 # {"$imagepolicy": "flux-system:api"}
+        image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:main-658caea-1658975432 # {"$imagepolicy": "flux-system:api"}
         securityContext:
           # No new privs for process or it's children
           # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
