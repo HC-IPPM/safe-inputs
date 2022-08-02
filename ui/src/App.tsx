@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
 import {
-  Code,
   Button,
   Input,
   FormControl,
@@ -45,6 +44,7 @@ function DeferredRender({
     })
 
     return () => cancelIdleCallback(id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idleTimeout])
 
   if (!render) return <Spinner />
@@ -108,6 +108,8 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   }, [parseWorker])
 
   const onFileChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setParserStatus(undefined);
+    setPreview(false);
     if (e.target.files && e.target.files.length === 1) {
       setFile(e.target.files[0])
       setFilename(e.target.files[0].name)
@@ -118,7 +120,6 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   }
 
   const invalid = false
-  console.log(parserStatus)
 
   const p =
     (parserStatus &&
@@ -150,7 +151,8 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
               accept="
             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
             application/vnd.ms-excel,
-            .xlsb
+            .xlsb,
+            .ods
           "
               style={{ display: 'none' }}
             />
