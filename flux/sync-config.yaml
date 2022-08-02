@@ -40,10 +40,7 @@ spec:
     name: flux-system
   healthChecks:
   - kind: Deployment
-    name: istio-ingressgateway
-    namespace: istio-system
-  - kind: Deployment
-    name: istiod
+    name: asm-ingressgateway
     namespace: istio-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
