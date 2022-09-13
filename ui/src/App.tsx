@@ -21,6 +21,7 @@ import {
 import { FcDataSheet } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
+import TopHeader from './components/header'
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
 
@@ -128,7 +129,9 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     undefined
 
   return (
+    
     <div className="App">
+      <TopHeader />
       <header className="App-header">
         <p>Safe inputs PoC</p>
       </header>
