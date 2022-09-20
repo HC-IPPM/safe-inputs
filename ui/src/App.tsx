@@ -139,7 +139,8 @@ function App({ parseWorker }: { parseWorker: ParseWorker }){
         </Box>
 
       <header className="App-header">
-      {language === 'en' ? (<Text>{LangEn.safe_input_poc}</Text>):(<Text>{LangFr.safe_input_poc}</Text>) }
+      {/* {language === 'en' ? (<Text>{LangEn.safe_input_poc}</Text>):(<Text>{LangFr.safe_input_poc}</Text>) } */}
+      <p>Safe inputs PoC</p>
       </header>
       
       <main>
