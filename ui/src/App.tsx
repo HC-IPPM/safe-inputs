@@ -269,7 +269,7 @@ application/vnd.ms-excel,
                     <AccordionPanel pb={4} >
                       <TableContainer>
                         <Table variant="simple">
-                          <TableCaption>{language === 'en' ? (`${LangEn.show_less}`) : (`${LangFr.show_less}`)}</TableCaption>
+                          <TableCaption>{language === 'en' ? (`${LangEn.file_props}`) : (`${LangFr.file_props}`)}</TableCaption>
                           <Tr>
                             {col(p, 'Application')}
                             {col(p, 'SheetNames')}
