@@ -120,14 +120,22 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   const LangEn = {
     analyze: "Analyze",
     image: require('./components/gov_gouv_en.png'),
+    input_bar: "Choose a spreadsheet to analyze",
+    preview: "Show Preview",
     safe_input_poc: "Safe Inputs PoC",
+    show_less: "Show Less",
+    show_more: "Show More",
 
   }
-  // {language === 'en' ? (<Text>{LangEn.<Vairable here>}</Text>):(<Text>{LangFr.<Vairable here>}</Text>) }
+  // {language === 'en' ? (`${LangEn.<Vairable here>}`):(`${LangFr.<Vairable here>}`)}
   const LangFr = {
     analyze: "Analyser",
     image: require('./components/gov_gouv_fr.png'),
+    input_bar: "Choisissez une feuille de calcul à analyser",
+    preview: "Prévisualisation",
     safe_input_poc: "Entrées Sécurisées PoC",
+    show_less: "Afficher moins",
+    show_more: "Afficher plus",
   }
 
   return (
@@ -142,7 +150,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
       </Box>
 
       <header className="App-header">
-        {/* {language === 'en' ? (<Text>{LangEn.safe_input_poc}</Text>):(<Text>{LangFr.safe_input_poc}</Text>) } */}
+        {/* {language === 'en' ? (`${LangEn.safe_input_poc}`):(`${LangFr.safe_input_poc}`) } */}
         <p>Safe inputs PoC</p>
       </header>
 
@@ -171,7 +179,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
               style={{ display: 'none' }}
             />
             <Input
-              placeholder="Choose a spreadsheet to analyze"
+              placeholder= {language === 'en' ? (`${LangEn.input_bar}`):(`${LangFr.input_bar}`) }
               onClick={() => inFile && inFile.current && inFile.current.click()}
               readOnly
               value={filename}
@@ -200,7 +208,10 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
                   <>
                     <h2>
                       <AccordionButton>
-                        {isExpanded ? (<><Box flex='1' textAlign='left'> Show Less</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>Show More</Box> <AddIcon fontSize='12px' /></>)}
+                        {isExpanded ? (<><Box flex='1' textAlign='left'> 
+                        {language === 'en' ? (`${LangEn.show_less}`):(`${LangFr.show_less}`)}
+                        </Box> <MinusIcon fontSize='12px' /></>
+                        ) : (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_more}`):(`${LangFr.show_more}`)}</Box> <AddIcon fontSize='12px' /></>)}
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4} >
