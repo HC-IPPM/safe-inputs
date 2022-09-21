@@ -119,6 +119,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
 
   const LangEn = {
     analyze: "Analyze",
+    file_props: "File Properties",
     image: require('./components/gov_gouv_en.png'),
     input_bar: "Choose a spreadsheet to analyze",
     preview: "Show Preview",
@@ -126,16 +127,70 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     show_less: "Show Less",
     show_more: "Show More",
 
+    Application: "Application ",
+    AppVersion: "AppVersion ",
+    Author: "Author",
+    Category: "Category",
+    Comments: "Comments ",
+    Company: "Company ",
+    ContentStatus: "ContentStatus ",
+    CreatedDate: "CreatedDate ",
+    DocSecurity: "DocSecurity ",
+    HyperlinksChanged: "HyperlinksChanged ",
+    Identifier: "Identifier ",
+    Keywords: "Keywords ",
+    Language: "Language ",
+    LastAuthor: "LastAuthor ",
+    LastPrinted: "LastPrinted ",
+    LinksUpToDate: "LinksUpToDate ",
+    Manager: "Manager ",
+    ModifiedDate: "ModifiedDate ",
+    Revision: "Revision ",
+    ScaleCrop: "ScaleCrop ",
+    SharedDoc: "SharedDoc ",
+    SheetNames: "SheetNames ",
+    Subject: "Subject ",
+    Title: "Title ",
+    Version: "Version ",
+    Worksheets: "Worksheets ",
   }
   // {language === 'en' ? (`${LangEn.<Vairable here>}`):(`${LangFr.<Vairable here>}`)}
   const LangFr = {
     analyze: "Analyser",
+    file_props: "Propriétés du fichier",
     image: require('./components/gov_gouv_fr.png'),
     input_bar: "Choisissez une feuille de calcul à analyser",
     preview: "Prévisualisation",
     safe_input_poc: "Entrées Sécurisées PoC",
     show_less: "Afficher moins",
     show_more: "Afficher plus",
+
+    Application: "Application",
+    AppVersion: "VersionD'Application ",
+    Author: "Auteur",
+    Category: "Catégorie",
+    Comments: "Commentaires",
+    Company: "Entreprise",
+    ContentStatus: "ÉtatDuContenu ",
+    CreatedDate: "DateCréée",
+    DocSecurity: "SécuritéDesDocuments",
+    HyperlinksChanged: "ModificationDesHyperliens",
+    Identifier: "Identifiant",
+    Keywords: "Mots-clés ",
+    Language: "Langue",
+    LastAuthor: "DernierAuteur",
+    LastPrinted: "DernierImprimé",
+    LinksUpToDate: "LiensÀJour ",
+    Manager: "Directeur",
+    ModifiedDate: "DateDeModification",
+    Revision: "Revision",
+    ScaleCrop: "ScaleCrop",
+    SharedDoc: "DocPartagé",
+    SheetNames: "NomsDesFeuilles",
+    Subject: "Sujet",
+    Title: "Titre",
+    Version: "Version",
+    Worksheets: "FeuillesDeTravail",
   }
 
   return (
@@ -171,15 +226,15 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
               ref={inFile}
               onChange={onFileChanged}
               accept="
-            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-            application/vnd.ms-excel,
-            .xlsb,
-            .ods
-          "
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+application/vnd.ms-excel,
+.xlsb,
+.ods
+"
               style={{ display: 'none' }}
             />
             <Input
-              placeholder= {language === 'en' ? (`${LangEn.input_bar}`):(`${LangFr.input_bar}`) }
+              placeholder={language === 'en' ? (`${LangEn.input_bar}`) : (`${LangFr.input_bar}`)}
               onClick={() => inFile && inFile.current && inFile.current.click()}
               readOnly
               value={filename}
@@ -195,7 +250,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
           }
           onClick={() => file && parseWorker.parse(file)}
         >
-          {language === 'en' ? (<>{LangEn.analyze}</>) : (<>{LangFr.analyze}</>)}
+          {language === 'en' ? (`${LangEn.analyze}`) : (`${LangFr.analyze}`)}
         </Button>
         <br />
         <br />
@@ -208,16 +263,13 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
                   <>
                     <h2>
                       <AccordionButton>
-                        {isExpanded ? (<><Box flex='1' textAlign='left'> 
-                        {language === 'en' ? (`${LangEn.show_less}`):(`${LangFr.show_less}`)}
-                        </Box> <MinusIcon fontSize='12px' /></>
-                        ) : (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_more}`):(`${LangFr.show_more}`)}</Box> <AddIcon fontSize='12px' /></>)}
+                        {isExpanded ? (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_less}`) : (`${LangFr.show_less}`)}</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_more}`) : (`${LangFr.show_more}`)}</Box> <AddIcon fontSize='12px' /></>)}
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4} >
                       <TableContainer>
                         <Table variant="simple">
-                          <TableCaption>File properties</TableCaption>
+                          <TableCaption>{language === 'en' ? (`${LangEn.show_less}`) : (`${LangFr.show_less}`)}</TableCaption>
                           <Tr>
                             {col(p, 'Application')}
                             {col(p, 'SheetNames')}
@@ -279,7 +331,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
             </Accordion>
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="show-preview" mb="0">
-                Show preview?
+                {language === 'en' ? (`${LangEn.preview}`) : (`${LangFr.preview}`)} ?
               </FormLabel>
               <Switch
                 id="show-preview"
