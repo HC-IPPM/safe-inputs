@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { Image,Box,Flex,Text,Button,Input,FormControl,FormLabel,InputGroup,InputLeftElement,FormErrorMessage,Icon,Spinner,Table,Tr,Th,Td,TableCaption,TableContainer,Switch,Accordion, Link,} from '@chakra-ui/react'
+import { MinusIcon, AddIcon } from '@chakra-ui/icons'
+import { Image, Box, Flex, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, Link, AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
 import { FcDataSheet } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
 
-import TopHeader from './components/header'
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
 import './App.css'
@@ -28,7 +28,7 @@ function DeferredRender({
     })
 
     return () => cancelIdleCallback(id)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idleTimeout])
 
   if (!render) return <Spinner />
@@ -66,7 +66,7 @@ const col = (
   )
 }
 
-function App({ parseWorker }: { parseWorker: ParseWorker }){
+function App({ parseWorker }: { parseWorker: ParseWorker }) {
   // const { loading, error, data } = useQuery(SAY_HELLO)
 
   // if (loading) return <p>Loading...</p>
@@ -112,37 +112,40 @@ function App({ parseWorker }: { parseWorker: ParseWorker }){
     undefined
 
 
-    const [language, setLanguage] = useState("en");
-    const handleLanguage = (language: React.SetStateAction<string>) => (event: any) => {
-        setLanguage(language);
-    };
-    
-    const LangEn={
-      image: require('./components/gov_gouv_en.png'),
-      safe_input_poc: "Safe Inputs PoC",
-    }
-    // {language === 'en' ? (<Text>{LangEn.<Vairable here>}</Text>):(<Text>{LangFr.<Vairable here>}</Text>) }
-    const LangFr={
-      image: require('./components/gov_gouv_fr.png'),
-      safe_input_poc: "Entrées Sécurisées PoC",
-    }
+  const [language, setLanguage] = useState("en");
+  const handleLanguage = (language: React.SetStateAction<string>) => (event: any) => {
+    setLanguage(language);
+  };
 
-  return (    
+  const LangEn = {
+    analyze: "Analyze",
+    image: require('./components/gov_gouv_en.png'),
+    safe_input_poc: "Safe Inputs PoC",
+
+  }
+  // {language === 'en' ? (<Text>{LangEn.<Vairable here>}</Text>):(<Text>{LangFr.<Vairable here>}</Text>) }
+  const LangFr = {
+    analyze: "Analyser",
+    image: require('./components/gov_gouv_fr.png'),
+    safe_input_poc: "Entrées Sécurisées PoC",
+  }
+
+  return (
     <div className="App">
       <Box bg='white' w='100%' color='#202020' fontSize='sm'>
-          <Flex justify='flex-end' mr={30} color='blue' _hover={{ color: 'purple', textDecor: 'underline' }} >
-            {language === 'en' ? (<><Link onClick={handleLanguage('fr')} > Français</Link></>) : (<><Link onClick={handleLanguage('en')}> English</Link></>)}
-          </Flex>
-          <Flex justify='Center' >
-          {language === 'en' ? (<><Image src={LangEn.image} alt={'government_canada_logo_en'} h={'35px'} m={1} /></>) : (<><Image src={LangFr.image} alt={'government_canada_logo_fr'} h={'35px'} m={1} /></>)} 
-          </Flex>
-        </Box>
+        <Flex justify='flex-end' mr={30} color='blue' _hover={{ color: 'purple', textDecor: 'underline' }} >
+          {language === 'en' ? (<><Link onClick={handleLanguage('fr')} > Français</Link></>) : (<><Link onClick={handleLanguage('en')}> English</Link></>)}
+        </Flex>
+        <Flex justify='Center' >
+          {language === 'en' ? (<><Image src={LangEn.image} alt={'government_canada_logo_en'} h={'35px'} m={1} /></>) : (<><Image src={LangFr.image} alt={'government_canada_logo_fr'} h={'35px'} m={1} /></>)}
+        </Flex>
+      </Box>
 
       <header className="App-header">
-      {/* {language === 'en' ? (<Text>{LangEn.safe_input_poc}</Text>):(<Text>{LangFr.safe_input_poc}</Text>) } */}
-      <p>Safe inputs PoC</p>
+        {/* {language === 'en' ? (<Text>{LangEn.safe_input_poc}</Text>):(<Text>{LangFr.safe_input_poc}</Text>) } */}
+        <p>Safe inputs PoC</p>
       </header>
-      
+
       <main>
         <FormControl
           isInvalid={Boolean(invalid)}
@@ -184,71 +187,84 @@ function App({ parseWorker }: { parseWorker: ParseWorker }){
           }
           onClick={() => file && parseWorker.parse(file)}
         >
-          Analyze
+          {language === 'en' ? (<>{LangEn.analyze}</>) : (<>{LangFr.analyze}</>)}
         </Button>
         <br />
         <br />
         {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
         {parserStatus && parserStatus.state === 'DONE' && p && (
           <div>
-            <Accordion allowToggle>
-            <TableContainer>
-              <Table variant="simple">
-                <TableCaption>File properties</TableCaption>
-                <Tr>
-                  {col(p, 'Application')}
-                  {col(p, 'SheetNames')}
-                </Tr>
-                <Tr>
-                  {col(p, 'AppVersion')}
-                  {col(p, 'ContentStatus')}
-                </Tr>
-                <Tr>
-                  {col(p, 'Title')}
-                  {col(p, 'Subject')}
-                </Tr>
-                <Tr>
-                  {col(p, 'Author')}
-                  {col(p, 'Manager')}
-                </Tr>
-                <Tr>
-                  {col(p, 'Company')}
-                  {col(p, 'Category')}
-                </Tr>
-                <Tr>
-                  {col(p, 'Keywords')}
-                  {col(p, 'Comments')}
-                </Tr>
-                <Tr>
-                  {col(p, 'LastAuthor')}
-                  {col(p, 'CreatedDate')}
-                </Tr>
-                <Tr>
-                  {col(p, 'DocSecurity')}
-                  {col(p, 'Identifier')}
-                </Tr>
-                <Tr>
-                  {col(p, 'SharedDoc')}
-                  {col(p, 'Language')}
-                </Tr>
-                <Tr>
-                  {col(p, 'HyperlinksChanged')}
-                  {col(p, 'Version')}
-                </Tr>
-                <Tr>
-                  {col(p, 'LinksUpToDate')}
-                  {col(p, 'Revision')}
-                </Tr>
-                <Tr>
-                  {col(p, 'ScaleCrop')}
-                  {col(p, 'LastPrinted')}
-                </Tr>
-                <Tr>
-                  {col(p, 'Worksheets')}
-                  {col(p, 'ModifiedDate')}
-                </Tr>
-              </Table>
-            </TableContainer>
+            <Accordion allowToggle defaultIndex={[0]} fontFamily="Noto Sans" fontSize={'16'} color="#333">
+              <AccordionItem>
+                {({ isExpanded }) => (
+                  <>
+                    <h2>
+                      <AccordionButton>
+                        {isExpanded ? (<><Box flex='1' textAlign='left'> Show Less</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>Show More</Box> <AddIcon fontSize='12px' /></>)}
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} >
+                      <TableContainer>
+                        <Table variant="simple">
+                          <TableCaption>File properties</TableCaption>
+                          <Tr>
+                            {col(p, 'Application')}
+                            {col(p, 'SheetNames')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'AppVersion')}
+                            {col(p, 'ContentStatus')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'Title')}
+                            {col(p, 'Subject')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'Author')}
+                            {col(p, 'Manager')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'Company')}
+                            {col(p, 'Category')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'Keywords')}
+                            {col(p, 'Comments')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'LastAuthor')}
+                            {col(p, 'CreatedDate')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'DocSecurity')}
+                            {col(p, 'Identifier')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'SharedDoc')}
+                            {col(p, 'Language')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'HyperlinksChanged')}
+                            {col(p, 'Version')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'LinksUpToDate')}
+                            {col(p, 'Revision')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'ScaleCrop')}
+                            {col(p, 'LastPrinted')}
+                          </Tr>
+                          <Tr>
+                            {col(p, 'Worksheets')}
+                            {col(p, 'ModifiedDate')}
+                          </Tr>
+                        </Table>
+                      </TableContainer>
+                    </AccordionPanel>
+                  </>
+                )}
+              </AccordionItem>
             </Accordion>
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="show-preview" mb="0">

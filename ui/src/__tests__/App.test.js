@@ -34,3 +34,14 @@ describe('<App/>', () => {
     expect(items).toHaveLength(1)
   })
 })
+// describe('<App>', () => {
+//     it ('displays french capability', async () => {    
+//       render(
+//       // <MockedProvider mocks={mocks} addTypename={false}>
+//       <App parseWorker={parseWorker} />,
+//       // </MockedProvider>,
+//     )
+//     const français = await screen.findAllByText(/Français/)
+//     expect(français).toHaveLength(1)
+//   }) 
+// })
