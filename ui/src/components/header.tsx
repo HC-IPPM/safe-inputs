@@ -5,8 +5,7 @@ import { MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Image, Link, Table, TableCaption, TableContainer, Tr, } from "@chakra-ui/react";
 
 export default function TopHeader() {
-    const logo_en = require('./gov_gouv_en.png')
-    const logo_fr = require('./gov_gouv_fr.png')
+
     const [language, setLanguage] = useState("en");
     const handleLanguage = (language: React.SetStateAction<string>) => (event: any) => {
         setLanguage(language);
@@ -19,9 +18,7 @@ export default function TopHeader() {
                 <Flex justify='flex-end' mr={30} color='blue' _hover={{ color: 'purple', textDecor: 'underline' }} >
                     {language === 'en' ? (<><Link onClick={handleLanguage('fr')} > Français</Link></>) : (<><Link onClick={handleLanguage('en')}> English</Link></>)}
                 </Flex>
-                <Flex justify='Center' >
-                    {language === 'en' ? (<><Image src={logo_en} alt={'government_canada_logo_en'} h={'35px'} m={1} /></>) : (<><Image src={logo_fr} alt={'government_canada_logo_fr'} h={'35px'} m={1} /></>)}
-                </Flex>
+                <Flex justify='Center' > </Flex>
 
                 <Accordion allowToggle  defaultIndex={[0]} fontFamily="Noto Sans" fontSize={'16'} color="#333"> 
                 <AccordionItem>

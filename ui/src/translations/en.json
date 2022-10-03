@@ -1,0 +1,10 @@
+{
+  "translations": {
+    "safe_inputs": {
+      "learnReact": "Learn React",
+      "input_bar": "Choose a spreadsheet to analyze",
+      "analyze": "Analyze",
+      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg"
+    }
+  }
+}
