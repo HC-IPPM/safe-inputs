@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom/client'
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import workerInstance from './serviceWorker'
 
 import './index.css'
 
@@ -36,7 +35,7 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-        <App parseWorker={workerInstance} />
+        <App />
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode>,
