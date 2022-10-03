@@ -10,9 +10,12 @@ import {
 import ReactDOM from 'react-dom/client'
 
 import App from './App'
+import App1 from './excelParser'
 import reportWebVitals from './reportWebVitals'
+import workerInstance from './serviceWorker'
 
 import './index.css'
+
 
 const themeConfig: ThemeConfig = {
   useSystemColorMode: true,
@@ -35,7 +38,7 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-        <App />
+        <App1 parseWorker={workerInstance}  />
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode>,
