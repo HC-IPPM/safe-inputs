@@ -1,0 +1,10 @@
+{
+  "translations": {
+    "safe_inputs": {
+      "learnReact": "Lernen React",
+      "input_bar": "Choisissez une feuille de calcul à analyser",
+      "analyze": "Analyser",
+      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg"
+    }
+  }
+}

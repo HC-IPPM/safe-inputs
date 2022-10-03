@@ -2,15 +2,17 @@ import React, { useRef, useState, useEffect } from 'react'
 
 import { MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Image, Box, Flex, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, Link, AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
+import {useTranslation} from "react-i18next";
 import { FcDataSheet } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
-
+import {availableLanguages} from "./i18n";
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
 import './App.css'
 // import { useQuery } from '@apollo/client'
 // import { SAY_HELLO } from './graphql.js'
+
 
 function DeferredRender({
   children,
@@ -112,15 +114,9 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     undefined
 
 
-  const [language, setLanguage] = useState("en");
-  const handleLanguage = (language: React.SetStateAction<string>) => (event: any) => {
-    setLanguage(language);
-  };
-
   const LangEn = {
     analyze: "Analyze",
     file_props: "File Properties",
-    image: require('./components/gov_gouv_en.png'),
     input_bar: "Choose a spreadsheet to analyze",
     preview: "Show Preview",
     safe_input_poc: "Safe Inputs PoC",
@@ -158,7 +154,6 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   const LangFr = {
     analyze: "Analyser",
     file_props: "Propriétés du fichier",
-    image: require('./components/gov_gouv_fr.png'),
     input_bar: "Choisissez une feuille de calcul à analyser",
     preview: "Prévisualisation",
     safe_input_poc: "Entrées Sécurisées PoC",
@@ -193,19 +188,13 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     Worksheets: "FeuillesDeTravail",
   }
 
+  const {t, i18n} = useTranslation()
   return (
     <div className="App">
-      <Box bg='white' w='100%' color='#202020' fontSize='sm'>
-        <Flex justify='flex-end' mr={30} color='blue' _hover={{ color: 'purple', textDecor: 'underline' }} >
-          {language === 'en' ? (<><Link onClick={handleLanguage('fr')} > Français</Link></>) : (<><Link onClick={handleLanguage('en')}> English</Link></>)}
-        </Flex>
-        <Flex justify='Center' >
-          {language === 'en' ? (<><Image src={LangEn.image} alt={'government_canada_logo_en'} h={'35px'} m={1} /></>) : (<><Image src={LangFr.image} alt={'government_canada_logo_fr'} h={'35px'} m={1} /></>)}
-        </Flex>
-      </Box>
+    
 
       <header className="App-header">
-        {/* {language === 'en' ? (`${LangEn.safe_input_poc}`):(`${LangFr.safe_input_poc}`) } */}
+        
         <p>Safe inputs PoC</p>
       </header>
 
@@ -234,7 +223,7 @@ application/vnd.ms-excel,
               style={{ display: 'none' }}
             />
             <Input
-              placeholder={language === 'en' ? (`${LangEn.input_bar}`) : (`${LangFr.input_bar}`)}
+              placeholder= {t('safe_inputs.input_bar')}
               onClick={() => inFile && inFile.current && inFile.current.click()}
               readOnly
               value={filename}
@@ -250,7 +239,7 @@ application/vnd.ms-excel,
           }
           onClick={() => file && parseWorker.parse(file)}
         >
-          {language === 'en' ? (`${LangEn.analyze}`) : (`${LangFr.analyze}`)}
+          {t('safe_inputs.analyze')}
         </Button>
         <br />
         <br />
@@ -263,13 +252,13 @@ application/vnd.ms-excel,
                   <>
                     <h2>
                       <AccordionButton>
-                        {isExpanded ? (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_less}`) : (`${LangFr.show_less}`)}</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{language === 'en' ? (`${LangEn.show_more}`) : (`${LangFr.show_more}`)}</Box> <AddIcon fontSize='12px' /></>)}
+                        {isExpanded ? (<><Box flex='1' textAlign='left'>show_less</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>show_more</Box> <AddIcon fontSize='12px' /></>)}
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4} >
                       <TableContainer>
                         <Table variant="simple">
-                          <TableCaption>{language === 'en' ? (`${LangEn.file_props}`) : (`${LangFr.file_props}`)}</TableCaption>
+                          <TableCaption>File_props </TableCaption>
                           <Tr>
                             {col(p, 'Application')}
                             {col(p, 'SheetNames')}
@@ -331,7 +320,7 @@ application/vnd.ms-excel,
             </Accordion>
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="show-preview" mb="0">
-                {language === 'en' ? (`${LangEn.preview}`) : (`${LangFr.preview}`)} ?
+                preview 
               </FormLabel>
               <Switch
                 id="show-preview"

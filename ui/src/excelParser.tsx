@@ -8,12 +8,14 @@ import './App.css'
 import App from './App'
 // eslint-disable-next-line import/order
 import workerInstance from './serviceWorker'
+import TopHeader1 from './topHeader'
 
 
 function App1({ parseWorker }: { parseWorker: ParseWorker }) {
 
    return(
     <>
+    <TopHeader1 />
     <App parseWorker={workerInstance} />
     </>
   )
