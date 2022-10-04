@@ -5,6 +5,7 @@ import App from './App'
 import SecondPage from './pageTwo'
 import { ParseWorker } from './serviceWorker'
 import workerInstance from './serviceWorker'
+import TopHeader1 from './topHeader'
 
 
 
@@ -12,8 +13,9 @@ function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
 
   return (
     <>
-      <SecondPage />
+      <TopHeader1 />
       <App parseWorker={workerInstance} />
+
     </>
   )
 }

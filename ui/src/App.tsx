@@ -126,7 +126,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
 
       <header className="App-header">
         
-        {/* <p>Safe inputs PoC</p> */}
+         <p>Safe inputs PoC</p> 
       </header>
 
       <main>
