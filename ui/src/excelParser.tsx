@@ -1,22 +1,18 @@
-import React, {  } from 'react'
+import React, { } from 'react'
 
-
-
-import { ParseWorker } from './serviceWorker'
 import './App.css'
-// eslint-disable-next-line import/order
 import App from './App'
-// eslint-disable-next-line import/order
+import { ParseWorker } from './serviceWorker'
 import workerInstance from './serviceWorker'
 import TopHeader1 from './topHeader'
 
 
 function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
 
-   return(
+  return (
     <>
-    <TopHeader1 />
-    <App parseWorker={workerInstance} />
+      <TopHeader1 />
+      <App parseWorker={workerInstance} />
     </>
   )
 }
