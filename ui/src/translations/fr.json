@@ -14,9 +14,9 @@
     },
     "secondPage":{
       "header" :"titre de la deuxieme page",
-      "para1": "Premier paragraphe pour le wedsite française",
-      "para2": "Deuxième paragraphe pour le wedsite française",
-      "para3": "Troisième paragraphe pour le wedsite français"
+      "para1": "Premier paragraphe ",
+      "para2": "Deuxième paragraphe ",
+      "para3": "Troisième paragraphe "
     }
   }
 }
