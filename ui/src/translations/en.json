@@ -1,10 +1,22 @@
 {
   "translations": {
+    "menu": {
+      "home": "Home",
+      "secondPage": "Page two"
+    },
     "safe_inputs": {
-      "learnReact": "Learn React",
-      "input_bar": "Choose a spreadsheet to analyze",
       "analyze": "Analyze",
-      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg"
+      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
+      "input_bar": "Choose a spreadsheet to analyze",
+      "learnReact": "Learn React",
+      "show_less":"",
+      "show_more":""
+    },
+    "secondPage": {
+      "header": "Second Page Header",
+      "para1": "Paragraph one for english side",
+      "para2": "Paragraph two for english side",
+      "para3": "Paragraph three for english side"
     }
   }
 }

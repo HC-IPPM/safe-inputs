@@ -6,12 +6,15 @@ import {
   extendTheme,
   ThemeConfig,
   withDefaultColorScheme,
+  Flex
 } from '@chakra-ui/react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route, } from "react-router-dom";
 
-import App from './App'
-import App1 from './excelParser'
+import ExcelParsingPage from './excelParser'
+import SecondPage from './pageTwo';
 import reportWebVitals from './reportWebVitals'
+// eslint-disable-next-line import/order
 import workerInstance from './serviceWorker'
 
 import './index.css'
@@ -35,13 +38,20 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') || document.body,
 )
 root.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>
-        <App1 parseWorker={workerInstance}  />
-      </ChakraProvider>
-    </ApolloProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <ApolloProvider client={client}>
+    <ChakraProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+          <Route path='/secondPage' element={<SecondPage />} />
+          <Route path="/ExcelParsingPage" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+          <Route path="*" element={<Flex background='grey' h='100vh' color='white' justify={'center'} align={'center'}>This webpage is not available </Flex>} />
+        </Routes>
+      </BrowserRouter>
+    </ChakraProvider>
+  </ApolloProvider>
+  // </React.StrictMode >,
 )
 
 // If you want to start measuring performance in your app, pass a function

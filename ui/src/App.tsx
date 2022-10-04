@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react'
 
 import { MinusIcon, AddIcon } from '@chakra-ui/icons'
-import { Image, Box, Flex, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, Link, AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
+import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion,  AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
 import {useTranslation} from "react-i18next";
 import { FcDataSheet } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
-import {availableLanguages} from "./i18n";
+// import {availableLanguages} from "./i18n"; 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// import {availableLanguages} from "./i18n"; 
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
 import './App.css'
@@ -44,6 +46,7 @@ const dateToStr = (d: Date | undefined) => {
     navigator.language,
   )}`
 }
+
 
 const getColVal = (properties: FullProperties, prop: keyof FullProperties) => {
   const d = properties[prop]
@@ -114,81 +117,9 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     undefined
 
 
-  const LangEn = {
-    analyze: "Analyze",
-    file_props: "File Properties",
-    input_bar: "Choose a spreadsheet to analyze",
-    preview: "Show Preview",
-    safe_input_poc: "Safe Inputs PoC",
-    show_less: "Show Less",
-    show_more: "Show More",
-
-    Application: "Application ",
-    AppVersion: "AppVersion ",
-    Author: "Author",
-    Category: "Category",
-    Comments: "Comments ",
-    Company: "Company ",
-    ContentStatus: "ContentStatus ",
-    CreatedDate: "CreatedDate ",
-    DocSecurity: "DocSecurity ",
-    HyperlinksChanged: "HyperlinksChanged ",
-    Identifier: "Identifier ",
-    Keywords: "Keywords ",
-    Language: "Language ",
-    LastAuthor: "LastAuthor ",
-    LastPrinted: "LastPrinted ",
-    LinksUpToDate: "LinksUpToDate ",
-    Manager: "Manager ",
-    ModifiedDate: "ModifiedDate ",
-    Revision: "Revision ",
-    ScaleCrop: "ScaleCrop ",
-    SharedDoc: "SharedDoc ",
-    SheetNames: "SheetNames ",
-    Subject: "Subject ",
-    Title: "Title ",
-    Version: "Version ",
-    Worksheets: "Worksheets ",
-  }
-  // {language === 'en' ? (`${LangEn.<Vairable here>}`):(`${LangFr.<Vairable here>}`)}
-  const LangFr = {
-    analyze: "Analyser",
-    file_props: "Propriétés du fichier",
-    input_bar: "Choisissez une feuille de calcul à analyser",
-    preview: "Prévisualisation",
-    safe_input_poc: "Entrées Sécurisées PoC",
-    show_less: "Afficher moins",
-    show_more: "Afficher plus",
-
-    Application: "Application",
-    AppVersion: "VersionD'Application ",
-    Author: "Auteur",
-    Category: "Catégorie",
-    Comments: "Commentaires",
-    Company: "Entreprise",
-    ContentStatus: "ÉtatDuContenu ",
-    CreatedDate: "DateCréée",
-    DocSecurity: "SécuritéDesDocuments",
-    HyperlinksChanged: "ModificationDesHyperliens",
-    Identifier: "Identifiant",
-    Keywords: "Mots-clés ",
-    Language: "Langue",
-    LastAuthor: "DernierAuteur",
-    LastPrinted: "DernierImprimé",
-    LinksUpToDate: "LiensÀJour ",
-    Manager: "Directeur",
-    ModifiedDate: "DateDeModification",
-    Revision: "Revision",
-    ScaleCrop: "ScaleCrop",
-    SharedDoc: "DocPartagé",
-    SheetNames: "NomsDesFeuilles",
-    Subject: "Sujet",
-    Title: "Titre",
-    Version: "Version",
-    Worksheets: "FeuillesDeTravail",
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {t, i18n} = useTranslation()
+
   return (
     <div className="App">
     

@@ -1,10 +1,22 @@
 {
   "translations": {
+    "menu":{
+      "home": "Accueil",
+      "secondPage": "deuxieme page"
+    },
     "safe_inputs": {
-      "learnReact": "Lernen React",
-      "input_bar": "Choisissez une feuille de calcul à analyser",
       "analyze": "Analyser",
-      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg"
+      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
+      "input_bar": "Choisissez une feuille de calcul à analyser",
+      "learnReact": "Lernen React",
+      "show_less":"",
+      "show_more":""
+    },
+    "secondPage":{
+      "header" :"titre de la deuxieme page",
+      "para1": "Premier paragraphe pour le wedsite française",
+      "para2": "Deuxième paragraphe pour le wedsite française",
+      "para3": "Troisième paragraphe pour le wedsite français"
     }
   }
 }

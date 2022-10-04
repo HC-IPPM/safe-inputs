@@ -11,7 +11,7 @@ import workerInstance from './serviceWorker'
 import TopHeader1 from './topHeader'
 
 
-function App1({ parseWorker }: { parseWorker: ParseWorker }) {
+function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
 
    return(
     <>
@@ -21,6 +21,6 @@ function App1({ parseWorker }: { parseWorker: ParseWorker }) {
   )
 }
 
-export default App1
+export default ExcelParsingPage;
 
 
