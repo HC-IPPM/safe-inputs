@@ -12,6 +12,9 @@ import {
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, } from "react-router-dom";
 
+// import ExcelParsingPage from './excelParser'
+// import SecondPage from './pageTwo';
+import App from './App'
 import ExcelParsingPage from './excelParser'
 import SecondPage from './pageTwo'
 import reportWebVitals from './reportWebVitals'
@@ -43,6 +46,7 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
+<<<<<<< HEAD
         {/* <BrowserRouter>
           <Routes>
             <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
@@ -53,6 +57,16 @@ root.render(
         </BrowserRouter>*/}
         <SecondPage />
         <ExcelParsingPage parseWorker={workerInstance} />
+=======
+        <BrowserRouter>
+          <Routes>
+            <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+            {/* <Route path='/secondPage' element={<SecondPage />} /> */}
+            <Route path="/ExcelParsingPage" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+            <Route path="*" element={<Flex background='grey' h='100vh' color='white' justify={'center'} align={'center'}>This webpage is not available </Flex>} />
+          </Routes>
+        </BrowserRouter>
+>>>>>>> main
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode >,

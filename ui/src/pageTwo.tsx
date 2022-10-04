@@ -18,9 +18,7 @@ export default function SecondPage() {
     return (
         <>
             <TopHeader1 />
-            <header className="App-header"> Safe Inputs Poc
-            {/* {t("secondPage.header")} */}
-            </header>
+            <header className="App-header"> {t("secondPage.header")}</header>
             <Box h='200px' bg='lightblue'><Center> {t('secondPage.para1')}</Center> </Box>
             <Box h='200px' bg=''><Center> {t('secondPage.para2')}</Center> </Box>
             <Box h='200px' bg='lightblue'><Center> {t('secondPage.para3')}</Center> </Box>
