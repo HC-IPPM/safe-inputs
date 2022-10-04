@@ -12,9 +12,9 @@ import { Link } from 'react-router-dom';
 // import { availableLanguages } from "./i18n";
 
 export default function TopHeader1() {
+    
     const Section = styled.section`
-    background: #333;
-    color: #fff;
+    color: #000000;
   `
     const { t, i18n } = useTranslation()
  
