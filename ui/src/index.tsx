@@ -46,14 +46,15 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-        <BrowserRouter>
+        {/* <BrowserRouter>
           <Routes>
             <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-            {/* <Route path='/secondPage' element={<SecondPage />} /> */}
+           <Route path='/secondPage' element={<SecondPage />} /> */} {/* 
             <Route path="/ExcelParsingPage" element={<ExcelParsingPage parseWorker={workerInstance} />} />
             <Route path="*" element={<Flex background='grey' h='100vh' color='white' justify={'center'} align={'center'}>This webpage is not available </Flex>} />
           </Routes>
-        </BrowserRouter>
+        </BrowserRouter> */}
+        <SecondPage /><ExcelParsingPage parseWorker={workerInstance} />
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode >,
