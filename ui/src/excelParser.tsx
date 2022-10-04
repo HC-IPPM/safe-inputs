@@ -11,11 +11,7 @@ function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
 
   return (
     <>
-<<<<<<< HEAD
       {/* <TopHeader1 /> */}
-=======
-      <TopHeader1 />
->>>>>>> main
       <App parseWorker={workerInstance} />
     </>
   )

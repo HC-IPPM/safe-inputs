@@ -46,18 +46,6 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
-<<<<<<< HEAD
-        {/* <BrowserRouter>
-          <Routes>
-            <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-            {/* <Route path='/secondPage' element={<SecondPage />} /> 
-            <Route path="/ExcelParsingPage" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-            <Route path="*" element={<Flex background='grey' h='100vh' color='white' justify={'center'} align={'center'}>This webpage is not available </Flex>} />
-          </Routes> 
-        </BrowserRouter>*/}
-        <SecondPage />
-        <ExcelParsingPage parseWorker={workerInstance} />
-=======
         <BrowserRouter>
           <Routes>
             <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
@@ -66,7 +54,6 @@ root.render(
             <Route path="*" element={<Flex background='grey' h='100vh' color='white' justify={'center'} align={'center'}>This webpage is not available </Flex>} />
           </Routes>
         </BrowserRouter>
->>>>>>> main
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode >,
