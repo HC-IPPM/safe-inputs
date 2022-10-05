@@ -6,9 +6,10 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import ExcelParsingPage from './excelParser'
+import DoesNotExistPage from './noLocationPage'
+import SecondPage from './pageTwo'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
-import DoesNotExistPage from './translations/noLocationPage'
 
 import './index.css'
 
@@ -31,19 +32,19 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') || document.body,
 )
 root.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
+  <BrowserRouter>
+    <React.StrictMode>
+      <ApolloProvider client={client}>
+        <ChakraProvider theme={theme}>
           <Routes>
-            <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-
+            <Route path="/" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+            <Route path='/secondpage' element={<SecondPage />} />
             <Route path="*" element={<DoesNotExistPage />} />
           </Routes>
-        </BrowserRouter>
-      </ChakraProvider>
-    </ApolloProvider>
-  </React.StrictMode >,
+        </ChakraProvider>
+      </ApolloProvider>
+    </React.StrictMode >
+  </BrowserRouter>,
 )
 
 // If you want to start measuring performance in your app, pass a function

@@ -118,9 +118,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   return (
     <div className="App">
 
-
       <header className="App-header">
-
         <p>Safe inputs PoC</p>
       </header>
 

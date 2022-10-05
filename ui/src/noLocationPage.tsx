@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Flex } from "@chakra-ui/react";
+import { Flex,Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 export default function DoesNotExistPage() {
@@ -8,8 +8,7 @@ export default function DoesNotExistPage() {
     return (
         <>
             <Flex justify={'center'} align={'center'} h='100Vh' w='100Vw' bg='gray.100'>
-                <p> {t("does_not_exist.message")}
-                </p>
+                <Text> {t("does_not_exist.message")} </Text>
             </Flex>
         </>
     )

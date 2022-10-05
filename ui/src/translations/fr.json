@@ -1,15 +1,15 @@
 {
   "translations": {
-    "menu":{
+    "menu": {
       "home": "Accueil",
       "secondPage": "deuxieme page"
     },
-    "does_not_exist":{
-      "message":"Page non trouvée"
+    "does_not_exist": {
+      "message": "Page non trouvée"
     },
     "safe_inputs": {
       "analyze": "Analyser",
-      "file_props":"Propriétés du fichier",
+      "file_props": "Propriétés du fichier",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
       "input_bar": "Choisissez une feuille de calcul à analyser",
       "learnReact": "Lernen React",
@@ -17,8 +17,8 @@
       "show_less": "Afficher Moins",
       "show_more": "Afficher Plus"
     },
-    "secondPage":{
-      "header" :"titre de la deuxieme page",
+    "second_page": {
+      "header": "Titre de la Deuxieme Page",
       "para1": "Premier paragraphe ",
       "para2": "Deuxième paragraphe ",
       "para3": "Troisième paragraphe "

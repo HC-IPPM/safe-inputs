@@ -4,12 +4,12 @@
       "home": "Home",
       "secondPage": "Page two"
     },
-    "does_not_exist":{
-      "message":"Page not found"
+    "does_not_exist": {
+      "message": "Page not found"
     },
     "safe_inputs": {
       "analyze": "Analyze",
-      "file_props":"File Properties",
+      "file_props": "File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
       "input_bar": "Choose a spreadsheet to analyze",
       "learnReact": "Learn React",
