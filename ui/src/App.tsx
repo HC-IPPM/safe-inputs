@@ -1,9 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { MinusIcon, AddIcon } from '@chakra-ui/icons'
 import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion,  AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
 import {useTranslation} from "react-i18next";
-import { FcDataSheet } from 'react-icons/fc'
+import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
 // import {availableLanguages} from "./i18n"; 
@@ -183,7 +182,7 @@ application/vnd.ms-excel,
                   <>
                     <h2>
                       <AccordionButton>
-                        {isExpanded ? (<><Box flex='1' textAlign='left'>show_less</Box> <MinusIcon fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>show_more</Box> <AddIcon fontSize='12px' /></>)}
+                        {isExpanded ? (<><Box flex='1' textAlign='left'>show_less</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>show_more</Box> <FcPlus fontSize='12px' /></>)}
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4} >
