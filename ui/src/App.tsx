@@ -124,7 +124,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
         <p>Safe inputs PoC</p>
       </header>
 
-      <main>
+      <main><Box className="pagebody">
         <FormControl
           isInvalid={Boolean(invalid)}
           isRequired={false}
@@ -263,6 +263,7 @@ application/vnd.ms-excel,
             )}
           </div>
         )}
+        </Box>
       </main>
     </div>
   )
