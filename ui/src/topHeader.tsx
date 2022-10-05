@@ -6,8 +6,7 @@ import { useTranslation } from "react-i18next";
 import { FcHome } from "react-icons/fc";
 import { } from 'react-router-dom';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { availableLanguages } from "./i18n";
+
 
 export default function TopHeader1() {
 

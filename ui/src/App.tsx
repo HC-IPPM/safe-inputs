@@ -5,9 +5,6 @@ import {useTranslation} from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
-// import {availableLanguages} from "./i18n"; 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import {availableLanguages} from "./i18n"; 
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
 import './App.css'
@@ -116,8 +113,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     undefined
 
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {t, i18n} = useTranslation()
+  const {t} = useTranslation()
 
   return (
     <div className="App">
@@ -182,13 +178,13 @@ application/vnd.ms-excel,
                   <>
                     <h2>
                       <AccordionButton>
-                        {isExpanded ? (<><Box flex='1' textAlign='left'>show_less</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>show_more</Box> <FcPlus fontSize='12px' /></>)}
+                        {isExpanded ? (<><Box flex='1' textAlign='left'>{t("safe_inputs.show_less")}</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{t("safe_inputs.show_more")}</Box> <FcPlus fontSize='12px' /></>)}
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4} >
                       <TableContainer>
                         <Table variant="simple">
-                          <TableCaption>File_props </TableCaption>
+                          <TableCaption>{t("safe_inputs.file_props")} </TableCaption>
                           <Tr>
                             {col(p, 'Application')}
                             {col(p, 'SheetNames')}

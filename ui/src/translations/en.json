@@ -6,11 +6,13 @@
     },
     "safe_inputs": {
       "analyze": "Analyze",
+      "file_props":"File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
       "input_bar": "Choose a spreadsheet to analyze",
       "learnReact": "Learn React",
-      "show_less":"",
-      "show_more":""
+      "preview": "Preview",
+      "show_less": "Show Less",
+      "show_more": "Show More"
     },
     "secondPage": {
       "header": "Second Page Header",
