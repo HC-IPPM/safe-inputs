@@ -33,7 +33,6 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') || document.body,
 )
 root.render(
-<<<<<<< HEAD
   <BrowserRouter>
     <React.StrictMode>
       <ApolloProvider client={client}>
@@ -47,21 +46,6 @@ root.render(
       </ApolloProvider>
     </React.StrictMode >
   </BrowserRouter>,
-=======
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-
-            <Route path="*" element={<DoesNotExistPage />} />
-          </Routes>
-        </BrowserRouter>
-      </ChakraProvider>
-    </ApolloProvider>
-  </React.StrictMode >,
->>>>>>> 184e2365c977011adadca895e46b7aa17df4e943
 )
 
 // If you want to start measuring performance in your app, pass a function
