@@ -4,8 +4,8 @@
       "home": "Home",
       "secondPage": "Page two"
     },
-    "does_not_exist": {
-      "message": "Page not found"
+    "does_not_exist":{
+      "message":"Page not found"
     },
     "safe_inputs": {
       "analyze": "Analyze",

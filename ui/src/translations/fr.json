@@ -4,8 +4,8 @@
       "home": "Accueil",
       "secondPage": "deuxieme page"
     },
-    "does_not_exist": {
-      "message": "Page non trouvée"
+    "does_not_exist":{
+      "message":"Page non trouvée"
     },
     "safe_inputs": {
       "analyze": "Analyser",
