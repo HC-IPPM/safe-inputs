@@ -1,19 +1,14 @@
 import React from 'react'
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
-import {
-  ChakraProvider,
-  extendTheme,
-  ThemeConfig,
-  withDefaultColorScheme,
-} from '@chakra-ui/react'
+import { ChakraProvider, extendTheme, ThemeConfig, withDefaultColorScheme, } from '@chakra-ui/react'
 import ReactDOM from 'react-dom/client'
-
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import ExcelParsingPage from './excelParser'
 import reportWebVitals from './reportWebVitals'
-// eslint-disable-next-line import/order
 import workerInstance from './serviceWorker'
+import DoesNotExistPage from './translations/noLocationPage'
 
 import './index.css'
 
@@ -38,8 +33,14 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>         
-         <ExcelParsingPage parseWorker={workerInstance} /> 
+      <ChakraProvider theme={theme}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="" element={<ExcelParsingPage parseWorker={workerInstance} />} />
+
+            <Route path="*" element={<DoesNotExistPage />} />
+          </Routes>
+        </BrowserRouter>
       </ChakraProvider>
     </ApolloProvider>
   </React.StrictMode >,

@@ -5,8 +5,6 @@ import {initReactI18next} from "react-i18next";
 import en from "./translations/en.json";
 import fr from "./translations/fr.json";
 
-// import de from "./translations/de.json"
-
 const resources = {
   en,
   fr,
