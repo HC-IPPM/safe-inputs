@@ -4,11 +4,6 @@ import './i18n'
 import { HStack, Box, Image, Text, Link } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FcHome } from "react-icons/fc";
-<<<<<<< HEAD
-
-=======
->>>>>>> 184e2365c977011adadca895e46b7aa17df4e943
-
 
 export default function TopHeader1() {
 
