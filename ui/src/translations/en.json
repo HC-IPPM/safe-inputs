@@ -4,6 +4,9 @@
       "home": "Home",
       "secondPage": "Page two"
     },
+    "does_not_exist":{
+      "message":"Page not found"
+    },
     "safe_inputs": {
       "analyze": "Analyze",
       "file_props":"File Properties",
@@ -14,7 +17,7 @@
       "show_less": "Show Less",
       "show_more": "Show More"
     },
-    "secondPage": {
+    "second_page": {
       "header": "Second Page Header",
       "para1": "Paragraph one",
       "para2": "Paragraph two",

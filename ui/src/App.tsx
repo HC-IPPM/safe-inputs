@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion,  AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
-import {useTranslation} from "react-i18next";
+import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
+import { useTranslation } from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
@@ -113,15 +113,15 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
     undefined
 
 
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <div className="App">
-    
+
 
       <header className="App-header">
-        
-         <p>Safe inputs PoC</p> 
+
+        <p>Safe inputs PoC</p>
       </header>
 
       <main>
@@ -149,7 +149,7 @@ application/vnd.ms-excel,
               style={{ display: 'none' }}
             />
             <Input
-              placeholder= {t('safe_inputs.input_bar')}
+              placeholder={t('safe_inputs.input_bar')}
               onClick={() => inFile && inFile.current && inFile.current.click()}
               readOnly
               value={filename}
@@ -246,7 +246,7 @@ application/vnd.ms-excel,
             </Accordion>
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="show-preview" mb="0">
-                preview 
+                {t("preview")}
               </FormLabel>
               <Switch
                 id="show-preview"

@@ -8,15 +8,13 @@ import { useTranslation } from "react-i18next";
 
 export default function SecondPage() {
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { t } = useTranslation()
-
 
     return (
         <>           
-            <Box h='200px' bg='lightblue'><Center> {t('secondPage.para1')}</Center> </Box>
-            <Box h='200px' bg=''><Center> {t('secondPage.para2')}</Center> </Box>
-            <Box h='200px' bg='lightblue'><Center> {t('secondPage.para3')}</Center> </Box>
+            <Box h='200px' bg='lightblue'><Center> {t('second_page.para1')}</Center> </Box>
+            <Box h='200px' bg=''><Center> {t('second_page.para2')}</Center> </Box>
+            <Box h='200px' bg='lightblue'><Center> {t('second_page.para3')}</Center> </Box>
         </>
     )
 }

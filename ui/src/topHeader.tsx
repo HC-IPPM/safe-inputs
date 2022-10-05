@@ -4,15 +4,11 @@ import './i18n'
 import { HStack, Box, Image, Text, Link } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FcHome } from "react-icons/fc";
-import { } from 'react-router-dom';
-
 
 
 export default function TopHeader1() {
 
-
     const { t, i18n } = useTranslation()
-
 
     return (
         <>
