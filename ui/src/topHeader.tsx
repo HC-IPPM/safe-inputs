@@ -15,7 +15,7 @@ export default function TopHeader1() {
             <Box >
                 <HStack justify={'space-around'} h='60px' className="pagebody" id='pageMarginSetting'>
                     <Box></Box>
-                    <Image src={t('safe_inputs.image')} w={{ base: '300px', md: '400px' }} min-width={'200px'} />
+                    <Image src={t('safeInputs.image')} w={{ base: '300px', md: '400px' }} min-width={'200px'} />
                     <Box fontSize={{ base: '12px', md: '14px' }} h={{ base: '30px', md: '45px' }} >
                         {i18n.language === 'en' ? (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('fr')}
                         > Français</Link></>) : (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('en')}

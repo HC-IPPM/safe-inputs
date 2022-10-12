@@ -17,17 +17,17 @@ export default function SecondPage() {
     return (
         < >
             <TopHeader1 />
-            <Box className="App-header" mb={2}>{t('second_page.header')}</Box>
+            <Box className="App-header" mb={2}>{t('secondPage.header')}</Box>
 
             <VStack>
                 <Flex bg='' w='100%' >
-                    <Box  {...boxStyle} >{t('second_page.para1')}</Box>
+                    <Box  {...boxStyle} >{t('secondPage.para1')}</Box>
                 </Flex>
                 <Flex bg='lightblue' w='100%'>
-                    <Box {...boxStyle} textAlign='center'>{t('second_page.para2')}</Box>
+                    <Box {...boxStyle} textAlign='center'>{t('secondPage.para2')}</Box>
                 </Flex>
                 <Flex bg='' w='100%'>
-                    <Box {...boxStyle} textAlign='right'>{t('second_page.para3')}</Box>
+                    <Box {...boxStyle} textAlign='right'>{t('secondPage.para3')}</Box>
                 </Flex>
             </VStack>
 

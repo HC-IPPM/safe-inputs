@@ -8,7 +8,7 @@ export default function DoesNotExistPage() {
     return (
         <>
             <Flex justify={'center'} align={'center'} h='100Vh' w='100Vw' bg='gray.100'>
-                <Text> {t("does_not_exist.message")} </Text>
+                <Text> {t("doesNotExist.message")} </Text>
             </Flex>
         </>
     )

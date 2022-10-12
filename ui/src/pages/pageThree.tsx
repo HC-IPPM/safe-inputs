@@ -16,17 +16,17 @@ export default function ThirdPage() {
     return (
         <>
             <TopHeader1 />
-            <Box className="App-header" mb={2}>{t('third_page.header')}</Box>
+            <Box className="App-header" mb={2}>{t('thirdPage.header')}</Box>
 
             <VStack>
                 <Flex bg='' w='100%'>
-                    <Box  {...boxStyle} >{t('third_page.para1')}</Box>
+                    <Box  {...boxStyle} >{t('thirdPage.para1')}</Box>
                 </Flex>
                 <Flex bg='lightblue' w='100%'>
-                    <Box {...boxStyle} >{t('third_page.para2')}</Box>
+                    <Box {...boxStyle} >{t('thirdPage.para2')}</Box>
                 </Flex>
                 <Flex bg='' w='100%'>
-                    <Box {...boxStyle} >{t('third_page.para3')}</Box>
+                    <Box {...boxStyle} >{t('thirdPage.para3')}</Box>
                 </Flex>
             </VStack>
         </>

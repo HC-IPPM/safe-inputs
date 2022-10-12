@@ -146,7 +146,7 @@ application/vnd.ms-excel,
                 style={{ display: 'none' }}
               />
               <Input
-                placeholder={t('safe_inputs.input_bar')}
+                placeholder={t('safeInputs.inputBar')}
                 onClick={() => inFile && inFile.current && inFile.current.click()}
                 readOnly
                 value={filename}
@@ -161,7 +161,7 @@ application/vnd.ms-excel,
           <br />
           <Button
             disabled={file === null || (parserStatus && parserStatus.state === 'LOADING')} onClick={() => file && parseWorker.parse(file)}>
-            {t('safe_inputs.analyze')}
+            {t('safeInputs.analyze')}
           </Button>
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
@@ -172,13 +172,13 @@ application/vnd.ms-excel,
                     <>
                       <h2>
                         <AccordionButton>
-                          {isExpanded ? (<><Box flex='1' textAlign='left'>{t("safe_inputs.show_less")}</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{t("safe_inputs.show_more")}</Box> <FcPlus fontSize='12px' /></>)}
+                          {isExpanded ? (<><Box flex='1' textAlign='left'>{t("safeInputs.showLess")}</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{t("safeInputs.showMore")}</Box> <FcPlus fontSize='12px' /></>)}
                         </AccordionButton>
                       </h2>
                       <AccordionPanel pb={4} >
                         <TableContainer>
                           <Table variant="simple">
-                            <TableCaption>{t("safe_inputs.file_props")} </TableCaption>
+                            <TableCaption>{t("safeInputs.thirdPage")} </TableCaption>
                             <Tr>
                               {col(p, 'Application')}
                               {col(p, 'SheetNames')}
@@ -240,7 +240,7 @@ application/vnd.ms-excel,
               </Accordion>
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="show-preview" mb="0">
-                  {t("preview")}
+                  {t("safeInputs.preview")}
                 </FormLabel>
                 <Switch
                   id="show-preview"

@@ -8,22 +8,22 @@
     "does_not_exist": {
       "message": "Page non trouvée"
     },
-    "safe_inputs": {
+    "safeInputs": {
       "analyze": "Analyser",
-      "file_props": "Propriétés du fichier",
+      "thirdPage": "Propriétés du fichier",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
-      "input_bar": "Choisissez une feuille de calcul à analyser",
+      "inputBar": "Choisissez une feuille de calcul à analyser",
       "preview": "Prévisualisation",
-      "show_less": "Afficher Moins",
-      "show_more": "Afficher Plus"
+      "showLess": "Afficher Moins",
+      "showMore": "Afficher Plus"
     },
-    "second_page": {
+    "secondPage": {
       "header": "Titre de la Deuxieme Page",
       "para1": "Premier paragraphe ",
       "para2": "Deuxième paragraphe ",
       "para3": "Troisième paragraphe "
     },
-    "third_page": {
+    "thirdPage": {
       "header": "Titre de la Troisième Page",
       "para1": "Suspendisse et ullamcorper mauris. Fusce fringilla urna in leo placerat rutrum. Nam in enim mollis, cursus quam a, lacinia lectus. Integer molestie dui dui, vel laoreet nunc bibendum quis. Phasellus pretium magna in nisi varius vehicula. Duis eleifend ac justo quis bibendum. In vitae cursus quam, non dictum sem. Maecenas gravida vulputate nisi, id dictum arcu tincidunt eu. Pellentesque gravida ac diam non gravida. Etiam tristique massa enim, iaculis aliquet libero euismod non. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. ",
       "para2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce condimentum venenatis felis at consectetur. Vivamus commodo volutpat quam, fringilla consectetur arcu ultricies at. Vivamus non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus laoreet. Quisque commodo facilisis scelerisque. Vestibulum non sapien commodo, viverra urna vel, vestibulum risus. Aliquam nibh nisi, maximus nec lorem a, eleifend tempus justo. Pellentesque sodales, erat quis aliquam iaculis, arcu ligula dignissim orci, sed viverra nibh dolor iaculis risus. Quisque sodales elit id tellus pretium faucibus. Ut vel tincidunt purus. Praesent nec elit venenatis, luctus tellus non, tristique turpis. Aliquam viverra massa vel pharetra viverra. ",
