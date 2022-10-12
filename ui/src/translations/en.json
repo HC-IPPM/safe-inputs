@@ -5,15 +5,14 @@
       "secondPage": "Page Two",
       "thirdPage": "Page Three"
     },
-    "does_not_exist":{
-      "message":"Page not found"
+    "does_not_exist": {
+      "message": "Page not found"
     },
     "safe_inputs": {
       "analyze": "Analyze",
       "file_props": "File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
       "input_bar": "Choose a spreadsheet to analyze",
-      "learnReact": "Learn React",
       "preview": "Preview",
       "show_less": "Show Less",
       "show_more": "Show More"
@@ -28,7 +27,7 @@
       "header": "Third Page Header",
       "para1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce condimentum venenatis felis at consectetur. Vivamus commodo volutpat quam, fringilla consectetur arcu ultricies at. Vivamus non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus laoreet. Quisque commodo facilisis scelerisque. Vestibulum non sapien commodo, viverra urna vel, vestibulum risus. Aliquam nibh nisi, maximus nec lorem a, eleifend tempus justo. Pellentesque sodales, erat quis aliquam iaculis, arcu ligula dignissim orci, sed viverra nibh dolor iaculis risus. Quisque sodales elit id tellus pretium faucibus. Ut vel tincidunt purus. Praesent nec elit venenatis, luctus tellus non, tristique turpis. Aliquam viverra massa vel pharetra viverra.",
       "para2": "Suspendisse et ullamcorper mauris. Fusce fringilla urna in leo placerat rutrum. Nam in enim mollis, cursus quam a, lacinia lectus. Integer molestie dui dui, vel laoreet nunc bibendum quis. Phasellus pretium magna in nisi varius vehicula. Duis eleifend ac justo quis bibendum. In vitae cursus quam, non dictum sem. Maecenas gravida vulputate nisi, id dictum arcu tincidunt eu. Pellentesque gravida ac diam non gravida. Etiam tristique massa enim, iaculis aliquet libero euismod non. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
-      "para3": "Integrating the GC Notify API allows you to send email or text messages automatically. You might do this if you have a system that tracks a business process, so that whenever there's a status change, your clients could receive a notification about the update. "
+      "para3": "Paragraph three"
     }
   }
 }
