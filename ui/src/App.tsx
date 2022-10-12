@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputLeftElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, } from '@chakra-ui/react'
+import { Box, Button, Input, FormControl, FormLabel, InputGroup, InputRightElement, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, } from '@chakra-ui/react'
 import { useTranslation } from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
@@ -116,15 +116,12 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   const { t } = useTranslation()
 
   return (
-    <div className="App">
+    <>
+    <div className="App" >
 
+      <Box className="App-header" mb={2}>Safe inputs PoC</Box>
 
-      <header className="App-header">
-
-        <p>Safe inputs PoC</p>
-      </header>
-
-      <main><Box className="pagebody">
+      <Box className="pageMarginSetting" id='pageMarginSetting' mt={8}>
         <FormControl
           isInvalid={Boolean(invalid)}
           isRequired={false}
@@ -154,19 +151,15 @@ application/vnd.ms-excel,
               readOnly
               value={filename}
             />
+            <InputRightElement><Button 
+              disabled={file === null || (parserStatus && parserStatus.state === 'LOADING')} onClick={() => file && parseWorker.parse(file)}>
+              {t('safe_inputs.analyze')}
+            </Button> </InputRightElement>
+
           </InputGroup>
           <FormErrorMessage>{invalid}</FormErrorMessage>
         </FormControl>
-        <br />
-        <br />
-        <Button
-          disabled={
-            file === null || (parserStatus && parserStatus.state === 'LOADING')
-          }
-          onClick={() => file && parseWorker.parse(file)}
-        >
-          {t('safe_inputs.analyze')}
-        </Button>
+
         <br />
         <br />
         {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
@@ -263,9 +256,9 @@ application/vnd.ms-excel,
             )}
           </div>
         )}
-        </Box>
-      </main>
-    </div>
+      </Box> 
+    </div >
+    </>
   )
 }
 

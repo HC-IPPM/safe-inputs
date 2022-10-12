@@ -1,10 +1,10 @@
 import React, { } from 'react'
 
-import './App.css'
-import App from './App'
-import { ParseWorker } from './serviceWorker'
-import workerInstance from './serviceWorker'
-import TopHeader1 from './topHeader'
+import '../App.css'
+import App from '../App'
+import { ParseWorker } from '../serviceWorker'
+import workerInstance from '../serviceWorker'
+import TopHeader1 from '../topHeader'
 
 function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
 

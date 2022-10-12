@@ -5,9 +5,10 @@ import { ChakraProvider, extendTheme, ThemeConfig, withDefaultColorScheme, } fro
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-import ExcelParsingPage from './excelParser'
-import DoesNotExistPage from './noLocationPage'
-import SecondPage from './pageTwo'
+import ExcelParsingPage from './pages/excelParser'
+import DoesNotExistPage from './pages/noLocationPage'
+import ThirdPage from './pages/pageThree'
+import SecondPage from './pages/pageTwo'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
 
@@ -40,7 +41,9 @@ root.render(
           <Routes>
             <Route path="/" element={<ExcelParsingPage parseWorker={workerInstance} />} />
             <Route path='/secondpage' element={<SecondPage />} />
+            <Route path='/thirdpage' element={<ThirdPage />} />
             <Route path="*" element={<DoesNotExistPage />} />
+
           </Routes>
         </ChakraProvider>
       </ApolloProvider>
