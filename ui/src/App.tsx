@@ -178,7 +178,7 @@ application/vnd.ms-excel,
                       <AccordionPanel pb={4} >
                         <TableContainer>
                           <Table variant="simple">
-                            <TableCaption>{t("safeInputs.thirdPage")} </TableCaption>
+                            <TableCaption>{t("safeInputs.fileProps")} </TableCaption>
                             <Tr>
                               {col(p, 'Application')}
                               {col(p, 'SheetNames')}

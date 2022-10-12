@@ -10,7 +10,7 @@
     },
     "safeInputs": {
       "analyze": "Analyser",
-      "thirdPage": "Propriétés du fichier",
+      "fileProps": "Propriétés du fichier",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
       "inputBar": "Choisissez une feuille de calcul à analyser",
       "preview": "Prévisualisation",
