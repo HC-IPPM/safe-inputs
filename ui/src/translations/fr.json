@@ -5,15 +5,14 @@
       "secondPage": "Deuxieme Page",
       "thirdPage": "Troisième Page"
     },
-    "does_not_exist":{
-      "message":"Page non trouvée"
+    "does_not_exist": {
+      "message": "Page non trouvée"
     },
     "safe_inputs": {
       "analyze": "Analyser",
       "file_props": "Propriétés du fichier",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
       "input_bar": "Choisissez une feuille de calcul à analyser",
-      "learnReact": "Lernen React",
       "preview": "Prévisualisation",
       "show_less": "Afficher Moins",
       "show_more": "Afficher Plus"

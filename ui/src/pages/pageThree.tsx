@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../i18n'
 import '../App.css'
-import { Box, Center, Flex, VStack } from '@chakra-ui/react';
+import { Box, Flex, VStack } from '@chakra-ui/react';
 import { useTranslation } from "react-i18next";
 
 import TopHeader1 from '../topHeader';
@@ -11,7 +11,7 @@ export default function ThirdPage() {
 
     const { t } = useTranslation()
 
-    const boxStyle = {background: 'transparent', className:"pagebody", id:'pageMarginSetting', width: '100%', justifyContent: 'justify' }
+    const boxStyle = { background: 'transparent', className: "pagebody", id: 'pageMarginSetting', width: '100%', justifyContent: 'justify' }
 
     return (
         <>
