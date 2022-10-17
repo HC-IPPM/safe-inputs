@@ -7,11 +7,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import ExcelParsingPage from './pages/excelParser'
 import DoesNotExistPage from './pages/noLocationPage'
+import PageFour from './pages/pageFour'
 import ThirdPage from './pages/pageThree'
 import SecondPage from './pages/pageTwo'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
-
 
 import './index.css'
 
@@ -42,6 +42,7 @@ root.render(
             <Route path="/" element={<ExcelParsingPage parseWorker={workerInstance} />} />
             <Route path='/secondpage' element={<SecondPage />} />
             <Route path='/thirdpage' element={<ThirdPage />} />
+            <Route path='/pagefour' element={<PageFour />} />
             <Route path="*" element={<DoesNotExistPage />} />
 
           </Routes>

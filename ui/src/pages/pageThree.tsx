@@ -17,7 +17,6 @@ export default function ThirdPage() {
         <>
             <TopHeader1 />
             <Box className="App-header" mb={2}>{t('thirdPage.header')}</Box>
-
             <VStack>
                 <Flex bg='' w='100%'>
                     <Box  {...boxStyle} >{t('thirdPage.para1')}</Box>
