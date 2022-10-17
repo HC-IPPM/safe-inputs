@@ -9,8 +9,6 @@ const {
 
 function publish() {return('test publish')} // Placeholder to be replaced with NATS
 
-function publish() {return('test publish')} // Placeholder to be replaced with NATS
-
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
