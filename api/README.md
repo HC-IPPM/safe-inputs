@@ -13,7 +13,6 @@ That's it!
 ## Running it
 
 ```bash
-$ docker run -d --network host -e POSTGRES_USER=bugbounty -e POSTGRES_PASSWORD=test postgres
 $ npm start &
 $ curl -s -H "Content-Type: application/json" -d '{"query":"{hello}"}' localhost:3000 | jq .
 {
@@ -29,7 +28,7 @@ $ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJs
     }
   }
 }
-`
+```
 
 ## Running the tests
 
