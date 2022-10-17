@@ -2,6 +2,10 @@ import request from 'supertest'
 import { Server } from '../Server.js'
 import { jest } from '@jest/globals' // support for ESM modules
 import { makeExecutableSchema } from '@graphql-tools/schema'
+import { connect, JSONCodec } from 'nats'
+
+const nc = await connect({ servers: "demo.nats.io:4222" })
+const jc = JSONCodec();
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = /* GraphQL */ `
@@ -23,7 +27,7 @@ const resolvers = {
   },
   Mutation:{
     verifyJsonFormat(_parent, { sheetData }, {publish}, _info) {
-      const testContext = console.log(publish()) // This will be replaced with NATS publish function 
+      const test = publish(sheetData);
       return sheetData
    }, 
   }
@@ -95,4 +99,24 @@ describe('Server', () => {
       expect(publish).toHaveBeenCalledTimes(1)
     })
   })
+
+  // describe('given a valid json payload in the verifyJsonFormat mutation', () => {
+  //   it('the payload is published', async () => {
+  //     function publish(sheetData){ nc.publish("sheetData", jc.encode(sheetData))}
+  //     const server = new Server({ schema, context:{publish}})
+      
+  //     const response = await request(server)
+  //       .post('/')
+  //       .set('Accept', 'application/json')
+  //       .send({
+  //         query: `mutation {
+  //               verifyJsonFormat(sheetData: "a")
+  //            }`,
+  //         contextValue: {},
+  //       })
+
+  //     expect(response.body).not.toHaveProperty('errors')
+  //     expect(publish).toHaveBeenCalledTimes(1)
+  //   })
+  // })
 })
