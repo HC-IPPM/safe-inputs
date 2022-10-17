@@ -11,7 +11,6 @@ const {
   DB_NAME,
   DB_PASS,
   DB_USER,
-  MAX_COMPLEXITY = 25,
 } = process.env
 
 const sql = postgres({
@@ -22,15 +21,16 @@ const sql = postgres({
   password: DB_PASS,
 })
 
+function publish() {return('test publish')} // Placeholder to be replaced with NATS
+
 process.on('SIGTERM', () => process.exit(0))
 process.on('SIGINT', () => process.exit(0))
 ;(async () => {
   const server = new Server({
     schema,
-    maxComplexity: MAX_COMPLEXITY,
-    context: { sql },
+    context: { sql, publish },
   })
   server.listen({ port: PORT, host: HOST }, () =>
-    console.log(`🚀 Node-demo listening on ${HOST}:${PORT}`),
+    console.log(`🚀 Safe-inputs API listening on ${HOST}:${PORT}`),
   )
 })()

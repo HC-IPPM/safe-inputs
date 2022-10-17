@@ -1,6 +1,6 @@
-# Node Demo
+# Safe Inputs GraphQL API 
 
-A simple API demonstrating some security practices.
+A simple GraphQL API used to verify that data is valid JSON format.
 
 ## Installing dependencies
 
@@ -15,18 +15,21 @@ That's it!
 ```bash
 $ docker run -d --network host -e POSTGRES_USER=bugbounty -e POSTGRES_PASSWORD=test postgres
 $ npm start &
-$ curl -s -H "Content-Type: application/json" -d '{"query":"{bugs {id title}}"}' localhost:3000 | jq .
+$ curl -s -H "Content-Type: application/json" -d '{"query":"{hello}"}' localhost:3000 | jq .
 {
   "data": {
-    "bugs": [
-      {
-        "id": "1",
-        "title": "Reflective XSS found on customer support page"
-      }
-    ]
+    "hello": "world!"
   }
 }
-```
+$ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJsonFormat (sheetData: {a:3})}"}' localhost:3000 | jq .
+{
+  "data": {
+    "verifyJsonFormat": {
+      "a": 3
+    }
+  }
+}
+`
 
 ## Running the tests
 
