@@ -14,12 +14,16 @@
   "author": "Mike Williamson",
   "license": "MIT",
   "dependencies": {
+    "@escape.tech/graphql-armor": "^1.4.0",
+    "@graphql-yoga/node": "^2.13.13",
     "dotenv-safe": "^8.2.0",
     "express": "^4.18.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.3.0",
     "graphql-query-complexity": "^0.11.0",
     "graphql-scalars": "^1.17.0",
+    "graphql-type-json": "^0.3.2",
+    "node-abort-controller": "^3.0.1",
     "postgres": "^3.1.0"
   },
   "devDependencies": {
