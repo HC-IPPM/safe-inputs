@@ -72,12 +72,6 @@ $ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJs
 ```bash
 npm t
 ```
-`
-### Testing NATS messaging
-Open a new window to run 
-```bash
-$ node nats_sub
-```
 Use the API to see that the data matches message. 
 ## Code audits
 
