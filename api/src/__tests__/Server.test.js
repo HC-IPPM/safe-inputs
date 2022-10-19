@@ -3,6 +3,8 @@ import { Server } from '../Server.js'
 import { jest } from '@jest/globals' // support for ESM modules
 import { makeExecutableSchema } from '@graphql-tools/schema'
 
+// ----- TEST SET UP -----
+
 // Construct a schema, using GraphQL schema language
 const typeDefs = /* GraphQL */ `
   scalar JSON
@@ -23,13 +25,15 @@ const resolvers = {
   },
   Mutation:{
     verifyJsonFormat(_parent, { sheetData }, {publish}, _info) {
-      const testContext = console.log(publish()) // This will be replaced with NATS publish function 
+      const test = publish(sheetData);
       return sheetData
    }, 
   }
 }
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+// ----- TESTS -----
 
 describe('Server', () => {
   describe('given a schema and resolver', () => {
@@ -95,4 +99,5 @@ describe('Server', () => {
       expect(publish).toHaveBeenCalledTimes(1)
     })
   })
+
 })
