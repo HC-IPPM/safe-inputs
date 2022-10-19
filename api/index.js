@@ -17,7 +17,8 @@ const jc = JSONCodec();
 // function publish() {return('test publish')} // Placeholder to be replaced with NATS
 
 function publish(payload) {
-  // Publishes payload of json valid spreadsheet data (ie sheetData). Called in GraphQL resolver. 
+  // Publishes payload of json valid spreadsheet data (ie sheetData). Called in GraphQL resolver.
+  // TODO add in metadata 
   nc.publish("sheetData", jc.encode(payload))
   console.log (payload)
 }
