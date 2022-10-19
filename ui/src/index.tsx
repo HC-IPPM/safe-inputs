@@ -15,14 +15,29 @@ import workerInstance from './serviceWorker'
 
 import './index.css'
 
-
 const themeConfig: ThemeConfig = {
   useSystemColorMode: true,
   initialColorMode: 'light',
 }
+
 const theme = extendTheme(
   themeConfig,
   withDefaultColorScheme({ colorScheme: 'blue' }),
+  {
+    styles: {
+      global: {
+        p: {
+          fontSize: { base: '12px', sm: '14px', md: '16px', lg: '16px' }
+        },
+        header: {
+          fontSize: { base: '20px', sm: '24px', md: '30px', lg: '30px' }
+        },       
+        '.menu': {
+          fontSize: { base: '12px', sm: '14px', md: '16px', lg: '16px' },
+        } 
+      }
+    },
+  },
 )
 
 const client = new ApolloClient({
@@ -35,10 +50,10 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <BrowserRouter>
-    <React.StrictMode>
+    <React.StrictMode >
       <ApolloProvider client={client}>
-        <ChakraProvider theme={theme}>
-          <Routes>
+        <ChakraProvider theme={theme} >
+          <Routes >
             <Route path="/" element={<ExcelParsingPage parseWorker={workerInstance} />} />
             <Route path='/secondpage' element={<SecondPage />} />
             <Route path='/thirdpage' element={<ThirdPage />} />

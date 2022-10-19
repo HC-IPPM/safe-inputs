@@ -6,7 +6,7 @@ import { HStack, Box, Image, Link, Button, Flex, Text, Drawer,useDisclosure, Dra
 import { useTranslation } from "react-i18next";
 import { FcMenu } from 'react-icons/fc';
 
-export default function TopHeader2Variant() {
+export default function MenuIdea1Variant() {
 
     const { t, i18n } = useTranslation()
     const LanuageButton = { h: '30px', w: '30px', bg: 'transparent', outline: 'varient', color: 'black', border: '1px', _hover: { color: '#ffffff', bg: '#202020', textDecor: 'underline', borderColor: '#ffffff' } }

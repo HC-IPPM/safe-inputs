@@ -19,7 +19,7 @@ export default function SecondPage() {
             <TopHeader1 />
             <Box className="App-header" mb={2}>{t('secondPage.header')}</Box>
 
-            <VStack>
+            <VStack >
                 <Flex bg='' w='100%' >
                     <Box  {...boxStyle} >{t('secondPage.para1')}</Box>
                 </Flex>
