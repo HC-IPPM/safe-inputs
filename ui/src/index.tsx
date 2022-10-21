@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route, } from "react-router-dom"
 import NavPage from './navPage'
 import ExcelParsingPage from './pages/excelParser'
 import DoesNotExistPage from './pages/noLocationPage'
+import PageFive from './pages/pageFive'
 import PageFour from './pages/pageFour'
 import ThirdPage from './pages/pageThree'
 import SecondPage from './pages/pageTwo'
@@ -64,6 +65,7 @@ root.render(
               <Route path="" element={< ExcelParsingPage parseWorker={workerInstance} />} />
               <Route path="secondpage" element={< SecondPage />} > </Route>
               <Route path='thirdpage' element={< ThirdPage />} > </Route>
+              <Route path='pagefive' element={< PageFive  parseWorker={workerInstance} />} > </Route>
             </Route>
 
             <Route path='/pagefour' element={< PageFour />} > </Route>
