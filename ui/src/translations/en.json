@@ -1,12 +1,42 @@
 {
   "translations": {
+    "doesNotExist": {
+      "message": "Page not found"
+    },
+    "footer": {
+      "aboutCanadaCa": "About Canada.ca",
+      "aboutCanadaCaLink": "https://www.canada.ca/en/government/about.html",
+      "aboutGovernment": "About government",
+      "aboutGovernmentLink": "https://www.canada.ca/en/government/system.html",
+      "contactUs": " Contact us",
+      "contactUsLink": "https://www.canada.ca/en/contact.html",
+      "departmentsAgencies": "Departments and agencies",
+      "departmentsAgenciesLink": "https://www.canada.ca/en/government/dept.html",
+      "governmentReporting": "Government-wide reporting",
+      "governmentReportingLink": "https://www.canada.ca/en/transparency/reporting.html",
+      "mobileApplication": "Mobile application",
+      "mobileApplicationLink": "https://www.canada.ca/en/mobile.html",
+      "news": "News",
+      "newsLink": "https://www.canada.ca/en/news.html",
+      "primeMinister": "Prime Minister",
+      "primeMinisterLink": "https://pm.gc.ca/en",
+      "privacy": "Privacy",
+      "privacyLink": "https://www.canada.ca/en/transparency/privacy.html",
+      "publicServiceMilitary": "Public service and military",
+      "publicServiceMilitaryLink": "https://www.canada.ca/en/government/publicservice.html",
+      "openGovernment": "Open government",
+      "openGovernmentLink": "https://open.canada.ca/en",
+      "socialMedia": "Social media",
+      "socialMediaLink": "https://www.canada.ca/en/social.html",
+      "termsConditions": "Terms and conditions",
+      "termsConditionsLink": "https://www.canada.ca/en/transparency/terms.html",
+      "treatiesLawsRegulations": "Treaties, laws and regulations",
+      "treatiesLawsRegulationsLink": "https://www.canada.ca/en/government/system/laws.html"
+    },
     "menu": {
       "home": "Home",
       "secondPage": "Page Two",
       "thirdPage": "Page Three"
-    },
-    "doesNotExist": {
-      "message": "Page not found"
     },
     "safeInputs": {
       "analyze": "Analyze",

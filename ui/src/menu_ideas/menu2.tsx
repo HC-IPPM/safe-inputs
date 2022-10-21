@@ -2,7 +2,7 @@ import React from "react";
 
 import '../App.css'
 import '../i18n'
-import { HStack, Box, Image, Link, Button, Menu, MenuButton, MenuList, MenuItem, } from "@chakra-ui/react";
+import { HStack, Box, Image, Link, Button, Menu, MenuButton, MenuList, MenuItem, Text, } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FcMenu } from "react-icons/fc";
 
@@ -13,11 +13,11 @@ export default function MenuIdea2() {
     return (
         <>
             <Box  >
-                <HStack justify={'space-around'} h='60px' className="pagebody" >
-                <Box></Box>
+                <HStack justify={'space-between'} h='60px' className="pagebody" >
+                     <Box></Box> {/* used to center the menu/hamburger, image, and translation */}
                     <Box>
                         <Menu>
-                            <MenuButton as={Button} aria-label='Options' bg='transparent' color='gray' _hover={{ bg: 'transparent' }} _expanded={{ bg: 'grey.400' }}>
+                            <MenuButton className='menu' as={Button} aria-label='Options' bg='transparent' color='gray' _hover={{ bg: 'transparent' }} _expanded={{ bg: 'grey.400' }}>
                                 <FcMenu />
                             </MenuButton>
                             <MenuList>
@@ -33,13 +33,15 @@ export default function MenuIdea2() {
                             </MenuList>
                         </Menu>
                     </Box>
-                    <Image src={t('safeInputs.image')} w={{ base: '300px', md: '400px' }} />
-                    <Box fontSize={{ base: '12px', md: '14px' }}  >
+
+                    <Image src={t('safeInputs.image')} w='auto' h='auto' maxW={{ base: '200px', sm: '250px', md: '300px', lg: '350px' }} />
+
+                    <Box  >
                         {i18n.language === 'en' ? (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('fr')}
-                        > Français</Link></>) : (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('en')}
-                        >English</Link> </>)}
+                        > <Text className="translationButton">Français</Text></Link></>) : (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('en')}
+                        ><Text>English</Text></Link> </>)}
                     </Box>
-                    <Box></Box>
+                    <Box></Box>{/* used to center the menu/hamburger, image, and translation */}
                 </HStack>
             </Box>
         </>

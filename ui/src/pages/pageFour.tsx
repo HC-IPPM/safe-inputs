@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/order */
 import React from "react";
 
@@ -8,12 +9,13 @@ import { useTranslation } from "react-i18next";
 
 import MenuIdea1 from "../menu_ideas/menu1";
 import MenuIdea2 from "../menu_ideas/menu2";
-import TopHeader1 from "../topHeader";
+import TopHeader1 from "../menu_footer.tsx/topHeader";
 import MenuIdea3 from "../menu_ideas/menu3";
 import MenuIdea3Variant from "../menu_ideas/menu3Variant";
-import TopHeader2Variant from "../menu_ideas/menu1Variant";
-import Footer from "../menu_ideas/footer";
+import Footer from "../menu_footer.tsx/footer";
 import MenuIdea4 from "../menu_ideas/menu4";
+import MenuIdea1SecondVariant from "../menu_ideas/menu1SecondVariant";
+import MenuIdea1Variant from "../menu_ideas/menu1Variant";
 
 
 
@@ -63,8 +65,13 @@ export default function PageFour() {
             <TestPage />
             <PageBreak />
 
+            <Center bg='gray' color='yellow'>Option 1 - collapsing menu by media size with dropdown menu </Center>
+            <MenuIdea1SecondVariant />
+            <TestPage />
+            <PageBreak />
+
             <Center bg='gray' color='yellow'>Option 1 - menu moved to beside fr/en, hamburger menu</Center>
-            <TopHeader2Variant />
+            <MenuIdea1Variant />
             <TestPage />
             <PageBreak />
 
@@ -74,7 +81,7 @@ export default function PageFour() {
             <TestPage />
             <PageBreak />
 
-            <Center bg='gray' color='yellow'>Option 3 - Drawer menu left </Center>
+            <Center bg='gray' color='yellow'>Option 3 - Drawer menu right </Center>
             <MenuIdea3 />
             <TestPage />
             <PageBreak />
@@ -84,13 +91,12 @@ export default function PageFour() {
             <TestPage />
             <PageBreak />
 
-            {/* <Center bg='gray' color='yellow'>Option 4 - classic style (incomplete) </Center>
+            <Center bg='gray' color='yellow'>Option 4 - classic style (incomplete) </Center>
             <MenuIdea4 />
             <TestPage />
-            <PageBreak />   */}
+            <PageBreak />
 
             <Footer />
-            <br></br>
 
         </>
     )

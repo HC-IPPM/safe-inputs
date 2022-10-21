@@ -1,10 +1,12 @@
 import React from 'react'
 
+import './index.css'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { ChakraProvider, extendTheme, ThemeConfig, withDefaultColorScheme, } from '@chakra-ui/react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, } from "react-router-dom"
 
+import NavPage from './navPage'
 import ExcelParsingPage from './pages/excelParser'
 import DoesNotExistPage from './pages/noLocationPage'
 import PageFour from './pages/pageFour'
@@ -13,7 +15,6 @@ import SecondPage from './pages/pageTwo'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
 
-import './index.css'
 
 const themeConfig: ThemeConfig = {
   useSystemColorMode: true,
@@ -31,10 +32,13 @@ const theme = extendTheme(
         },
         header: {
           fontSize: { base: '20px', sm: '24px', md: '30px', lg: '30px' }
-        },       
+        },
         '.menu': {
-          fontSize: { base: '12px', sm: '14px', md: '16px', lg: '16px' },
-        } 
+          fontSize: { base: '14px', sm: '16px', md: '18px', lg: '18px' }
+        },
+        '.translationButton': {
+          fontSize: { base: '12px', sm: '12px', md: '14px' }
+        }
       }
     },
   },
@@ -46,28 +50,32 @@ const client = new ApolloClient({
 })
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') || document.body,
-)
+  document.getElementById('root') as HTMLElement //|| document.body,
+);
 root.render(
   <BrowserRouter>
     <React.StrictMode >
       <ApolloProvider client={client}>
         <ChakraProvider theme={theme} >
-          <Routes >
-            <Route path="/" element={<ExcelParsingPage parseWorker={workerInstance} />} />
-            <Route path='/secondpage' element={<SecondPage />} />
-            <Route path='/thirdpage' element={<ThirdPage />} />
-            <Route path='/pagefour' element={<PageFour />} />
-            <Route path="*" element={<DoesNotExistPage />} />
+          <Routes>
 
+            {/* All elements inside the <NavPage/> route will have the header and footer added automatically */}
+            <Route path="/" element={< NavPage />} >
+              <Route path="" element={< ExcelParsingPage parseWorker={workerInstance} />} />
+              <Route path="secondpage" element={< SecondPage />} > </Route>
+              <Route path='thirdpage' element={< ThirdPage />} > </Route>
+            </Route>
+
+            <Route path='/pagefour' element={< PageFour />} > </Route>
+            <Route path="*" element={< DoesNotExistPage />} > </Route>
           </Routes>
         </ChakraProvider>
       </ApolloProvider>
     </React.StrictMode >
-  </BrowserRouter>,
-)
+  </BrowserRouter>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
+reportWebVitals();
