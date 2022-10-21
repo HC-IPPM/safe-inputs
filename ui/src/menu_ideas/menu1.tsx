@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../App.css'
 import '../i18n'
-import { HStack, Box, Image, Link, Button, Flex,Center,Text } from "@chakra-ui/react";
+import { HStack, Box, Image, Link, Button, Flex, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 
@@ -14,13 +14,13 @@ export default function MenuIdea1() {
     return (
         <>
             <Box bg='#EEEEEE'>
-                <Flex w='100%' flex={1} justify={'space-between'} className="pagebody" id='pageMarginSetting' padding={'6px 8px'}
+            <Flex w='100%' flex={1} justify={'space-between'} className="pagebody" id='pageMarginSetting' padding={'6px 8px'} align='center'
                     as="header" >
-                    <Center >
-                        <Image src={t('safeInputs.image')} w='200px'/>
-                    </Center>                    
+                    <Box w='100%'   >                        
+                        <Image src={t('safeInputs.image')} w='auto' h='auto' maxW={{ base: '200px', sm: '250px', md: '300px', lg: '350px' }} />
+                    </Box>
                     <Box id='pageMarginSetting' bg='transparent' fontFamily="Noto Sans" >
-                        <HStack gap={3} fontFamily={"Noto Sans"}  >
+                        <HStack w='280px' fontFamily={"Noto Sans"}  >
                             <Box >
                                 <Link href='/' ><Text className='menu'>{t("menu.home")}</Text></Link>
                             </Box><Box >
@@ -37,6 +37,8 @@ export default function MenuIdea1() {
                     </Box>
                 </Flex>
             </Box>
+
+            
         </>
     )
 }

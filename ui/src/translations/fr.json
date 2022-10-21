@@ -1,12 +1,42 @@
 {
   "translations": {
+    "does_not_exist": {
+      "message": "Page non trouvée"
+    },
+    "footer": {
+      "aboutCanadaCa": "À propos de Canada.ca",
+      "aboutCanadaCaLink": "https://www.canada.ca/fr/gouvernement/a-propos.html",
+      "aboutGovernment": "À propos du gouvernement",
+      "aboutGovernmentLink": "https://www.canada.ca/fr/gouvernement/systeme.html",
+      "contactUs": "Contactez-nous",
+      "contactUsLink": "https://www.canada.ca/fr/contact.html",
+      "departmentsAgencies": "Ministères et organismes",
+      "departmentsAgenciesLink": "https://www.canada.ca/fr/gouvernement/min.html",
+      "governmentReporting": "Rapports à l'échelle du gouvernement",
+      "governmentReportingLink": "https://www.canada.ca/fr/transparence/rapports.html",
+      "mobileApplication": "Applications Mobiles",
+      "mobileApplicationLink": "https://www.canada.ca/fr/mobile.html",
+      "news": "Nouvelles",
+      "newsLink": "https://www.canada.ca/fr/nouvelles.html",
+      "privacy": "Confidentialité",
+      "privacyLink": "https://www.canada.ca/fr/transparence/confidentialite.html",
+      "primeMinister": "Premier ministre",
+      "primeMinisterLink": "https://pm.gc.ca/fr",
+      "publicServiceMilitary": "Fonction publique et force militaire",
+      "publicServiceMilitaryLink": "https://www.canada.ca/fr/gouvernement/fonctionpublique.html",
+      "openGovernment": "Gouvernement ouvert",
+      "openGovernmentLink": "https://open.canada.ca/fr",
+      "socialMedia": "Médias sociaux",
+      "socialMediaLink": "https://www.canada.ca/fr/sociaux.html",
+      "termsConditions": "Avis",
+      "termsConditionsLink": "https://www.canada.ca/fr/transparence/avis.html",
+      "treatiesLawsRegulations": "Traités, lois et règlements",
+      "treatiesLawsRegulationsLink": "https://www.canada.ca/fr/gouvernement/systeme/lois.html"
+    },
     "menu": {
       "home": "Accueil",
       "secondPage": "Deuxieme Page",
       "thirdPage": "Troisième Page"
-    },
-    "does_not_exist": {
-      "message": "Page non trouvée"
     },
     "safeInputs": {
       "analyze": "Analyser",

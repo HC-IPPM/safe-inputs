@@ -5,18 +5,14 @@ import '../App.css'
 import { Box, Flex, VStack } from '@chakra-ui/react';
 import { useTranslation } from "react-i18next";
 
-import TopHeader1 from '../topHeader';
 
 export default function SecondPage() {
 
     const { t } = useTranslation()
-
     const boxStyle = { background: 'transparent', className: "pagebody", id: 'pageMarginSetting', width: '100%', justifyContent: 'justify' }
 
-
     return (
-        < >
-            <TopHeader1 />
+        <>
             <Box className="App-header" mb={2}>{t('secondPage.header')}</Box>
 
             <VStack >
@@ -30,7 +26,6 @@ export default function SecondPage() {
                     <Box {...boxStyle} textAlign='right'>{t('secondPage.para3')}</Box>
                 </Flex>
             </VStack>
-
         </>
     )
 }

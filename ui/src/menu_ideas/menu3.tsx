@@ -15,13 +15,13 @@ export default function MenuIdea3() {
         <>
             <Box  >
                 <HStack justify={'space-around'} h='60px' className="pagebody" >
-                    <Box></Box>
+                    <Box></Box> {/* used to center the menu/hamburger, image, and translation */}
                     <Box >
                         <Button colorScheme='teal' onClick={onOpen} as={Button}
                             aria-label='Options'
                             bg='transparent' color='gray'
                             _hover={{ bg: 'transparent' }}
-                            _expanded={{ bg: 'grey.400' }}>                            
+                            _expanded={{ bg: 'grey.400' }} className='menu'>
                             <FcMenu />
                         </Button>
                         <Drawer isOpen={isOpen} placement='right' onClose={onClose} size={'sm'}>
@@ -60,13 +60,15 @@ export default function MenuIdea3() {
                             </DrawerContent>
                         </Drawer>
                     </Box>
-                    <Image src={t('safeInputs.image')} minW={{ base: '300px', md: '400px' }} maxW={'400px'} />
+
+                    <Image src={t('safeInputs.image')} w='auto' h='auto' maxW={{ base: '200px', sm: '250px', md: '300px', lg: '350px' }} />
+
                     <Box fontSize={{ base: '12px', md: '14px' }}  >
                         {i18n.language === 'en' ? (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('fr')}
                         > Français</Link></>) : (<><Link href='' defaultValue={i18n.language} onClick={() => i18n.changeLanguage('en')}
                         >English</Link> </>)}
                     </Box>
-                    <Box></Box>
+                    <Box></Box> {/* used to center the menu/hamburger, image, and translation */}
                 </HStack>
 
             </Box>
