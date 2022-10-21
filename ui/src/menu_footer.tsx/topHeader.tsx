@@ -25,7 +25,7 @@ export default function TopHeader1() {
                             ><Text className="translationButton">English</Text></Link> </>)}
                         </Box>
                     </HStack>
-                    <Box bg='#EEEEEE' >
+                    <Box bg='#e4e2e0' >
                         <Box id='pageMarginSetting' bg='transparent' padding={'6px 8px'} fontFamily="Noto Sans" >
                             <HStack gap={3} fontFamily={"Noto Sans"} fontSize='19px' lineHeight='1.4375' h='40px' color='#0B0C0C'>
                                 <Box >
