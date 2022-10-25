@@ -82,6 +82,7 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   const handleMessages = (msg: any) => {
     if (typeof msg.data === 'object' && msg.data.type === 'ParseEvent') {
       setParserStatus(msg.data)
+      // set parser state here to handle mutation
     }
   }
   useEffect(() => {
@@ -258,6 +259,8 @@ application/vnd.ms-excel,
             </div>
           )}
         </Box>
+
+        
       </div >
     </>
   )
