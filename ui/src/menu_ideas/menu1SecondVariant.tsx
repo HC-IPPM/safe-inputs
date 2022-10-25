@@ -37,7 +37,7 @@ export default function MenuIdea1SecondVariant() {
             <>
                 {windowDimenion.winWidth > 768 ? (
                     <>
-                        <HStack w='280px' justify={'center'} align='center'>
+                        <HStack w='300px' justify={'center'} align='center'>
                             <Box>
                                 {homePage}
                             </Box>
