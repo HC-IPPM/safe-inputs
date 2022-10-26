@@ -74,7 +74,7 @@ root.render(
 
             <Route path="/" element={<>< MenuIdea5 /> <Footer /></>} >
               <Route path='pagefive' element={< PageFive parseWorker={workerInstance} />} > </Route>
-              <Route path='pagesix' element={< PageSix />} > </Route>
+              <Route path='pagesix' element={< PageSix parseWorker={workerInstance} />} > </Route>
               <Route path='/pagefour' element={< PageFour />} > </Route>
               <Route path="*" element={< DoesNotExistPage />} > </Route>
             </Route>
