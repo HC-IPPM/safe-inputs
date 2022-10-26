@@ -21,84 +21,52 @@ import { type } from 'os';
 // import { useQuery } from '@apollo/client'
 // import { SAY_HELLO } from './graphql.js'
 
-const Get_Data = gql`  
-    mutation  verifyJsonFormat($testSheet: JSON!){
-        verifyJsonFormat(sheetData: $testSheet)
-      }
-  `
+// const Get_Data = gql`  
+//     mutation  verifyJsonFormat($testSheet: JSON!){
+//         verifyJsonFormat(sheetData: $testSheet)
+//       }
+//   `
 
 const testSheet = [
-    {
-      "A": "id",
-      "B": "q1",
-      "C": "q2",
-      "D": "q3",
-      "E": "q4",
-      "F": "q5",
-      "G": "q6"
-    },
-    {
-      "A": 124,
-      "B": "r",
-      "C": 1,
-      "D": 67,
-      "E": "a",
-      "F": 3,
-      "G": "free form answer"
-    },
-    {
-      "A": 125,
-      "B": "s",
-      "C": 3,
-      "D": 98,
-      "E": "a",
-      "F": 5,
-      "G": "more text"
-    },
-    {
-      "A": 126,
-      "B": "sdf",
-      "C": 2,
-      "D": 76,
-      "E": "d",
-      "F": 23
-    },
-    {
-      "A": 127,
-      "B": "d",
-      "C": 3,
-      "D": 56,
-      "E": "e",
-      "F": 56,
-      "G": "okay last field"
-    }
-] ;
-
+  {
+    "A": "id", "B": "q1", "C": "q2", "D": "q3", "E": "q4", "F": "q5", "G": "q6"
+  },
+  {
+    "A": 124, "B": "r", "C": 1, "D": 67, "E": "a", "F": 3, "G": "free form answer"
+  },
+];
 
 export default function PageSix() {
-    const [ mutation , { loading, error, data }] = useMutation(Get_Data)
+  // const [mutation, { loading, error, data }] = useMutation(Get_Data)
+  const Get_Hello = gql`{ hello }`
+  const { loading, error, data } = useQuery(Get_Hello)
 
-    useEffect(() => {
-        mutation({ variables: {testSheet}}) 
-    },[mutation]);
+  // useEffect(() => {
+  //   mutation({ variables: { testSheet } })
+  // }, [mutation]);
 
-    return (
-        <>
-            <Box className="App" >
-            <br />
-                <p className="App-header">PAGE SIX </p>
-                <br />
-                <br />
-                
-                {data ? (<> <pre> 
-                    {JSON.stringify(data.verifyJsonFormat, null ,2)}                 
-                    </pre> 
-                    </>) : null}
-                <br />
+  return (
+    <>
+      <Box className="App" >
+        <br />
+        <p className="App-header">PAGE SIX </p>
+        <br />
+        <br />
 
-            </Box >
-        </>
-    )
+        {/* {data ? (<> <pre>
+          {JSON.stringify(data.verifyJsonFormat, null, 2)}
+        </pre>
+        </>) : null} */}
+
+        {data ? (<> <pre>
+          {JSON.stringify(data.hello, null, 2)}
+        </pre>
+        </>) : null}
+        <br />
+
+      </Box >
+    </>
+  )
 }
 
 
