@@ -262,7 +262,7 @@ application/vnd.ms-excel,
   }
 
   const Get_Hello = gql`{ hello }`
-  const { loading, error, data } = useQuery(Get_Hello)
+  const { data } = useQuery(Get_Hello)
   useEffect(() => { 
     console.log(data)
   },[data])

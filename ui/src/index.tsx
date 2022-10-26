@@ -6,10 +6,9 @@ import { ChakraProvider, extendTheme, ThemeConfig, withDefaultColorScheme,} from
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, } from "react-router-dom"
 
-import Footer from './live_menu_footer.tsx/footer'
-import TopHeader1 from './live_menu_footer.tsx/topHeader'
 import MenuIdea5 from './menu_ideas/menu5'
 import ExcelParsingPage from './pages/excelParser'
+import NavPage from './pages/navePage'
 import DoesNotExistPage from './pages/noLocationPage'
 import PageFive from './pages/pageFive'
 import PageFour from './pages/pageFour'
@@ -66,13 +65,13 @@ root.render(
           <Routes>
 
             {/* All elements inside the <NavPage/> route will have the header and footer added automatically */}
-            <Route path="/" element={<>< TopHeader1 /> <Footer /></>} >
+            <Route path="/" element={< NavPage /> } >
               <Route path="" element={< ExcelParsingPage parseWorker={workerInstance} />} />
               <Route path="secondpage" element={< SecondPage />} > </Route>
               <Route path='thirdpage' element={< ThirdPage />} > </Route>
             </Route>
 
-            <Route path="/" element={<>< MenuIdea5 /> <Footer /></>} >
+            <Route path="/" element={< MenuIdea5 /> }>
               <Route path='pagefive' element={< PageFive parseWorker={workerInstance} />} > </Route>
               <Route path='pagesix' element={< PageSix parseWorker={workerInstance} />} > </Route>
               <Route path='/pagefour' element={< PageFour />} > </Route>
