@@ -9,10 +9,9 @@ import { useTranslation } from "react-i18next";
 
 import MenuIdea1 from "../menu_ideas/menu1";
 import MenuIdea2 from "../menu_ideas/menu2";
-import TopHeader1 from "../menu_footer.tsx/topHeader";
+import TopHeader1 from "../live_menu_footer.tsx/topHeader";
 import MenuIdea3 from "../menu_ideas/menu3";
 import MenuIdea3Variant from "../menu_ideas/menu3Variant";
-import Footer from "../menu_footer.tsx/footer";
 import MenuIdea4 from "../menu_ideas/menu4";
 import MenuIdea1SecondVariant from "../menu_ideas/menu1SecondVariant";
 import MenuIdea1Variant from "../menu_ideas/menu1Variant";
@@ -95,8 +94,6 @@ export default function PageFour() {
             <MenuIdea4 />
             <TestPage />
             <PageBreak />
-
-            <Footer />
 
         </>
     )
