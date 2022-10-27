@@ -83,6 +83,7 @@ b) Alternatively use docker NATS [(nats-box)](https://github.com/nats-io/nats-bo
 docker run --rm -it natsio/nats-box:latest
 ```
 2. Subscribe to messages:
+
 a) If trying this out with the nats demo server (no credentials required); before running, change the following in index.js:
 * Use NATS_URL = "demo.nats.io:4222".
 * Comment out "authenticator: credsAuthenticator(new TextEncoder().encode(creds));".
@@ -92,7 +93,7 @@ Then with NATS, subscribe to the 'sheetData' subject:
 ```
 nats sub -s nats://demo.nats.io:4222 “sheetData”
 ```
-Pass data to the API (see previous section) and watch it appear in the PowerShell or terminal. 
+Pass data to the API (see previous section) and watch it appear in the terminal. 
 
 b) If using the ngs server:
 This to come shortly. (As you'll likely need some credentials to subscribe.)
