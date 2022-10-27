@@ -29,7 +29,8 @@ http://localhost:3000/
     "hello": "world!"
   }
 }
-
+```
+```
 mutation {
     verifyJsonFormat(sheetData: {a:3})
   }
@@ -41,8 +42,6 @@ mutation {
     }
   }
 }
-
-
 ```
 
 #### Curl
@@ -75,9 +74,9 @@ npm t
 ## Subscribe to view published data
 1. Run a NATS server:
 
-a) If you have [NATS](https://docs.nats.io/running-a-nats-service/introduction/installation) and the NATS [cli](https://github.com/nats-io/natscli) installed, start the server:
+a) If you have [NATS](https://docs.nats.io/running-a-nats-service/introduction/installation) and the NATS [cli](https://github.com/nats-io/natscli) installed:
 ```
-$nats-server
+$ nats-server
 ```
 b) Alternatively use docker NATS [(nats-box)](https://github.com/nats-io/nats-box):
 ```
