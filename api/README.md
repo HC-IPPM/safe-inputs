@@ -7,7 +7,7 @@ The idea is that the (potentially dangerous) spreadsheet data extracted by the U
 ## Installing dependencies
 
 ```bash
-npm install
+$ npm install
 ```
 
 That's it!
@@ -68,7 +68,7 @@ $ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJs
 ## Running the tests
 
 ```bash
-npm t
+$ npm t
 ```
 
 ## Subscribe to view published data
@@ -80,7 +80,7 @@ $ nats-server
 ```
 b) Alternatively use docker NATS [(nats-box)](https://github.com/nats-io/nats-box):
 ```
-docker run --rm -it natsio/nats-box:latest
+$ docker run --rm -it natsio/nats-box:latest
 ```
 2. Subscribe to messages:
 
@@ -89,16 +89,16 @@ a) If trying this out with the nats demo server (no credentials required); befor
 * Comment out "authenticator: credsAuthenticator(new TextEncoder().encode(creds));".
 * Comment out "const creds = await readFile("./nats.creds", { encoding: 'utf8' });". 
 
-Then with NATS, subscribe to the 'sheetData' subject:
+Then with the NATS, subscribe to the 'sheetData' subject:
 ```
-nats sub -s nats://demo.nats.io:4222 “sheetData”
+$ nats sub -s nats://demo.nats.io:4222 “sheetData”
 ```
-Pass data to the API (see previous section) and watch it appear in the terminal. 
+Pass data to the API (see "Using it" section) and watch it appear in the terminal. 
 
 b) If using the ngs server:
 This to come shortly. (As you'll likely need some credentials to subscribe.)
 ```
-nats sub -s nats://connect.ngs.global:4222 "sheetData" 
+$ nats sub -s nats://connect.ngs.global:4222 "sheetData" 
 ```
 ## Code audits
 
