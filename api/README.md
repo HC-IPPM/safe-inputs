@@ -96,7 +96,23 @@ $ nats sub -s nats://demo.nats.io:4222 “sheetData”
 Pass data to the API (see "Using it" section) and watch it appear in the terminal. 
 
 b) If using the ngs server:
-This to come shortly. (As you'll likely need some credentials to subscribe.)
+** To update soon but...this *should work.
+With [nsc](https://docs.nats.io/using-nats/nats-tools/nsc) (the command line tool to edit congfigurations for NATS.io security) installed, import the sheet_data_service from the account used in this API (See the [nats_references](./nats_references) folder for more information):
+```
+$ nsc add import -i
+? pick from locally available exports No
+? is the export public? Yes
+? src-account public key ACJYDWSYGCUK54ISQPOVFVKY3CHS24O7LZKV64TSFWFOYXTQCUSZJH3E
+? remote subject sheet_data_service
+? is import a service Yes
+? name sheet_data_service
+? local subject sheet_data_service
+```
+Push changes to your nats server.
+```
+$ nsc push -A
+```
+Subscribe to the feed. 
 ```
 $ nats sub -s nats://connect.ngs.global:4222 "sheetData" 
 ```
