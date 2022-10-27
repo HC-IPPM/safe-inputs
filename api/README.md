@@ -97,7 +97,7 @@ Pass data to the API (see "Using it" section) and watch it appear in the termina
 
 b) If using the ngs server:
 ** To update soon but...this *should work.
-With [nsc](https://docs.nats.io/using-nats/nats-tools/nsc) (the command line tool to edit congfigurations for NATS.io security) installed, import the sheet_data_service from the account used in this API (See the [nats_references](./nats_references) folder for more information):
+With [nsc](https://docs.nats.io/using-nats/nats-tools/nsc) (the command line tool to edit congfigurations for NATS.io security) installed, import the sheet_data_service exported from the account used in this API:
 ```
 $ nsc add import -i
 ? pick from locally available exports No
