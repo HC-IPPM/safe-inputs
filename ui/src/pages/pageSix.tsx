@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useMutation } from '@apollo/client';
+import { gql,  useMutation } from '@apollo/client';
 import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, } from '@chakra-ui/react'
 import { useTranslation } from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -115,10 +115,31 @@ export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) 
 
 
   const { t } = useTranslation()
-  function Parser() {
 
-    return (
-      <>
+  const Get_Data = gql`  
+    mutation  verifyJsonFormat($testSheet: JSON!){
+        verifyJsonFormat(sheetData: $testSheet)
+      }
+  `
+  const [mutation, { data }] = useMutation(Get_Data)
+  const testSheet = parserStatus
+
+  useEffect(() => {
+    mutation({ variables: { testSheet } })
+  }, [mutation, testSheet]);
+
+
+  // const Get_Hello = gql`{ 
+  //   hello 
+
+  // }`
+
+
+
+  return (
+    <>
+      <Box className="App" >
+        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
         <Box className="pageMarginSetting" id='pageMarginSetting' mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
@@ -253,47 +274,22 @@ application/vnd.ms-excel,
                     </pre>
                   </DeferredRender>
                 )} </Box> </>) : (<></>)}
+                {/* THis is the json parser full data */}
+                
+                  <Box h='600px' overflowY={'auto'}>
+                    {data ? (<>
+                      {/*  Add comment tags on line below to remove data from screen. Remove comment tags on line below to see data on the screen */}
+                      <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> 
+                    </>) : (<></>)}
+                  </Box>              
               </Box>
             )
           }
         </Box>
-      </>
-    )
-  }
-
-  const Get_Hello = gql`{ hello }`
-  const { data } = useQuery(Get_Hello)
-  useEffect(() => { 
-    console.log(data)
-  },[data])
-
-  return (
-    <>
-      <Box className="App" >
-
-        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
-
-        <Parser />
-
-        <>
-
-          <Box>
-            
-            
-          {data ? (<> <pre>
-          {JSON.stringify(data.hello, null, 2)} 
-        </pre>
-        </>) : null}
-        <br />
-
-          </Box>
-
-        </>
       </Box >
     </>
   )
 }
-
 
 
 
