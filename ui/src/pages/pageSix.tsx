@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { gql, useQuery, useMutation } from '@apollo/client';
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, Wrap, WrapItem, } from '@chakra-ui/react'
+import { gql,  useMutation } from '@apollo/client';
+import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, } from '@chakra-ui/react'
 import { useTranslation } from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
@@ -126,7 +126,7 @@ export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) 
 
   useEffect(() => {
     mutation({ variables: { testSheet } })
-  }, []);
+  }, [mutation, testSheet]);
 
 
   // const Get_Hello = gql`{ 
@@ -274,20 +274,18 @@ application/vnd.ms-excel,
                     </pre>
                   </DeferredRender>
                 )} </Box> </>) : (<></>)}
+                {/* THis is the json parser full data */}
+                
+                  <Box h='600px' overflowY={'auto'}>
+                    {data ? (<>
+                      {/*  Add comment tags on line below to remove data from screen. Remove comment tags on line below to see data on the screen */}
+                      <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> 
+                    </>) : (<></>)}
+                  </Box>              
               </Box>
             )
           }
-          
-            {data ? (<> <pre>
-               {JSON.stringify(data.verifyJsonFormat, null, 2)} 
-            </pre> </>) : null}
-            
-            </Box>
-       
-        <>
-          <Box>    
-          </Box>
-        </>
+        </Box>
       </Box >
     </>
   )
