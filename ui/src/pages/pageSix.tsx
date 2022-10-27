@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
 import { gql, useQuery, useMutation } from '@apollo/client';
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, } from '@chakra-ui/react'
+import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, Wrap, WrapItem, } from '@chakra-ui/react'
 import { useTranslation } from "react-i18next";
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
@@ -115,10 +115,31 @@ export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) 
 
 
   const { t } = useTranslation()
-  function Parser() {
 
-    return (
-      <>
+  const Get_Data = gql`  
+    mutation  verifyJsonFormat($testSheet: JSON!){
+        verifyJsonFormat(sheetData: $testSheet)
+      }
+  `
+  const [mutation, { data }] = useMutation(Get_Data)
+  const testSheet = parserStatus
+
+  useEffect(() => {
+    mutation({ variables: { testSheet } })
+  }, []);
+
+
+  // const Get_Hello = gql`{ 
+  //   hello 
+
+  // }`
+
+
+
+  return (
+    <>
+      <Box className="App" >
+        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
         <Box className="pageMarginSetting" id='pageMarginSetting' mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
@@ -256,38 +277,16 @@ application/vnd.ms-excel,
               </Box>
             )
           }
-        </Box>
-      </>
-    )
-  }
-
-  const Get_Hello = gql`{ hello }`
-  const { data } = useQuery(Get_Hello)
-  useEffect(() => { 
-    console.log(data)
-  },[data])
-
-  return (
-    <>
-      <Box className="App" >
-
-        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
-
-        <Parser />
-
+          
+            {data ? (<> <pre>
+               {JSON.stringify(data.verifyJsonFormat, null, 2)} 
+            </pre> </>) : null}
+            
+            </Box>
+       
         <>
-
-          <Box>
-            
-            
-          {data ? (<> <pre>
-          {JSON.stringify(data.hello, null, 2)} 
-        </pre>
-        </>) : null}
-        <br />
-
+          <Box>    
           </Box>
-
         </>
       </Box >
     </>
