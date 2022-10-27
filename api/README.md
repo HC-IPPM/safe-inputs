@@ -53,9 +53,9 @@ $ curl -s -H "Content-Type: application/json" -d '{"query":"{hello}"}' localhost
     "hello": "world!"
   }
 }
+```
 
-or 
-
+```
 $ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJsonFormat (sheetData: {a:3})}"}' localhost:3000 | jq .
 {
   "data": {
@@ -72,22 +72,30 @@ $ curl -s -H "Content-Type: application/json" -d '{"query": "mutation { verifyJs
 npm t
 ```
 
-## Subscribe to and view published data
-Run docker NATS [(nats-box)](https://github.com/nats-io/nats-box):
+## Subscribe to view published data
+1. Run a NATS server:
+
+a) If you have [NATS](https://docs.nats.io/running-a-nats-service/introduction/installation) and the NATS [cli](https://github.com/nats-io/natscli) installed, start the server:
+```
+$nats-server
+```
+b) Alternatively use docker NATS [(nats-box)](https://github.com/nats-io/nats-box):
 ```
 docker run --rm -it natsio/nats-box:latest
 ```
-### If trying this out with the nats demo server (with no credentials required), before running:
-* Use NATS_URL = "demo.nats.io:4222" in index.js.
-* Comment out "authenticator: credsAuthenticator(new TextEncoder().encode(creds));" in index.js.
-* Comment out "const creds = await readFile("./nats.creds", { encoding: 'utf8' });" in index.js. 
+2. Subscribe to messages:
+a) If trying this out with the nats demo server (no credentials required); before running, change the following in index.js:
+* Use NATS_URL = "demo.nats.io:4222".
+* Comment out "authenticator: credsAuthenticator(new TextEncoder().encode(creds));".
+* Comment out "const creds = await readFile("./nats.creds", { encoding: 'utf8' });". 
+
 Then with NATS, subscribe to the 'sheetData' subject:
 ```
 nats sub -s nats://demo.nats.io:4222 “sheetData”
 ```
 Pass data to the API (see previous section) and watch it appear in the PowerShell or terminal. 
 
-### If using the ngs server:
+b) If using the ngs server:
 This to come shortly. (As you'll likely need some credentials to subscribe.)
 ```
 nats sub -s nats://connect.ngs.global:4222 "sheetData" 
