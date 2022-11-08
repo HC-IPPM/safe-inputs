@@ -11,12 +11,6 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  - name: node:18-alpine
-    id: build-production-bundle
-    dir: ui
-    entrypoint: npm
-    args: ['run', 'build']
-
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
