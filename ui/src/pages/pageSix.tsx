@@ -1,8 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { gql,  useMutation } from '@apollo/client';
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, InputRightElement, } from '@chakra-ui/react'
-import { useTranslation } from "react-i18next";
+import { gql, useMutation } from '@apollo/client'
+import {
+  Box,
+  Button,
+  Input,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  FormErrorMessage,
+  Icon,
+  Spinner,
+  Table,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Switch,
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+  InputLeftElement,
+  InputRightElement,
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
@@ -11,7 +34,6 @@ import { ParseEvent } from '../worker'
 import '../App.css'
 // import { useQuery } from '@apollo/client'
 // import { SAY_HELLO } from './graphql.js'
-
 
 function DeferredRender({
   children,
@@ -44,7 +66,6 @@ const dateToStr = (d: Date | undefined) => {
   )}`
 }
 
-
 const getColVal = (properties: FullProperties, prop: keyof FullProperties) => {
   const d = properties[prop]
   if (prop === 'LastPrinted' && d && typeof d === 'string')
@@ -68,7 +89,11 @@ const col = (
   )
 }
 
-export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) {
+export default function PageFive({
+  parseWorker,
+}: {
+  parseWorker: ParseWorker
+}) {
   // const { loading, error, data } = useQuery(SAY_HELLO)
 
   // if (loading) return <p>Loading...</p>
@@ -94,8 +119,8 @@ export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) 
   }, [parseWorker])
 
   const onFileChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setParserStatus(undefined);
-    setPreview(false);
+    setParserStatus(undefined)
+    setPreview(false)
     if (e.target.files && e.target.files.length === 1) {
       setFile(e.target.files[0])
       setFilename(e.target.files[0].name)
@@ -113,34 +138,32 @@ export default function PageFive({ parseWorker }: { parseWorker: ParseWorker }) 
       parserStatus.workbook.Props) ||
     undefined
 
-
   const { t } = useTranslation()
 
-  const Get_Data = gql`  
-    mutation  verifyJsonFormat($testSheet: JSON!){
-        verifyJsonFormat(sheetData: $testSheet)
-      }
+  const Get_Data = gql`
+    mutation verifyJsonFormat($testSheet: JSON!) {
+      verifyJsonFormat(sheetData: $testSheet)
+    }
   `
   const [mutation, { data }] = useMutation(Get_Data)
   const testSheet = parserStatus
 
   useEffect(() => {
     mutation({ variables: { testSheet } })
-  }, [mutation, testSheet]);
+  }, [mutation, testSheet])
 
-
-  // const Get_Hello = gql`{ 
-  //   hello 
+  // const Get_Hello = gql`{
+  //   hello
 
   // }`
 
-
-
   return (
     <>
-      <Box className="App" >
-        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
-        <Box className="pageMarginSetting" id='pageMarginSetting' mt={8}>
+      <Box className="App">
+        <Box className="App-header" mb={2}>
+          Safe inputs PoC
+        </Box>
+        <Box className="pageMarginSetting" id="pageMarginSetting" mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -166,13 +189,20 @@ application/vnd.ms-excel,
               />
               <Input
                 placeholder={t('safeInputs.inputBar')}
-                onClick={() => inFile && inFile.current && inFile.current.click()}
+                onClick={() =>
+                  inFile && inFile.current && inFile.current.click()
+                }
                 readOnly
                 value={filename}
               />
-              <InputRightElement w='auto'>
+              <InputRightElement w="auto">
                 <Button
-                  disabled={file === null || (parserStatus && parserStatus.state === 'LOADING')} onClick={() => file && parseWorker.parse(file)}>
+                  disabled={
+                    file === null ||
+                    (parserStatus && parserStatus.state === 'LOADING')
+                  }
+                  onClick={() => file && parseWorker.parse(file)}
+                >
                   {t('safeInputs.analyze')}
                 </Button>
               </InputRightElement>
@@ -182,114 +212,145 @@ application/vnd.ms-excel,
           <br />
 
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
-          {parserStatus && parserStatus.state === 'DONE' && p &&
-            (
-              <Box>
-                <Accordion allowToggle defaultIndex={[0]} fontFamily="Noto Sans" fontSize={'16'} color="#333">
-                  <AccordionItem>
-                    {({ isExpanded }) => (
-                      <>
-                        <h2>
-                          <AccordionButton>
-                            {isExpanded ? (<><Box flex='1' textAlign='left'>{t("safeInputs.showLess")}</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{t("safeInputs.showMore")}</Box> <FcPlus fontSize='12px' /></>)}
-                          </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4} >
-                          <TableContainer>
-                            <Table variant="simple">
-                              <TableCaption>{t("safeInputs.fileProps")} </TableCaption>
-                              <Tr>
-                                {col(p, 'Application')}
-                                {col(p, 'SheetNames')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'AppVersion')}
-                                {col(p, 'ContentStatus')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'Title')}
-                                {col(p, 'Subject')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'Author')}
-                                {col(p, 'Manager')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'Company')}
-                                {col(p, 'Category')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'Keywords')}
-                                {col(p, 'Comments')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'LastAuthor')}
-                                {col(p, 'CreatedDate')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'DocSecurity')}
-                                {col(p, 'Identifier')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'SharedDoc')}
-                                {col(p, 'Language')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'HyperlinksChanged')}
-                                {col(p, 'Version')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'LinksUpToDate')}
-                                {col(p, 'Revision')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'ScaleCrop')}
-                                {col(p, 'LastPrinted')}
-                              </Tr>
-                              <Tr>
-                                {col(p, 'Worksheets')}
-                                {col(p, 'ModifiedDate')}
-                              </Tr>
-                            </Table>
-                          </TableContainer>
-                        </AccordionPanel>
-                      </>
-                    )}
-                  </AccordionItem>
-                </Accordion>
-                <FormControl display="flex" alignItems="center">
-                  <FormLabel htmlFor="show-preview" mb="0">
-                    {t("safeInputs.preview")}
-                  </FormLabel>
-                  <Switch
-                    id="show-preview"
-                    isChecked={preview}
-                    onChange={(e) => setPreview(e.target.checked)}
-                  />
-                </FormControl>
-                {preview === true ? (<> <Box h='500px' overflowY={'auto'} bg='red'> {preview && (
-                  <DeferredRender idleTimeout={1000}>
-                    <pre className="docPreview">
-                      {JSON.stringify(parserStatus.sheets, null, 2)}
-                    </pre>
-                  </DeferredRender>
-                )} </Box> </>) : (<></>)}
-                {/* THis is the json parser full data */}
-                
-                  <Box h='600px' overflowY={'auto'}>
-                    {data ? (<>
-                      {/*  Add comment tags on line below to remove data from screen. Remove comment tags on line below to see data on the screen */}
-                      <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> 
-                    </>) : (<></>)}
-                  </Box>              
+          {parserStatus && parserStatus.state === 'DONE' && p && (
+            <Box>
+              <Accordion
+                allowToggle
+                defaultIndex={[0]}
+                fontFamily="Noto Sans"
+                fontSize={'16'}
+                color="#333"
+              >
+                <AccordionItem>
+                  {({ isExpanded }) => (
+                    <>
+                      <h2>
+                        <AccordionButton>
+                          {isExpanded ? (
+                            <>
+                              <Box flex="1" textAlign="left">
+                                {t('safeInputs.showLess')}
+                              </Box>{' '}
+                              <FcMinus fontSize="12px" />
+                            </>
+                          ) : (
+                            <>
+                              <Box flex="1" textAlign="left">
+                                {t('safeInputs.showMore')}
+                              </Box>{' '}
+                              <FcPlus fontSize="12px" />
+                            </>
+                          )}
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        <TableContainer>
+                          <Table variant="simple">
+                            <TableCaption>
+                              {t('safeInputs.fileProps')}{' '}
+                            </TableCaption>
+                            <Tr>
+                              {col(p, 'Application')}
+                              {col(p, 'SheetNames')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'AppVersion')}
+                              {col(p, 'ContentStatus')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'Title')}
+                              {col(p, 'Subject')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'Author')}
+                              {col(p, 'Manager')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'Company')}
+                              {col(p, 'Category')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'Keywords')}
+                              {col(p, 'Comments')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'LastAuthor')}
+                              {col(p, 'CreatedDate')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'DocSecurity')}
+                              {col(p, 'Identifier')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'SharedDoc')}
+                              {col(p, 'Language')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'HyperlinksChanged')}
+                              {col(p, 'Version')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'LinksUpToDate')}
+                              {col(p, 'Revision')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'ScaleCrop')}
+                              {col(p, 'LastPrinted')}
+                            </Tr>
+                            <Tr>
+                              {col(p, 'Worksheets')}
+                              {col(p, 'ModifiedDate')}
+                            </Tr>
+                          </Table>
+                        </TableContainer>
+                      </AccordionPanel>
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="show-preview" mb="0">
+                  {t('safeInputs.preview')}
+                </FormLabel>
+                <Switch
+                  id="show-preview"
+                  isChecked={preview}
+                  onChange={(e) => setPreview(e.target.checked)}
+                />
+              </FormControl>
+              {preview === true ? (
+                <>
+                  {' '}
+                  <Box h="500px" overflowY={'auto'} bg="red">
+                    {' '}
+                    {preview && (
+                      <DeferredRender idleTimeout={1000}>
+                        <pre className="docPreview">
+                          {JSON.stringify(parserStatus.sheets, null, 2)}
+                        </pre>
+                      </DeferredRender>
+                    )}{' '}
+                  </Box>{' '}
+                </>
+              ) : (
+                <></>
+              )}
+              {/* THis is the json parser full data */}
+
+              <Box h="600px" overflowY={'auto'}>
+                {data ? (
+                  <>
+                    {/*  Add comment tags on line below to remove data from screen. Remove comment tags on line below to see data on the screen */}
+                    <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Box>
-            )
-          }
+            </Box>
+          )}
         </Box>
-      </Box >
+      </Box>
     </>
   )
 }
-
-
-

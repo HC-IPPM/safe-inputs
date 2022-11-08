@@ -17,7 +17,7 @@ export default function MenuIdea1() {
             <Flex w='100%' flex={1} justify={'space-between'} className="pagebody" id='pageMarginSetting' padding={'6px 8px'} align='center'
                     as="header" >
                     <Box w='100%'   >                        
-                        <Image src={t('safeInputs.image')} w='auto' h='auto' maxW={{ base: '200px', sm: '250px', md: '300px', lg: '350px' }} />
+                        <Image src={t('safeInputs.image')} w='auto' h='auto' maxW={{ base: '200px', sm: '250px', md: '300px', lg: '350px' }} minW={'200px'} />
                     </Box>
                     <Box id='pageMarginSetting' bg='transparent' fontFamily="Noto Sans" >
                         <HStack w='280px' fontFamily={"Noto Sans"}  >
