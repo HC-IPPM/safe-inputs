@@ -45,11 +45,12 @@ export default function TopHeader() {
     margin: '2',
     bg: 'transparent',
     outline: 'varient',
-    color: 'black',
+    color: '#213045',
     border: '1px',
+    borderColor: '#213045',
     _hover: {
       color: '#ffffff',
-      bg: '#202020',
+      bg: '#213045',
       textDecor: 'underline',
       borderColor: '#ffffff',
     },
@@ -191,7 +192,7 @@ export default function TopHeader() {
               minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
             />
           </Box>
-          <Box id="pageMarginSetting" >
+          <Box id="pageMarginSetting">
             {/* MenuContent function above on line 112 */}
             <MenuContent />
           </Box>
