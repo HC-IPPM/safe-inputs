@@ -29,19 +29,15 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: ingress
+  name: istio
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./ingress
+  path: ./istio
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
-  healthChecks:
-  - kind: Deployment
-    name: asm-ingressgateway
-    namespace: istio-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
@@ -74,3 +70,17 @@ spec:
   timeout: 2m0s
   dependsOn:
     - name: ingress
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: certmanager
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./certmanager
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 2m0s
