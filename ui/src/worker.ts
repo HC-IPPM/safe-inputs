@@ -20,7 +20,7 @@ export const parse = async (file: File) => {
   } else postMessage('ERROR!')
 }
 
-export type SheetData = { sheetName: string; data: any };
+export type SheetData = { sheetName: string; data: any }
 
 interface ParseEventLoadingState {
   state: 'LOADING'

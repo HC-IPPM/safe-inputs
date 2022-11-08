@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 
 
 export default function Footer() {
-    const UpperLinkStyle = { color: 'white', _hover: { color: '#0089c7', textDecoration: 'underline' } }
-    const LowerLinkStyle = { color: '#0089c7', _hover: { color: 'purple', textDecoration: 'underline' } }
+    const UpperLinkStyle = { color: '#ffffff', _hover: { color: '#0089c7', textDecoration: 'underline' } }
+    const LowerLinkStyle = { color: '#00587f', _hover: { color: 'purple', textDecoration: 'underline' } }
     const { t } = useTranslation()
 
     return (
         <>
-            <Box bg="#444444" mt={12} >
+            <Box bg="#333333" mt={12} >
                 <Wrap id='pageMarginSetting' justify='space-between' align='center' p='2px 2px' pt={2} pb={2}>
                     <WrapItem >
                         <Stack >
@@ -38,7 +38,7 @@ export default function Footer() {
                     </WrapItem>
                 </Wrap>
             </Box>
-            <Box bg='white' pt={2} pb={2}>
+            <Box bg='#ffffff' pt={2} pb={2}>
                 <Wrap id='pageMarginSetting' justify='space-evenly' align='center' pb={3}>
                     <WrapItem>
                         <Center >
