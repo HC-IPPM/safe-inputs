@@ -3,4 +3,4 @@ import worker from 'workerize-loader!./worker'
 
 const workerInstance = worker()
 
-export default workerInstance;
+export default workerInstance

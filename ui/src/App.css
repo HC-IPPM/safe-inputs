@@ -37,19 +37,19 @@ pre.docPreview {
     max-width: calc((100%) - (2%));
   }
 }
-@media only screen and (min-width:468px) and (max-width: 767px) {
+@media only screen and (min-width: 468px) and (max-width: 767px) {
   #pageMarginSetting {
     margin-left: 5%;
     max-width: calc((100%) - (10%));
   }
 }
-@media screen and (min-width: 768px) and (max-width:991px) {
+@media screen and (min-width: 768px) and (max-width: 991px) {
   #pageMarginSetting {
     margin-left: 10%;
     max-width: calc((100%) - (20%));
   }
 }
-@media screen and (min-width: 992px)  {
+@media screen and (min-width: 992px) {
   #pageMarginSetting {
     margin-left: 20%;
     max-width: calc((100%) - (40%));
@@ -58,11 +58,9 @@ pre.docPreview {
 
 .pagebody {
   padding: 6px 8px;
-  font-family: "Noto Sans", sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   line-height: 1.4375;
   color: #213045;
   text-align: justify;
   align-items: justify;
 }
-
-

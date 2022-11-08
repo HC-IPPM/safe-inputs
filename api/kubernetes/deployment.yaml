@@ -22,7 +22,6 @@ spec:
         envFrom:
           secretRef:
             name: nats-jwt-secret
-          
         securityContext:
           # No new privs for process or it's children
           # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md

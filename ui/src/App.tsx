@@ -1,16 +1,39 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { Box, Button, Input, FormControl, FormLabel, InputGroup, FormErrorMessage, Icon, Spinner, Table, Tr, Th, Td, TableCaption, TableContainer, Switch, Accordion, AccordionButton, AccordionItem, AccordionPanel, InputLeftElement, } from '@chakra-ui/react'
-import { useTranslation } from "react-i18next";
+import { ChevronUpIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  Button,
+  Input,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  FormErrorMessage,
+  Icon,
+  Spinner,
+  Table,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Switch,
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+  InputLeftElement,
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
 
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
+
 import './App.css'
 // import { useQuery } from '@apollo/client'
 // import { SAY_HELLO } from './graphql.js'
-
 
 function DeferredRender({
   children,
@@ -42,7 +65,6 @@ const dateToStr = (d: Date | undefined) => {
     navigator.language,
   )}`
 }
-
 
 const getColVal = (properties: FullProperties, prop: keyof FullProperties) => {
   const d = properties[prop]
@@ -94,8 +116,8 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   }, [parseWorker])
 
   const onFileChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setParserStatus(undefined);
-    setPreview(false);
+    setParserStatus(undefined)
+    setPreview(false)
     if (e.target.files && e.target.files.length === 1) {
       setFile(e.target.files[0])
       setFilename(e.target.files[0].name)
@@ -113,16 +135,16 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
       parserStatus.workbook.Props) ||
     undefined
 
-
   const { t } = useTranslation()
 
   return (
     <>
-      <div className="App" >
+      <div className="App">
+        <Box className="App-header" mb={2}>
+          Safe inputs PoC
+        </Box>
 
-        <Box className="App-header" mb={2}>Safe inputs PoC</Box>
-
-        <Box className="pageMarginSetting" id='pageMarginSetting' mt={8}>
+        <Box className="pageMarginSetting" id="pageMarginSetting" mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -148,12 +170,12 @@ application/vnd.ms-excel,
               />
               <Input
                 placeholder={t('safeInputs.inputBar')}
-                onClick={() => inFile && inFile.current && inFile.current.click()}
+                onClick={() =>
+                  inFile && inFile.current && inFile.current.click()
+                }
                 readOnly
                 value={filename}
               />
-
-
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>
           </FormControl>
@@ -161,25 +183,52 @@ application/vnd.ms-excel,
           <br />
           <br />
           <Button
-            disabled={file === null || (parserStatus && parserStatus.state === 'LOADING')} onClick={() => file && parseWorker.parse(file)}>
+            disabled={
+              file === null ||
+              (parserStatus && parserStatus.state === 'LOADING')
+            }
+            onClick={() => file && parseWorker.parse(file)}
+          >
             {t('safeInputs.analyze')}
           </Button>
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
             <div>
-              <Accordion allowToggle defaultIndex={[0]} fontFamily="Noto Sans" fontSize={'16'} color="#333">
+              <Accordion
+                allowToggle
+                defaultIndex={[0]}
+                fontFamily="Noto Sans"
+                fontSize={'16'}
+                color="#333"
+              >
                 <AccordionItem>
                   {({ isExpanded }) => (
                     <>
                       <h2>
                         <AccordionButton>
-                          {isExpanded ? (<><Box flex='1' textAlign='left'>{t("safeInputs.showLess")}</Box> <FcMinus fontSize='12px' /></>) : (<><Box flex='1' textAlign='left'>{t("safeInputs.showMore")}</Box> <FcPlus fontSize='12px' /></>)}
+                          {isExpanded ? (
+                            <>
+                              <Box flex="1" textAlign="left">
+                                {t('safeInputs.showLess')}
+                              </Box>{' '}
+                              <FcMinus fontSize="12px" />
+                            </>
+                          ) : (
+                            <>
+                              <Box flex="1" textAlign="left">
+                                {t('safeInputs.showMore')}
+                              </Box>{' '}
+                              <FcPlus fontSize="12px" />
+                            </>
+                          )}
                         </AccordionButton>
                       </h2>
-                      <AccordionPanel pb={4} >
+                      <AccordionPanel pb={4}>
                         <TableContainer>
                           <Table variant="simple">
-                            <TableCaption>{t("safeInputs.fileProps")} </TableCaption>
+                            <TableCaption>
+                              {t('safeInputs.fileProps')}{' '}
+                            </TableCaption>
                             <Tr>
                               {col(p, 'Application')}
                               {col(p, 'SheetNames')}
@@ -241,7 +290,7 @@ application/vnd.ms-excel,
               </Accordion>
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="show-preview" mb="0">
-                  {t("safeInputs.preview")}
+                  {t('safeInputs.preview')}
                 </FormLabel>
                 <Switch
                   id="show-preview"
@@ -256,16 +305,27 @@ application/vnd.ms-excel,
                   </pre>
                 </DeferredRender>
               )}
+              <Button
+                position="fixed"
+                padding="1px 2px"
+                fontSize="20px"
+                bottom="10px"
+                left="90px"
+                backgroundColor="#284162"
+                color="#fff"
+                textAlign="center"
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                }}
+              >
+                <ChevronUpIcon />{' '}
+              </Button>
             </div>
           )}
         </Box>
-
-        
-      </div >
+      </div>
     </>
   )
 }
 
 export default App
-
-
