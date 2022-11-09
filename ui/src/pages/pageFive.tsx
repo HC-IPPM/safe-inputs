@@ -179,15 +179,26 @@ application/vnd.ms-excel,
                 value={filename}
               />
               <InputRightElement w="auto">
+              {file === null ? (                       
                 <Button
-                  disabled={
-                    file === null ||
-                    (parserStatus && parserStatus.state === 'LOADING')
-                  }
-                  onClick={() => file && parseWorker.parse(file)}
+                  isDisabled
+                  color="#FFFFFF"
+                  bg="#000000"
+                  _hover={{ bg: '#00000099' }}
+                  as="button"
                 >
-                  {t('safeInputs.analyze')}
+                  {t('safeInputs.upload')}
                 </Button>
+          ) : (
+            <Button
+              bg="#3182ce"
+              color="#FFFFFF"
+              _hover={{ bg: '#3182ce' }}
+              onClick={() => file && parseWorker.parse(file)}
+            >
+              {t('safeInputs.upload')}
+            </Button>
+          )}
               </InputRightElement>
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>

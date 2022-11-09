@@ -45,6 +45,7 @@ const theme = extendTheme(
           fontSize: {base: '18px', sm: '15px', md: '17px', lg: '17px', xl: '18px',
           },
           fontFamily: 'sans-serif',
+          color:'#333333'
         },
         '.translationButton': {
           fontSize: { base: '12px', sm: '12px', md: '14px' },

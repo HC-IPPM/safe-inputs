@@ -23,6 +23,7 @@ import {
   AccordionItem,
   AccordionPanel,
   InputLeftElement,
+  Tooltip,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -179,18 +180,33 @@ application/vnd.ms-excel,
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>
           </FormControl>
-
           <br />
-          <br />
-          <Button
-            disabled={
-              file === null ||
-              (parserStatus && parserStatus.state === 'LOADING')
-            }
-            onClick={() => file && parseWorker.parse(file)}
-          >
-            {t('safeInputs.analyze')}
-          </Button>
+          {file === null ? (
+            <Tooltip
+              hasArrow
+              label={t('safeInputs.inputBar')}
+              aria-label="A tooltip"
+            >
+              <Button
+                cursor={'not-allowed'}
+                color="#FFFFFF"
+                bg="#3232FF"
+                _hover={{ bg: '#1616FF99' }}
+                as="button"
+              >
+                {t('safeInputs.upload')}
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button
+              bg="#3232FF"
+              color="#FFFFFF"
+              _hover={{ bg: '#0000DD' }}
+              onClick={() => file && parseWorker.parse(file)}
+            >
+              {t('safeInputs.upload')}
+            </Button>
+          )}
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
             <div>

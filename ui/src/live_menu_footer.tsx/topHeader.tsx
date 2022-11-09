@@ -45,14 +45,14 @@ export default function TopHeader() {
     margin: '2',
     bg: 'transparent',
     outline: 'varient',
-    color: '#213045',
+    color: '#333333',
     border: '1px',
-    borderColor: '#213045',
+    borderColor: '#333333',
     _hover: {
-      color: '#ffffff',
-      bg: '#213045',
+      color: '#FFFFFF',
+      bg: '#26374A',
       textDecor: 'underline',
-      borderColor: '#ffffff',
+      borderColor: '#FFFFFF',
     },
   }
 
@@ -81,27 +81,25 @@ export default function TopHeader() {
       <>
         {i18n.language === 'en' ? (
           <>
-            <Link
-              href=""
+            <Button
+              {...LanguageButtonStyle}
               defaultValue={i18n.language}
               onClick={() => i18n.changeLanguage('fr')}
+              as="button"
             >
-              <Button {...LanguageButtonStyle}>
-                <Text>Fr</Text>
-              </Button>
-            </Link>
+              <Text>Fr</Text>
+            </Button>
           </>
         ) : (
           <>
-            <Link
-              href=""
+            <Button
+              {...LanguageButtonStyle}
               defaultValue={i18n.language}
               onClick={() => i18n.changeLanguage('en')}
+              as="button"
             >
-              <Button {...LanguageButtonStyle}>
-                <Text>En</Text>
-              </Button>
-            </Link>
+              <Text>En</Text>
+            </Button>
           </>
         )}
       </>
@@ -117,8 +115,8 @@ export default function TopHeader() {
           <>
             <HStack
               w="325px"
-              h="auto"
-              justify={'center'}
+              h="52px"
+              justify={'end'}
               align="center"
               textAlign={'center'}
             >
@@ -172,14 +170,14 @@ export default function TopHeader() {
   }
   return (
     <>
-      <Box bg="#EEEEEE">
+      <Box bg="#EEEEEE"
+      role={''}>
         <Flex
           w="100%"
           flex={1}
           justify={'space-between'}
           className="pagebody"
           id="pageMarginSetting"
-          padding={'6px 8px'}
           align="center"
           as="header"
         >
@@ -190,6 +188,7 @@ export default function TopHeader() {
               h="auto"
               maxW={{ base: '200px', sm: '250px', md: '315px', lg: '350px' }}
               minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
+              alt={t('safeInputs.imageAlt')}
             />
           </Box>
           <Box id="pageMarginSetting">
