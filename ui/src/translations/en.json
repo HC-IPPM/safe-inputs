@@ -42,10 +42,12 @@
       "analyze": "Analyze",
       "fileProps": "File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
+      "imageAlt":"Government of Canada",
       "inputBar": "Choose a spreadsheet to analyze",
       "preview": "Preview",
       "showLess": "Show Less",
-      "showMore": "Show More"
+      "showMore": "Show More",
+      "upload": "Upload"
     },
     "secondPage": {
       "header": "Second Page Header",
