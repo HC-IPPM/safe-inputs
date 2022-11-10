@@ -25,10 +25,9 @@ const nc = await connect({
 const jc = JSONCodec();
 
 function publish(payload) {
-  // Publishes payload of json valid spreadsheet data. Called in GraphQL resolver.
-  // TODO add in metadata 
+  // Publishes payload of json valid spreadsheet data via NATS. Called in GraphQL resolver.
   nc.publish("sheetData", jc.encode(payload))
-  console.log (payload)
+  // console.log (JSON.stringify(payload))
 }
 
 process.on('SIGTERM', () => process.exit(0))

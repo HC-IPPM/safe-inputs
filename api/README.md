@@ -4,13 +4,13 @@ A GraphQL API used to verify that data is valid JSON format.
 
 The idea is that the (potentially dangerous) spreadsheet data extracted by the UI/ other methods will be passed to this API ensuring that the data from the spreadsheet is JSON formatted. GraphQL is typed so only input matching the data types defined in the schema will be successfully passed through.  The okayed data is then published via [NATS](https://nats.io/) messaging system. This API uses the NATS NGS global hosted server from [Synadia](https://synadia.com/ngs). (Though can be demoed locally using their demo server (demo.nats.io)).
 
+The API is found https://safeinputs.alpha.canada.ca/graphql
+
 ## Installing dependencies
 
 ```bash
 $ npm install
 ```
-
-That's it!
 
 ## Running it
 
