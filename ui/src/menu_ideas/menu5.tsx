@@ -30,6 +30,9 @@ export default function MenuIdea5() {
                         <MenuItem  >
                             <Link href='/pagesix'>pagesix</Link>
                         </MenuItem>
+                        <MenuItem  >
+                            <Link href='/pageseven'>pageseven</Link>
+                        </MenuItem>
                     </MenuList>
                 </Menu>
             </Box>
