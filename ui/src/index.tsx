@@ -17,6 +17,7 @@ import NavPage from './pages/navPage'
 import DoesNotExistPage from './pages/noLocationPage'
 import PageFive from './pages/pageFive'
 import PageFour from './pages/pageFour'
+import PageSeven from './pages/pageseven'
 import PageSix from './pages/pageSix'
 import ThirdPage from './pages/pageThree'
 import SecondPage from './pages/pageTwo'
@@ -88,6 +89,10 @@ root.render(
               <Route
                 path="pagesix"
                 element={<PageSix parseWorker={workerInstance} />}
+              ></Route>
+              <Route
+                path="pageseven"
+                element={<PageSeven/>}
               ></Route>
               <Route path="/pagefour" element={<PageFour />}></Route>
               <Route path="*" element={<DoesNotExistPage />}></Route>

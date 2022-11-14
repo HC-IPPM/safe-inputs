@@ -24,6 +24,7 @@ import {
   AccordionPanel,
   InputLeftElement,
   InputRightElement,
+  Tooltip,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -145,8 +146,11 @@ export default function PageFive({
       verifyJsonFormat(sheetData: $testSheet)
     }
   `
-  const [mutation, { data }] = useMutation(Get_Data)
+  const [mutation, {data }] = useMutation(Get_Data)
+  
+  
   const testSheet = parserStatus
+  
   // const testSheet = (data.verifyJsonFormat)
 
   useEffect(() => {
@@ -157,6 +161,7 @@ export default function PageFive({
   //   hello
 
   // }`
+
 
   return (
     <>
@@ -197,24 +202,50 @@ application/vnd.ms-excel,
                 value={filename}
               />
               <InputRightElement w="auto">
-                <Button
-                  disabled={
-                    file === null ||
-                    (parserStatus && parserStatus.state === 'LOADING')
-                  }
-                  onClick={() => file && parseWorker.parse(file)}
-                >
-                  {t('safeInputs.analyze')}
-                </Button>
+                
               </InputRightElement>
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>
           </FormControl>
           <br />
+    
+          {file === null ? (
+            <Tooltip
+              hasArrow
+              label={t('safeInputs.inputBar')}
+              aria-label="A tooltip"
+            >
+              <Button
+                cursor={'not-allowed'}
+                color="#FFFFFF"
+                bg="#3232FF"
+                _hover={{ bg: '#1616FF99' }}
+                as="button"
+              >
+                {t('safeInputs.upload')}
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button
+              bg="#3232FF"
+              color="#FFFFFF"
+              _hover={{ bg: '#0000DD' }}
+              onClick={() => {
+                file && parseWorker.parse(file); 
+                console.log('')
+              }
+              }
+            >
+              {t('safeInputs.upload')}
+            </Button>
+          )}
+         
 
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
-            <Box>
+         
+         <Box>
+           <br />
               <Accordion
                 allowToggle
                 defaultIndex={[0]}
@@ -309,10 +340,12 @@ application/vnd.ms-excel,
                   )}
                 </AccordionItem>
               </Accordion>
+              <br />
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="show-preview" mb="0">
                   {t('safeInputs.preview')}
                 </FormLabel>
+                
                 <Switch
                   id="show-preview"
                   isChecked={preview}

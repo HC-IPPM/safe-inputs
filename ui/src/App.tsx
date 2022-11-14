@@ -210,6 +210,7 @@ application/vnd.ms-excel,
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
             <div>
+               <br />
               <Accordion
                 allowToggle
                 defaultIndex={[0]}
