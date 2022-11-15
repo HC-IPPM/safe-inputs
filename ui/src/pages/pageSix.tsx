@@ -141,27 +141,30 @@ export default function PageFive({
 
   const { t } = useTranslation()
 
-  const Get_Data = gql`
-    mutation verifyJsonFormat($testSheet: JSON!) {
-      verifyJsonFormat(sheetData: $testSheet)
-    }
-  `
-  const [mutation, {data }] = useMutation(Get_Data)
-  
-  
-  const testSheet = parserStatus
-  
-  // const testSheet = (data.verifyJsonFormat)
+  function GQL() {
+    const Get_Data = gql`
+      mutation verifyJsonFormat($testSheet: JSON!) {
+        verifyJsonFormat(sheetData: $testSheet)
+      }
+    `
+    const [mutation, { loading, error, data }] = useMutation(Get_Data)
+    const testSheet = parserStatus
+    // const testSheet = (data.verifyJsonFormat)
+    useEffect(() => {
+      mutation({ variables: { testSheet } })
+    }, [mutation, testSheet])
 
-  useEffect(() => {
-    mutation({ variables: { testSheet } })
-  }, [mutation, testSheet])
+    if (data)    
+      return (
+        <>
+          <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre>
+        </>
+      )
 
-  // const Get_Hello = gql`{
-  //   hello
-
-  // }`
-
+    if (loading) return <> {'Submitting...'}</>
+    if (error) return <> {`Submission error! ${error.message}`}</>
+    else return <></>
+  }
 
   return (
     <>
@@ -201,14 +204,12 @@ application/vnd.ms-excel,
                 readOnly
                 value={filename}
               />
-              <InputRightElement w="auto">
-                
-              </InputRightElement>
+              <InputRightElement w="auto"></InputRightElement>
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>
           </FormControl>
           <br />
-    
+
           {file === null ? (
             <Tooltip
               hasArrow
@@ -231,21 +232,18 @@ application/vnd.ms-excel,
               color="#FFFFFF"
               _hover={{ bg: '#0000DD' }}
               onClick={() => {
-                file && parseWorker.parse(file); 
+                file && parseWorker.parse(file)
                 console.log('')
-              }
-              }
+              }}
             >
               {t('safeInputs.upload')}
             </Button>
           )}
-         
 
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
-         
-         <Box>
-           <br />
+            <Box>
+              <br />
               <Accordion
                 allowToggle
                 defaultIndex={[0]}
@@ -345,7 +343,7 @@ application/vnd.ms-excel,
                 <FormLabel htmlFor="show-preview" mb="0">
                   {t('safeInputs.preview')}
                 </FormLabel>
-                
+
                 <Switch
                   id="show-preview"
                   isChecked={preview}
@@ -355,7 +353,7 @@ application/vnd.ms-excel,
               {preview === true ? (
                 <>
                   {' '}
-                  <Box h="500px" overflowY={'auto'} bg="red">
+                  <Box h="510px" overflowY={'auto'}>
                     {' '}
                     {preview && (
                       <DeferredRender idleTimeout={1000}>
@@ -369,18 +367,14 @@ application/vnd.ms-excel,
               ) : (
                 <></>
               )}
-              {/* THis is the json parser full data */}
 
-              <Box h="600px" overflowY={'auto'}>
-                {data ? (
-                  <>
-                    {/*  Add comment tags on line below to remove data from screen. Remove comment tags on line below to see data on the screen */}
-                    <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre>
-                  </>
-                ) : (
-                  <></>
-                )}
+              <Box h="315px" overflowY={'auto'}>
+                <br />
+                <GQL />
+                <br />
               </Box>
+              <br />
+              <br />
             </Box>
           )}
         </Box>
