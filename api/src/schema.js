@@ -5,10 +5,11 @@ import {
   GraphQLNonNull,
 } from 'graphql'
 
-import { GraphQLJSON } from 'graphql-type-json';
+import { GraphQLJSON } from 'graphql-type-json'; // JSON is outside of the standard GraphQL scalar types 
 
 export const schema = new GraphQLSchema({
-
+// Defining the [GraphQL](https://graphql.org/) type definitions and resolvers in one go (which is helpful if you have many variables to 
+// keep track of)
   query: new GraphQLObjectType({
     // Used for testing purposes at this time.
     name: 'Query',
@@ -24,7 +25,7 @@ export const schema = new GraphQLSchema({
 
   mutation: new GraphQLObjectType({
     // GraphQL ensures that variables match the types defined in the schema. This mutation acts as a filter;  
-    // allowing only valid JSON formated data through. (And if valid will be publish via nats.)
+    // allowing only valid JSON formated data through. (And if valid will be publish via nats.) 
     name: 'Mutation',
     fields: { 
       verifyJsonFormat: {
@@ -33,7 +34,7 @@ export const schema = new GraphQLSchema({
           sheetData: { type: new GraphQLNonNull(GraphQLJSON) },
           },
         async resolve(_parent, { sheetData }, { publish }, _info) {
-          publish(sheetData); 
+          publish(sheetData);  // where the NATs publish is called from index.js 
           return sheetData;
         },
       },
