@@ -34,6 +34,7 @@ export const schema = new GraphQLSchema({
           sheetData: { type: new GraphQLNonNull(GraphQLJSON) },
           },
         async resolve(_parent, { sheetData }, { publish }, _info) {
+          console.log(JSON.stringify(sheetData))
           publish(sheetData);  // where the NATs publish is called from index.js 
           return sheetData;
         },
