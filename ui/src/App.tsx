@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import { ChevronUpIcon } from '@chakra-ui/icons'
+import { gql, useMutation } from '@apollo/client'
 import {
   Box,
   Button,
@@ -23,6 +23,7 @@ import {
   AccordionItem,
   AccordionPanel,
   InputLeftElement,
+  InputRightElement,
   Tooltip,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +32,6 @@ import { FullProperties } from 'xlsx'
 
 import { ParseWorker } from './serviceWorker'
 import { ParseEvent } from './worker'
-
 import './App.css'
 // import { useQuery } from '@apollo/client'
 // import { SAY_HELLO } from './graphql.js'
@@ -90,7 +90,11 @@ const col = (
   )
 }
 
-function App({ parseWorker }: { parseWorker: ParseWorker }) {
+export default function PageFive({
+  parseWorker,
+}: {
+  parseWorker: ParseWorker
+}) {
   // const { loading, error, data } = useQuery(SAY_HELLO)
 
   // if (loading) return <p>Loading...</p>
@@ -105,7 +109,6 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
   const handleMessages = (msg: any) => {
     if (typeof msg.data === 'object' && msg.data.type === 'ParseEvent') {
       setParserStatus(msg.data)
-      // set parser state here to handle mutation
     }
   }
   useEffect(() => {
@@ -138,13 +141,42 @@ function App({ parseWorker }: { parseWorker: ParseWorker }) {
 
   const { t } = useTranslation()
 
+
+  // 
+  // Function for the API call -> useMutation
+  // 
+  function GQL() {
+    const Get_Data = gql`
+      mutation verifyJsonFormat($testSheet: JSON!) {
+        verifyJsonFormat(sheetData: $testSheet)
+      }
+    `
+    const [mutation, { loading, error, data }] = useMutation(Get_Data)
+    const testSheet = parserStatus
+    // const testSheet = (data.verifyJsonFormat)
+    useEffect(() => {
+      mutation({ variables: { testSheet } })
+    }, [mutation, testSheet])
+
+    if (data)    
+      return (
+        <>
+        {/* Uncomment to view the data */}
+          {/* <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> */}
+        </>
+      )
+
+    if (loading) return <> {'Submitting...'}</>
+    if (error) return <> {`Submission error! ${error.message}`}</>
+    else return <></>
+  }
+
   return (
     <>
-      <div className="App">
+      <Box className="App">
         <Box className="App-header" mb={2}>
           Safe inputs PoC
         </Box>
-
         <Box className="pageMarginSetting" id="pageMarginSetting" mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
@@ -177,10 +209,12 @@ application/vnd.ms-excel,
                 readOnly
                 value={filename}
               />
+              <InputRightElement w="auto"></InputRightElement>
             </InputGroup>
             <FormErrorMessage>{invalid}</FormErrorMessage>
           </FormControl>
           <br />
+
           {file === null ? (
             <Tooltip
               hasArrow
@@ -202,15 +236,19 @@ application/vnd.ms-excel,
               bg="#3232FF"
               color="#FFFFFF"
               _hover={{ bg: '#0000DD' }}
-              onClick={() => file && parseWorker.parse(file)}
+              onClick={() => {
+                file && parseWorker.parse(file)
+                console.log('')
+              }}
             >
               {t('safeInputs.upload')}
             </Button>
           )}
+
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
-            <div>
-               <br />
+            <Box>
+              <br />
               <Accordion
                 allowToggle
                 defaultIndex={[0]}
@@ -305,44 +343,47 @@ application/vnd.ms-excel,
                   )}
                 </AccordionItem>
               </Accordion>
+              <br />
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="show-preview" mb="0">
                   {t('safeInputs.preview')}
                 </FormLabel>
+
                 <Switch
                   id="show-preview"
                   isChecked={preview}
                   onChange={(e) => setPreview(e.target.checked)}
                 />
               </FormControl>
-              {preview && (
-                <DeferredRender idleTimeout={1000}>
-                  <pre className="docPreview">
-                    {JSON.stringify(parserStatus.sheets, null, 2)}
-                  </pre>
-                </DeferredRender>
+              {preview === true ? (
+                <>
+                  {' '}
+                  <Box h="510px" overflowY={'auto'}>
+                    {' '}
+                    {preview && (
+                      <DeferredRender idleTimeout={1000}>
+                        <pre className="docPreview">
+                          {JSON.stringify(parserStatus.sheets, null, 2)}
+                        </pre>
+                      </DeferredRender>
+                    )}{' '}
+                  </Box>{' '}
+                </>
+              ) : (
+                <></>
               )}
-              <Button
-                position="fixed"
-                padding="1px 2px"
-                fontSize="20px"
-                bottom="10px"
-                left="90px"
-                backgroundColor="#284162"
-                color="#fff"
-                textAlign="center"
-                onClick={() => {
-                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-                }}
-              >
-                <ChevronUpIcon />{' '}
-              </Button>
-            </div>
+
+              <Box h="315px" overflowY={'auto'}>
+                <br />
+                <GQL />
+                <br />
+              </Box>
+              <br />
+              <br />
+            </Box>
           )}
         </Box>
-      </div>
+      </Box>
     </>
   )
 }
-
-export default App
