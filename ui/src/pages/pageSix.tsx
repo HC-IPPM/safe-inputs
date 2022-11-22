@@ -141,6 +141,10 @@ export default function PageFive({
 
   const { t } = useTranslation()
 
+
+  // 
+  // Function for the API call -> useMutation
+  // 
   function GQL() {
     const Get_Data = gql`
       mutation verifyJsonFormat($testSheet: JSON!) {
@@ -157,7 +161,8 @@ export default function PageFive({
     if (data)    
       return (
         <>
-          <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre>
+        {/* Uncomment to view the data */}
+          {/* <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> */}
         </>
       )
 
