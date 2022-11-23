@@ -17,7 +17,6 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  Switch,
   Accordion,
   AccordionButton,
   AccordionItem,
@@ -25,6 +24,7 @@ import {
   InputLeftElement,
   InputRightElement,
   Tooltip,
+  Text,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -104,7 +104,6 @@ export default function PageFive({
   const [filename, setFilename] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [parserStatus, setParserStatus] = useState<ParseEvent>()
-  const [preview, setPreview] = useState(false)
 
   const handleMessages = (msg: any) => {
     if (typeof msg.data === 'object' && msg.data.type === 'ParseEvent') {
@@ -121,7 +120,6 @@ export default function PageFive({
 
   const onFileChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setParserStatus(undefined)
-    setPreview(false)
     if (e.target.files && e.target.files.length === 1) {
       setFile(e.target.files[0])
       setFilename(e.target.files[0].name)
@@ -141,7 +139,6 @@ export default function PageFive({
 
   const { t } = useTranslation()
 
-
   //
   // Function for the API call -> useMutation
   //
@@ -153,10 +150,7 @@ export default function PageFive({
     `
     const [mutation, { loading, error, data }] = useMutation(Get_Data)
     const testSheet = parserStatus
-    // const sheetPreview = {parserStatus.sheets}
-    //  const testSheet = (data.verifyJsonFormat) //does not work, breaks page
-    // const testSheet = preview
-    // const testSheet = filename 
+
     useEffect(() => {
       mutation({ variables: { testSheet } })
     }, [mutation, testSheet])
@@ -166,12 +160,11 @@ export default function PageFive({
         <>
           {/* Uncomment to view the data */}
           {/* <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> */}
-
         </>
       )
 
-      if (loading) return <> {'Submitting...'}</>
-      if (error) return <> {`Submission error! ${error.message}`}</>
+    if (loading) return <> {'Submitting...'}</>
+    if (error) return <> {`Submission error! ${error.message}`}</>
     else return <></>
   }
 
@@ -286,7 +279,7 @@ application/vnd.ms-excel,
                         <TableContainer>
                           <Table variant="simple">
                             <TableCaption>
-                              {t('safeInputs.fileProps')}{' '}
+                              {t('safeInputs.fileProps')}
                             </TableCaption>
                             <Tr>
                               {col(p, 'Application')}
@@ -348,41 +341,19 @@ application/vnd.ms-excel,
                 </AccordionItem>
               </Accordion>
               <br />
-              <FormControl display="flex" alignItems="center">
-                <FormLabel htmlFor="show-preview" mb="0">
-                  {t('safeInputs.preview')}
-                </FormLabel>
 
-                <Switch
-                  id="show-preview"
-                  isChecked={preview}
-                  onChange={(e) => setPreview(e.target.checked)}
-                />
-              </FormControl>
-              {preview === true ? (
-                <>
-                  {' '}
-                  <Box h="510px" overflowY={'auto'}>
-                    {' '}
-                    {preview && (
-                      <DeferredRender idleTimeout={1000}>
-                        <pre className="docPreview">
-                          {JSON.stringify(parserStatus.sheets, null, 2)}
-                        </pre>
-                      </DeferredRender>
-                    )}{' '}
-                  </Box>{' '}
-                </>
-              ) : (
-                <></>
-              )}
-
-              <Box h="315px" overflowY={'auto'}>
-                <br />
-                <GQL />
-                <br />
+              <Box textAlign={'left'}>
+                <Text>{t('safeInputs.preview')} </Text>
+                <Box h="510px" overflowY={'auto'}>
+                  <DeferredRender idleTimeout={1000}>
+                    <pre className="docPreview">
+                      {JSON.stringify(parserStatus.sheets, null, 2)}
+                    </pre>
+                  </DeferredRender>
+                </Box>
               </Box>
-              <br />
+
+              <GQL />
               <br />
             </Box>
           )}
