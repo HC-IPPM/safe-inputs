@@ -142,9 +142,9 @@ export default function PageFive({
   const { t } = useTranslation()
 
 
-  // 
+  //
   // Function for the API call -> useMutation
-  // 
+  //
   function GQL() {
     const Get_Data = gql`
       mutation verifyJsonFormat($testSheet: JSON!) {
@@ -153,21 +153,25 @@ export default function PageFive({
     `
     const [mutation, { loading, error, data }] = useMutation(Get_Data)
     const testSheet = parserStatus
-    // const testSheet = (data.verifyJsonFormat)
+    // const sheetPreview = {parserStatus.sheets}
+    //  const testSheet = (data.verifyJsonFormat) //does not work, breaks page
+    // const testSheet = preview
+    // const testSheet = filename 
     useEffect(() => {
       mutation({ variables: { testSheet } })
     }, [mutation, testSheet])
 
-    if (data)    
+    if (data)
       return (
         <>
-        {/* Uncomment to view the data */}
+          {/* Uncomment to view the data */}
           {/* <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> */}
+
         </>
       )
 
-    if (loading) return <> {'Submitting...'}</>
-    if (error) return <> {`Submission error! ${error.message}`}</>
+      if (loading) return <> {'Submitting...'}</>
+      if (error) return <> {`Submission error! ${error.message}`}</>
     else return <></>
   }
 
