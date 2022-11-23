@@ -11,11 +11,11 @@ export const parse = async (file: File) => {
   workbook.SheetNames.forEach((sheetName) => {
     sheets.push({
       sheetName,
-      data: utils.sheet_to_json(workbook.Sheets[sheetName], { header: 'A' }),
+      data: utils.sheet_to_json(workbook.Sheets[sheetName]),
     })
   })
   if (workbook.SheetNames.length > 0) {
-    signal({ state: 'DONE', workbook, sheets })
+    signal({ state: 'DONE', filename: file.name, workbook, sheets })
     // const payload_str = JSON.stringify(payload)
   } else postMessage('ERROR!')
 }
@@ -28,6 +28,7 @@ interface ParseEventLoadingState {
 
 interface ParseEventDoneState {
   state: 'DONE'
+  filename: string
   workbook: WorkBook
   sheets: SheetData[]
 }
