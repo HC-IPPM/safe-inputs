@@ -5,7 +5,7 @@ import { Button } from "@chakra-ui/react";
 
 
 
-export default function ToTopButton() {
+export default function ScrollToTopButton() {
     return(
               <Button position='fixed' padding='1px 2px' fontSize='20px' bottom='10px' left='90px'
                 backgroundColor='#284162' color='#fff' textAlign='center'
