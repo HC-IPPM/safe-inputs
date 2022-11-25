@@ -2,7 +2,7 @@
 
 A GraphQL API used to verify that data is valid JSON format. 
 
-The idea is that the (potentially dangerous) spreadsheet data extracted by the UI/ other methods is passed to this API. GraphQL is typed so only input (spreadsheet data) matching the data types defined in the schema (JSON) will be successfully passed through.  The okayed data is then published via [NATS](https://nats.io/) messaging system. This API uses the NATS NGS global hosted server from [Synadia](https://synadia.com/ngs). (Though can be demoed locally using their demo server (demo.nats.io)).
+The idea is that the (potentially dangerous) spreadsheet data extracted by the UI/ other methods is passed to this API. GraphQL is typed so only input (spreadsheet data) matching the data types defined in the schema (JSON) will be successfully passed through.  The okayed data is then published via [NATS](https://nats.io/) messaging system. This API uses the NATS NGS global hosted server from [Synadia](https://synadia.com/ngs). (Though can be demoed locally using their demo server (demo.nats.io)). *Note this is temporarily using the NATS demo server to test some downstream functionality*
 
 The API is found https://safeinputs.alpha.canada.ca/graphql
 
@@ -20,7 +20,7 @@ $ npm start &
 
 ## Using it
 #### Pass spreadsheet to Safe Inputs User Interface:
-https://safeinputs.alpha.canada.ca/pagesix 
+https://safeinputs.alpha.canada.ca/ 
 
 'Upload' an Excel sheet - the data will be extracted locally on your computer then passed to the API. 
 

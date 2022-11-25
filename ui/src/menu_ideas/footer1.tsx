@@ -29,14 +29,14 @@ export default function FooterIdea1() {
         color="#333333"
       >
         <SimpleGrid
-          columns={[1, null, 3]}
+          columns={[1, null,3]}
           justifyContent="space-around"
           id="pageMarginSetting"
           gap={[1, null, 3]}
           py={2}
           color="#FFFFFF"
         >
-          <Box>
+          <Box >
             <Stack>
               <Text fontSize={'2xl'} textDecor={'underline'}>
                 About
@@ -52,7 +52,7 @@ export default function FooterIdea1() {
               </Link>
             </Stack>
           </Box>
-          <Box>
+          <Box  >
             <Stack justify={'end'}>
               <Text fontSize={'2xl'} textDecor={'underline'}>
                 Using GC Notify
@@ -68,7 +68,7 @@ export default function FooterIdea1() {
               </Link>
             </Stack>
           </Box>
-          <Box>
+          <Box >
             <Stack>
               <Text fontSize={'2xl'} textDecor={'underline'}>
                 Support
@@ -94,10 +94,8 @@ export default function FooterIdea1() {
           </Link>
         </Box>
         <Box minW="80px">
-          <Link href={`${t('footer.aboutCanadaCaLink')} `} {...LinkStyle}>
-            {' '}
-            <Text>{t('footer.aboutCanadaCa')}</Text>
-          </Link>
+        <Link href={`${t('footer.aboutCanadaCaLink')} `} {...LinkStyle} > <Text>{t('footer.aboutCanadaCa')}</Text></Link>
+
         </Box>
         <Box minW="80px">
           <Link href={''} {...LinkStyle}>
@@ -112,9 +110,7 @@ export default function FooterIdea1() {
         <Box minW="80px"></Box>
         <Box minW="80px" h="50px">
           <Image
-            loading="lazy"
             src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg"
-            alt="Canada logo"
             w="auto"
             h="auto"
             maxW={{

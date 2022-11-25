@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:main-a6cf9fc-1668743476 # {"$imagepolicy": "flux-system:api"}
+        image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:main-755fc7d-1669316921 # {"$imagepolicy": "flux-system:api"}
         envFrom:
         - secretRef:
             name: nats-jwt-secret
