@@ -18,7 +18,6 @@ import DoesNotExistPage from './pages/noLocationPage'
 import PageFive from './pages/pageFive'
 import PageFour from './pages/pageFour'
 import PageSeven from './pages/pageseven'
-import PageSix from './pages/pageSix'
 import ThirdPage from './pages/pageThree'
 import SecondPage from './pages/pageTwo'
 import reportWebVitals from './reportWebVitals'
@@ -43,10 +42,15 @@ const theme = extendTheme(
           fontSize: { base: '20px', sm: '24px', md: '30px', lg: '30px' },
         },
         '.menu': {
-          fontSize: {base: '18px', sm: '15px', md: '17px', lg: '17px', xl: '18px',
+          fontSize: {
+            base: '18px',
+            sm: '15px',
+            md: '17px',
+            lg: '17px',
+            xl: '18px',
           },
           fontFamily: 'sans-serif',
-          color:'#333333'
+          color: '#333333',
         },
         '.translationButton': {
           fontSize: { base: '12px', sm: '12px', md: '14px' },
@@ -86,14 +90,7 @@ root.render(
                 path="pagefive"
                 element={<PageFive parseWorker={workerInstance} />}
               ></Route>
-              <Route
-                path="pagesix"
-                element={<PageSix parseWorker={workerInstance} />}
-              ></Route>
-              <Route
-                path="pageseven"
-                element={<PageSeven/>}
-              ></Route>
+              <Route path="pageseven" element={<PageSeven />}></Route>
               <Route path="/pagefour" element={<PageFour />}></Route>
               <Route path="*" element={<DoesNotExistPage />}></Route>
             </Route>
