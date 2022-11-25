@@ -2,25 +2,15 @@ import React from 'react'
 
 import '../App.css'
 import '../i18n'
-import {
-  Box,
-  Link,
-  Stack,
-  Image,
-  Center,
-  Wrap,
-  WrapItem,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Link, Stack, Image, Text, SimpleGrid } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 export default function FooterIdea1() {
-  const UpperLinkStyle = {
+  const LinkStyle = {
     _hover: { color: '#0089c7', textDecoration: 'underline' },
   }
-  const LowerLinkStyle = {
-    _hover: { color: 'purple', textDecoration: 'underline' },
-  }
+
+
   const { t } = useTranslation()
 
   return (
@@ -36,141 +26,103 @@ export default function FooterIdea1() {
           backgroundPosition: 'right bottom',
           backgroundRepeat: 'no-repeat',
         }}
-        h="180px"
+        minH="180px"
         color="#333333"
       >
-        <Wrap
+        <SimpleGrid
+          columns={[1, null,3]}
+          justifyContent="space-around"
           id="pageMarginSetting"
-          justify="space-between"
-          color={'#FFFFFF'}
-          align={'flex-start'}
+          gap={[1, null, 3]}
+          py={2}
+          color="#FFFFFF"
         >
-          <WrapItem>
-            <Center w="180px">
-              <Stack>
-                <Text fontSize={'2xl'} color="#ffffff" textDecor={'underline'}>
-                  About
-                </Text>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Why GC Notify</Text>
-                </Link>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Features</Text>
-                </Link>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Activity on GC Notify</Text>
-                </Link>
-              </Stack>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center w="180px">
-              <Stack>
-                <Text fontSize={'2xl'} color="#ffffff" textDecor={'underline'}>
-                  Using GC Notify
-                </Text>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>API documentation</Text>
-                </Link>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Guidance</Text>
-                </Link>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Service level objectives</Text>
-                </Link>
-              </Stack>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center w="180px">
-              <Stack justify={'top'}>
-                <Text fontSize={'2xl'} color="#ffffff" textDecor={'underline'}>
-                  Support
-                </Text>
-                <Link href={''} {...UpperLinkStyle}>
-                  <Text>Contact Us</Text>
-                </Link>
-              </Stack>
-            </Center>
-          </WrapItem>
-        </Wrap>
+          <Box >
+            <Stack>
+              <Text fontSize={'2xl'} textDecor={'underline'}>
+                About
+              </Text>
+              <Link href={''} {...LinkStyle}>
+                <Text>Why GC Notify</Text>
+              </Link>
+              <Link href={''} {...LinkStyle}>
+                <Text>Features</Text>
+              </Link>
+              <Link href={''} {...LinkStyle}>
+                <Text>Activity on GC Notify</Text>
+              </Link>
+            </Stack>
+          </Box>
+          <Box  >
+            <Stack justify={'end'}>
+              <Text fontSize={'2xl'} textDecor={'underline'}>
+                Using GC Notify
+              </Text>
+              <Link href={''} {...LinkStyle}>
+                <Text>API documentation</Text>
+              </Link>
+              <Link href={''} {...LinkStyle}>
+                <Text>Guidance</Text>
+              </Link>
+              <Link href={''} {...LinkStyle}>
+                <Text>Service level objectives</Text>
+              </Link>
+            </Stack>
+          </Box>
+          <Box >
+            <Stack>
+              <Text fontSize={'2xl'} textDecor={'underline'}>
+                Support
+              </Text>
+              <Link href={''} {...LinkStyle}>
+                <Text>Contact Us</Text>
+              </Link>
+            </Stack>
+          </Box>
+        </SimpleGrid>
       </Box>
 
-      <Box bg="#26374a" borderTop="1px solid #ffffff" color='#FFFFFF'>
-        <Wrap
-          id="pageMarginSetting"
-          justify="space-between"
-          align="center"
-          pb={3}
-          mb={3}
-        >
-          <WrapItem>
-            <Center h="60px">
-              <Link
-                href={`${t('footer.socialMediaLink')} `}
-                {...LowerLinkStyle}
-              >
-                {' '}
-                <Text>{t('footer.socialMedia')}</Text>
-              </Link>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center>
-              <Link
-                href={`${t('footer.mobileApplicationLink')} `}
-                {...LowerLinkStyle}
-              >
-                {' '}
-                <Text>{t('footer.mobileApplication')}</Text>
-              </Link>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center>
-              <Link
-                href={`${t('footer.aboutCanadaCaLink')} `}
-                {...LowerLinkStyle}
-              >
-                {' '}
-                <Text>{t('footer.aboutCanadaCa')}</Text>
-              </Link>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center>
-              <Link
-                href={`${t('footer.termsConditionsLink')} `}
-                {...LowerLinkStyle}
-              >
-                {' '}
-                <Text>{t('footer.termsConditions')}</Text>
-              </Link>
-            </Center>
-          </WrapItem>
-          <WrapItem>
-            <Center>
-              <Link href={`${t('footer.privacyLink')} `} {...LowerLinkStyle}>
-                {' '}
-                <Text>{t('footer.privacy')}</Text>
-              </Link>
-            </Center>
-          </WrapItem>
-        </Wrap>
-      </Box>
-      <Center pb={3}>
-        <Image
-          src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg"
-          w="auto"
-          h="auto"
-          maxW={{ base: '100px', sm: '100px', md: '125px', lg: '150px' }}
-        />
-      </Center>
+      {/* Lower footer */}
+      <SimpleGrid columns={[1, null, 7]} id="pageMarginSetting" gap={2} py={5}>
+        <Box minW="80px">
+          <Link href={''} {...LinkStyle}>
+            <Text>Social Media</Text>
+          </Link>
+        </Box>
+        <Box minW="80px">
+          <Link href={''} {...LinkStyle}>
+            <Text>Mobile Application</Text>
+          </Link>
+        </Box>
+        <Box minW="80px">
+        <Link href={`${t('footer.aboutCanadaCaLink')} `} {...LinkStyle} > <Text>{t('footer.aboutCanadaCa')}</Text></Link>
 
-      {/* <Button position='fixed' padding='1px 2px' fontSize='20px' bottom='10px' left='90px'
-                backgroundColor='#284162' color='#fff' textAlign='center'
-                onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); }} >
-                <ChevronUpIcon />  </Button> */}
+        </Box>
+        <Box minW="80px">
+          <Link href={''} {...LinkStyle}>
+            <Text>Terms and Conditions</Text>
+          </Link>
+        </Box>
+        <Box minW="80px">
+          <Link href={''} {...LinkStyle}>
+            <Text>Privacy</Text>
+          </Link>
+        </Box>
+        <Box minW="80px"></Box>
+        <Box minW="80px" h="50px">
+          <Image
+            src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg"
+            w="auto"
+            h="auto"
+            maxW={{
+              base: '100px',
+              sm: '100px',
+              md: '125px',
+              lg: '150px',
+            }}
+          />
+        </Box>
+      </SimpleGrid>
     </>
   )
 }
