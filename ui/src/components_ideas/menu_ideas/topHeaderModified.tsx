@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-import '../App.css'
-import '../i18n'
+import '../../App.css'
+import '../../i18n'
 import {
   HStack,
+  Container,
   Box,
   Image,
   Link,
@@ -119,7 +120,8 @@ export default function TopHeaderModified() {
       >
         API Documentation
       </Text>
-    </Link>)
+    </Link>
+    )
 
   // Function for the language Button.
   // Button will change the state of the Language from EN/FR. This will change the language displayed on the page. Languages are initially set by windows language detector
@@ -158,32 +160,22 @@ export default function TopHeaderModified() {
       <>
         {windowDimenion.winWidth > 768 ? (
           <>
-            <Box h="3px" />
-            <Text id="pageMarginSetting" pl={2} fontSize="calc(8px + 2vmin)">
-              {' '}
-              Safe Inputs PoC{' '}
-            </Text>
-            <Box h="5px" />
-            <Box bg="#eeeeee" pb={2} pt={2} >
-              <Flex
-                w="100%"
-                flex={1}
-                justify={'space-between'}
-                className="pagebody"
-                id="pageMarginSetting"
-                align="center"
-                as="header"
-                color="#213045"
-                
-              >
-                <HStack gap={1}>
+            <Flex bg="" w="full" py={3}>
+          <Container maxW="7xl" px={10} >
+            <Text fontSize="calc(10px + 2vmin)">Safe Inputs PoC </Text>
+          </Container>
+        </Flex>
+
+        <Flex bg="#EEEEEE" w="full" py={2}>
+          <Container maxW="7xl" px={10} >
+          <HStack gap={1} >
                   <Box>{homePage}</Box>
                   <Box>{secondPage}</Box>
                   <Box>{thirdPage}</Box>
                   <Box>{fourthPage}</Box>
                 </HStack>
-              </Flex>
-            </Box>{' '}
+          </Container>
+        </Flex>
           </>
         ) : (
           <> </>
@@ -258,7 +250,7 @@ export default function TopHeaderModified() {
         <Flex
           w="100%"
           flex={1}
-          justify={'space-between'}
+         justify={'space-between'}
           className="pagebody"
           id="pageMarginSetting"
           align="center"
@@ -282,7 +274,7 @@ export default function TopHeaderModified() {
       </Box>
       <Box bg="#FFFFFF" role={''}>
         <LargeMenu />
-      </Box>
+      </Box> 
     </>
   )
 }

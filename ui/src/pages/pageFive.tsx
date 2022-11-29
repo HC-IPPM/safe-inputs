@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
+import { gql, useMutation } from '@apollo/client'
 import {
   Box,
   Button,
@@ -16,13 +17,16 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  Switch,
   Accordion,
   AccordionButton,
   AccordionItem,
   AccordionPanel,
   InputLeftElement,
   InputRightElement,
+  Tooltip,
+  Text,
+  Container,
+  Center,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -88,11 +92,7 @@ const col = (
   )
 }
 
-export default function PageFive({
-  parseWorker,
-}: {
-  parseWorker: ParseWorker
-}) {
+export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
   // const { loading, error, data } = useQuery(SAY_HELLO)
 
   // if (loading) return <p>Loading...</p>
@@ -102,7 +102,6 @@ export default function PageFive({
   const [filename, setFilename] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [parserStatus, setParserStatus] = useState<ParseEvent>()
-  const [preview, setPreview] = useState(false)
 
   const handleMessages = (msg: any) => {
     if (typeof msg.data === 'object' && msg.data.type === 'ParseEvent') {
@@ -119,7 +118,6 @@ export default function PageFive({
 
   const onFileChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setParserStatus(undefined)
-    setPreview(false)
     if (e.target.files && e.target.files.length === 1) {
       setFile(e.target.files[0])
       setFilename(e.target.files[0].name)
@@ -139,6 +137,35 @@ export default function PageFive({
 
   const { t } = useTranslation()
 
+  //
+  // Function for the API call -> useMutation
+  //
+  function GQL() {
+    const Get_Data = gql`
+      mutation verifyJsonFormat($testSheet: JSON!) {
+        verifyJsonFormat(sheetData: $testSheet)
+      }
+    `
+    const [mutation, { loading, error, data }] = useMutation(Get_Data)
+    const testSheet = parserStatus
+
+    useEffect(() => {
+      mutation({ variables: { testSheet } })
+    }, [mutation, testSheet])
+
+    if (data)
+      return (
+        <>
+          {/* Uncomment to view the data */}
+          {/* <pre>{JSON.stringify(data.verifyJsonFormat, null, 2)} </pre> */}
+        </>
+      )
+
+    if (loading) return <> {'Submitting...'}</>
+    if (error) return <> {`Submission error! ${error.message}`}</>
+    else return <></>
+  }
+
   return (
     <>
       <Box className="App">
@@ -146,7 +173,7 @@ export default function PageFive({
           Safe inputs PoC
         </Box>
 
-        <Box className="pageMarginSetting" id="pageMarginSetting" mt={8}>
+        <Container maxW="8xl" pl={10} pr={10} mt={8} className='pagebody'>
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -178,36 +205,49 @@ application/vnd.ms-excel,
                 readOnly
                 value={filename}
               />
-              <InputRightElement w="auto">
-              {file === null ? (                       
-                <Button
-                  isDisabled
-                  color="#FFFFFF"
-                  bg="#000000"
-                  _hover={{ bg: '#00000099' }}
-                  as="button"
-                >
-                  {t('safeInputs.upload')}
-                </Button>
+              <InputRightElement w="auto"></InputRightElement>
+            </InputGroup>
+            <FormErrorMessage>{invalid}</FormErrorMessage>
+          </FormControl>
+
+          <br />
+
+          <Center>
+          {file === null ? (
+            <Tooltip
+              hasArrow
+              label={t('safeInputs.inputBar')}
+              aria-label="A tooltip"
+            >
+              <Button
+                cursor={'not-allowed'}
+                color="#FFFFFF"
+                bg="#3232FF"
+                _hover={{ bg: '#1616FF99' }}
+                as="button"
+              >
+                {t('safeInputs.upload')}
+              </Button>
+            </Tooltip>
           ) : (
+
             <Button
-              bg="#3182ce"
+              bg="#3232FF"
               color="#FFFFFF"
-              _hover={{ bg: '#3182ce' }}
-              onClick={() => file && parseWorker.parse(file)}
+              _hover={{ bg: '#0000DD' }}
+              onClick={() => {
+                file && parseWorker.parse(file)
+                console.log('')
+              }}
             >
               {t('safeInputs.upload')}
             </Button>
           )}
-              </InputRightElement>
-            </InputGroup>
-            <FormErrorMessage>{invalid}</FormErrorMessage>
-          </FormControl>
-          <br />
-
+</Center>
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
             <Box>
+              <br />
               <Accordion
                 allowToggle
                 defaultIndex={[0]}
@@ -241,7 +281,7 @@ application/vnd.ms-excel,
                         <TableContainer>
                           <Table variant="simple">
                             <TableCaption>
-                              {t('safeInputs.fileProps')}{' '}
+                              {t('safeInputs.fileProps')}
                             </TableCaption>
                             <Tr>
                               {col(p, 'Application')}
@@ -302,36 +342,30 @@ application/vnd.ms-excel,
                   )}
                 </AccordionItem>
               </Accordion>
-              <FormControl display="flex" alignItems="center">
-                <FormLabel htmlFor="show-preview" mb="0">
-                  {t('safeInputs.preview')}
-                </FormLabel>
-                <Switch
-                  id="show-preview"
-                  isChecked={preview}
-                  onChange={(e) => setPreview(e.target.checked)}
-                />
-              </FormControl>
-              {preview === true ? (
-                <>
-                  {' '}
-                  <Box h="500px" overflowY={'auto'} bg="red">
-                    {' '}
-                    {preview && (
-                      <DeferredRender idleTimeout={1000}>
-                        <pre className="docPreview">
-                          {JSON.stringify(parserStatus.sheets, null, 2)}
-                        </pre>
-                      </DeferredRender>
-                    )}{' '}
-                  </Box>{' '}
-                </>
-              ) : (
-                <></>
-              )}
+              <br />
+
+              <Box textAlign={'left'}>
+                <Text>{t('safeInputs.preview')} </Text>
+                <Box
+                  h="600px"
+                  overflowY={'auto'}
+                  overflow="wrap"
+                  bg="#eee"
+                  border="1px dotted #284162"
+                  padding="5px"
+                  text-align="left"
+                >
+                  <DeferredRender idleTimeout={1000}>
+                    <pre>{JSON.stringify(parserStatus.sheets, null, 2)}</pre>
+                  </DeferredRender>
+                </Box>
+              </Box>
+
+              <GQL />
+              <br />
             </Box>
           )}
-        </Box>
+        </Container>
       </Box>
     </>
   )

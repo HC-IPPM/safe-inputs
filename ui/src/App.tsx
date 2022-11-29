@@ -25,6 +25,7 @@ import {
   InputRightElement,
   Tooltip,
   Text,
+  Container,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -90,11 +91,7 @@ const col = (
   )
 }
 
-export default function App({
-  parseWorker,
-}: {
-  parseWorker: ParseWorker
-}) {
+export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
   // const { loading, error, data } = useQuery(SAY_HELLO)
 
   // if (loading) return <p>Loading...</p>
@@ -174,7 +171,7 @@ export default function App({
         <Box className="App-header" mb={2}>
           Safe inputs PoC
         </Box>
-        <Box className="pageMarginSetting" id="pageMarginSetting" mt={8}>
+        <Container maxW="7xl" px={10} mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -344,16 +341,17 @@ application/vnd.ms-excel,
 
               <Box textAlign={'left'}>
                 <Text>{t('safeInputs.preview')} </Text>
-                <Box h="600px" overflowY={'auto'} overflow='wrap' 
-                  bg= '#eee'
-                  border= '1px dotted #284162'
-                  padding= '5px'
-                  text-align= 'left'
+                <Box
+                  h="600px"
+                  overflowY={'auto'}
+                  overflow="wrap"
+                  bg="#eee"
+                  border="1px dotted #284162"
+                  padding="5px"
+                  text-align="left"
                 >
                   <DeferredRender idleTimeout={1000}>
-                    <pre >
-                      {JSON.stringify(parserStatus.sheets, null, 2)}
-                    </pre>
+                    <pre>{JSON.stringify(parserStatus.sheets, null, 2)}</pre>
                   </DeferredRender>
                 </Box>
               </Box>
@@ -362,7 +360,7 @@ application/vnd.ms-excel,
               <br />
             </Box>
           )}
-        </Box>
+        </Container>
       </Box>
     </>
   )

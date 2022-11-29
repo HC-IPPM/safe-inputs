@@ -9,6 +9,7 @@ function ExcelParsingPage({ parseWorker }: { parseWorker: ParseWorker }) {
   return (
     <>
       <App parseWorker={workerInstance} />
+      
     </>
   )
 }

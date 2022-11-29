@@ -9,12 +9,11 @@ import TopHeader from '../live_menu_footer.tsx/topHeader'
 export default function NavPage() {
   return (
     <>
-      <TopHeader />
+      <TopHeader  key="1" />
 
-{/* Outlet function used by React-Router-Dom to nest the child routes/elements when rendered.   */}
-      <Outlet />
-      <Footer />
-
+      {/* Outlet function used by React-Router-Dom to nest the child routes/elements when rendered.   */}
+      <Outlet key="1" />
+      <Footer key="2" />
     </>
   )
 }
