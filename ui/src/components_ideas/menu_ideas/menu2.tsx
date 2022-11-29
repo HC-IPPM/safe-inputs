@@ -1,7 +1,7 @@
 import React from "react";
 
-import '../App.css'
-import '../i18n'
+import '../../App.css'
+import '../../i18n'
 import { HStack, Box, Image, Link, Button, Menu, MenuButton, MenuList, MenuItem, Text, } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { FcMenu } from "react-icons/fc";

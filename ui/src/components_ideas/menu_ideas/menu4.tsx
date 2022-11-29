@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '../App.css'
-import '../i18n'
+import '../../App.css'
+import '../../i18n'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Link, Box, Flex, Menu, MenuButton, MenuList, MenuItem, HStack, Text, Image, Button } from '@chakra-ui/react';
 import { useTranslation } from "react-i18next";

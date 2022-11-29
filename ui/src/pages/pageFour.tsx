@@ -4,66 +4,82 @@ import React from 'react'
 
 import '../i18n'
 import '../App.css'
-import { Box, VStack, Flex, Center, Text } from '@chakra-ui/react'
+import {
+  Box,
+  VStack,
+  Flex,
+  Center,
+  Text,
+  Container,
+  Divider,
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
-import MenuIdea1 from '../menu_ideas/menu1'
-import MenuIdea2 from '../menu_ideas/menu2'
-import MenuIdea3 from '../menu_ideas/menu3'
-import MenuIdea3Variant from '../menu_ideas/menu3Variant'
-import MenuIdea4 from '../menu_ideas/menu4'
-import MenuIdea1SecondVariant from '../menu_ideas/menu1SecondVariant'
-import MenuIdea1Variant from '../menu_ideas/menu1Variant'
+import MenuIdea1 from '../components_ideas/menu_ideas/menu1'
+import MenuIdea2 from '../components_ideas/menu_ideas/menu2'
+import MenuIdea3 from '../components_ideas/menu_ideas/menu3'
+import MenuIdea3Variant from '../components_ideas/menu_ideas/menu3Variant'
+import MenuIdea4 from '../components_ideas/menu_ideas/menu4'
+import MenuIdea1SecondVariant from '../components_ideas/menu_ideas/menu1SecondVariant'
+import MenuIdea1Variant from '../components_ideas/menu_ideas/menu1Variant'
 import TopHeader from '../live_menu_footer.tsx/topHeader'
-import FooterIdea1 from '../menu_ideas/footer1'
-import TopHeaderModified from '../menu_ideas/topHeaderModified'
+import FooterIdea1 from '../components_ideas/footer_ideas/footer1'
+import TopHeaderModified from '../components_ideas/menu_ideas/topHeaderModified'
 
 export default function PageFour() {
   const { t } = useTranslation()
 
   function TestPage() {
-    const boxStyle = {
-      background: 'transparent',
-      className: 'pagebody',
-      id: 'pageMarginSetting',
-      width: '100%',
-      justifyContent: 'justify',
-    }
-
     return (
       <>
-        <Box
-          bg="#284162"
-          display="flex"
-          flex-direction="column"
-          align-items="center"
-          justify-content="center"
-          fontSize="calc(8px + 2vmin)"
-          color="#ffffff"
-          height="60px"
-          mb={2}
-        >
-          <Center id="pageMarginSetting" pl={2}>
-            <header>{t('secondPage.header')}</header>
-          </Center>
+        <Box className="App-header" mb={2}>
+          {t('secondPage.header')}
         </Box>
-        <VStack>
-          <Flex bg="" w="100%">
-            <Box {...boxStyle}>
-              <Text>{t('thirdPage.para1')} </Text>
-            </Box>
-          </Flex>
-          <Flex bg="lightblue" w="100%">
-            <Box {...boxStyle}>
-              <Text>{t('thirdPage.para2')}</Text>
-            </Box>
-          </Flex>
-          <Flex w="100%">
-            <Box {...boxStyle}>
-              <Text>{t('thirdPage.para3')}</Text>
-            </Box>
-          </Flex>
-        </VStack>
+        <Flex bg="" w="full" py={3}>
+          <Container maxW="7xl" 
+           px={10}
+          >
+            <Text>{t('thirdPage.para1')} </Text>
+          </Container>
+        </Flex>
+        <Flex bg="lightblue" w="full" py={3}>
+          <Container maxW="7xl" px={10}>
+            <Text>{t('thirdPage.para2')}</Text>
+          </Container>
+        </Flex>
+        <Flex bg="" w="full" py={3}>
+          <Container maxW="7xl" px={10}>
+            <Text>
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+              condimentum venenatis felis at consectetur. Vivamus commodo
+              volutpat quam, fringilla consectetur arcu ultricies at. Vivamus
+              non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus
+              laoreet. Quisque commodo facilisis scelerisque. Vestibulum non
+              sapien commodo, viverra urna vel, vestibulum risus. Aliquam nibh
+              nisi, maximus nec lorem a, eleifend tempus justo. Pellentesque
+              sodales, erat quis aliquam iaculis, arcu ligula dignissim orci,
+              sed viverra nibh dolor iaculis risus. Quisque sodales elit id
+              tellus pretium faucibus. Ut vel tincidunt purus. Praesent nec elit
+              venenatis, luctus tellus non, tristique turpis. Aliquam viverra
+              massa vel pharetra viverra. "
+            </Text>
+            <br />
+            <Text>
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+              condimentum venenatis felis at consectetur. Vivamus commodo
+              volutpat quam, fringilla consectetur arcu ultricies at. Vivamus
+              non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus
+              laoreet. Quisque commodo facilisis scelerisque. Vestibulum non
+              sapien commodo, viverra urna vel, vestibulum risus. Aliquam nibh
+              nisi, maximus nec lorem a, eleifend tempus justo. Pellentesque
+              sodales, erat quis aliquam iaculis, arcu ligula dignissim orci,
+              sed viverra nibh dolor iaculis risus. Quisque sodales elit id
+              tellus pretium faucibus. Ut vel tincidunt purus. Praesent nec elit
+              venenatis, luctus tellus non, tristique turpis. Aliquam viverra
+              massa vel pharetra viverra. "
+            </Text>
+          </Container>
+        </Flex>
       </>
     )
   }
@@ -146,10 +162,6 @@ export default function PageFour() {
 
       <TestPage />
 
-      <br />
-      <br />
-      <br />
-      <br />
       <FooterIdea1 />
     </>
   )

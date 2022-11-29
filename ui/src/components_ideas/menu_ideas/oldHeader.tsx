@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '../App.css'
-import '../i18n'
+import '../../App.css'
+import '../../i18n'
 import { HStack, Box, Image, Text, Link } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";

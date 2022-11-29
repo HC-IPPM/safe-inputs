@@ -1,81 +1,81 @@
-import React from 'react';
+import React from 'react'
 
 import '../App.css'
 import '../i18n'
-import { Box, Link, Stack, Image, Center, Wrap, WrapItem, Text } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
-
+import {
+  Box,
+  Link,
+  Image,
+  Text,
+  SimpleGrid,
+  Container,
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 export default function Footer() {
-    const UpperLinkStyle = { color: '#ffffff', _hover: { color: '#0089c7', textDecoration: 'underline' } }
-    const LowerLinkStyle = { color: '#00587f', _hover: { color: 'purple', textDecoration: 'underline' } }
-    const { t } = useTranslation()
+  const LinkStyle = {
+    fontSize: { base: '10px', sm: '12px', md: '13px', lg: '16px' },
+    fontFamily: 'sans-serif',
+    _hover: { color: '#0089c7', textDecoration: 'underline' },
+  }
 
-    return (
-        <>
-            <Box bg="#333333" mt={12} >
-                <Wrap id='pageMarginSetting' justify='space-between' align='center' p='2px 2px' pt={2} pb={2}>
-                    <WrapItem >
-                        <Stack >
-                            <Link href={`${t('footer.contactUsLink')}`} {...UpperLinkStyle}><Text>{t('footer.contactUs')}</Text></Link>
-                            <Link href={`${t('footer.departmentsAgenciesLink')}`} {...UpperLinkStyle}><Text>{t('footer.departmentsAgencies')}</Text></Link>
-                            <Link href={`${t('footer.publicServiceMilitaryLink')} `} {...UpperLinkStyle}><Text>{t('footer.publicServiceMilitary')}</Text></Link>
-                        </Stack>
-                    </WrapItem>
-                    <WrapItem >
-                        <Stack >
-                            <Link href={`${t('footer.newsLink')} `} {...UpperLinkStyle}><Text>{t('footer.news')}</Text></Link>
-                            <Link href={`${t('footer.treatiesLawsRegulationsLink')} `} {...UpperLinkStyle}><Text>{t('footer.treatiesLawsRegulations')}</Text></Link>
-                            <Link href={`${t('footer.governmentReportingLink')} `} {...UpperLinkStyle}><Text>{t('footer.governmentReporting')}</Text></Link>
-                        </Stack>
-                    </WrapItem>
-                    <WrapItem >
-                        <Stack >
-                            <Link href={`${t('footer.primeMinisterLink')} `} {...UpperLinkStyle}><Text>{t('footer.primeMinister')}</Text></Link>
-                            <Link href={`${t('footer.aboutGovernmentLink')} `} {...UpperLinkStyle}><Text>{t('footer.aboutGovernment')}</Text></Link>
-                            <Link href={`${t('footer.openGovernmentLink')} `} {...UpperLinkStyle}><Text>{t('footer.openGovernment')}</Text></Link>
-                        </Stack>
-                    </WrapItem>
-                </Wrap>
-            </Box>
-            <Box bg='#ffffff' pt={2} pb={2}>
-                <Wrap id='pageMarginSetting' justify='space-evenly' align='center' pb={3}>
-                    <WrapItem>
-                        <Center >
-                            <Link href={`${t('footer.socialMediaLink')} `} {...LowerLinkStyle}> <Text>{t('footer.socialMedia')}</Text></Link>
-                        </Center>
-                    </WrapItem>
-                    <WrapItem>
-                        <Center >
-                            <Link href={`${t('footer.mobileApplicationLink')} `} {...LowerLinkStyle} > <Text>{t('footer.mobileApplication')}</Text></Link>
-                        </Center>
-                    </WrapItem>
-                    <WrapItem>
-                        <Center >
-                            <Link href={`${t('footer.aboutCanadaCaLink')} `} {...LowerLinkStyle} > <Text>{t('footer.aboutCanadaCa')}</Text></Link>
-                        </Center>
-                    </WrapItem>
-                    <WrapItem>
-                        <Center>
-                            <Link href={`${t('footer.termsConditionsLink')} `} {...LowerLinkStyle} > <Text>{t('footer.termsConditions')}</Text></Link>
-                        </Center>
-                    </WrapItem>
-                    <WrapItem>
-                        <Center >
-                            <Link href={`${t('footer.privacyLink')} `} {...LowerLinkStyle} > <Text>{t('footer.privacy')}</Text></Link>
-                        </Center>
-                    </WrapItem>
-                </Wrap>
-            </Box>
-            <Center pb={3} >
-                <Image src='https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg'
-                    w='auto' h='auto' maxW={{ base: '100px', sm: '100px', md: '125px', lg: '150px' }} />
-            </Center>
+  const { t } = useTranslation()
 
-            {/* <Button position='fixed' padding='1px 2px' fontSize='20px' bottom='10px' left='90px'
-                backgroundColor='#284162' color='#fff' textAlign='center'
-                onClick={() => { window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); }} >
-                <ChevronUpIcon />  </Button> */}
-        </>
-    )
+  return (
+    <>
+      <Box
+        mt={12}
+        p={3}
+        borderTop="1px solid #ffffff"
+        bg="#26374a"
+        style={{
+          backgroundImage:
+            'url(https://health-infobase.canada.ca/src/GCWeb/assets/landscape.png)  ',
+          backgroundPosition: 'right bottom',
+          backgroundRepeat: 'no-repeat',
+        }}
+        as="footer"
+        role="contentinfo"
+        // color="#333333"
+        position='fixed' bottom='3px' w={'100vw'}
+                
+      >
+        <Container maxW="7xl" px={10} color="#FFFFFF">
+          <SimpleGrid
+            columns={[1, null, 4]}
+            gap={[2, null, 10]}
+            py={2}
+            color="#FFFFFF"
+            h='130px'
+          >
+            <Box pt={{ base:0, md:20}}>
+              <Link href="/termsConditions" {...LinkStyle}>
+                <Text>{t('footer.termsConditions')}</Text>
+              </Link>
+            </Box>
+            <Box pt={{ base:0, md:20}}>
+              <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
+                <Text>{t('footer.privacy')}</Text>
+              </Link>
+            </Box>
+            <Box></Box>
+            <Box pt={{ base:0, md:20}}>              
+                <Image
+                  // src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg" //black font Canada Wordmark
+                  src="https://cpra.ca/wp-content/uploads/2021/05/logo_canada.svg" //white font Canada Wordmark
+                  w="auto"
+                  h="auto"
+                  maxW={{
+                    base: '100px',
+                    sm: '100px',
+                    md: '125px',
+                    lg: '150px',
+                  }}
+                />
+            </Box>
+          </SimpleGrid>
+        </Container>
+      </Box>
+    </>
+  )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import '../App.css'
-import '../i18n'
+import '../../App.css'
+import '../../i18n'
 import {
   HStack,
   Box,

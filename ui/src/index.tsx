@@ -11,15 +11,13 @@ import {
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import MenuIdea5 from './menu_ideas/menu5'
+import MenuIdea5 from './components_ideas/menu_ideas/menu5'
 import ExcelParsingPage from './pages/excelParser'
 import NavPage from './pages/navPage'
 import DoesNotExistPage from './pages/noLocationPage'
 import PageFive from './pages/pageFive'
 import PageFour from './pages/pageFour'
-import PageSeven from './pages/pageseven'
-import ThirdPage from './pages/pageThree'
-import SecondPage from './pages/pageTwo'
+import TermsConditions from './pages/termsConditions'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
 
@@ -81,8 +79,10 @@ root.render(
                 path=""
                 element={<ExcelParsingPage parseWorker={workerInstance} />}
               />
-              <Route path="secondpage" element={<SecondPage />}></Route>
-              <Route path="thirdpage" element={<ThirdPage />}></Route>
+              <Route
+              path="termsConditions"
+              element={<TermsConditions />}>
+              </Route>
             </Route>
 
             <Route path="/" element={<MenuIdea5 />}>
@@ -90,7 +90,6 @@ root.render(
                 path="pagefive"
                 element={<PageFive parseWorker={workerInstance} />}
               ></Route>
-              <Route path="pageseven" element={<PageSeven />}></Route>
               <Route path="/pagefour" element={<PageFour />}></Route>
               <Route path="*" element={<DoesNotExistPage />}></Route>
             </Route>
