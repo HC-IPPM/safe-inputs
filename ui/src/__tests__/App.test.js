@@ -30,7 +30,7 @@ describe('<App/>', () => {
       // </MockedProvider>,
     )
 
-    const items = await screen.findAllByText(/Safe inputs PoC/)
+    const items = await screen.findAllByText(/Safe Inputs PoC/)
     expect(items).toHaveLength(1)
   })
 })

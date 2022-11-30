@@ -6,18 +6,12 @@ import {
   HStack,
   Box,
   Image,
-  Link,
   Button,
-  Center,
   Text,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Container,
+  Link,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { FcMenu } from 'react-icons/fc'
 
 export default function TopHeader() {
   const [windowDimenion, detectHW] = useState({
@@ -93,16 +87,28 @@ export default function TopHeader() {
       <Box bg="#EEEEEE">
         <Container maxW="7xl" px={10} py={4}>
           <HStack justify="space-between">
-            <Image
-              src={t('safeInputs.image')}
-              w="auto"
+            <Link
+              bg="transparent"
               h="auto"
-              maxW={{ base: '200px', sm: '250px', md: '315px', lg: '350px' }}
-              minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
-              alt={t('safeInputs.imageAlt')}
-            />
+              _hover={{
+                bg: 'transparent',
+              }}
+              maxW={{ base: '250px', sm: '300px', md: '365px', lg: '400px' }}
+              minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
+              href="/"
+            >
+              <Image
+                src={t('safeInputs.image')}
+                w="auto"
+                h="auto"
+                alt={t('safeInputs.imageAlt')}
+              />
+            </Link>
             {/* MenuContent function above on line 112 */}
-            <LanguageButton />
+            <HStack>
+            <Link href='/'>{t("menu.home")}</Link>
+              <LanguageButton />{' '}
+            </HStack>
           </HStack>
         </Container>
       </Box>
