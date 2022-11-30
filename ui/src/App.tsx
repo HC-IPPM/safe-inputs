@@ -26,6 +26,8 @@ import {
   Tooltip,
   Text,
   Container,
+  AspectRatio,
+  Center
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
@@ -168,9 +170,49 @@ export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
   return (
     <>
       <Box className="App">
-        <Box className="App-header" mb={2}>
+        {/* <Box className="App-header" mb={2}>
           Safe inputs PoC
+        </Box> */}
+
+<Box h="2px" bg="rgb(000,000,000,.6)"></Box>      
+      <Box w="100%"
+      // boxShadow= 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
+      boxShadow= "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset"     
+      >
+        <AspectRatio h="100px">
+          <video id="background-video" loop autoPlay muted   >
+            <source
+              src="https://geo.ca/wp-content/uploads/videos/cgp_test_vid.mp4#t=1,82"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        </AspectRatio>
+        <Box bg="transparent" position={'absolute'} top="75px" w="100%">
+          <Center
+            alignItems="center"
+            justifyContent=" center"
+            height="80px"
+            w="auto"
+            p={6}            
+            borderStyle="solid"
+            transition="background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s"          
+          >
+            <Text
+              fontSize=" calc(12px + 2vmin)"
+              color="#ffffff"
+              backdropFilter="blur(10px)"
+              px={'15px'}
+              borderRadius='10px'
+              border='2px transparent'
+              fontWeight='bold'
+            >
+              Safe Inputs PoC
+            </Text>
+          </Center>
         </Box>
+      </Box>
+
         <Container maxW="7xl" px={10} mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}

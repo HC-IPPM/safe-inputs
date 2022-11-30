@@ -41,24 +41,27 @@
       "analyze": "Analyze",
       "fileProps": "File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
-      "imageAlt":"Government of Canada",
+      "imageAlt": "Government of Canada",
       "inputBar": "Choose a spreadsheet to analyze",
       "preview": "Preview",
       "showLess": "Show Less",
       "showMore": "Show More",
       "upload": "Upload"
     },
-    "secondPage": {
-      "header": "Second Page Header",
-      "para1": "Paragraph one",
-      "para2": "Paragraph two",
-      "para3": "Paragraph three"
-    },
-    "thirdPage": {
-      "header": "Third Page Header",
-      "para1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce condimentum venenatis felis at consectetur. Vivamus commodo volutpat quam, fringilla consectetur arcu ultricies at. Vivamus non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus laoreet. Quisque commodo facilisis scelerisque. Vestibulum non sapien commodo, viverra urna vel, vestibulum risus. Aliquam nibh nisi, maximus nec lorem a, eleifend tempus justo. Pellentesque sodales, erat quis aliquam iaculis, arcu ligula dignissim orci, sed viverra nibh dolor iaculis risus. Quisque sodales elit id tellus pretium faucibus. Ut vel tincidunt purus. Praesent nec elit venenatis, luctus tellus non, tristique turpis. Aliquam viverra massa vel pharetra viverra.",
-      "para2": "Suspendisse et ullamcorper mauris. Fusce fringilla urna in leo placerat rutrum. Nam in enim mollis, cursus quam a, lacinia lectus. Integer molestie dui dui, vel laoreet nunc bibendum quis. Phasellus pretium magna in nisi varius vehicula. Duis eleifend ac justo quis bibendum. In vitae cursus quam, non dictum sem. Maecenas gravida vulputate nisi, id dictum arcu tincidunt eu. Pellentesque gravida ac diam non gravida. Etiam tristique massa enim, iaculis aliquet libero euismod non. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
-      "para3": "Paragraph three"
+    "termsAndConditions": {      
+     "noticeAgreeement": {
+        "noticeAgreementHeader":"Notice of Agreement",
+        "noticeAgreeementBody": " By accessing, browsing, or using our or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you.If you do not agree to these Terms and Conditions, please refrain from using our , products and services."
+      },
+      "privacy": {
+        "privacyHeader": "Second Page Header",
+        "privacy1": "For details related to terms pertaining to privacy, please refer to ",
+        "privacy2": "our Terms and Conditions on the TBS",
+        "privacy2Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp",        
+        "privacy3": ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the ",
+        "privacy4": "Privacy Act.",
+        "privacy4Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"      
+      }
     }
   }
 }

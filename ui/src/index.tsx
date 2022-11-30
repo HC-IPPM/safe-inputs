@@ -69,34 +69,31 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <BrowserRouter>
-    <React.StrictMode>
-      <ApolloProvider client={client}>
-        <ChakraProvider theme={theme}>
-          <Routes>
-            {/* All elements inside the <NavPage/> route will have the header and footer added automatically */}
-            <Route path="/" element={<NavPage />}>
-              <Route
-                path=""
-                element={<ExcelParsingPage parseWorker={workerInstance} />}
-              />
-              <Route
-              path="termsConditions"
-              element={<TermsConditions />}>
-              </Route>
-            </Route>
-
-            <Route path="/" element={<MenuIdea5 />}>
-              <Route
-                path="pagefive"
-                element={<PageFive parseWorker={workerInstance} />}
-              ></Route>
-              <Route path="/pagefour" element={<PageFour />}></Route>
-              <Route path="*" element={<DoesNotExistPage />}></Route>
-            </Route>
-          </Routes>
-        </ChakraProvider>
-      </ApolloProvider>
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <ApolloProvider client={client}>
+      <ChakraProvider theme={theme}>
+        <Routes>
+          {/* All elements inside the <NavPage/> route will have the header and footer added automatically */}
+          <Route path="/" element={<NavPage />}>
+            <Route
+              path=""
+              element={<ExcelParsingPage parseWorker={workerInstance} />}
+            />
+            <Route path="termsConditions" element={<TermsConditions />}></Route>
+          </Route>
+          <Route path="*" element={<DoesNotExistPage />}></Route>
+          
+          <Route path="/" element={<MenuIdea5 />}>
+            <Route
+              path="pagefive"
+              element={<PageFive parseWorker={workerInstance} />}
+            ></Route>
+            <Route path="/pagefour" element={<PageFour />}></Route>
+          </Route>
+        </Routes>
+      </ChakraProvider>
+    </ApolloProvider>
+    {/* </React.StrictMode> */}
   </BrowserRouter>,
 )
 
