@@ -38,6 +38,7 @@
       "thirdPage": "Page Three"
     },
     "safeInputs": {
+      
       "analyze": "Analyze",
       "fileProps": "File Properties",
       "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
@@ -49,23 +50,50 @@
       "upload": "Upload"
     },
     "termsAndConditions": {
-      "accessToInformation": {
-        "accessToInformationHeader": "Access to Information",
-        "accessToInformationBody":"Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the",
-        "accessToInformationLink":"https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
-      },
       "noticeAgreeement": {
         "noticeAgreementHeader": "Notice of Agreement",
-        "noticeAgreeementBody": " By accessing, browsing, or using our or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you.If you do not agree to these Terms and Conditions, please refrain from using our , products and services."
+        "noticeAgreeementBody": " By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
       },
       "privacy": {
-        "privacyHeader": "Second Page Header",
-        "privacy1": "For details related to terms pertaining to privacy, please refer to ",
-        "privacy2": "our Terms and Conditions on the TBS",
+        "privacyHeader": "Privacy",
+        "privacyBody1": "For details related to terms pertaining to privacy, please refer to ",
+        "privacyBody2": "our Terms and Conditions on the TBS website",
         "privacy2Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp",
-        "privacy3": ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the ",
-        "privacy4": "Privacy Act.",
+        "privacyBody3": ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the ",
+        "privacyBody4": "Privacy Act.",
         "privacy4Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
+      },
+      "accessToInformation": {
+        "accessToInformationHeader": "Access to Information",
+        "accessToInformationBody1": "Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the ",
+        "accessToInformationBody2": "Access to Information Act.",
+        "accessToInformationLink": "https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
+      },
+      "dataSecurity": {
+        "dataSecurityHeader": "Data Security and Use",
+        "dataSecurityBody": "You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended."
+      },
+      "intellectualProperty": {
+        "intellectualPropertyHeader": "Intellectual Property, Copyright and Trademarks ",
+        "intellectualPropertyBody1": "Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada. ",
+        "intellectualPropertyBody2": "The graphics displayed on the Safe Inputs PoC website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada's approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs. ",
+
+        "intellectualPropertyBody3": "The material available on this web site is subject to the",
+        "intellectualPropertyBody4": " Copyright Act",
+        "intellectualPropertyLink1": "https://cb-cda.gc.ca/en/copyright-information/acts-and-regulations",
+        "intellectualPropertyBody5": ", and ",
+        "intellectualPropertyBody6": "Trademarks Act",
+        "intellectualPropertyLink2": "https://laws-lois.justice.gc.ca/eng/acts/t-13/FullText.html",        
+        "intellectualPropertyBody7": " and by applicable laws, policies, regulations and international agreements.",
+        "intellectualPropertyBody8": "Use of intellectual property in breach of this agreement may result in the termination of access to the Safe Inputs PoC website, product or services."
+      },
+      "dataHandling":{
+        "dataHandlingHeader": "Data Handling",
+        "dataHandlingBody1": "TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care. ",
+        "dataHandlingBody2": "You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS's mandate under the Policy on Government Security and the Policy on Service and Digital. ",
+        "dataHandlingBody3": "Any data or information disclosed to TBS will be used in a manner consistent with our ",
+        "dataHandlingBody4": "Privacy Notice Statement",
+        "dataHandlinglink": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
       }
     }
   }

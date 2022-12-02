@@ -49,23 +49,50 @@
       "upload": "Télécharger"
     },
     "termsAndConditions": {
-      "accessToInformation": {
-        "accessToInformationHeader": "accessToInformationheader",
-        "accessToInformationBody": "",
-        "accessToInformationLink":""
-      },
       "noticeAgreeement": {
-        "noticeAgreementHeader": "Notice of Agreement",
-        "noticeAgreeementBody": ""
+        "noticeAgreementHeader": "Avis d'accord",
+        "noticeAgreeementBody": "En accédant, en naviguant ou en utilisant notre site web ou nos services, vous reconnaissez avoir lu, compris et accepté d'être lié par les présentes conditions générales, et de vous conformer à toutes les lois et réglementations applicables. Nous vous recommandons de consulter périodiquement les Conditions générales afin de comprendre les mises à jour ou les modifications qui pourraient vous concerner. Si vous n'acceptez pas les présentes conditions générales, veuillez vous abstenir d'utiliser notre site Web, nos produits et nos services."
       },
       "privacy": {
-        "privacyHeader": "Titre de la Deuxieme Page",
-        "privacy1": "Premier paragraphe ",
-        "privacy2": "Deuxième paragraphe ",
-        "privacy2Link": "",
-        "privacy3": "Troisième paragraphe ",
-        "privacy4": "Privacy Act.",
-        "privacy4Link": ""
+        "privacyHeader": "Confidentialité",
+        "privacyBody1": "Pour plus de détails concernant les termes relatifs à la vie privée, veuillez vous référer à ",
+        "privacyBody2": "nos conditions générales sur le site Web du SCT. ",
+        "privacy2Link": "https://www.canada.ca/fr/transparence/avis.html",
+        "privacyBody3": "Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du ",
+        "privacyBody4": "Loi sur la protection de la vie privée.",
+        "privacy4Link": "https://laws-lois.justice.gc.ca/fra/lois/p-21/index.html"
+      },
+      "accessToInformation": {
+        "accessToInformationHeader": "Accès à l'information",
+        "accessToInformationBody1": "Les renseignements partagés avec le SCT ou acquis par l'entremise de systèmes hébergés par le SCT peuvent faire l'objet d'une divulgation publique en vertu de la Loi sur la protection des renseignements personnels. ",
+        "accessToInformationBody2": "Loi sur l'accès à l'information",
+        "accessToInformationLink": "https://www.canada.ca/fr/secretariat-conseil-tresor/services/acces-information-protection-reseignements-personnels/loi-acces-information.html"
+      },
+      "dataSecurity": {
+        "dataSecurityHeader": "Sécurité et utilisation des données",
+        "dataSecurityBody": "Vous acceptez de protéger toute information qui vous est divulguée par TBS conformément aux mesures de traitement des données décrites dans les présentes conditions générales. De même, TBS accepte de protéger toute information que vous lui communiquez. Ces informations ne doivent être utilisées qu'aux fins pour lesquelles elles ont été prévues."
+      },
+      "intellectualProperty": {
+        "intellectualPropertyHeader": "Propriété intellectuelle, droits d'auteur et marques de commerce",
+        "intellectualPropertyBody1": "Tous les produits ou services connexes qui vous sont fournis par le SCT sont et demeureront la propriété intellectuelle du gouvernement du Canada.",
+        "intellectualPropertyBody2": "Les graphiques affichés sur le site Web de Safe Inputs PoC ne peuvent pas être utilisés, en tout ou en partie, en relation avec une entreprise, des produits ou des services, ou utilisés d'une autre manière, d'une façon qui pourrait laisser croire que ce produit d'entreprise, ce service ou cette autre utilisation, a reçu l'approbation du gouvernement du Canada et ne peuvent pas être copiés, reproduits, imités ou utilisés, en tout ou en partie, sans l'autorisation écrite préalable de tbs. ",
+
+        "intellectualPropertyBody3": "Le matériel disponible sur ce site web est soumis à l'approbation de la Commission européenne. ",
+        "intellectualPropertyBody4": " Loi sur le droit d'auteur",
+        "intellectualPropertyLink1": "https://cb-cda.gc.ca/fr/information-sur-le-droit-dauteur/lois-et-reglements",
+        "intellectualPropertyBody5": ", et ",
+        "intellectualPropertyBody6": "Loi sur les marques de commerce",
+        "intellectualPropertyLink2": "https://laws-lois.justice.gc.ca/fra/lois/t-13/TexteComplet.html",
+        "intellectualPropertyBody7": " et par les lois, politiques, règlements et accords internationaux applicables.",
+        "intellectualPropertyBody8": "L'utilisation de la propriété intellectuelle en violation de cet accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Safe Inputs PoC.."
+      },
+      "dataHandling": {
+        "dataHandlingHeader": "Traitement des données",
+        "dataHandlingBody1": "Le SCT s'engage à protéger toute information que vous lui communiquez d'une manière correspondant au niveau de protection que vous utilisez pour sécuriser cette information, mais en tout état de cause, avec au moins un niveau de soin raisonnable. ",
+        "dataHandlingBody2": "Vous reconnaissez que toute donnée ou information divulguée au SCT peut être utilisée pour protéger le gouvernement du Canada ainsi que l'information électronique et les infrastructures d'information désignées comme étant importantes pour le gouvernement du Canada, conformément à l'aspect cybersécurité et assurance de l'information du mandat du SCT en vertu de la Politique sur la sécurité du gouvernement et de la Politique sur le service et le numérique. ",
+        "dataHandlingBody3": "Toute donnée ou information divulguée au SCT sera utilisée d'une manière compatible avec notre ",
+        "dataHandlingBody4": "Déclaration de confidentialité",
+        "dataHandlinglink": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-fra.asp"
       }
     }
   }

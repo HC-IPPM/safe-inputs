@@ -25,7 +25,8 @@ import {
   InputRightElement,
   Tooltip,
   Text,
-  Container} from '@chakra-ui/react'
+  Container,
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcDataSheet, FcMinus, FcPlus } from 'react-icons/fc'
 import { FullProperties } from 'xlsx'
@@ -171,7 +172,6 @@ export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
           Safe inputs PoC
         </Box>
 
-
         <Container maxW="7xl" px={10} mt={8}>
           <FormControl
             isInvalid={Boolean(invalid)}
@@ -219,7 +219,7 @@ application/vnd.ms-excel,
               <Button
                 cursor={'not-allowed'}
                 color="#FFFFFF"
-                bg="#3232FF"
+                bg="#26374a"
                 _hover={{ bg: '#1616FF99' }}
                 as="button"
               >
@@ -228,7 +228,7 @@ application/vnd.ms-excel,
             </Tooltip>
           ) : (
             <Button
-              bg="#3232FF"
+              bg="#26374a"
               color="#FFFFFF"
               _hover={{ bg: '#0000DD' }}
               onClick={() => {
