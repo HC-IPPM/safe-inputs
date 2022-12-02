@@ -16,9 +16,16 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FcMenu } from 'react-icons/fc'
+
+import TermsConditions from '../../pages/termsConditions'
 
 export default function TopHeaderModified() {
   const [windowDimenion, detectHW] = useState({
@@ -41,24 +48,17 @@ export default function TopHeaderModified() {
 
   const { t, i18n } = useTranslation()
   const LanguageButtonStyle = {
-    w: '20px',
-    h: '30px',
-    margin: '2',
     bg: 'transparent',
-    outline: 'varient',
     color: '#333333',
-    border: '1px',
-    borderColor: '#333333',
     _hover: {
-      color: '#FFFFFF',
-      bg: '#26374A',
+      color: '#0000FF',
       textDecor: 'underline',
       borderColor: '#FFFFFF',
     },
   }
 
   const homePage = (
-    <Link href="" w="auto">
+    <Link href="/pagefour" w="auto">
       <Text
         fontSize={{
           base: '18px',
@@ -69,7 +69,7 @@ export default function TopHeaderModified() {
         }}
         fontFamily="sans-serif"
       >
-        {t('menu.home')}
+        pagefour
       </Text>
     </Link>
   )
@@ -121,7 +121,7 @@ export default function TopHeaderModified() {
         API Documentation
       </Text>
     </Link>
-    )
+  )
 
   // Function for the language Button.
   // Button will change the state of the Language from EN/FR. This will change the language displayed on the page. Languages are initially set by windows language detector
@@ -130,25 +130,25 @@ export default function TopHeaderModified() {
       <>
         {i18n.language === 'en' ? (
           <>
-            <Button
+            <Link
               {...LanguageButtonStyle}
               defaultValue={i18n.language}
               onClick={() => i18n.changeLanguage('fr')}
               as="button"
             >
-              <Text>Fr</Text>
-            </Button>
+              <Text>Français</Text>
+            </Link>
           </>
         ) : (
           <>
-            <Button
+            <Link
               {...LanguageButtonStyle}
               defaultValue={i18n.language}
               onClick={() => i18n.changeLanguage('en')}
               as="button"
             >
-              <Text>En</Text>
-            </Button>
+              <Text>English</Text>
+            </Link>
           </>
         )}
       </>
@@ -161,21 +161,56 @@ export default function TopHeaderModified() {
         {windowDimenion.winWidth > 768 ? (
           <>
             <Flex bg="" w="full" py={3}>
-          <Container maxW="7xl" px={10} >
-            <Text fontSize="calc(10px + 2vmin)">Safe Inputs PoC </Text>
-          </Container>
-        </Flex>
+              <Container maxW="7xl" px={10}>
+                <Text fontSize="calc(10px + 2vmin)">Safe Inputs PoC </Text>
+              </Container>
+            </Flex>
 
-        <Flex bg="#EEEEEE" w="full" py={2}>
-          <Container maxW="7xl" px={10} >
-          <HStack gap={1} >
+            <Flex bg="#E8DCB899 " w="full" py={2}>
+              <Container maxW="8xl" px={10}>
+                <Tabs bg="#f4f0e8" variant='enclosed'>
+                  <TabList
+                    pl="12"
+                    gap={9}
+                    fontSize={{
+                      base: '18px',
+                      sm: '15px',
+                      md: '17px',
+                      lg: '17px',
+                      xl: '18px',
+                    }}
+                    fontFamily="sans-serif"
+                    
+                  >
+        
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>
+                      Safe inputs PoC
+                    </Tab>
+
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>Two</Tab>
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>Three</Tab>
+                  </TabList>
+
+                  <TabPanels>
+                    <TabPanel>
+                      <TermsConditions />
+                    </TabPanel>
+                    <TabPanel>
+                      <p>two!</p>
+                    </TabPanel>
+                    <TabPanel>
+                      <p>three!</p>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+                <HStack gap={1}>
                   <Box>{homePage}</Box>
                   <Box>{secondPage}</Box>
                   <Box>{thirdPage}</Box>
                   <Box>{fourthPage}</Box>
                 </HStack>
-          </Container>
-        </Flex>
+              </Container>
+            </Flex>
           </>
         ) : (
           <> </>
@@ -230,7 +265,7 @@ export default function TopHeaderModified() {
                   <MenuItem>{homePage}</MenuItem>
                   <MenuItem>{secondPage}</MenuItem>
                   <MenuItem>{thirdPage}</MenuItem>
-                  <MenuItem>{fourthPage}</MenuItem>                  
+                  <MenuItem>{fourthPage}</MenuItem>
                 </MenuList>
               </Menu>
               <Box>
@@ -247,34 +282,34 @@ export default function TopHeaderModified() {
   return (
     <>
       <Box bg="#FFFFFF" role={''}>
-        <Flex
-          w="100%"
-          flex={1}
-         justify={'space-between'}
-          className="pagebody"
-          id="pageMarginSetting"
-          align="center"
-          as="header"
-        >
-          <Box w="100%">
-            <Image
-              src={t('safeInputs.image')}
-              w="auto"
-              h="auto"
-              maxW={{ base: '200px', sm: '250px', md: '315px', lg: '350px' }}
-              minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
-              alt={t('safeInputs.imageAlt')}
-            />
-          </Box>
-          <Box id="pageMarginSetting">
-            {/* MenuContent function above on line 112 */}
-            <DropMenuContent />
-          </Box>
-        </Flex>
+        <Container maxW="7xl" px={10}>
+          <Flex
+            w="100%"
+            flex={1}
+            justify={'space-between'}
+            align="center"
+            as="header"
+          >
+            <Box w="100%">
+              <Image
+                src={t('safeInputs.image')}
+                w="auto"
+                h="auto"
+                maxW={{ base: '200px', sm: '250px', md: '315px', lg: '350px' }}
+                minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
+                alt={t('safeInputs.imageAlt')}
+              />
+            </Box>
+            <Box id="pageMarginSetting">
+              {/* MenuContent function above on line 112 */}
+              <DropMenuContent />
+            </Box>
+          </Flex>
+        </Container>
       </Box>
       <Box bg="#FFFFFF" role={''}>
         <LargeMenu />
-      </Box> 
+      </Box>
     </>
   )
 }

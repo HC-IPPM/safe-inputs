@@ -2,9 +2,7 @@ import React from 'react'
 
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import {
-  AspectRatio,
   Box,
-  Center,
   Container,
   Divider,
   Link,
@@ -17,50 +15,15 @@ export default function TermsConditions() {
 
   return (
     <>
-      <Box h="2px" bg="rgb(000,000,000,.6)"></Box>      
-      <Box w="100%"
-      // boxShadow= 'rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
-      boxShadow= "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset"     
-      >
-        <AspectRatio h="100px">
-          <video id="background-video" loop autoPlay muted   >
-            <source
-              src="https://geo.ca/wp-content/uploads/videos/cgp_test_vid.mp4#t=1,82"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
-        </AspectRatio>
-        <Box bg="transparent" position={'absolute'} top="75px" w="100%">
-          <Center
-            alignItems="center"
-            justifyContent=" center"
-            height="80px"
-            w="auto"
-            p={6}            
-            borderStyle="solid"
-            transition="background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s"          
-          >
-            <Text
-              fontSize=" calc(12px + 2vmin)"
-              color="#ffffff"
-              backdropFilter="blur(20px)"
-              px={'15px'}
-              borderRadius='10px'
-              border='2px transparent'
-              fontWeight='bold'
-            >
-              {t("footer.termsConditions")}
-            </Text>
-          </Center>
+
+<Box className="App-header" mb={2}>
+          {t('footer.termsConditions')}
         </Box>
-      </Box>
 
       <Container maxW="7xl" px={10} my={6} textAlign="justify">
-         <Text fontSize={'2xl'}>
+        <Text fontSize={'2xl'}>
           {t('termsAndConditions.noticeAgreeement.noticeAgreementHeader')}
         </Text>
-
         <Text>
           {t('termsAndConditions.noticeAgreeement.noticeAgreeementBody')}
         </Text>
@@ -86,16 +49,15 @@ export default function TermsConditions() {
 
         <Divider m={2} />
 
-        <Text fontSize={'2xl'}>Access to Information</Text>
+        <Text fontSize={'2xl'}>{t("termsAndConditions.accessToInformation.accessToInformationHeader")}</Text>
 
         <Text>
-          Information shared with TBS, or acquired via systems hosted by TBS,
-          may be subject to public disclosure under the
+        {t("termsAndConditions.accessToInformation.accessToInformationBody")}
           <Link
             isExternal
             href="https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
           >
-            Access to Information Act.
+            Access to Information Act.<ExternalLinkIcon mx="2px" />
           </Link>
         </Text>
 
@@ -279,7 +241,6 @@ export default function TermsConditions() {
           courts of Canada shall have exclusive jurisdiction over all matters
           arising in relation to these terms and conditions.
         </Text>
-
       </Container>
       <br />
     </>
