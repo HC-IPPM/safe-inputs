@@ -48,19 +48,24 @@
       "showMore": "Show More",
       "upload": "Upload"
     },
-    "termsAndConditions": {      
-     "noticeAgreeement": {
-        "noticeAgreementHeader":"Notice of Agreement",
+    "termsAndConditions": {
+      "accessToInformation": {
+        "accessToInformationHeader": "Access to Information",
+        "accessToInformationBody":"Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the",
+        "accessToInformationLink":"https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
+      },
+      "noticeAgreeement": {
+        "noticeAgreementHeader": "Notice of Agreement",
         "noticeAgreeementBody": " By accessing, browsing, or using our or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you.If you do not agree to these Terms and Conditions, please refrain from using our , products and services."
       },
       "privacy": {
         "privacyHeader": "Second Page Header",
         "privacy1": "For details related to terms pertaining to privacy, please refer to ",
         "privacy2": "our Terms and Conditions on the TBS",
-        "privacy2Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp",        
+        "privacy2Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp",
         "privacy3": ". Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the ",
         "privacy4": "Privacy Act.",
-        "privacy4Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"      
+        "privacy4Link": "https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
       }
     }
   }

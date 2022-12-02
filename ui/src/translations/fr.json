@@ -49,16 +49,20 @@
       "upload": "Télécharger"
     },
     "termsAndConditions": {
-      
-     "noticeAgreeement": {
-      "noticeAgreementHeader":"Notice of Agreement",
-      "noticeAgreeementBody": ""
+      "accessToInformation": {
+        "accessToInformationHeader": "accessToInformationheader",
+        "accessToInformationBody": "",
+        "accessToInformationLink":""
+      },
+      "noticeAgreeement": {
+        "noticeAgreementHeader": "Notice of Agreement",
+        "noticeAgreeementBody": ""
       },
       "privacy": {
         "privacyHeader": "Titre de la Deuxieme Page",
         "privacy1": "Premier paragraphe ",
         "privacy2": "Deuxième paragraphe ",
-        "privacy2Link":"",
+        "privacy2Link": "",
         "privacy3": "Troisième paragraphe ",
         "privacy4": "Privacy Act.",
         "privacy4Link": ""
