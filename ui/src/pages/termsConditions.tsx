@@ -1,12 +1,15 @@
 import React from 'react'
 
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { LinkIcon } from '@chakra-ui/icons'
 import {
   Box,
   Container,
   Divider,
+  HStack,
   Link,
+  ListItem,
   Text,
+  UnorderedList,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,132 +18,195 @@ export default function TermsConditions() {
 
   return (
     <>
-
-<Box className="App-header" mb={2}>
-          {t('footer.termsConditions')}
-        </Box>
+      <Box className="App-header" mb={2}>
+        {t('footer.termsConditions')}
+      </Box>
 
       <Container maxW="7xl" px={10} my={6} textAlign="justify">
         <Text fontSize={'2xl'}>
           {t('termsAndConditions.noticeAgreeement.noticeAgreementHeader')}
         </Text>
-        <Text>
-          {t('termsAndConditions.noticeAgreeement.noticeAgreeementBody')}
-        </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>
+              {t('termsAndConditions.noticeAgreeement.noticeAgreeementBody')}
+            </Text>
+          </ListItem>
+        </UnorderedList>
 
         <Divider m={2} />
 
         <Text fontSize={'2xl'}>
           {t('termsAndConditions.privacy.privacyHeader')}
         </Text>
-
-        <Text>
-          {t('termsAndConditions.privacy.privacy1')}
-          <Link isExternal href={t('termsAndConditions.privacy.privacy2Link')}>
-            {t('termsAndConditions.privacy.privacy2')}
-            <ExternalLinkIcon mx="2px" />
-          </Link>
-          {t('termsAndConditions.privacy.privacy3')}
-          <Link isExternal href={t('termsAndConditions.privacy.privacy4Link')}>
-            {t('termsAndConditions.privacy.privacy4')}
-            <ExternalLinkIcon mx="2px" />
-          </Link>
-        </Text>
-
-        <Divider m={2} />
-
-        <Text fontSize={'2xl'}>{t("termsAndConditions.accessToInformation.accessToInformationHeader")}</Text>
-
-        <Text>
-        {t("termsAndConditions.accessToInformation.accessToInformationBody")}
-          <Link
-            isExternal
-            href="https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
-          >
-            Access to Information Act.<ExternalLinkIcon mx="2px" />
-          </Link>
-        </Text>
-
-        <Divider m={2} />
-
-        <Text fontSize={'2xl'}>Data Security and Use</Text>
-
-        <Text>
-          You agree to protect any information disclosed to you by TBS in
-          accordance with the data handling measures outlined in these Terms
-          &amp; Conditions. Similarly, TBS agrees to protect any information you
-          disclose to us. Any such information must only be used for the
-          purposes for which it was intended.
-        </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>
+              {t('termsAndConditions.privacy.privacyBody1')}
+              <Link
+                isExternal
+                textDecor={'underline'}
+                href={t('termsAndConditions.privacy.privacyBody2Link')}
+              >
+                {t('termsAndConditions.privacy.privacyBody2')}
+                <LinkIcon m="2px" />
+              </Link>
+              {t('termsAndConditions.privacy.privacyBody3')}
+              <Link
+                isExternal
+                textDecor={'underline'}
+                href={t('termsAndConditions.privacy.privacy4Link')}
+              >
+                {t('termsAndConditions.privacy.privacyBody4')}
+                <LinkIcon m="2px" />
+              </Link>
+            </Text>
+          </ListItem>
+        </UnorderedList>
 
         <Divider m={2} />
 
         <Text fontSize={'2xl'}>
-          Intellectual Property, Copyright and Trademarks
+          {t(
+            'termsAndConditions.accessToInformation.accessToInformationHeader',
+          )}
         </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>
+              {t(
+                'termsAndConditions.accessToInformation.accessToInformationBody1',
+              )}
+              <Link
+                isExternal
+                textDecor={'underline'}
+                href={t(
+                  'termsAndConditions.accessToInformation.accessToInformationLink',
+                )}
+              >
+                {t(
+                  'termsAndConditions.accessToInformation.accessToInformationBody2',
+                )}
+                <LinkIcon m="2px" />
+              </Link>
+            </Text>
+          </ListItem>
+        </UnorderedList>
 
-        <Text>
-          Any products or related services provided to you by TBS are and will
-          remain the intellectual property of the Government of Canada.
-        </Text>
-        <Text>
-          The graphics displayed on the Tracker may not be used, in whole or in
-          part, in connection with any business, products or service, or
-          otherwise used, in a manner that is likely to lead to the belief that
-          such business product, service or other use, has received the
-          Government of Canada's approval and may not be copied, reproduced,
-          imitated, or used, in whole or in part, without the prior written
-          permission of tbs.
-        </Text>
-        <Text>
-          The material available on this web site is subject to the
-          <Link
-            isExternal
-            href="https://cb-cda.gc.ca/en/copyright-information/acts-and-regulations"
-          >
-            Copyright Act
-          </Link>
-          , and
-          <Link
-            isExternal
-            href="https://laws-lois.justice.gc.ca/eng/acts/t-13/FullText.html"
-          >
-            Trademarks Act
-          </Link>
-          and by applicable laws, policies, regulations and international
-          agreements.
-        </Text>
-        <Text>
-          Use of intellectual property in breach of this agreement may result in
-          the termination of access to the Tracker , product or services.
-        </Text>
         <Divider m={2} />
-        <Text fontSize={'2xl'}>Data Handling</Text>
-        <Text>
-          TBS agrees to protect any information you disclose to us in a manner
-          commensurate with the level of protection you use to secure such
-          information, but in any event, with no less than a reasonable level of
-          care.
+
+        <Text fontSize={'2xl'}>
+          {t('termsAndConditions.dataSecurity.dataSecurityHeader')}
         </Text>
-        <Text>
-          You acknowledge that any data or information disclosed to TBS may be
-          used to protect the Government of Canada as well as electronic
-          information and information infrastructures designated as being of
-          importance to the Government of Canada in accordance with cyber
-          security and information assurance aspect of TBS's mandate under the
-          Policy on Government Security and the Policy on Service and Digital.
-        </Text>
-        <Text>
-          Any data or information disclosed to TBS will be used in a manner
-          consistent with our
-          <Link
-            isExternal
-            href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
-          >
-            Privacy Notice Statement
-          </Link>
-        </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>{t('termsAndConditions.dataSecurity.dataSecurityBody')}</Text>
+          </ListItem>
+        </UnorderedList>
+
         <Divider m={2} />
+
+        <Text fontSize={'2xl'}>
+          {t(
+            'termsAndConditions.intellectualProperty.intellectualPropertyHeader',
+          )}
+        </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody1',
+              )}
+            </Text>
+          </ListItem>
+          <ListItem p={2} >
+            <Text>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody2',
+              )}
+            </Text>
+          </ListItem>
+          <ListItem p={2} >
+            <Text>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody3',
+              )}
+              <Link
+                isExternal
+                textDecor={'underline'}
+                href={t(
+                  'termsAndConditions.intellectualProperty.intellectualPropertyLink1',
+                )}
+              >
+                {t(
+                  'termsAndConditions.intellectualProperty.intellectualPropertyBody4',
+                )}
+              </Link>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody5',
+              )}
+              <Link
+                isExternal
+                textDecor={'underline'}
+                href={t(
+                  'termsAndConditions.intellectualProperty.intellectualPropertyLink2',
+                )}
+              >
+                {t(
+                  'termsAndConditions.intellectualProperty.intellectualPropertyBody6',
+                )}
+              </Link>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody7',
+              )}
+            </Text>
+          </ListItem>
+          <ListItem p={2} >
+            <Text>
+              {t(
+                'termsAndConditions.intellectualProperty.intellectualPropertyBody8',
+              )}
+            </Text>
+          </ListItem>
+        </UnorderedList>
+
+        <Divider m={2} />
+
+        <Text fontSize={'2xl'}>
+          {t('termsAndConditions.dataHandling.dataHandlingHeader')}
+        </Text>
+        <UnorderedList>
+          <ListItem p={2} >
+            <Text>
+              {t('termsAndConditions.dataHandling.dataHandlingBody1')}
+            </Text>
+          </ListItem>
+          <ListItem p={2} >
+            <Text>
+              {t('termsAndConditions.dataHandling.dataHandlingBody2')}
+            </Text>
+          </ListItem>
+          <ListItem p={2} >
+            <Text>
+              {t('termsAndConditions.dataHandling.dataHandlingBody3')}
+              <Link
+                textDecor={'underline'}
+                isExternal
+                href={t('termsAndConditions.dataHandling.dataHandlingLink')}
+              >
+                {t('termsAndConditions.dataHandling.dataHandlingBody4')}
+                <LinkIcon />
+              </Link>
+            </Text>
+          </ListItem>
+        </UnorderedList>
+        <Divider m={2} />
+        {/* <Divider m={2} />
+        <Divider m={2} />
+        <Divider m={2} />
+        <Divider m={2} />
+        <Divider m={2} />
+        <Divider m={2} /> */}
         <Text fontSize={'2xl'}>Account</Text>
         <Text>
           You will need a Tracker account to use certain products and services.
@@ -227,7 +293,11 @@ export default function TermsConditions() {
         <Text>
           If at any time you or your representatives wish to adjust or cancel
           these services, please contact us at
-          <Link isExternal href="https://https-everywhere.canada.ca/en/help/">
+          <Link
+            textDecor={'underline'}
+            isExternal
+            href="https://https-everywhere.canada.ca/en/help/"
+          >
             https://https-everywhere.canada.ca/en/help/
           </Link>
         </Text>
