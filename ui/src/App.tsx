@@ -172,7 +172,7 @@ export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
           Safe inputs PoC
         </Box>
 
-        <Container maxW="7xl" px={10} mt={8}>
+        <Container maxW="7xl" px={10} mt={8} minH='66vh'>
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -363,6 +363,7 @@ application/vnd.ms-excel,
           )}
         </Container>
       </Box>
+      <br />
     </>
   )
 }
