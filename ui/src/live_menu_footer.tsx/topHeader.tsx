@@ -85,7 +85,7 @@ export default function TopHeader() {
   return (
     <>
       <Box bg="#EEEEEE">
-        <Container maxW="7xl" px={10} py={4}>
+        <Container maxW="7xl" px={{base:5, md:10}} py={4}>
           <HStack justify="space-between">
             <Link
               bg="transparent"

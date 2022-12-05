@@ -2,7 +2,15 @@ import React from 'react'
 
 import '../App.css'
 import '../i18n'
-import { Box, Link, Image, Text, SimpleGrid, Container } from '@chakra-ui/react'
+import {
+  Box,
+  Link,
+  Image,
+  Text,
+  SimpleGrid,
+  Container,
+  Spacer,
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 export default function Footer() {
@@ -18,7 +26,7 @@ export default function Footer() {
     <>
       <Box
         mt={2}
-        p={3}
+        py={3}
         borderTop="1px solid #ffffff"
         bg="#26374a"
         style={{
@@ -31,35 +39,41 @@ export default function Footer() {
         role="contentinfo"
         color="#333333"
         position="relative"
-        bottom="1px"
+        bottom="0px"
         w={'100%'}
       >
-        <Container maxW="7xl" px={10} color="#FFFFFF">
-          <SimpleGrid
-            columns={[1, null, 7]}
-            gap={[2, null, 20]}
-            py={2}
-            color="#FFFFFF"
-            h="130px"
-          >
-            <Box pt={{ base: 0, md: 20 }} minW='190px'>
-              <Link href="/termsConditions" {...LinkStyle}>
-                <Text>{t('footer.termsConditions')}</Text>
-              </Link>
+        <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
+          <SimpleGrid columns={[1, null, 6]}>
+            <Box
+              minW={{
+                base: '200px',
+                sm: '200px',
+                md: '350px',
+              }}
+            >
+              <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
+                <Box pt={{ base: 6, md: 20 }}>
+                  <Link href="/termsConditions" {...LinkStyle}>
+                    <Text>{t('footer.termsConditions')}</Text>
+                  </Link>
+                </Box>
+                <Box pt={{ base: 0, md: 20 }}>
+                  <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
+                    <Text>{t('footer.privacy')}</Text>
+                  </Link>
+                </Box>
+              </SimpleGrid>
             </Box>
-            <Box pt={{ base: 0, md: 20 }} >
-              <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
-                <Text>{t('footer.privacy')}</Text>
-              </Link>
-            </Box>
-            <Box ></Box>
-            <Box ></Box>
-            <Box ></Box>
-            <Box ></Box>
-            <Box pt={{ base: 0, md: 20 }}>
+            <Spacer />
+            <Spacer />
+            <Spacer />
+            <Spacer />
+            <Box pt={{ base: 5, md: 20 }}>
               <Image
                 // src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg" //black font Canada Wordmark
-                src="https://cpra.ca/wp-content/uploads/2021/05/logo_canada.svg" //white font Canada Wordmark
+                src={
+                  process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg'
+                } //white font Canada Wordmark
                 w="auto"
                 h="auto"
                 maxW={{
@@ -75,7 +89,7 @@ export default function Footer() {
       </Box>
 
       {/* This box adds a sm,all white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
-      <Box h="1px" bg="white" position="relative" bottom="0px" w={'100%'}></Box>
+      <Box h="5px" bg="white" position="relative" bottom="0px" w={'100%'}></Box>
     </>
   )
 }

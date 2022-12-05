@@ -40,7 +40,7 @@
     "safeInputs": {
       "analyze": "Analyser",
       "fileProps": "Propriétés du fichier",
-      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-fr.svg",
+      "image": "images/sig-blk-fr.svg",
       "imageAlt": "Gouvernement du Canada",
       "inputBar": "Choisissez une feuille de calcul à analyser",
       "preview": "Prévisualisation",
