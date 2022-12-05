@@ -30,8 +30,7 @@ export default function Footer() {
         borderTop="1px solid #ffffff"
         bg="#26374a"
         style={{
-          backgroundImage:
-            'url(https://health-infobase.canada.ca/src/GCWeb/assets/landscape.png)  ',
+          backgroundImage: 'url(images/landscape.png)',
           backgroundPosition: 'right bottom',
           backgroundRepeat: 'no-repeat',
         }}
@@ -70,10 +69,10 @@ export default function Footer() {
             <Spacer />
             <Box pt={{ base: 5, md: 20 }}>
               <Image
-                // src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg" //black font Canada Wordmark
+                loading="lazy"
                 src={
                   process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg'
-                } //white font Canada Wordmark
+                }
                 w="auto"
                 h="auto"
                 maxW={{
