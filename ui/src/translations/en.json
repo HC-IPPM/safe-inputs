@@ -41,7 +41,7 @@
       
       "analyze": "Analyze",
       "fileProps": "File Properties",
-      "image": "https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_0_45/wet-boew/assets/sig-blk-en.svg",
+      "image": "images/sig-blk-en.svg",
       "imageAlt": "Government of Canada",
       "inputBar": "Choose a spreadsheet to analyze",
       "preview": "Preview",
