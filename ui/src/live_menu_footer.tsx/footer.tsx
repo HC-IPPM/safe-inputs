@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <>
       <Box
-        mt={12}
+        mt={2}
         p={3}
         borderTop="1px solid #ffffff"
         bg="#26374a"
@@ -30,29 +30,32 @@ export default function Footer() {
         as="footer"
         role="contentinfo"
         color="#333333"
-        position="fixed"
+        position="relative"
         bottom="1px"
-        w={'100vw'}
+        w={'100%'}
       >
         <Container maxW="7xl" px={10} color="#FFFFFF">
           <SimpleGrid
-            columns={[1, null, 4]}
-            gap={[2, null, 10]}
+            columns={[1, null, 7]}
+            gap={[2, null, 20]}
             py={2}
             color="#FFFFFF"
             h="130px"
           >
-            <Box pt={{ base: 0, md: 20 }}>
+            <Box pt={{ base: 0, md: 20 }} minW='190px'>
               <Link href="/termsConditions" {...LinkStyle}>
                 <Text>{t('footer.termsConditions')}</Text>
               </Link>
             </Box>
-            <Box pt={{ base: 0, md: 20 }}>
+            <Box pt={{ base: 0, md: 20 }} >
               <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
                 <Text>{t('footer.privacy')}</Text>
               </Link>
             </Box>
-            <Box></Box>
+            <Box ></Box>
+            <Box ></Box>
+            <Box ></Box>
+            <Box ></Box>
             <Box pt={{ base: 0, md: 20 }}>
               <Image
                 // src="https://www.canada.ca/etc/designs/canada/wet-boew/assets/wmms-blk.svg" //black font Canada Wordmark
@@ -72,7 +75,7 @@ export default function Footer() {
       </Box>
 
       {/* This box adds a sm,all white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
-      <Box h="1px" bg="white" position="fixed" bottom="0px" w={'100vw'}></Box>
+      <Box h="1px" bg="white" position="relative" bottom="0px" w={'100%'}></Box>
     </>
   )
 }
