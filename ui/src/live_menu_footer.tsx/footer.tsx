@@ -81,6 +81,7 @@ export default function Footer() {
                   md: '125px',
                   lg: '150px',
                 }}
+                alt={t('footer.canadaImageAlt')}
               />
             </Box>
           </SimpleGrid>
