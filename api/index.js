@@ -24,15 +24,15 @@ const jc = JSONCodec(); // for encoding NAT's messages
 const jsm = await nc.jetstreamManager();
 const js = nc.jetstream();
 
-// Add a stream to publish on 
-const stream = "safeInputsRawSheetData";
-const subj = `safeInputsRawSheetData.>`;
-await jsm.streams.add({ name: stream, subjects: [subj] });
+// // Add a stream to publish on 
+// const stream = "safeInputsRawSheetData";
+// const subj = `safeInputsRawSheetData.>`;
+// await jsm.streams.add({ name: stream, subjects: [subj] });
 
 function publish(payload) {
   // Publishes payload of json valid spreadsheet data via NATS. Called in GraphQL resolver.
-  // nc.publish("sheetData", jc.encode(payload))
-  js.publish(stream, jc.encode(payload))
+  nc.publish("sheetData", jc.encode(payload))
+  // js.publish(stream, jc.encode(payload))
 
 }
 
