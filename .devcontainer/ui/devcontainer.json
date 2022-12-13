@@ -1,6 +1,18 @@
 {
+  "name": "SafeInputs UI Development Container",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {}
-  }
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-contrib/features/jest:1": {}
+  },
+  "extensions": [
+    "yzhang.markdown-all-in-one", 
+    "ohsen1.prettify-json",
+    "wallabyjs.console-ninja",
+    "oderwat.indent-rainbow",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint"
+    
+  ]
 }
