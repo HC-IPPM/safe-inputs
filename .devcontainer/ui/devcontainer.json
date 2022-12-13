@@ -12,7 +12,7 @@
     "oderwat.indent-rainbow",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "rvest.vs-code-prettier-eslint"
-    
+    "rvest.vs-code-prettier-eslint",
+    "mutantdino.resourcemonitor"
   ]
 }
