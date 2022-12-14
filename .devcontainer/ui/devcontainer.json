@@ -1,7 +1,6 @@
 {
   "name": "SafeInputs UI Development Container",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:16-bullseye",
-  "workspaceFolder": "/workspace",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers-contrib/features/jest:1": {}
