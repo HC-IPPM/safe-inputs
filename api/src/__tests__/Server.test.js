@@ -99,5 +99,4 @@ describe('Server', () => {
       expect(publish).toHaveBeenCalledTimes(1)
     })
   })
-
 })
