@@ -28,7 +28,7 @@ const resolvers = {
       const test = publish(sheetData);
       return sheetData
    }, 
-  }
+  },
 }
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
@@ -62,7 +62,7 @@ describe('Server', () => {
         })
       const [err] = response.body.errors
 
-      expect(err.message).toMatch(/^Syntax Error: Query Cost limit of 10 exceeded/);
+      expect(err.message).toMatch("Syntax Error: Aliases limit of 4 exceeded, found 8");
     })
   })
 
@@ -92,8 +92,9 @@ describe('Server', () => {
           query: `mutation {
                 verifyJsonFormat(sheetData: "a")
              }`,
-          contextValue: {publish},
+          context: {publish},
         })
+      // console.log (response)
 
       expect(response.body).not.toHaveProperty('errors')
       expect(publish).toHaveBeenCalledTimes(1)
