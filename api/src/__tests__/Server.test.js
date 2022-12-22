@@ -92,9 +92,8 @@ describe('Server', () => {
           query: `mutation {
                 verifyJsonFormat(sheetData: "a")
              }`,
-          context: {publish},
+          // contextValue: {publish},
         })
-      // console.log (response)
 
       expect(response.body).not.toHaveProperty('errors')
       expect(publish).toHaveBeenCalledTimes(1)
