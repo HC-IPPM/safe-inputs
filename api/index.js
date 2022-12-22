@@ -3,7 +3,7 @@ import { Server } from './src/Server.js'
 import { schema } from './src/schema.js'
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'
 
-const {
+const { 
   PORT = 3000,
   HOST = '0.0.0.0',
   NATS_URL = "demo.nats.io:4222", // Uncomment this to use demo server

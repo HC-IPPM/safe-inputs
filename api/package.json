@@ -14,18 +14,18 @@
   "author": "Mike Williamson",
   "license": "MIT",
   "dependencies": {
+    "@envelop/core": "^3.0.4",
+    "@envelop/disable-introspection": "^4.0.4",
     "@escape.tech/graphql-armor": "^1.4.0",
-    "@graphql-yoga/node": "^2.13.13",
+    "@escape.tech/graphql-armor-max-aliases": "^1.6.0",
+    "@escape.tech/graphql-armor-max-depth": "^1.8.0",
+    "@graphql-tools/schema": "^9.0.12",
     "dotenv-safe": "^8.2.0",
-    "express": "^4.18.1",
-    "express-graphql": "^0.12.0",
-    "graphql": "^15.3.0",
-    "graphql-query-complexity": "^0.11.0",
-    "graphql-scalars": "^1.17.0",
     "graphql-type-json": "^0.3.2",
+    "graphql-yoga": "^3.1.1",
+    "http": "^0.0.1-security",
     "nats": "^2.8.0",
-    "node-abort-controller": "^3.0.1",
-    "postgres": "^3.1.0"
+    "node-abort-controller": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",
