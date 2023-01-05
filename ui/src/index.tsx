@@ -59,8 +59,8 @@ const theme = extendTheme(
 )
 
 const client = new ApolloClient({
-  // uri: '/graphql',
-  uri: 'http://localhost:3000/graphql',
+  uri: '/graphql',
+  // uri: 'http://localhost:3000/graphql',
   cache: new InMemoryCache(),
 })
 
