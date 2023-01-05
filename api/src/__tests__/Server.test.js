@@ -41,7 +41,7 @@ describe('Server', () => {
       const server = new Server({ schema})
 
       const response = await request(server)
-        .post('/')
+        .post('/graphql')
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -55,7 +55,7 @@ describe('Server', () => {
     it('rejects it', async () => {
       const server = new Server({ schema })
       const response = await request(server)
-        .post('/')
+        .post('/graphql')
         .set('Accept', 'application/json')
         .send({
           query: '{a:hello, b:hello, c:hello, d:hello, e:hello, f:hello, g:hello, h:hello}',
@@ -70,7 +70,7 @@ describe('Server', () => {
     it('executes it', async () => {
       const server = new Server({ schema })
       const response = await request(server)
-        .post('/')
+        .post('/graphql')
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -86,7 +86,7 @@ describe('Server', () => {
       const server = new Server({ schema, context:{publish}})
       
       const response = await request(server)
-        .post('/')
+        .post('/graphql')
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
