@@ -98,13 +98,10 @@ export default function TopHeader() {
               href="/"
             >
               <Image
-                returnNull={false}
                 src={t('safeInputs.image')}
                 w="auto"
                 h="auto"
-                alt=
-                // {t('safeInputs.imageAlt')}
-                {`${t('safeInputs.imageAlt')} ID321`}
+                alt={t('safeInputs.imageAlt')}
               />
             </Link>
             {/* MenuContent function above on line 112 */}
