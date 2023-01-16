@@ -42,13 +42,14 @@ export default function Footer() {
         w={'100%'}
       >
         <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
-          <SimpleGrid columns={[1, null, 6]}>
+          <SimpleGrid columns={[1, null, 6]} >
             <Box
               minW={{
                 base: '200px',
                 sm: '200px',
                 md: '350px',
               }}
+              zIndex='1'
             >
               <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
                 <Box pt={{ base: 6, md: 20 }}>
@@ -82,6 +83,7 @@ export default function Footer() {
                   lg: '150px',
                 }}
                 alt={t('footer.canadaImageAlt')}
+                returnNull={false}
               />
             </Box>
           </SimpleGrid>

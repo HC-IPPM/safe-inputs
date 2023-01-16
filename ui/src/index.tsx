@@ -11,12 +11,9 @@ import {
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import MenuIdea5 from './components_ideas/menu_ideas/menu5'
 import ExcelParsingPage from './pages/excelParser'
 import NavPage from './pages/navPage'
 import DoesNotExistPage from './pages/noLocationPage'
-import PageFive from './pages/pageFive'
-import PageFour from './pages/pageFour'
 import TermsConditions from './pages/termsConditions'
 import reportWebVitals from './reportWebVitals'
 import workerInstance from './serviceWorker'
@@ -83,13 +80,6 @@ root.render(
           </Route>
           <Route path="*" element={<DoesNotExistPage />}></Route>
           
-          <Route path="/" element={<MenuIdea5 />}>
-            <Route
-              path="pagefive"
-              element={<PageFive parseWorker={workerInstance} />}
-            ></Route>
-            <Route path="/pagefour" element={<PageFour />}></Route>
-          </Route>
         </Routes>
       </ChakraProvider>
     </ApolloProvider>
