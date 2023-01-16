@@ -36,7 +36,9 @@ export default function PageFour() {
           {t('secondPage.header')}
         </Box>
         <Flex bg="" w="full" py={3}>
-          <Container maxW="7xl" px={10}>
+          <Container maxW="7xl" 
+           px={10}
+          >
             <Text>{t('thirdPage.para1')} </Text>
           </Container>
         </Flex>
@@ -63,7 +65,7 @@ export default function PageFour() {
             </Text>
             <br />
             <Text>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
               condimentum venenatis felis at consectetur. Vivamus commodo
               volutpat quam, fringilla consectetur arcu ultricies at. Vivamus
               non enim ex. Nulla ultricies semper sem, a accumsan mauris luctus
