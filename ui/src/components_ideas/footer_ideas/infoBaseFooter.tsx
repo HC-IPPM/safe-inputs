@@ -161,6 +161,7 @@ export default function FooterIdea1() {
                 md: '125px',
                 lg: '150px',
               }}
+              returnNull={false}
             />
           </Box>
         </SimpleGrid>

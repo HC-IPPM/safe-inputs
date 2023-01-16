@@ -85,7 +85,7 @@ export default function TopHeader() {
   return (
     <>
       <Box bg="#EEEEEE">
-        <Container maxW="7xl" px={{base:5, md:10}} py={4}>
+        <Container maxW="7xl" px={{ base: 5, md: 10 }} py={4}>
           <HStack justify="space-between">
             <Link
               bg="transparent"
@@ -102,11 +102,12 @@ export default function TopHeader() {
                 w="auto"
                 h="auto"
                 alt={t('safeInputs.imageAlt')}
+                returnNull={false}
               />
             </Link>
             {/* MenuContent function above on line 112 */}
             <HStack>
-            <Link href='/'>{t("menu.home")}</Link>
+              <Link href="/">{t('menu.home')}</Link>
               <LanguageButton />{' '}
             </HStack>
           </HStack>
