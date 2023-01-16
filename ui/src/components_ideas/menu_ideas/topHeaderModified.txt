@@ -168,7 +168,7 @@ export default function TopHeaderModified() {
 
             <Flex bg="#E8DCB899 " w="full" py={2}>
               <Container maxW="8xl" px={10}>
-                <Tabs bg="#f4f0e8" variant="enclosed">
+                <Tabs bg="#f4f0e8" variant='enclosed'>
                   <TabList
                     pl="12"
                     gap={9}
@@ -180,35 +180,15 @@ export default function TopHeaderModified() {
                       xl: '18px',
                     }}
                     fontFamily="sans-serif"
+                    
                   >
-                    <Tab
-                      _selected={{
-                        outline: 'variant',
-                        bg: '#BBBBBB',
-                        boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px',
-                      }}
-                    >
+        
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>
                       Safe inputs PoC
                     </Tab>
 
-                    <Tab
-                      _selected={{
-                        outline: 'variant',
-                        bg: '#BBBBBB',
-                        boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px',
-                      }}
-                    >
-                      Two
-                    </Tab>
-                    <Tab
-                      _selected={{
-                        outline: 'variant',
-                        bg: '#BBBBBB',
-                        boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px',
-                      }}
-                    >
-                      Three
-                    </Tab>
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>Two</Tab>
+                    <Tab _selected={{ outline: 'variant', bg: '#BBBBBB',boxShadow:"rgba(0, 0, 0, 0.4) 0px 2px 4px" }}>Three</Tab>
                   </TabList>
 
                   <TabPanels>
@@ -318,7 +298,6 @@ export default function TopHeaderModified() {
                 maxW={{ base: '200px', sm: '250px', md: '315px', lg: '350px' }}
                 minW={{ base: '170px', sm: '215px', md: '260px', lg: '275px' }}
                 alt={t('safeInputs.imageAlt')}
-                returnNull={false}
               />
             </Box>
             <Box id="pageMarginSetting">

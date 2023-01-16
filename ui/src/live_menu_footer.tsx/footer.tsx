@@ -42,25 +42,28 @@ export default function Footer() {
         w={'100%'}
       >
         <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
-          <SimpleGrid columns={[1, null, 6]}>
-            <SimpleGrid
-              columns={[1, null, 2]}
-              gap={{ base: 3, md: 0 }}
-              pt={{ base: 6, md: 20 }}
+          <SimpleGrid columns={[1, null, 6]} >
+            <Box
               minW={{
-                base: '300px',
-                sm: '300px',
-                md: '450px',
+                base: '200px',
+                sm: '200px',
+                md: '350px',
               }}
-              zIndex="1"
+              zIndex='1'
             >
-              <Link href="/termsConditions" {...LinkStyle}>
-                <Text>{t('footer.termsConditions')}</Text>
-              </Link>
-              <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
+              <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
+                <Box pt={{ base: 6, md: 20 }}>
+                  <Link href="/termsConditions" {...LinkStyle}>
+                    <Text>{t('footer.termsConditions')}</Text>
+                  </Link>
+                </Box>
+                <Box pt={{ base: 0, md: 20 }}>
+                  <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
                     <Text>{t('footer.privacy')}</Text>
-                  </Link>              
-            </SimpleGrid>
+                  </Link>
+                </Box>
+              </SimpleGrid>
+            </Box>
             <Spacer />
             <Spacer />
             <Spacer />
