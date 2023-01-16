@@ -173,7 +173,7 @@ export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
           Safe inputs PoC
         </Box>
 
-        <Container maxW="8xl" pl={10} pr={10} mt={8} className='pagebody'>
+        <Container maxW="8xl" pl={10} pr={10} mt={8} className="pagebody">
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -213,37 +213,36 @@ application/vnd.ms-excel,
           <br />
 
           <Center>
-          {file === null ? (
-            <Tooltip
-              hasArrow
-              label={t('safeInputs.inputBar')}
-              aria-label="A tooltip"
-            >
+            {file === null ? (
+              <Tooltip
+                hasArrow
+                label={t('safeInputs.inputBar')}
+                aria-label="A tooltip"
+              >
+                <Button
+                  cursor={'not-allowed'}
+                  color="#FFFFFF"
+                  bg="#3232FF"
+                  _hover={{ bg: '#1616FF99' }}
+                  as="button"
+                >
+                  {t('safeInputs.upload')}
+                </Button>
+              </Tooltip>
+            ) : (
               <Button
-                cursor={'not-allowed'}
-                color="#FFFFFF"
                 bg="#3232FF"
-                _hover={{ bg: '#1616FF99' }}
-                as="button"
+                color="#FFFFFF"
+                _hover={{ bg: '#0000DD' }}
+                onClick={() => {
+                  file && parseWorker.parse(file)
+                  console.log('')
+                }}
               >
                 {t('safeInputs.upload')}
               </Button>
-            </Tooltip>
-          ) : (
-
-            <Button
-              bg="#3232FF"
-              color="#FFFFFF"
-              _hover={{ bg: '#0000DD' }}
-              onClick={() => {
-                file && parseWorker.parse(file)
-                console.log('')
-              }}
-            >
-              {t('safeInputs.upload')}
-            </Button>
-          )}
-</Center>
+            )}
+          </Center>
           {parserStatus && parserStatus.state === 'LOADING' && <Spinner />}
           {parserStatus && parserStatus.state === 'DONE' && p && (
             <Box>

@@ -43,26 +43,24 @@ export default function Footer() {
       >
         <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
           <SimpleGrid columns={[1, null, 6]}>
-            <Box
+            <SimpleGrid
+              columns={[1, null, 2]}
+              gap={{ base: 3, md: 0 }}
+              pt={{ base: 6, md: 20 }}
               minW={{
-                base: '200px',
-                sm: '200px',
-                md: '350px',
+                base: '300px',
+                sm: '300px',
+                md: '450px',
               }}
+              zIndex="1"
             >
-              <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
-                <Box pt={{ base: 6, md: 20 }}>
-                  <Link href="/termsConditions" {...LinkStyle}>
-                    <Text>{t('footer.termsConditions')}</Text>
-                  </Link>
-                </Box>
-                <Box pt={{ base: 0, md: 20 }}>
-                  <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
+              <Link href="/termsConditions" {...LinkStyle}>
+                <Text>{t('footer.termsConditions')}</Text>
+              </Link>
+              <Link href={`${t('footer.privacyLink')} `} {...LinkStyle}>
                     <Text>{t('footer.privacy')}</Text>
-                  </Link>
-                </Box>
-              </SimpleGrid>
-            </Box>
+                  </Link>              
+            </SimpleGrid>
             <Spacer />
             <Spacer />
             <Spacer />
@@ -82,6 +80,7 @@ export default function Footer() {
                   lg: '150px',
                 }}
                 alt={t('footer.canadaImageAlt')}
+                returnNull={false}
               />
             </Box>
           </SimpleGrid>
