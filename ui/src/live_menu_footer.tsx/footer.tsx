@@ -69,8 +69,7 @@ export default function Footer() {
             <Spacer />
             <Spacer />
             <Box pt={{ base: 5, md: 20 }}>
-              <Image
-                returnNull={false}
+              <Image                 
                 loading="lazy"
                 src={
                   process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg'
@@ -83,9 +82,7 @@ export default function Footer() {
                   md: '125px',
                   lg: '150px',
                 }}
-                alt=
-                // {t('footer.canadaImageAlt')}
-                {`${t('footer.canadaImageAlt')} ID123`}
+                alt={t('footer.canadaImageAlt')}
               />
             </Box>
           </SimpleGrid>
