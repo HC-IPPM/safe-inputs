@@ -14,39 +14,34 @@
   "author": "Mike Williamson",
   "license": "MIT",
   "dependencies": {
-    "@envelop/core": "^3.0.4",
-    "@envelop/disable-introspection": "^4.0.4",
-    "@escape.tech/graphql-armor-max-aliases": "^1.6.0",
-    "@escape.tech/graphql-armor-max-depth": "^1.8.0",
-    "@graphql-tools/schema": "^9.0.12",
-    "dotenv-safe": "^8.2.0",
+    "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
+    "@escape.tech/graphql-armor-max-depth": "^1.8.1",
+    "@graphql-yoga/node": "^3.3.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.32.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "graphql": "^16.6.0",
     "graphql-type-json": "^0.3.2",
-    "graphql-yoga": "^3.1.1",
-    "http": "^0.0.1-security",
-    "nats": "^2.8.0",
-    "node-abort-controller": "^3.0.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.17.12",
-    "babel-jest": "^28.0.3",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jest": "^24.4.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.1",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-standard": "^4.1.0",
-    "jest": "^27.0.6",
-    "prettier": "^2.6.2",
-    "supertest": "^6.2.4"
+    "nats": "^2.11.0",
+    "node-abort-controller": "^3.0.1",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "verbose": true,
     "setupFilesAfterEnv": [
       "./setupTests.js"
     ]
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "@babel/core": "^7.20.12",
+    "babel-jest": "^29.3.1",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^4.1.0",
+    "prettier": "^2.8.3"
   }
 }

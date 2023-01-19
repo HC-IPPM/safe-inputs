@@ -23,18 +23,3 @@ export function Server({
 
   return server
 }
-  // const app = express()
-  // const graphQLServer = createServer({
-  //   schema,
-  //   context,
-  //   maskedErrors: false,
-  //   plugins: [...protection.plugins],
-  // })
-
-//   // Bind GraphQL Yoga to `/graphql` endpoint
-//   app.use(
-//     '/', 
-//     graphQLServer,
-//   )
-//   return app
-// }
