@@ -197,7 +197,7 @@ application/vnd.ms-excel,
                 style={{ display: 'none' }}
               />
               <Input
-                placeholder={t('safeInputs.inputBar')}
+                placeholder={t('safeInputs.inputBar' ) || '' }
                 onClick={() =>
                   inFile && inFile.current && inFile.current.click()
                 }
