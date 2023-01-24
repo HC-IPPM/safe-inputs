@@ -44,7 +44,7 @@ export default function TermsConditions() {
               <Link
                 isExternal
                 textDecor={'underline'}
-                href={t('termsAndConditions.privacy.privacyBody2Link')}
+                href={t('termsAndConditions.privacy.privacyBody2Link')  || '' }
               >
                 {t('termsAndConditions.privacy.privacyBody2')}
                 <LinkIcon m="2px" />
@@ -53,7 +53,7 @@ export default function TermsConditions() {
               <Link
                 isExternal
                 textDecor={'underline'}
-                href={t('termsAndConditions.privacy.privacy4Link')}
+                href={t('termsAndConditions.privacy.privacy4Link')  || '' }
               >
                 {t('termsAndConditions.privacy.privacyBody4')}
                 <LinkIcon m="2px" />
@@ -83,7 +83,7 @@ export default function TermsConditions() {
                 textDecor={'underline'}
                 href={t(
                   'termsAndConditions.accessToInformation.accessToInformationLink',
-                )}
+                )  || '' }
               >
                 {t(
                   'termsAndConditions.accessToInformation.accessToInformationBody2',
@@ -143,7 +143,7 @@ export default function TermsConditions() {
                 textDecor={'underline'}
                 href={t(
                   'termsAndConditions.intellectualProperty.intellectualPropertyLink1',
-                )}
+                ) || '' }
               >
                 {t(
                   'termsAndConditions.intellectualProperty.intellectualPropertyBody4',
@@ -157,7 +157,7 @@ export default function TermsConditions() {
                 textDecor={'underline'}
                 href={t(
                   'termsAndConditions.intellectualProperty.intellectualPropertyLink2',
-                )}
+                ) || '' }
               >
                 {t(
                   'termsAndConditions.intellectualProperty.intellectualPropertyBody6',
@@ -202,7 +202,7 @@ export default function TermsConditions() {
               <Link
                 textDecor={'underline'}
                 isExternal
-                href={t('termsAndConditions.dataHandling.dataHandlingLink')}
+                href={t('termsAndConditions.dataHandling.dataHandlingLink') || '' }
               >
                 {t('termsAndConditions.dataHandling.dataHandlingBody4')}
                 <LinkIcon />
@@ -322,7 +322,7 @@ export default function TermsConditions() {
               <Link
                 isExternal
                 textDecor={'underline'}
-                href={t('termsAndConditions.termination.terminationBody2Link')}
+                href={t('termsAndConditions.termination.terminationBody2Link') || '' }
               >
                 {t('termsAndConditions.termination.terminationBody3')}
                 <LinkIcon m="2px" />

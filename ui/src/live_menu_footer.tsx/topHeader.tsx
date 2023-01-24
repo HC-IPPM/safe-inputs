@@ -81,7 +81,8 @@ export default function TopHeader() {
       </>
     )
   }
-
+  let imageSRC:string = `${t('safeInputs.image')}` || '';	
+  let imageALT:string = `${t('safeInputs.imageAlt')}` || '';	
   return (
     <>
       <Box bg="#EEEEEE">
@@ -98,10 +99,10 @@ export default function TopHeader() {
               href="/"
             >
               <Image
-                src={t('safeInputs.image')}
+                src={imageSRC}
                 w="auto"
                 h="auto"
-                alt={t('safeInputs.imageAlt')}
+                alt={imageALT}
               />
             </Link>
             {/* MenuContent function above on line 112 */}

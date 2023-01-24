@@ -72,7 +72,7 @@ export default function Footer() {
               <Image                 
                 loading="lazy"
                 src={
-                  process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg'
+                  process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg' || ''
                 }
                 w="auto"
                 h="auto"
@@ -82,8 +82,9 @@ export default function Footer() {
                   md: '125px',
                   lg: '150px',
                 }}
-                alt={t('footer.canadaImageAlt')}
+                alt={t('footer.canadaImageAlt') || ''}
               />
+              
             </Box>
           </SimpleGrid>
         </Container>
