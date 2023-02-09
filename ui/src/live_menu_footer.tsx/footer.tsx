@@ -5,13 +5,14 @@ import '../i18n'
 import {
   Box,
   Link,
-  Image,
   Text,
   SimpleGrid,
   Container,
   Spacer,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+
+import { CanadaWithFlag } from '../components/wordmarks'
 
 export default function Footer() {
   const LinkStyle = {
@@ -25,7 +26,7 @@ export default function Footer() {
   return (
     <>
       <Box
-        mt={2}
+        mt={10}
         py={3}
         borderTop="1px solid #ffffff"
         bg="#26374a"
@@ -42,14 +43,14 @@ export default function Footer() {
         w={'100%'}
       >
         <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
-          <SimpleGrid columns={[1, null, 6]} >
+          <SimpleGrid columns={[1, null, 6]}>
             <Box
               minW={{
                 base: '200px',
                 sm: '200px',
                 md: '350px',
               }}
-              zIndex='1'
+              zIndex="1"
             >
               <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
                 <Box pt={{ base: 6, md: 20 }}>
@@ -68,12 +69,10 @@ export default function Footer() {
             <Spacer />
             <Spacer />
             <Spacer />
+            {/* Sets the position of the CanadaWithFlag */}
             <Box pt={{ base: 5, md: 20 }}>
-              <Image                 
-                loading="lazy"
-                src={
-                  process.env.PUBLIC_URL + 'images/logo_canada_whiteFont.svg' || ''
-                }
+              {/* Contropls the size of the CanadaWithFlag */}
+              <Box
                 w="auto"
                 h="auto"
                 maxW={{
@@ -82,9 +81,9 @@ export default function Footer() {
                   md: '125px',
                   lg: '150px',
                 }}
-                alt={t('footer.canadaImageAlt') || ''}
-              />
-              
+              >
+                <CanadaWithFlag textColor="white" />
+              </Box>
             </Box>
           </SimpleGrid>
         </Container>
