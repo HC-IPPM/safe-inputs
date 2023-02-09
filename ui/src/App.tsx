@@ -172,7 +172,7 @@ export default function App({ parseWorker }: { parseWorker: ParseWorker }) {
           Safe inputs PoC
         </Box>
 
-        <Container maxW="7xl" px={{base:5, md:10}} mt={8} minH='63vh'>
+        <Container maxW="7xl" px={{ base: 5, md: 10 }} mt={8} minH="64vh">
           <FormControl
             isInvalid={Boolean(invalid)}
             isRequired={false}
@@ -197,7 +197,7 @@ application/vnd.ms-excel,
                 style={{ display: 'none' }}
               />
               <Input
-                placeholder={t('safeInputs.inputBar' ) || '' }
+                placeholder={t('safeInputs.inputBar') || ''}
                 onClick={() =>
                   inFile && inFile.current && inFile.current.click()
                 }

@@ -2,16 +2,10 @@ import React, { useEffect, useState } from 'react'
 
 import '../App.css'
 import '../i18n'
-import {
-  HStack,
-  Box,
-  Image,
-  Button,
-  Text,
-  Container,
-  Link,
-} from '@chakra-ui/react'
+import { HStack, Box, Button, Text, Container, Link } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+
+import { WordMark } from '../components/wordmarks'
 
 export default function TopHeader() {
   const [windowDimenion, detectHW] = useState({
@@ -81,8 +75,7 @@ export default function TopHeader() {
       </>
     )
   }
-  let imageSRC:string = `${t('safeInputs.image')}` || '';	
-  let imageALT:string = `${t('safeInputs.imageAlt')}` || '';	
+
   return (
     <>
       <Box bg="#EEEEEE">
@@ -98,12 +91,11 @@ export default function TopHeader() {
               minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
               href="/"
             >
-              <Image
-                src={imageSRC}
-                w="auto"
-                h="auto"
-                alt={imageALT}
-              />
+              {i18n.language === 'en' ? (
+                <WordMark lang={'en'} textColor={'black'} />
+              ) : (
+                <WordMark lang={'fr'} textColor={'black'} />
+              )}
             </Link>
             {/* MenuContent function above on line 112 */}
             <HStack>
