@@ -5,6 +5,7 @@ import '../i18n'
 import { HStack, Box, Button, Text, Container, Link } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
+import { Phacsignature } from '../components/Phacsignature'
 import { WordMark } from '../components/wordmarks'
 
 export default function TopHeader() {
