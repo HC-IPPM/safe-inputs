@@ -4,7 +4,8 @@ metadata:
   name: api
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api
+  image: northamerica-northeast1-docker.pkg.dev/phemu-platdev-safeinputs/safeinputs/api
+  # image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
@@ -28,7 +29,7 @@ metadata:
   name: ui
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/ui
+  image: northamerica-northeast1-docker.pkg.dev/phemu-platdev-safeinputs/safeinputs/ui
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
