@@ -18,8 +18,8 @@ spec:
     spec:
       containers:
       - name: api
-        image: northamerica-northeast1-docker.pkg.dev/phemu-platdev-safeinputs/safeinputs/api:test-0000 # {"$imagepolicy": "flux-system:api"}
-        # image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api:main-49b1120-1677095699 # {"$imagepolicy": "flux-system:api"}
+        image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:test-0000 # {"$imagepolicy": "flux-system:api"}
+        # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-49b1120-1677095699 # {"$imagepolicy": "flux-system:api"}
 
         envFrom:
         # - secretRef:

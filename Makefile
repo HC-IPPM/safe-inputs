@@ -3,7 +3,7 @@
 #################################################################################
 SHELL := /usr/bin/bash
 
-project := phsx-sp-sdi-livebrant
+project := pdcp-cloud-005-safeinputs
 project_number := 145891259449
 name := safe-inputs
 region := northamerica-northeast1

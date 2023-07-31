@@ -4,8 +4,8 @@ metadata:
   name: api
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phemu-platdev-safeinputs/safeinputs/api
-  # image: northamerica-northeast1-docker.pkg.dev/phsx-sp-sdi-livebrant/safeinputs/api
+  image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api
+  # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
@@ -29,7 +29,7 @@ metadata:
   name: ui
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phemu-platdev-safeinputs/safeinputs/ui
+  image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1alpha1
@@ -68,6 +68,6 @@ spec:
       author:
         name: fluxbot
         email: fluxcd@users.noreply.github.com
-      messageTemplate: '[ci skip] {{range .Updated.Images}}{{println .}}{{end}}'
+      messageTemplate: "[ci skip] {{range .Updated.Images}}{{println .}}{{end}}"
     push:
       branch: main
