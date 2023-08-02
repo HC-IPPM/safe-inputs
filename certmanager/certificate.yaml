@@ -7,7 +7,7 @@ spec:
   commonName: safeinputs.phac.alpha.canada.ca
   dnsNames:
     - safeinputs.phac.alpha.canada.ca
-    - entreessecurisees.phac.alpha.canada.ca
+    - entreessecurisees.aspc.alpha.canada.ca
   issuerRef:
     kind: Issuer
     # name: letsencrypt-staging
