@@ -3,15 +3,15 @@
 #################################################################################
 SHELL := /usr/bin/bash
 
-project := phsx-sp-sdi-livebrant
-project_number := 145891259449
+project := pdcp-cloud-005-safeinputs
+project_number := 718380134822
 name := safe-inputs
 region := northamerica-northeast1
 ipname := safeinputs-ip
 release_channel := regular
-english_domain := safeinputs.alpha.canada.ca
+english_domain := safeinputs.phac.alpha.canada.ca
 
-ip != gcloud compute addresses describe --region $(region) $(ipname) --format='value(address)'
+ip = $(shell gcloud compute addresses describe --region $(region) $(ipname) --format='value(address)')
 
 .PHONY: cluster
 cluster:
@@ -34,9 +34,9 @@ watch-mesh:
 dns:
 		gcloud services enable dns.googleapis.com
 		gcloud dns --project="$(project)" managed-zones create $(name) --description="" --dns-name="$(english_domain)." --visibility="public" --dnssec-state="off"
-		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone="actually-works" --type="CAA" --ttl="300" --rrdatas="0 issue "letsencrypt.org""
+		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone=$(name) --type="CAA" --ttl="300" --rrdatas="0 issue "letsencrypt.org""
 		gcloud compute addresses create $(ipname) --project="$(project)" --region="$(region)"
-		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone="actually-works" --type="A" --ttl="300" --rrdatas="$(ip)"
+		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone=$(name) --type="A" --ttl="300" --rrdatas="$(ip)"
 
 # TODO: reduce priviledges below dns admin
 .PHONY: dns-solver-service-account
