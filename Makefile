@@ -10,6 +10,7 @@ region := northamerica-northeast1
 ipname := safeinputs-ip
 release_channel := regular
 english_domain := safeinputs.phac.alpha.canada.ca
+french_domain := entreessecurisees.aspc.alpha.canada.ca
 
 ip = $(shell gcloud compute addresses describe --region $(region) $(ipname) --format='value(address)')
 
@@ -33,10 +34,16 @@ watch-mesh:
 .PHONY: dns
 dns:
 		gcloud services enable dns.googleapis.com
-		gcloud dns --project="$(project)" managed-zones create $(name) --description="" --dns-name="$(english_domain)." --visibility="public" --dnssec-state="off"
+
+		gcloud dns --project="$(project)" managed-zones create "$(name)-en" --description="" --dns-name="$(english_domain)." --visibility="public" --dnssec-state="off"
 		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone=$(name) --type="CAA" --ttl="300" --rrdatas="0 issue "letsencrypt.org""
 		gcloud compute addresses create $(ipname) --project="$(project)" --region="$(region)"
 		gcloud dns --project="$(project)" record-sets create "$(english_domain)." --zone=$(name) --type="A" --ttl="300" --rrdatas="$(ip)"
+
+		gcloud dns --project="$(project)" managed-zones create "$(name)-fr" --description="" --dns-name="$(french_domain)." --visibility="public" --dnssec-state="off"
+		gcloud dns --project="$(project)" record-sets create "$(french_domain)." --zone=$(name) --type="CAA" --ttl="300" --rrdatas="0 issue "letsencrypt.org""
+		gcloud compute addresses create $(ipname) --project="$(project)" --region="$(region)"
+		gcloud dns --project="$(project)" record-sets create "$(french_domain)." --zone=$(name) --type="A" --ttl="300" --rrdatas="$(ip)"
 
 # TODO: reduce priviledges below dns admin
 .PHONY: dns-solver-service-account
