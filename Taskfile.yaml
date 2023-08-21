@@ -1,0 +1,89 @@
+version: "3"
+dotenv: [".env"]
+output: prefixed
+silent: false
+
+vars:
+  CLUSTER_NAME: safe-inputs
+  CONTEXT_NAME: "k3d-{{.CLUSTER_NAME}}"
+  AGENT_NODE_NAME: k3d-{{.CLUSTER_NAME}}-agent
+  SERVER_NODE_NAME: k3d-{{.CLUSTER_NAME}}-server
+  BIN_FOLDER: /usr/local/bin
+  # k3s verisons can be found here:
+  # https://hub.docker.com/r/rancher/k3s/tags
+  K3S_VERSION: "v1.27.4-k3s1"
+  ISTIO_VERSION: "1.18.2"
+  ISTIOCTL: "istioctl --context={{.CONTEXT_NAME}}"
+  # minimal profile includes Istio CRDs
+  ISTIO_PROFILE: minimal
+  KUBECTL: "kubectl --context={{.CONTEXT_NAME}}"
+
+tasks:
+  #  _    _____     _
+  # | | _|___ /  __| |
+  # | |/ / |_ \ / _` |
+  # |   < ___) | (_| |
+  # |_|\_\____/ \__,_|
+
+  k3d:cluster:all:
+    prefix: ⚙️ > create
+    desc: Setup local k3d cluster and install all dependencies.
+    deps:
+      - k3d:cluster:create
+      - istio:install
+
+  k3d:cluster:create:
+    prefix: ⚙️ > create k3d cluster
+    desc: create k3d cluster
+    cmds:
+      - k3d cluster create {{.CLUSTER_NAME}} --image rancher/k3s:{{.K3S_VERSION}}
+
+  k3d:cluster:destroy:
+    prefix: ⚙️ > destroy
+    desc: destroy k3d cluster
+    cmds:
+      - "k3d cluster delete {{.CLUSTER_NAME}}"
+
+  k3d:start:
+    prefix: ⚙️ > start
+    desc: starts k3d cluster
+    cmds:
+      - "k3d cluster start {{.CLUSTER_NAME}}"
+
+  k3d:stop:
+    prefix: ⚙️ > stop
+    desc: stops k3d cluster
+    cmds:
+      - "k3d cluster stop {{.CLUSTER_NAME}}"
+
+  #  _     _   _
+  # (_)___| |_(_) ___
+  # | / __| __| |/ _ \
+  # | \__ \ |_| | (_) |
+  # |_|___/\__|_|\___/
+
+  istioctl:install:
+    prefix: istioctl > install
+    desc: Downloads Istioctl onto the user's machine in {{.BIN_FOLDER}}.
+    cmds:
+      - curl -L https://istio.io/downloadIstio | ISTIO_VERSION={{.ISTIO_VERSION}} TARGET_ARCH=x86_64 sh -
+      - sudo mv istio-{{.ISTIO_VERSION}}/bin/istioctl {{.BIN_FOLDER}}/istioctl
+      - rm -r istio-{{.ISTIO_VERSION}}
+
+  istio:install:
+    prefix: istio > install
+    desc: Install istio onto the k3d cluster.
+    cmds:
+      - istioctl install --set profile={{.ISTIO_PROFILE}} -y
+
+  #      _          __  __       _     _
+  #  ___| | ____ _ / _|/ _| ___ | | __| |
+  # / __| |/ / _` | |_| |_ / _ \| |/ _` |
+  # \__ \   < (_| |  _|  _| (_) | | (_| |
+  # |___/_|\_\__,_|_| |_|  \___/|_|\__,_|
+
+  skaffold:config:
+    prefix: scaffold > config
+    desc: Configure Skaffold to look at local cluster.
+    cmds:
+      - skaffold config set --global local-cluster true
