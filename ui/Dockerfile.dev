@@ -1,7 +1,7 @@
 FROM node:18.6.0-alpine3.15 AS builder
 
 RUN mkdir -p /home/ui
-# Copy only package.json over to avoid running the `npm install`
+# Copy only package.json to avoid running the `npm install`
 # stanza after every source code change.
 COPY package.json /home/ui
 # Set /home/ui as cwd.
@@ -12,7 +12,7 @@ RUN npm i
 # versions of React (see https://stackoverflow.com/a/67540612).
 RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
-# Copy source code to /home/ui after npm install step
+# Copy source code to /home/ui after npm install step.
 COPY . /home/ui
 
 # Need to allow rwx over `src/` to enable skaffold's file sync
@@ -23,6 +23,6 @@ RUN chmod -R 777 src/
 # Start container as non-root user.
 USER node
 EXPOSE 3000
-# Run the development server 
+# Run the development server. 
 ENTRYPOINT ["npm", "run", "start"]
 
