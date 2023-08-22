@@ -87,3 +87,9 @@ tasks:
     desc: Configure Skaffold to look at local cluster.
     cmds:
       - skaffold config set --global local-cluster true
+
+  skaffold:dev:
+    prefix: skaffold > dev
+    desc: Run skaffold in dev mode.
+    cmds:
+      - skaffold dev
