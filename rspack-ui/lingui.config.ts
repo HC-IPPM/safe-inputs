@@ -4,7 +4,7 @@ const config: Partial<LinguiConfig> = {
     locales: ["en", "fr"],
     sourceLocale: "en",
     catalogs: [{
-        path: "src/locales/{locale}/messages",
+        path: "src/i18n/locales/{locale}/messages",
         include: ["src"]
     }],
     format: "po"

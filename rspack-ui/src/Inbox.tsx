@@ -4,7 +4,7 @@ import { useLingui } from "@lingui/react";
 
 import { Trans, Plural } from "@lingui/macro";
 
-import LocaleSwitcher from './LocaleSwitcher';
+import LocaleSwitcher from './i18n/LocaleSwitcher';
 
 export default function Inbox() {
     const messages = [{}, {}];
