@@ -17,42 +17,24 @@ module.exports = {
 		rules: [
 			{
 				test: /\.svg$/,
-				type: "asset",
+				type: "asset"
 			},
 			{
 				test: /\.tsx$/,
 				exclude: /node_modules/,
-				use: [
-					{
-						loader: "builtin:swc-loader",
-						options: {
-							jsc: {
-								parser: {
-									syntax: "typescript",
-									jsx: true,
-								},
-								transform: {
-									react: {
-										pragma: "React.createElement",
-										pragmaFrag: "React.Fragment",
-										throwIfNamespace: true,
-										development: false,
-										useBuiltins: false,
-									},
-								},
-							},
-						},
-					},
-					{
-						loader: 'babel-loader',
-						options: {
-							plugins: [
-								"macros"
-							],
-						}
-					},
-				]
-			},
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							"@babel/preset-typescript",
+							"@babel/preset-react"
+						],
+						plugins: [
+							"macros"
+						]
+					}
+				}
+			}
 		]
 	}
-};
+};;
