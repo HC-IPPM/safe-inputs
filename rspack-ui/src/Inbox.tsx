@@ -17,7 +17,6 @@ export default function Inbox() {
 
     return (
         <div>
-            <LanguageButton />
             <h1><Trans>Message Inbox</Trans></h1>
             <p>
                 <Trans>
