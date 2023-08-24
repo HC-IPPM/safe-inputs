@@ -17,6 +17,15 @@ This project shows how to use the [Rspack JavaScript bundler](https://www.rspack
 3. Translate any new messages in the catalogs.
 4. `npm run compile` to create runtime catalogs.
 
+## VSCode Debug Instructions
+
+It is possible to use VSCode's built-in debugging tools with this application. To enable debugging, complete the following steps.
+
+1. Start the development server (`npm run dev`).
+2. Take the configuration in `rspack-ui/.vscode/example.launch.json`, and place it in `.vscode/launch.json` at the project root. Note that the `"sourceMaps": true` setting in the config is what preserves the mapping between the original source code and the trans-compiled source code.
+3. Click on the debug tools icon on the VSCode sidebar, select `"Debug Rspack UI"` from the drop-down menu, then press the green "play" button. This will launch a debugger and attach it to the application hosted at the url provided in the `example.launch.json` file.
+4. Add breakpoints to the source files in the `src` directory, and proceed with debugging.
+
 ## Configuration File Notes
 
 - [rspack.config.js](./rspack-project/rspack.config.js) specifies that that babel should transcompile all `.tsx` files using the `@babel/preset-typscript` and `@babel/preset-react` [presets](https://babeljs.io/docs/presets), as well as the `macros` [plugin](https://babeljs.io/docs/plugins). This step is necessary so that [Lingui Macros](https://lingui.dev/ref/macro) such as `<Trans>` are correctly transcompiled into their respective React components.
@@ -27,3 +36,4 @@ This project shows how to use the [Rspack JavaScript bundler](https://www.rspack
 
 - This [blog post](https://betterprogramming.pub/react-app-internationalization-with-linguijs-9486ccd80e07) shows a step-by-step guide to set up LinguiJS with React.
 - [Official documentation for React setup with LinguiJS](https://lingui.dev/tutorials/react). This repo closely follows the example from the official docs.
+- [This code gist](https://gist.github.com/jarshwah/389f93f2282a165563990ed60f2b6d6c) has an example of setting up VSCode debug tools to map between original source code and transcompiled source code.
