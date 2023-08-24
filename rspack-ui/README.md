@@ -26,6 +26,8 @@ It is possible to use VSCode's built-in debugging tools with this application. T
 3. Click on the debug tools icon on the VSCode sidebar, select `"Debug Rspack UI"` from the drop-down menu, then press the green "play" button. This will launch a debugger and attach it to the application hosted at the url provided in the `example.launch.json` file.
 4. Add breakpoints to the source files in the `src` directory, and proceed with debugging.
 
+Note that it may also be helpful to install the [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) on your browser of choice.
+
 ## Configuration File Notes
 
 - [rspack.config.js](./rspack-project/rspack.config.js) specifies that that babel should transcompile all `.tsx` files using the `@babel/preset-typscript` and `@babel/preset-react` [presets](https://babeljs.io/docs/presets), as well as the `macros` [plugin](https://babeljs.io/docs/plugins). This step is necessary so that [Lingui Macros](https://lingui.dev/ref/macro) such as `<Trans>` are correctly transcompiled into their respective React components.
