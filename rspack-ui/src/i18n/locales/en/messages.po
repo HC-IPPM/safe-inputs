@@ -13,18 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/Inbox.tsx:30
+#: src/components/Footer.tsx:78
+#~ msgid "\"https://www.canada.ca/en/transparency/privacy.html\""
+#~ msgstr "\"https://www.canada.ca/en/transparency/privacy.html\""
+
+#: src/Inbox.tsx:29
 msgid "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
 msgstr "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
 
-#: src/Inbox.tsx:32
+#: src/components/Footer.tsx:78
+msgid "<0><1>Privacy</1></0>"
+msgstr "<0><1>Privacy</1></0>"
+
+#: src/components/Footer.tsx:71
+msgid "<0><1>Terms and Conditions</1></0>"
+msgstr "<0><1>Terms and Conditions</1></0>"
+
+#: src/components/Header.tsx:17
+msgid "Home"
+msgstr "Home"
+
+#: src/Inbox.tsx:31
 msgid "Last login on {0}."
 msgstr "Last login on {0}."
 
-#: src/Inbox.tsx:21
+#: src/Inbox.tsx:20
 msgid "Message Inbox"
 msgstr "Message Inbox"
 
-#: src/Inbox.tsx:23
+#: src/components/Footer.tsx:80
+#~ msgid "Privacy"
+#~ msgstr "Privacy"
+
+#: src/Inbox.tsx:22
 msgid "See all <0>unread messages </0>or <1>mark them</1> as read."
 msgstr "See all <0>unread messages </0>or <1>mark them</1> as read."

@@ -13,18 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/Inbox.tsx:30
+#: src/components/Footer.tsx:78
+#~ msgid "\"https://www.canada.ca/en/transparency/privacy.html\""
+#~ msgstr ""
+
+#: src/Inbox.tsx:29
 msgid "{messagesCount, plural, one {There's # message in your inbox.} other {There are # messages in your inbox.}}"
 msgstr "{messagesCount, plural, one {Il y a # message dans boîte de réception.} other {Il y a # messages dans votre boîte de réception.}}"
 
-#: src/Inbox.tsx:32
+#: src/components/Footer.tsx:78
+msgid "<0><1>Privacy</1></0>"
+msgstr ""
+
+#: src/components/Footer.tsx:71
+msgid "<0><1>Terms and Conditions</1></0>"
+msgstr ""
+
+#: src/components/Header.tsx:17
+msgid "Home"
+msgstr ""
+
+#: src/Inbox.tsx:31
 msgid "Last login on {0}."
 msgstr "Dernière connexion le {0}."
 
-#: src/Inbox.tsx:21
+#: src/Inbox.tsx:20
 msgid "Message Inbox"
 msgstr "Boîte de réception de messages."
 
-#: src/Inbox.tsx:23
+#: src/components/Footer.tsx:80
+#~ msgid "Privacy"
+#~ msgstr ""
+
+#: src/Inbox.tsx:22
 msgid "See all <0>unread messages </0>or <1>mark them</1> as read."
 msgstr "Voir tous <0>les messages non lus </0>ou <1>les marquer</1> comme lus."
