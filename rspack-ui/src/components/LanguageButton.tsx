@@ -21,8 +21,9 @@ const LanguageButtonStyle = {
 }
 
 // Function for the language Button.
-// Button will change the state of the Language from EN/FR. This will change the language displayed on the page. Languages are initially set by windows language detector
-function LanguageButton() {
+// Button will change the state of the Language from EN/FR.
+// TODO: Languages should be initially set by window language detector
+export default function LanguageButton() {
     const { i18n } = useLingui();
 
     return (
@@ -53,5 +54,3 @@ function LanguageButton() {
         </>
     )
 }
-
-export default LanguageButton;
