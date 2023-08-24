@@ -10,8 +10,13 @@ import {
   ThemeConfig,
   withDefaultColorScheme,
 } from '@chakra-ui/react'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
 import { messages as enMessages } from "./i18n/locales/en/messages";
 import { messages as frMessages } from "./i18n/locales/fr/messages";
+
+import NavPage from "./pages/navPage";
 
 
 //  _   _                         
@@ -57,6 +62,12 @@ const theme = extendTheme(
   },
 )
 
+//  _ _  ___        
+// (_) |( _ ) _ __  
+// | | |/ _ \| '_ \ 
+// | | | (_) | | | |
+// |_|_|\___/|_| |_|
+
 i18n.load({
   "en": enMessages,
   "fr": frMessages,
@@ -64,16 +75,25 @@ i18n.load({
 
 i18n.activate("en");
 
-const App = () => (
-  <I18nProvider i18n={i18n}>
-    <Inbox />
-  </I18nProvider>
-);
+//                     _           
+//  _ __ ___ _ __   __| | ___ _ __ 
+// | '__/ _ \ '_ \ / _` |/ _ \ '__|
+// | | |  __/ | | | (_| |  __/ |   
+// |_|  \___|_| |_|\__,_|\___|_|   
+
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <ChakraProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
+          <Routes>
+            <Route path="/" element={<NavPage />} />
+          </Routes>
+        </I18nProvider>
+      </ChakraProvider>
+    </BrowserRouter>
   </React.StrictMode>
 )
