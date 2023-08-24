@@ -4,7 +4,7 @@ import { useLingui } from "@lingui/react";
 
 import { Trans, Plural } from "@lingui/macro";
 
-import LocaleSwitcher from './i18n/LocaleSwitcher';
+import LanguageButton from "./components/LanguageButton";
 
 export default function Inbox() {
     const messages = [{}, {}];
@@ -17,7 +17,7 @@ export default function Inbox() {
 
     return (
         <div>
-            <LocaleSwitcher />
+            <LanguageButton />
             <h1><Trans>Message Inbox</Trans></h1>
             <p>
                 <Trans>
