@@ -5,7 +5,7 @@ module.exports = {
 	context: __dirname,
 	entry: {
 		main: "./src/index.tsx",
-		serviceWorker: "./src/serviceWorker.js",
+		serviceWorker: "./src/serviceWorker.ts",
 	},
 	output: {
 		filename: "[name].js",
