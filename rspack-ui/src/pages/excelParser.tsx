@@ -1,17 +1,29 @@
-import React from 'react'
+import React from "react";
+import { ChakraProvider, Box } from "@chakra-ui/react";
+import ExcelUploadForm from "../components/ExcelUploadForm";
 
-import { Box } from "@chakra-ui/react"
-import InputForm from '../components/InputForm'
+import { Trans } from "@lingui/macro";
 
-function ExcelParsingPage() {
+
+const App: React.FC = () => {
+    const handleFileUpload = (file: File) => {
+        // Handle the file upload logic here
+        console.log("File uploaded:", file);
+    };
+
     return (
         <>
             <Box className="App-header" mb={2}>
-                Safe inputs PoC
+                <Trans>
+                    Safe Inputs PoC
+                </Trans>
             </Box>
-            <InputForm />
-        </>
-    )
-}
+            <ChakraProvider>
+                <ExcelUploadForm onSubmit={handleFileUpload} />
+            </ChakraProvider>
 
-export default ExcelParsingPage
+        </>
+    );
+};
+
+export default App;
