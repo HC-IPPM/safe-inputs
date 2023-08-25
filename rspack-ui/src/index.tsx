@@ -20,6 +20,7 @@ import { messages as frMessages } from "./i18n/locales/fr/messages";
 
 import NavPage from "./pages/navPage";
 import TermsAndConditions from "./pages/termsAndConditions";
+import ExcelParsingPage from "./pages/excelParser";
 
 //  _   _                         
 // | |_| |__   ___ _ __ ___   ___ 
@@ -93,6 +94,7 @@ root.render(
         <I18nProvider i18n={i18n}>
           <Routes>
             <Route path="/" element={<NavPage />}>
+              <Route path="" element={<ExcelParsingPage />}></Route>
               <Route path="/termsAndConditions" element={<TermsAndConditions />}></Route>
             </Route>
           </Routes>
