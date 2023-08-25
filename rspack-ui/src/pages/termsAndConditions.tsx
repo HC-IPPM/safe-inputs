@@ -28,13 +28,11 @@ export default function TermsAndConditions() {
                 <UnorderedList>
                     <ListItem listStyleType="disc" px={2}>
                         <Trans>
-                            <Text>
-                                By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood,
-                                and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations.
-                                We recommend that you review all Terms and Conditions periodically to understand any updates or changes that
-                                may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website,
-                                products and services.
-                            </Text>
+                            By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood,
+                            and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations.
+                            We recommend that you review all Terms and Conditions periodically to understand any updates or changes that
+                            may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website,
+                            products and services.
                         </Trans>
                     </ListItem>
                 </UnorderedList>
@@ -51,35 +49,29 @@ export default function TermsAndConditions() {
                 </Text>
                 <UnorderedList>
                     <ListItem listStyleType="disc" px={2}>
-                        <Text>
-                            <Trans>
-                                <Text>
-                                    For details related to terms pertaining to privacy, please refer to{' '}
-                                    <Link
-                                        isExternal
-                                        textDecor={'underline'}
-                                        href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
-                                    >
-                                        our Terms and Conditions on the TBS website
-                                        <LinkIcon m="2px" />
-                                    </Link>.
-                                </Text>
-                            </Trans>
-                            <Trans>
-                                <Text>
-                                    Personal information will not be disclosed by Treasury Board Secretariat of Canada
-                                    (TBS) except in accordance with the{' '}
-                                    <Link
-                                        isExternal
-                                        textDecor={'underline'}
-                                        href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
-                                    >
-                                        Privacy Act
-                                        <LinkIcon m="2px" />
-                                    </Link>.
-                                </Text>
-                            </Trans>
-                        </Text>
+                        <Trans>
+                            For details related to terms pertaining to privacy, please refer to{' '}
+                            <Link
+                                isExternal
+                                textDecor={'underline'}
+                                href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
+                            >
+                                our Terms and Conditions on the TBS website
+                                <LinkIcon m="2px" />
+                            </Link>.
+                        </Trans>
+                        <Trans>
+                            Personal information will not be disclosed by Treasury Board Secretariat of Canada
+                            (TBS) except in accordance with the{' '}
+                            <Link
+                                isExternal
+                                textDecor={'underline'}
+                                href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
+                            >
+                                Privacy Act
+                                <LinkIcon m="2px" />
+                            </Link>.
+                        </Trans>
                     </ListItem>
                 </UnorderedList>
             </>
