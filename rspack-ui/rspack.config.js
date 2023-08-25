@@ -4,7 +4,11 @@
 module.exports = {
 	context: __dirname,
 	entry: {
-		main: "./src/index.tsx"
+		main: "./src/index.tsx",
+		serviceWorker: "./src/serviceWorker.js",
+	},
+	output: {
+		filename: "[name].js",
 	},
 	builtins: {
 		html: [

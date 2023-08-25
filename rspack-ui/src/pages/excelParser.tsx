@@ -7,8 +7,10 @@ import { Trans } from "@lingui/macro";
 
 const App: React.FC = () => {
     const handleFileUpload = (file: File) => {
-        // Handle the file upload logic here
-        console.log("File uploaded:", file);
+        console.log("file is ", file);
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'file', file });
+        }
     };
 
     return (
