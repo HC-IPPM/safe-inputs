@@ -1,0 +1,42 @@
+.App {
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+.App-header {
+    background-color: #26374a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(8px + 2vmin);
+    color: #ffffff;
+    height: 60px;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+li {
+    list-style: none;
+}
+
+pre.docPreview {
+    background: #eee;
+    border: 1px dotted #284162;
+    padding: 5px;
+    text-align: left;
+}
+
+.pagebody {
+    padding: 6px 8px;
+    font-family: 'Noto Sans', sans-serif;
+    line-height: 1.4375;
+    color: #213045;
+    text-align: justify;
+    align-items: justify;
+}
