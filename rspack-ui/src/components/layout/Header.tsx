@@ -3,7 +3,7 @@ import { Trans } from "@lingui/macro";
 import { HStack, Box, Container, Link } from '@chakra-ui/react'
 
 
-import LanguageButton from "./LanguageButton"
+import LanguageButton from "../LanguageButton"
 
 export default function TopHeader() {
 
