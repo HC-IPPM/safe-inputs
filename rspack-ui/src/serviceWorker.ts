@@ -8,14 +8,20 @@ self.addEventListener('message', async event => {
     if (event.data.type === 'file') {
         const file = event.data.file;
         const fileData = await file.arrayBuffer();
-        console.log("file data are: ", fileData);
-        // Do something with the uploaded file in the service worker
-        console.log('Service Worker received file:', file);
 
-        // Process the file and generate some data
-        const responseData = { "foo": "bar" };
+        const workbook = read(fileData)
+        const sheets: { sheetName: string; data: any }[] = []
+        workbook.SheetNames.forEach((sheetName) => {
+            sheets.push({
+                sheetName,
+                data: utils.sheet_to_json(workbook.Sheets[sheetName]),
+            })
+        })
+        if (workbook.SheetNames.length > 0) {
+            // Send the data back to the original client
+            event.source?.postMessage({ type: 'fileResponse', dfilename: file.name, workbook, sheets });
 
-        // Send the data back to the original client
-        event.source?.postMessage({ type: 'fileResponse', data: responseData });
+        } else postMessage('ERROR!')
     }
+
 });
