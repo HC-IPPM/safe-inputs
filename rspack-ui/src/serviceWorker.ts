@@ -11,5 +11,11 @@ self.addEventListener('message', async event => {
         console.log("file data are: ", fileData);
         // Do something with the uploaded file in the service worker
         console.log('Service Worker received file:', file);
+
+        // Process the file and generate some data
+        const responseData = { "foo": "bar" };
+
+        // Send the data back to the original client
+        event.source?.postMessage({ type: 'fileResponse', data: responseData });
     }
 });
