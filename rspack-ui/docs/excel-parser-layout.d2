@@ -9,6 +9,7 @@ ExcelParsingPage: {
     handleFileUpload
     handleServiceWorkerMessage: {
         setDisplayComponent
+        setParserData
     }
     ExcelUploadForm: {
         Props: {
@@ -36,12 +37,7 @@ serviceWorker\.ts: {
 }
 
 ExcelParsingPage.handleFileUpload -> serviceWorker\.ts.messageEventListener.xlsx\.read(workbook file): workbook file
-serviceWorker\.ts.messageEventListener.postMessage(workbook json) -> ExcelParsingPage.handleServiceWorkerMessage
+serviceWorker\.ts.messageEventListener.postMessage(workbook json) -> ExcelParsingPage.handleServiceWorkerMessage: processed workbook file
 
-React State: {
-    displayComponent
-    parserData
-}
-
-React State.displayComponent -> ExcelParsingPage.handleServiceWorkerMessage.setDisplayComponent
-React State.displayComponent -> ExcelParsingPage.handleServiceWorkerMessage.setParserData
+ExcelParsingPage.handleServiceWorkerMessage.setDisplayComponent -> ExcelParsingPage.TableOutput.Props.displayComponent
+ExcelParsingPage.handleServiceWorkerMessage.setParserData -> ExcelParsingPage.TableOutput.Props.parserData
