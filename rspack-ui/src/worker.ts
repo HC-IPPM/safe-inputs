@@ -1,4 +1,4 @@
-import { read, utils, WorkBook } from 'xlsx';
+import { read, utils } from 'xlsx';
 
 console.log("hello from service worker");
 
