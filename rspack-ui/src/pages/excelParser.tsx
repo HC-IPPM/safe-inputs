@@ -11,20 +11,17 @@ interface WorkBook {
 }
 
 const ExcelParsingPage: React.FC = () => {
-
+    const parserWorker = new Worker("/worker.js");
     const handleFileUpload = (file: File) => {
-        console.log("file is ", file);
-        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({ type: 'file', file });
-        }
+        parserWorker.postMessage({ type: 'file', file });
     };
 
     // TODO: these components should maybe be decoupled from excelParser.tsx
     const [displayComponent, setDisplayComponent] = useState(false);
     const [parserData, setParserData] = useState<WorkBook | null>(null);
 
-    // Function to handle the data received from the service worker
-    const handleServiceWorkerMessage = (event: MessageEvent) => {
+    // Register callback on myWorker
+    parserWorker.addEventListener("message", (event) => {
         const workbookData = event.data;
 
         // Handle the data returned from the service worker
@@ -33,12 +30,7 @@ const ExcelParsingPage: React.FC = () => {
         setParserData(workbookData);
         // Render the display component after receiving service worker message.
         setDisplayComponent(true);
-    };
-
-    // Add a message event listener to listen for messages from the service worker
-    navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
-
-
+    })
 
 
     return (

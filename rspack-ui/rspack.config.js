@@ -5,7 +5,7 @@ module.exports = {
 	context: __dirname,
 	entry: {
 		main: "./src/index.tsx",
-		serviceWorker: "./src/serviceWorker.ts",
+		worker: "./src/worker.ts",
 	},
 	output: {
 		filename: "[name].js",
@@ -14,7 +14,7 @@ module.exports = {
 		html: [
 			{
 				template: "./index.html",
-				favicon: "./assets/logo.svg",
+				favicon: "./src/assets/logo.svg",
 			}
 		]
 	},

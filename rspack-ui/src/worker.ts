@@ -1,20 +1,26 @@
-import { WorkBook } from 'xlsx';
+import { read, utils, WorkBook } from 'xlsx';
 
-export type SheetData = { sheetName: string; data: any }
+console.log("hello from service worker");
 
+self.addEventListener('message', async event => {
+    console.log("service worker was pinged");
 
-interface ParseEventLoadingState {
-    state: 'LOADING'
-}
+    if (event.data.type === 'file') {
+        const file = event.data.file;
+        const fileData = await file.arrayBuffer();
 
-interface ParseEventDoneState {
-    state: 'DONE'
-    filename: string
-    workbook: WorkBook
-    sheets: SheetData[]
-}
+        const workbook = read(fileData)
+        const sheets: { sheetName: string; data: any }[] = []
+        workbook.SheetNames.forEach((sheetName) => {
+            sheets.push({
+                sheetName,
+                data: utils.sheet_to_json(workbook.Sheets[sheetName]),
+            })
+        })
+        if (workbook.SheetNames.length > 0) {
+            // Send the data back to the original client
+            self.postMessage({ type: 'fileResponse', dfilename: file.name, workbook, sheets });
 
-export type ParseEvent = { type: 'ParseEvent' } & (
-    | ParseEventLoadingState
-    | ParseEventDoneState
-)
+        } else postMessage('ERROR!')
+    }
+});

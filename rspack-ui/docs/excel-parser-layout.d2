@@ -7,9 +7,10 @@ title: |md
 
 ExcelParsingPage: {
     handleFileUpload
-    handleServiceWorkerMessage: {
+    parserWorker: {
         setDisplayComponent
         setParserData
+        addEventListener
     }
     ExcelUploadForm: {
         Props: {
@@ -37,7 +38,7 @@ serviceWorker\.ts: {
 }
 
 ExcelParsingPage.handleFileUpload -> serviceWorker\.ts.messageEventListener.xlsx\.read(workbook file): workbook file
-serviceWorker\.ts.messageEventListener.postMessage(workbook json) -> ExcelParsingPage.handleServiceWorkerMessage: processed workbook file
+serviceWorker\.ts.messageEventListener.postMessage(workbook json) -> ExcelParsingPage.parserWorker.addEventListener: processed workbook file
 
-ExcelParsingPage.handleServiceWorkerMessage.setDisplayComponent -> ExcelParsingPage.TableOutput.Props.displayComponent
-ExcelParsingPage.handleServiceWorkerMessage.setParserData -> ExcelParsingPage.TableOutput.Props.parserData
+ExcelParsingPage.parserWorker.setDisplayComponent -> ExcelParsingPage.TableOutput.Props.displayComponent
+ExcelParsingPage.parserWorker.setParserData -> ExcelParsingPage.TableOutput.Props.parserData

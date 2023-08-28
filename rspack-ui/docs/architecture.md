@@ -13,9 +13,9 @@ A top level navigation page `NavPage` renders `Header`, `Footer`, and `Outlet` c
 
 The `ExcelParsingPage.tsx` component renders two main components: `ExcelUploadForm.tsx` and `TableOutput.tsx`.
 
-A `handleFileUpload` callback function is passed as a prop from `ExcelParsingPage.tsx` to `ExcelUploadForm.tsx`. When the form is submitted, `handleFileUpload` sends a message to the service worker containing the file submitted from the form.
+A `handleFileUpload` callback function is passed as a prop from `ExcelParsingPage.tsx` to `ExcelUploadForm.tsx`. When the form is submitted, `handleFileUpload` sends a message to the web worker containing the file submitted from the form.
 
-Using the `xlsx` package, the service worker parses the Excel Workbook file, extracts the data for each sheet, and sends a message containing the output in `json` format back to the main JavaScript thread. A `handleServiceWorkerMessage` callback function is registered against the service worker to listen for `message` events. `handleServiceWorkerMessage` sets `displayComponent` and `parserData` React state variables, which are passed as props to the `TableOutput.tsx` component.
+Using the `xlsx` package, the web worker parses the Excel Workbook file, extracts the data for each sheet, and sends a message containing the output in `json` format back to the main JavaScript thread. A callback function is registered against the web worker to listen for `message` events. This callback function sets `displayComponent` and `parserData` React state variables, which are passed as props to the `TableOutput.tsx` component.
 
 `TableOutput.tsx` conditionally renders components to display certain data and metadata from the processed spreadsheet.
 
@@ -23,11 +23,11 @@ Using the `xlsx` package, the service worker parses the Excel Workbook file, ext
 ![excel parser layout](./excel-parser-layout.svg)
 
 
-## Register the Service Worker
+## Register the Web Worker
 
-[Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) are separate threads of execution that can be used to offload work from the main JavaScript thread of the application. Since JavaScript is single threaded, we use a separate non-blocking service worker thread to perform synchronous cpu-bound work while the main thread of the JavaScript application can listen for and respond to user events.
+[Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) are separate threads of execution that can be used to offload work from the main JavaScript thread of the application. Since JavaScript is single threaded, we use a separate non-blocking worker thread to perform synchronous cpu-bound work while the main thread of the JavaScript application can listen for and respond to user events.
 
-The service worker is registered with the application in `index.tsx`. In order to register the service worker, the browser is expecting to find a file called `serviceWorker.js` in the top-level directory of the origin. Therefore, it is necessary to instruct Rspack to output two javascript files: one for the main application (`main.js`), and one for the service worker (`serviceWorker.js`). This configuration can be found in the `entry` and `output` top-level keys in `rspack.config.js`.
+The worker thread is created in `excelParser.tsx`. In order to register the worker, the browser is expecting to find a file called `worker.js` in the top-level directory of the origin. Therefore, it is necessary to instruct Rspack to output two javascript files: one for the main application (`main.js`), and one for the worker (`worker.js`). This configuration can be found in the `entry` and `output` top-level keys in `rspack.config.js`.
 
 ## Build Process
 

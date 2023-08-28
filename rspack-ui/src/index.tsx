@@ -23,28 +23,6 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import ExcelParsingPage from "./pages/excelParser";
 
 
-//                      _                               _             
-//  ___  ___ _ ____   _(_) ___ ___  __      _____  _ __| | _____ _ __ 
-// / __|/ _ \ '__\ \ / / |/ __/ _ \ \ \ /\ / / _ \| '__| |/ / _ \ '__|
-// \__ \  __/ |   \ V /| | (_|  __/  \ V  V / (_) | |  |   <  __/ |   
-// |___/\___|_|    \_/ |_|\___\___|   \_/\_/ \___/|_|  |_|\_\___|_|   
-
-
-
-// Register the service worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/serviceWorker.js') // Path to your service worker file
-      .then(registration => {
-        console.log('Service worker registered:', registration);
-      })
-      .catch(error => {
-        console.error('Service worker registration failed:', error);
-      });
-  });
-}
-
 //  _   _                         
 // | |_| |__   ___ _ __ ___   ___ 
 // | __| '_ \ / _ \ '_ ` _ \ / _ \
