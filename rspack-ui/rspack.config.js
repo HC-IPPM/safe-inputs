@@ -13,7 +13,8 @@ module.exports = {
 	builtins: {
 		html: [
 			{
-				template: "./index.html"
+				template: "./index.html",
+				favicon: "./assets/logo.svg",
 			}
 		]
 	},
