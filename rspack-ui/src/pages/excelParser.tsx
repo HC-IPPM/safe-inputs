@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { ChakraProvider, Box, Table } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import ExcelUploadForm from "../components/ExcelUploadForm";
 
 import TableOutput from "../components/TableOutput";
 
 import { Trans } from "@lingui/macro";
 
-const App: React.FC = () => {
+interface WorkBook {
+    sheets: object | null;
+}
+
+const ExcelParsingPage: React.FC = () => {
+
     const handleFileUpload = (file: File) => {
         console.log("file is ", file);
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -16,14 +21,17 @@ const App: React.FC = () => {
 
     // TODO: these components should maybe be decoupled from excelParser.tsx
     const [displayComponent, setDisplayComponent] = useState(false);
+    const [parserData, setParserData] = useState<WorkBook | null>(null);
+
     // Function to handle the data received from the service worker
     const handleServiceWorkerMessage = (event: MessageEvent) => {
-        const workbook = event.data.workbook;
-        const sheets = event.data.sheets;
+        const workbookData = event.data;
 
         // Handle the data returned from the service worker
-        console.log('Data returned from service worker:', workbook);
-        // render the display component after receiving service worker message.
+        console.log('Data returned from service worker:', workbookData);
+        // Set workbook data from parser to react state
+        setParserData(workbookData);
+        // Render the display component after receiving service worker message.
         setDisplayComponent(true);
     };
 
@@ -40,13 +48,13 @@ const App: React.FC = () => {
                     Safe Inputs PoC
                 </Trans>
             </Box>
-            <ChakraProvider>
+            <Container>
                 <ExcelUploadForm onSubmit={handleFileUpload} />
-                <TableOutput shouldDisplayComponent={displayComponent} />
-            </ChakraProvider>
+                <TableOutput parserData={parserData} shouldDisplayComponent={displayComponent} />
+            </Container>
 
         </>
     );
 };
 
-export default App;
+export default ExcelParsingPage;
