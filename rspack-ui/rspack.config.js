@@ -22,7 +22,9 @@ module.exports = {
 		rules: [
 			{
 				test: /\.svg$/,
-				type: "asset"
+				use: [
+					"@svgr/webpack"
+				],
 			},
 			{
 				test: /\.tsx$/,
