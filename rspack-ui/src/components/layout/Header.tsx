@@ -5,7 +5,7 @@ import { HStack, Box, Container, Link } from '@chakra-ui/react'
 
 import LanguageButton from "../LanguageButton"
 
-export default function TopHeader() {
+export default function Header() {
 
     return (
         <>
