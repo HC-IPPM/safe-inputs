@@ -2,7 +2,7 @@
 
 This project shows how to use the [Rspack JavaScript bundler](https://www.rspack.dev/guide/introduction.html) with [Lingui JS](https://lingui.dev/) to provide i18n for a React application (TypeScript).
 
-![lingui-rspack-i18n-demo](demo.gif)
+![lingui-rspack-i18n-demo](./docs/demo.gif)
 
 ## Setup Instructions
 
