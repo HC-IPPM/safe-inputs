@@ -88,7 +88,7 @@ export default function Footer() {
           </SimpleGrid>
         </Container>
       </Box>
-
+      
       {/* This box adds a sm,all white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
       <Box h="5px" bg="white" position="relative" bottom="0px" w={'100%'}></Box>
     </>
