@@ -12,7 +12,8 @@ import { Link as ReactRouterLink } from 'react-router-dom'
 
 import { Trans } from '@lingui/macro';
 
-import CanadaWhiteFont from '../../assets/canada-white-font.svg';
+// import CanadaWhiteFont from '../../assets/canada-white-font.svg';
+import CanadaWhiteFont from '../../assets/wmms-blk.svg'
 
 export default function Footer() {
     const LinkStyle = {

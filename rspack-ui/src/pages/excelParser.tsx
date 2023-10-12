@@ -5,9 +5,11 @@ import ExcelUploadForm from "../components/ExcelUploadForm";
 import TableOutput from "../components/TableOutput";
 
 import { Trans } from "@lingui/macro";
+import { WorkBook } from "xlsx";
 
-interface WorkBook {
+interface ParserData {
     sheets: object | null;
+    workbook: WorkBook;
 }
 
 const ExcelParsingPage: React.FC = () => {
@@ -18,7 +20,7 @@ const ExcelParsingPage: React.FC = () => {
 
     // TODO: these components should maybe be decoupled from excelParser.tsx
     const [displayComponent, setDisplayComponent] = useState(false);
-    const [parserData, setParserData] = useState<WorkBook | null>(null);
+    const [parserData, setParserData] = useState<ParserData | null>(null);
 
     // Register callback on myWorker
     parserWorker.addEventListener("message", (event) => {
@@ -40,7 +42,7 @@ const ExcelParsingPage: React.FC = () => {
                     Safe Inputs PoC
                 </Trans>
             </Box>
-            <Container>
+            <Container maxW="7xl" px={{ base: 5, md: 10 }} mt={8} minH="63vh">
                 <ExcelUploadForm onSubmit={handleFileUpload} />
                 <TableOutput parserData={parserData} shouldDisplayComponent={displayComponent} />
             </Container>
