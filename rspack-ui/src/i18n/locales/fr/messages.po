@@ -107,43 +107,43 @@ msgstr "<0>Les présentes conditions générales sont régies et interprétées 
 
 #: src/pages/termsAndConditions.tsx:183
 msgid "<0>Use of intellectual property in breach of this agreement may result in the termination of access to the Safe Inputs PoC website, product or services.</0>"
-msgstr ""
+msgstr "<0>L'utilisation de la propriété intellectuelle en violation du présent accord peut entraîner la résiliation de l'accès au site web, au produit ou aux services de Safe Inputs PoC.</0>"
 
 #: src/pages/termsAndConditions.tsx:302
 msgid "<0>Users exercise due diligence in ensuring the accuracy of the materials reproduced;</0>"
-msgstr ""
+msgstr "<0>Les utilisateurs font preuve de diligence raisonnable en s'assurant de l'exactitude des documents reproduits;</0>"
 
 #: src/pages/termsAndConditions.tsx:339
 msgid "<0>We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change.</0>"
-msgstr ""
+msgstr "<0>Nous nous réservons le droit de modifier la présentation et le contenu de notre site Web, nos politiques, nos produits, nos services et les présentes conditions générales à tout moment et sans préavis. Veuillez consulter régulièrement les présentes conditions générales, car l'utilisation continue de nos services après qu'une modification a été apportée sera considérée comme une acceptation de cette modification.</0>"
 
 #: src/pages/termsAndConditions.tsx:361
 msgid "<0>We reserve the right to modify or terminate our services for any reason, without notice, at any time.</0>"
-msgstr ""
+msgstr "<0>Nous nous réservons le droit de modifier ou de mettre fin à nos services pour quelque raison que ce soit, sans préavis, à tout moment.</0>"
 
 #: src/pages/termsAndConditions.tsx:212
 msgid "<0>You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS's mandate under the Policy on Government Security and the Policy on Service and Digital.</0>"
-msgstr ""
+msgstr "<0>Vous reconnaissez que toute donnée ou information divulguée au SCT peut être utilisée pour protéger le gouvernement du Canada ainsi que l'information électronique et les infrastructures d'information désignées comme étant importantes pour le gouvernement du Canada, conformément à l'aspect cybersécurité et assurance de l'information du mandat du SCT en vertu de la Politique sur la sécurité du gouvernement et de la Politique sur le service et le numérique.</0>"
 
 #: src/pages/termsAndConditions.tsx:119
 msgid "<0>You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended.</0>"
-msgstr ""
+msgstr "<0>Vous acceptez de protéger toute information qui vous est divulguée par TBS conformément aux mesures de traitement des données décrites dans les présentes conditions générales. De même, TBS accepte de protéger toute information que vous lui communiquez. Ces informations ne doivent être utilisées qu'aux fins pour lesquelles elles ont été prévues.</0>"
 
 #: src/pages/termsAndConditions.tsx:276
 msgid "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
-msgstr ""
+msgstr "<0>Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité.</0>"
 
 #: src/pages/termsAndConditions.tsx:30
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
-msgstr ""
+msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos services, vous reconnaissez avoir lu, compris et accepté d'être lié par les présentes conditions générales, et de vous conformer à toutes les lois et réglementations applicables. Nous vous recommandons de consulter périodiquement les Conditions générales afin de comprendre les mises à jour ou les modifications qui pourraient vous concerner. Si vous n'acceptez pas les présentes conditions générales, veuillez vous abstenir d'utiliser notre site Web, nos produits et nos services."
 
 #: src/components/ExcelUploadForm.tsx:54
 msgid "Choose a spreadsheet to upload"
-msgstr ""
+msgstr "Choisissez une feuille de calcul à analyser"
 
 #: src/components/TableOutput.tsx:78
 msgid "Data Preview"
-msgstr ""
+msgstr "Données Prévisualisation"
 
 #: src/components/TableOutput.tsx:69
 msgid "File Properties"
