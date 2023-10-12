@@ -14,7 +14,7 @@ module.exports = {
 		html: [
 			{
 				template: "./index.html",
-				favicon: "./src/assets/logo.svg",
+				favicon: "./src/assets/favicon_canadaFlag.ico",
 			}
 		]
 	},

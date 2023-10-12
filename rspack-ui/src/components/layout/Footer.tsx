@@ -6,7 +6,6 @@ import {
     Text,
     SimpleGrid,
     Container,
-    Spacer,
 } from '@chakra-ui/react'
 
 import { Link as ReactRouterLink } from 'react-router-dom'
@@ -14,24 +13,6 @@ import { Link as ReactRouterLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro';
 
 import CanadaWhiteFont from '../../assets/canada-white-font.svg';
-
-const BoxStyle = {
-    mt: 10,
-    py: 3,
-    borderTop: "1px solid #ffffff",
-    bg: "#26374a",
-    style: {
-        backgroundImage: 'url(images/landscape.png)',
-        backgroundPosition: 'right bottom',
-        backgroundRepeat: 'no-repeat',
-    },
-    as: "footer",
-    role: "contentinfo",
-    color: "#333333",
-    position: "relative",
-    bottom: "0px",
-    w: '100%'
-}
 
 export default function Footer() {
     const LinkStyle = {
@@ -49,7 +30,7 @@ export default function Footer() {
                 borderTop="1px solid #ffffff"
                 bg="#26374a"
                 style={{
-                    backgroundImage: 'url(images/landscape.png)',
+                    backgroundImage: 'url(https://health-infobase.canada.ca/src/GCWeb/assets/landscape.png)',
                     backgroundPosition: 'right bottom',
                     backgroundRepeat: 'no-repeat',
                 }}
@@ -82,13 +63,13 @@ export default function Footer() {
                         </SimpleGrid>
                         {/* Sets the position of the CanadaWithFlag */}
                         <Box pt={{ base: 5, md: 20 }}>
-                            {/* Contropls the size of the CanadaWithFlag */}
+                            {/* Controls the size of the CanadaWithFlag */}
                             <CanadaWhiteFont />
                         </Box>
                     </SimpleGrid >
                 </Container >
             </Box >
-            {/* This box adds a sm,all white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
+            {/* This box adds a small white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
             < Box h="5px" bg="white" position="relative" bottom="0px" w={'100%'} ></Box >
         </>
     )
