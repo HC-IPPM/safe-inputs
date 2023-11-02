@@ -6,13 +6,13 @@ import {
     Text,
     SimpleGrid,
     Container,
+    Spacer,
 } from '@chakra-ui/react'
 
 import { Link as ReactRouterLink } from 'react-router-dom'
 
 import { Trans } from '@lingui/macro';
 
-// import CanadaWhiteFont from '../../assets/canada-white-font.svg';
 import CanadaWhiteFont from '../../assets/wmms-blk.svg'
 
 export default function Footer() {
@@ -44,28 +44,53 @@ export default function Footer() {
             >
                 <Container maxW="7xl" color="#FFFFFF" pl={{ base: 5, md: 10 }}>
                     <SimpleGrid columns={[1, null, 6]}>
-                        <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
-                            <Box pt={{ base: 6, md: 20 }}>
-                                <Trans>
-                                    <Link as={ReactRouterLink} to="/termsAndConditions" {...LinkStyle}>
-                                        <Text>Terms and Conditions</Text>
-                                    </Link>
-                                </Trans>
-                            </Box>
-                            <Box pt={{ base: 0, md: 20 }}>
-                                <Trans>
-                                    <Link href="https://www.canada.ca/en/transparency/privacy.html" {...LinkStyle}>
-                                        <Text>
-                                            Privacy
-                                        </Text>
-                                    </Link>
-                                </Trans>
-                            </Box>
-                        </SimpleGrid>
+                        <Box
+                            minW={{
+                                base: '200px',
+                                sm: '200px',
+                                md: '350px',
+                            }}
+                            zIndex="1"
+                        >
+                            <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
+                                <Box pt={{ base: 6, md: 20 }}>
+                                    <Trans>
+                                        <Link as={ReactRouterLink} to="/termsAndConditions" {...LinkStyle}>
+                                            <Text>Terms and Conditions</Text>
+                                        </Link>
+                                    </Trans>
+                                </Box>
+                                <Box pt={{ base: 0, md: 20 }}>
+                                    <Trans>
+                                        <Link href="https://www.canada.ca/en/transparency/privacy.html" {...LinkStyle}>
+                                            <Text>
+                                                Privacy
+                                            </Text>
+                                        </Link>
+                                    </Trans>
+                                </Box>
+                            </SimpleGrid>
+
+                        </Box>
+                        <Spacer />
+                        <Spacer />
+                        <Spacer />
+                        <Spacer />
                         {/* Sets the position of the CanadaWithFlag */}
                         <Box pt={{ base: 5, md: 20 }}>
                             {/* Controls the size of the CanadaWithFlag */}
-                            <CanadaWhiteFont />
+                            <Box
+                                w="auto"
+                                h="auto"
+                                maxW={{
+                                    base: '100px',
+                                    sm: '100px',
+                                    md: '125px',
+                                    lg: '150px',
+                                }}
+                            >
+                                <CanadaWhiteFont />
+                            </Box>
                         </Box>
                     </SimpleGrid >
                 </Container >

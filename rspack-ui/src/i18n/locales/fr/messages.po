@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/layout/Footer.tsx:74
+#: src/components/layout/Footer.tsx:55
 msgid "<0><1>Privacy</1></0>"
 msgstr "<0><1>Confidentialité</1></0>"
 
-#: src/components/layout/Footer.tsx:67
+#: src/components/layout/Footer.tsx:48
 msgid "<0><1>Terms and Conditions</1></0>"
 msgstr "<0><1>Avis</1></0>"
 
@@ -141,50 +141,50 @@ msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos service
 msgid "Choose a spreadsheet to upload"
 msgstr "Choisissez une feuille de calcul à analyser"
 
-#: src/components/TableOutput.tsx:78
+#: src/components/TableOutput.tsx:166
 msgid "Data Preview"
 msgstr "Données Prévisualisation"
 
-#: src/components/TableOutput.tsx:69
+#: src/components/TableOutput.tsx:104
 msgid "File Properties"
-msgstr ""
+msgstr "Propriétés du fichier"
 
 #: src/pages/termsAndConditions.tsx:52
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
-msgstr ""
+msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, veuillez vous référer à <0>nos conditions générales sur le site Web du SCT. <1/></0>"
 
-#: src/components/layout/Header.tsx:20
+#: src/components/layout/Header.tsx:37
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: src/pages/termsAndConditions.tsx:24
 msgid "Notice of Agreement"
-msgstr ""
+msgstr "Avis d'accord"
 
 #: src/pages/termsAndConditions.tsx:63
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
-msgstr ""
+msgstr "Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du "
 
 #: src/pages/termsAndConditions.tsx:46
 msgid "Privacy"
-msgstr ""
+msgstr "Confidentialité"
 
-#: src/pages/excelParser.tsx:39
+#: src/pages/excelParser.tsx:41
 msgid "Safe Inputs PoC"
-msgstr ""
+msgstr "Safe Inputs PoC"
 
-#: src/components/TableOutput.tsx:48
+#: src/components/TableOutput.tsx:83
 msgid "Show Less"
-msgstr ""
+msgstr "Afficher Moins"
 
-#: src/components/TableOutput.tsx:57
+#: src/components/TableOutput.tsx:92
 msgid "Show More"
-msgstr ""
+msgstr "Afficher Plus"
 
 #: src/pages/termsAndConditions.tsx:413
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Avis"
 
 #: src/components/ExcelUploadForm.tsx:79
 msgid "Upload"
-msgstr ""
+msgstr "Télécharger"

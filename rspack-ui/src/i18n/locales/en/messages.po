@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/layout/Footer.tsx:74
+#: src/components/layout/Footer.tsx:55
 msgid "<0><1>Privacy</1></0>"
 msgstr "<0><1>Privacy</1></0>"
 
-#: src/components/layout/Footer.tsx:67
+#: src/components/layout/Footer.tsx:48
 msgid "<0><1>Terms and Conditions</1></0>"
 msgstr "<0><1>Terms and Conditions</1></0>"
 
@@ -141,11 +141,11 @@ msgstr "By accessing, browsing, or using our website or our services, you acknow
 msgid "Choose a spreadsheet to upload"
 msgstr "Choose a spreadsheet to upload"
 
-#: src/components/TableOutput.tsx:78
+#: src/components/TableOutput.tsx:166
 msgid "Data Preview"
 msgstr "Data Preview"
 
-#: src/components/TableOutput.tsx:69
+#: src/components/TableOutput.tsx:104
 msgid "File Properties"
 msgstr "File Properties"
 
@@ -153,7 +153,7 @@ msgstr "File Properties"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 
-#: src/components/layout/Header.tsx:20
+#: src/components/layout/Header.tsx:37
 msgid "Home"
 msgstr "Home"
 
@@ -169,15 +169,15 @@ msgstr "Personal information will not be disclosed by Treasury Board Secretariat
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/pages/excelParser.tsx:39
+#: src/pages/excelParser.tsx:41
 msgid "Safe Inputs PoC"
 msgstr "Safe Inputs PoC"
 
-#: src/components/TableOutput.tsx:48
+#: src/components/TableOutput.tsx:83
 msgid "Show Less"
 msgstr "Show Less"
 
-#: src/components/TableOutput.tsx:57
+#: src/components/TableOutput.tsx:92
 msgid "Show More"
 msgstr "Show More"
 
