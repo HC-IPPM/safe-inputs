@@ -34,7 +34,8 @@ module.exports = {
 					options: {
 						presets: [
 							"@babel/preset-typescript",
-							"@babel/preset-react"
+							// To avoid importing React
+							[ "@babel/preset-react", { runtime: "automatic" } ]
 						],
 						plugins: [
 							"macros"

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Button, Text } from '@chakra-ui/react';
 import { useLingui } from '@lingui/react';
 
