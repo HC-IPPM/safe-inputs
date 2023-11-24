@@ -1,0 +1,34 @@
+title: |md
+
+   **Page Layout (`index.tsx`)**
+
+| { near: top-center }
+
+BrowserRouter: {
+  ChakraProvider: {
+    I18nProvider: {
+      Routes: {
+        "Route (path = '/')": {
+          NavPage: {
+            Header
+            Outlet: {
+              "Route (path='')": {
+                ExcelParsingPage
+              }
+              "Route (path='/termsAndConditions')": {
+                TermsAndConditions
+              }
+            }
+            Footer
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+

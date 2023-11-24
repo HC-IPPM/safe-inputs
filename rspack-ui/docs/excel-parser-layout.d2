@@ -1,0 +1,44 @@
+title: |md
+
+   **Page Layout (`excelParser.tsx`)**
+
+| { near: top-center }
+
+
+ExcelParsingPage: {
+    handleFileUpload
+    parserWorker: {
+        setDisplayComponent
+        setParserData
+        addEventListener
+    }
+    ExcelUploadForm: {
+        Props: {
+            onSubmit
+        }
+        Props.style.3d: true
+    }
+    TableOutput: {
+        Props: {
+            parserData
+            shouldDisplayComponent
+        }
+        Props.style.3d: true
+    }
+}
+
+ExcelParsingPage.handleFileUpload <- ExcelParsingPage.ExcelUploadForm.Props.onSubmit
+
+serviceWorker\.ts: {
+  messageEventListener: {
+    xlsx\.read(workbook file)
+    xlsx\.sheet_to_json(sheets)
+    postMessage(workbook json)
+  }
+}
+
+ExcelParsingPage.handleFileUpload -> serviceWorker\.ts.messageEventListener.xlsx\.read(workbook file): workbook file
+serviceWorker\.ts.messageEventListener.postMessage(workbook json) -> ExcelParsingPage.parserWorker.addEventListener: processed workbook file
+
+ExcelParsingPage.parserWorker.setDisplayComponent -> ExcelParsingPage.TableOutput.Props.displayComponent
+ExcelParsingPage.parserWorker.setParserData -> ExcelParsingPage.TableOutput.Props.parserData
