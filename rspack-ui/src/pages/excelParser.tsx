@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Box, Container } from "@chakra-ui/react";
 import ExcelUploadForm from "../components/ExcelUploadForm";
 
-import TableOutput from "../components/TableOutput";
+import ExcelFileOutput from "../components/ExcelFileOutput";
 
 import { Trans } from "@lingui/macro";
 import { WorkBook } from "xlsx";
 
 interface ParserData {
-    sheets: object | null;
+    sheets: { sheetName: string; data: any }[];
     workbook: WorkBook;
 }
 
@@ -34,7 +34,6 @@ const ExcelParsingPage: React.FC = () => {
         setDisplayComponent(true);
     })
 
-
     return (
         <>
             <Box className="App-header" mb={2}>
@@ -44,7 +43,7 @@ const ExcelParsingPage: React.FC = () => {
             </Box>
             <Container maxW="7xl" px={{ base: 5, md: 10 }} mt={8} minH="63vh">
                 <ExcelUploadForm onSubmit={handleFileUpload} />
-                <TableOutput parserData={parserData} shouldDisplayComponent={displayComponent} />
+                <ExcelFileOutput parserData={parserData} shouldDisplayComponent={displayComponent} />
             </Container>
 
         </>
