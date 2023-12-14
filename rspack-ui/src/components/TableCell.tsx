@@ -1,6 +1,9 @@
 
 import React, { useEffect, useState } from "react";
-import {Table} from '@tanstack/react-table'
+import { Table } from '@tanstack/react-table'
+import { Input, Tooltip } from "@chakra-ui/react";
+import { ErrorObject } from 'ajv';
+import { RowError, constructErrorMessage } from "../schema/utils";
 
 type TableCellProps = {
     getValue: () => any;
@@ -13,9 +16,24 @@ type TableCellProps = {
     table: Table<any>;
 };
 
+const isErrorCell = (rowError: RowError | undefined, header: string,) => {
+    if (!rowError || !rowError.errors || rowError.valid) {
+        return false;
+    }
+
+    const match = rowError.errors.find((error: ErrorObject) =>
+        (error.instancePath.substring(1) === header)
+        || (error.params.missingProperty === header))
+
+    return match && constructErrorMessage(match);
+};
+
 const TableCell: React.FC<TableCellProps> = ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     const [value, setValue] = useState(initialValue)
+    const rowError = table.options.meta?.rowErrors[index]
+    const isError = isErrorCell(rowError, id);
+    console.log(value);
     useEffect(() => {
         setValue(initialValue)
     }, [initialValue])
@@ -23,11 +41,15 @@ const TableCell: React.FC<TableCellProps> = ({ getValue, row: { index }, column:
         table.options.meta?.updateData(index, id, value)
     }
     return (
-        <input
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            onBlur={onBlur}
-        />
+        <Tooltip isDisabled={!isError} label={isError} placement="bottom">
+            <Input
+                border={isError ? '1px solid red' : 'none'}
+                value={value}
+                width="auto"
+                onChange={e => setValue(e.target.value)}
+                onBlur={onBlur}
+            />
+        </Tooltip>
     )
 }
 

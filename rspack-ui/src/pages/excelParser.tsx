@@ -7,8 +7,10 @@ import ExcelFileOutput from "../components/ExcelFileOutput";
 import { Trans } from "@lingui/macro";
 import { WorkBook } from "xlsx";
 
+interface Sheet { sheetName: string; data: any }
+
 interface ParserData {
-    sheets: { sheetName: string; data: any }[];
+    sheets: Sheet[];
     workbook: WorkBook;
 }
 
@@ -23,7 +25,7 @@ const ExcelParsingPage: React.FC = () => {
     const [parserData, setParserData] = useState<ParserData | null>(null);
 
     // Register callback on myWorker
-    parserWorker.addEventListener("message", (event) => {
+    parserWorker.addEventListener("message", (event: MessageEvent<ParserData>) => {
         const workbookData = event.data;
 
         // Handle the data returned from the service worker

@@ -6,7 +6,6 @@ import {
     AccordionItem,
     AccordionButton,
     AccordionPanel,
-    TableContainer,
 } from "@chakra-ui/react";
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
@@ -25,12 +24,12 @@ interface ParserData {
     workbook: WorkBook;
 }
 
-interface MyComponentProps {
+interface ExcelFileOutputProps {
     shouldDisplayComponent: boolean;
     parserData: ParserData | null;
 }
 
-const ExcelFileOutput: React.FC<MyComponentProps> = ({ shouldDisplayComponent, parserData }) => {
+const ExcelFileOutput: React.FC<ExcelFileOutputProps> = ({ shouldDisplayComponent, parserData }) => {
     const p = (parserData && parserData.workbook && parserData.workbook.Props);
     return (
         <>
@@ -65,9 +64,7 @@ const ExcelFileOutput: React.FC<MyComponentProps> = ({ shouldDisplayComponent, p
                                         )}
                                     </AccordionButton>
                                     <AccordionPanel pb={4}>
-                                        <TableContainer>
-                                            <DataTable initialData={sheet.data} /> 
-                                        </TableContainer>
+                                        <DataTable initialData={sheet.data} />
                                     </AccordionPanel>
                                 </>
                             )}
