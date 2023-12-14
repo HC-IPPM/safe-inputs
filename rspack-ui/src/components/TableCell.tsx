@@ -33,7 +33,6 @@ const TableCell: React.FC<TableCellProps> = ({ getValue, row: { index }, column:
     const [value, setValue] = useState(initialValue)
     const rowError = table.options.meta?.rowErrors[index]
     const isError = isErrorCell(rowError, id);
-    console.log(value);
     useEffect(() => {
         setValue(initialValue)
     }, [initialValue])
