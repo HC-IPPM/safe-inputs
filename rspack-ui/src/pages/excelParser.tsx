@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Box, Container } from "@chakra-ui/react";
-import ExcelUploadForm from "../components/ExcelUploadForm";
-
-import ExcelFileOutput from "../components/ExcelFileOutput";
-
 import { Trans } from "@lingui/macro";
 import { WorkBook } from "xlsx";
+
+import ExcelUploadForm from "../components/ExcelUploadForm";
+import ExcelFileOutput from "../components/ExcelFileOutput";
 
 interface Sheet { sheetName: string; data: any }
 
