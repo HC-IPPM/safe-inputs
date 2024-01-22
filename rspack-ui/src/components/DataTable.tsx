@@ -46,7 +46,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
     useEffect(() => {
         setRowErrors(validateData(data))
         if(isInitialRender) {
-            db.schema_cases.bulkPut(data);
+            db.cases.bulkPut(data);
             isInitialRender.current = false;
         }
     }, [data])
@@ -58,7 +58,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
                     ...old[rowIndex]!,
                     [columnId]: value,
                 };
-                    db.schema_cases.put(newRow);
+                    db.cases.put(newRow);
                     return newRow;
             }
             return row;
