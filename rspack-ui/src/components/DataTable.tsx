@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Tr,
@@ -21,7 +21,6 @@ import {
 import { Pagination } from "@dts-stn/service-canada-design-system";
 import TableCell from "./TableCell";
 import { RowError, validateData } from "../schema/utils";
-import { db } from '../schema/model';
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
@@ -41,14 +40,9 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
     }));
     const [data, setData] = useState(initialData);
     const [rowErrors, setRowErrors] = useState<RowError[]>([]);
-    const isInitialRender = useRef(true);
 
     useEffect(() => {
         setRowErrors(validateData(data))
-        if(isInitialRender) {
-            db.cases.bulkPut(data);
-            isInitialRender.current = false;
-        }
     }, [data])
 
     const updateData = (rowIndex: number, columnId: string, value: any) => {
@@ -58,8 +52,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
                     ...old[rowIndex]!,
                     [columnId]: value,
                 };
-                    db.cases.put(newRow);
-                    return newRow;
+                return newRow;
             }
             return row;
         }));
