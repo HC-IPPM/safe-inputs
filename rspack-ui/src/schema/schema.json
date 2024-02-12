@@ -2,231 +2,87 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "CaseNumber": {
-            "type": "number"
+        "caseNumber": {
+            "type": "number",
+            "description": "Unique case number assigned to the patient."
         },
-        "Gender": {
+        "patientName": {
+            "type": "string",
+            "description": "The patient's name."
+        },
+        "age": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Age of the patient in years."
+        },
+        "gender": {
             "type": "string",
             "enum": [
-                "M",
-                "U",
-                "F"
-            ]
+                "Male",
+                "Female",
+                "Other"
+            ],
+            "description": "Gender of the patient."
         },
-        "PostalCode": {
+        "diagnosisDate": {
             "type": "string",
+            "description": "Date of diagnosis in YYYY-MM-DD format.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "treatmentStatus": {
+            "type": "string",
+            "enum": [
+                "In Treatment",
+                "Recovered",
+                "Deceased",
+                "Unknown"
+            ],
+            "description": "Current treatment status of the patient."
+        },
+        "hasInsurance": {
+            "type": "boolean",
+            "description": "Indicates whether the patient has health insurance."
+        },
+        "insuranceProvider": {
+            "type": "string",
+            "description": "Name of the patient's health insurance provider."
+        },
+        "postalCode": {
+            "type": "string",
+            "description": "Postal code of the patient's address.",
             "pattern": "^[A-Za-z]\\d[A-Za-z][ -]?\\d[A-Za-z]\\d$"
         },
-        "DiagnosisDate": {
+        "treatingPhysician": {
             "type": "string",
-            "pattern": "^(19|20)\\d{2}/(0[1-9]|1[0-2])/([0-2][0-9]|3[01])$"
+            "description": "Name of the physician treating the patient."
         },
-        "ICDOption": {
-            "type": "string",
-            "enum": [
-                "ICD9",
-                "ICD10"
-            ]
-        },
-        "ICD9": {
-            "type": "string"
-        },
-        "ICD10": {
-            "type": "string"
-        },
-        "ChestXRay": {
-            "type": "string",
-            "enum": [
-                "Normal",
-                "Abnormal",
-                "Not Done",
-                "Unknown"
-            ]
-        },
-        "IfAbnormal": {
-            "type": "string",
-            "enum": [
-                "Cavitary",
-                "Non-Cavitary"
-            ]
-        },
-        "CaseCriteria": {
-            "type": "string",
-            "enum": [
-                "Culture positive",
-                "Clinical diagnosis"
-            ]
-        },
-        "Initial_Resistance": {
-            "type": "string",
-            "enum": [
-                "Yes",
-                "No",
-                "Unknown"
-            ]
-        },
-        "GenotypingResults": {
-            "type": "string",
-            "enum": [
-                "Yes",
-                "No",
-                "Unknown",
-                null
-            ]
-        },
-        "GenotypingSpoligotyping": {
-            "type": "string",
-            "pattern": "^[0-9]{1,15}$"
-        },
-        "MIRU": {
-            "type": "string",
-            "maxLength": 24
-        },
-        "PreviousTreatmentCompleted": {
-            "type": "string",
-            "enum": [
-                "yes",
-                "no",
-                "unknown",
-                null
-            ]
-        },
-        "HIVStatus": {
-            "type": "string",
-            "enum": [
-                "Negative",
-                "Positive",
-                "Test not offered",
-                "Test refused",
-                "Unknown"
-            ]
-        },
-        "Date_Of_HIV_Test": {
-            "type": "string",
-            "pattern": "^(19|20)\\d{2}/(0[1-9]|1[0-2])/([0-2][0-9]|3[01])$"
-        },
-        "TravelTBCountry": {
-            "type": "string",
-            "enum": [
-                "yes",
-                "no",
-                "unknown"
-            ]
-        },
-        "HowLong": {
-            "type": [
-                "number",
-                "null"
-            ]
-        },
-        "patientDiedBeforeDuring": {
-            "type": "string",
-            "enum": [
-                "checked",
-                "unchecked"
-            ]
-        },
-        "DidPatientDie": {
-            "type": "string",
-            "enum": [
-                "Yes-before treatment",
-                "Yes-during treatment",
-                "No",
-                "Unknown",
-                null
-            ]
-        },
-        "DateOfDeath": {
-            "type": "string",
-            "pattern": "^(19|20)\\d{2}/(0[1-9]|1[0-2])/([0-2][0-9]|3[01])$"
-        },
-        "CauseOfDeath": {
-            "type": "string",
-            "enum": [
-                "TB contributed to death but was not the underlying cause",
-                "TB did not contribute to death",
-                "TB was the cause of death",
-                "Unknown"
-            ]
-        },
-        "FirstEpisodeOfTB": {
-            "type": "number",
-            "enum": [
-                1,
-                2,
-                3
-            ]
-        },
-        "PreviousDiagnosisYear": {
-            "type": "number"
-        }
-    },
-    "dependencies": {
-        "PreviousDiagnosisYear": {
-            "properties": {
-                "FirstEpisodeOfTB": {
-                    "const": 2
-                }
+        "medications": {
+            "type": "array",
+            "items": {
+                "type": "string"
             },
-            "required": [
-                "PreviousDiagnosisYear"
-            ]
-        },
-        "IfAbnormal": {
-            "properties": {
-                "ChestXRay": {
-                    "const": "Abnormal"
-                }
-            },
-            "required": [
-                "IfAbnormal"
-            ]
-        },
-        "HowLong": {
-            "properties": {
-                "TravelTBCountry": {
-                    "const": "yes"
-                }
-            },
-            "required": [
-                "HowLong"
-            ]
-        },
-        "DateOfDeath": {
-            "properties": {
-                "DidPatientDie": {
-                    "enum": [
-                        "Yes-before treatment",
-                        "Yes-during treatment"
-                    ]
-                }
-            },
-            "required": [
-                "DateOfDeath"
-            ]
+            "description": "List of medications prescribed to the patient."
         }
     },
     "required": [
-        "CaseNumber",
-        "Gender",
-        "PostalCode",
-        "DiagnosisDate",
-        "ICDOption",
-        "ICD9",
-        "ICD10",
-        "ChestXRay",
-        "CaseCriteria",
-        "Initial_Resistance",
-        "GenotypingResults",
-        "GenotypingSpoligotyping",
-        "MIRU",
-        "PreviousTreatmentCompleted",
-        "HIVStatus",
-        "Date_Of_HIV_Test",
-        "TravelTBCountry",
-        "patientDiedBeforeDuring",
-        "DidPatientDie",
-        "CauseOfDeath",
-        "FirstEpisodeOfTB"
-    ]
+        "caseNumber",
+        "patientName",
+        "age",
+        "gender",
+        "diagnosisDate",
+        "treatmentStatus",
+        "hasInsurance"
+    ],
+    "if": {
+        "properties": {
+            "hasInsurance": {
+                "const": true
+            }
+        }
+    },
+    "then": {
+        "required": [
+            "insuranceProvider"
+        ]
+    }
 }
