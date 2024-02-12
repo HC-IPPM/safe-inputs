@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useMutation, gql } from "@apollo/client";
 import {
     Tr,
     Th,
@@ -7,7 +7,9 @@ import {
     Tbody,
     Thead,
     Table,
-    TableContainer
+    TableContainer,
+    Button,
+    Box
 } from "@chakra-ui/react";
 
 import {
@@ -19,8 +21,8 @@ import {
 } from '@tanstack/react-table'
 
 import { Pagination } from "@dts-stn/service-canada-design-system";
-import TableCell from "./TableCell";
-import { RowError, validateData } from "../schema/utils";
+import TableCell from "./TableCell.tsx";
+import { RowError, validateData } from "../schema/utils.ts";
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
@@ -63,6 +65,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        autoResetPageIndex: false,
         meta: {
             updateData,
             rowErrors
@@ -71,6 +74,18 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
             cell: TableCell,
         }
     });
+
+    const VERIFY_JSON_FORMAT_MUTATION = gql`
+        mutation verifyJsonFormat($testSheet: JSON!) {
+            verifyJsonFormat(sheetData: $testSheet)
+        }
+    `;
+
+    const [publishData, { loading, error, data: resultData }] = useMutation(VERIFY_JSON_FORMAT_MUTATION);
+
+    const handleButtonClick = async () => {
+        publishData({ variables: { testSheet: data } });
+    };
 
     return (
         <>
@@ -113,6 +128,21 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
                 onPageChange={(page: number) => table.setPageIndex(page - 1)}
                 browser
             />
+            <Box as="br" />
+            <Box as="br" />
+            <Button
+                bg="#26374a"
+                color="#FFFFFF"
+                _hover={{ bg: '#0000DD' }}
+                onClick={handleButtonClick}
+            >
+                Upload Anyway Data
+            </Button>
+            <Box as="br" />
+            <Box as="br" />
+            {loading && <pre>Publishing Data....</pre>}
+            {resultData && <pre>{JSON.stringify(resultData, null, 2)}</pre>}
+            {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
         </>
     )
 }

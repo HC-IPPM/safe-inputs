@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 
 import "./index.css"
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -15,12 +16,12 @@ import {
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { messages as enMessages } from "./i18n/locales/en/messages";
-import { messages as frMessages } from "./i18n/locales/fr/messages";
+import { messages as enMessages } from "./i18n/locales/en/messages.ts";
+import { messages as frMessages } from "./i18n/locales/fr/messages.ts";
 
-import NavPage from "./pages/navPage";
-import TermsAndConditions from "./pages/termsAndConditions";
-import ExcelParsingPage from "./pages/excelParser";
+import NavPage from "./pages/navPage.tsx";
+import TermsAndConditions from "./pages/termsAndConditions.tsx";
+import ExcelParsingPage from "./pages/excelParser.tsx";
 
 
 //  _   _                         
@@ -88,19 +89,26 @@ i18n.activate("en");
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
+const client = new ApolloClient({
+  // uri: '/graphql',
+  uri: 'http://localhost:3000/graphql',
+  cache: new InMemoryCache(),
+});
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <Routes>
-            <Route path="/" element={<NavPage />}>
-              <Route path="" element={<ExcelParsingPage />}></Route>
-              <Route path="/termsAndConditions" element={<TermsAndConditions />}></Route>
-            </Route>
-          </Routes>
-        </I18nProvider>
-      </ChakraProvider>
+      <ApolloProvider client={client}>
+        <ChakraProvider theme={theme}>
+          <I18nProvider i18n={i18n}>
+            <Routes>
+              <Route path="/" element={<NavPage />}>
+                <Route path="" element={<ExcelParsingPage />}></Route>
+                <Route path="/termsAndConditions" element={<TermsAndConditions />}></Route>
+              </Route>
+            </Routes>
+          </I18nProvider>
+        </ChakraProvider>
+      </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode >
 )

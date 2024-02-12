@@ -3,8 +3,8 @@ import { Box, Container } from "@chakra-ui/react";
 import { Trans } from "@lingui/macro";
 import { WorkBook } from "xlsx";
 
-import ExcelUploadForm from "../components/ExcelUploadForm";
-import ExcelFileOutput from "../components/ExcelFileOutput";
+import ExcelUploadForm from "../components/ExcelUploadForm.tsx";
+import ExcelFileOutput from "../components/ExcelFileOutput.tsx";
 
 interface Sheet { sheetName: string; data: any }
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from '@tanstack/react-table'
 import { Input, Tooltip } from "@chakra-ui/react";
 import { ErrorObject } from 'ajv';
-import { RowError, constructErrorMessage } from "../schema/utils";
+import { RowError, constructErrorMessage } from "../schema/utils.ts";
 
 type TableCellProps = {
     getValue: () => any;

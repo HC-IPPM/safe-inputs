@@ -11,7 +11,7 @@ import {
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
 import { WorkBook } from "xlsx";
-import DataTable from "./DataTable";
+import DataTable from "./DataTable.tsx";
 
 
 interface SheetData {
