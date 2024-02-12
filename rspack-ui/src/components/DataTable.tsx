@@ -50,11 +50,10 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
     const updateData = (rowIndex: number, columnId: string, value: any) => {
         setData(old => old.map((row, index) => {
             if (index === rowIndex) {
-                const newRow = {
+                return {
                     ...old[rowIndex]!,
                     [columnId]: value,
-                };
-                return newRow;
+                }
             }
             return row;
         }));

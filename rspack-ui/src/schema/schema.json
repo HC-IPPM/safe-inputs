@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "RegisterCaseNumber": {
+        "CaseNumber": {
             "type": "number"
         },
         "Gender": {
@@ -207,7 +207,7 @@
         }
     },
     "required": [
-        "RegisterCaseNumber",
+        "CaseNumber",
         "Gender",
         "PostalCode",
         "DiagnosisDate",
