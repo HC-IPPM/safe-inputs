@@ -50,6 +50,10 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
     const updateData = (rowIndex: number, columnId: string, value: any) => {
         setData(old => old.map((row, index) => {
             if (index === rowIndex) {
+                const oldValue = old[rowIndex][columnId];
+                if(typeof oldValue === 'number') {
+                    value = parseInt(value)
+                }
                 return {
                     ...old[rowIndex]!,
                     [columnId]: value,
@@ -135,7 +139,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
                 _hover={{ bg: '#0000DD' }}
                 onClick={handleButtonClick}
             >
-                Upload Anyway Data
+                {rowErrors.some(error => !error.valid) ? "Upload Data With Errors" : "Upload Data"}
             </Button>
             <Box as="br" />
             <Box as="br" />

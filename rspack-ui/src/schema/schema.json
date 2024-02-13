@@ -40,8 +40,11 @@
             "description": "Current treatment status of the patient."
         },
         "hasInsurance": {
-            "type": "boolean",
-            "description": "Indicates whether the patient has health insurance."
+            "type": "string",
+            "description": "Indicates whether the patient has health insurance.",
+            "enum": [
+                "true", "false"
+            ]
         },
         "insuranceProvider": {
             "type": "string",
@@ -56,11 +59,8 @@
             "type": "string",
             "description": "Name of the physician treating the patient."
         },
-        "medications": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            },
+        "medication": {
+            "type": "string",
             "description": "List of medications prescribed to the patient."
         }
     },
@@ -76,7 +76,7 @@
     "if": {
         "properties": {
             "hasInsurance": {
-                "const": true
+                "const": "true"
             }
         }
     },

@@ -49,6 +49,9 @@ export const constructErrorMessage = (error: ErrorObject): string => {
         case "const":
             return `${error.instancePath} should be ${error.params.allowedValue} due to other fields`;
 
+        case "minimum":
+            return `${error.instancePath} ${error.message}` 
+
         default:
             return `${error.instancePath} does not satisfy the schema requirements.`;
     }
