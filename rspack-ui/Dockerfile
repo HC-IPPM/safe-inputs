@@ -18,6 +18,8 @@ RUN npm run build
 # 2. For Nginx setup
 FROM docker.io/library/nginx:alpine
 
+RUN chown -R 1000:1000 /var/cache/nginx /var/run/ 
+
 # Copy config nginx
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -29,6 +31,7 @@ RUN rm -rf ./*
 # Copy static assets from builder stage
 COPY --from=build /app/dist .
 
-USER nginx
+USER 1000
+EXPOSE 3000
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

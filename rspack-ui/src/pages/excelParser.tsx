@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Box, Container } from "@chakra-ui/react";
-import ExcelUploadForm from "../components/ExcelUploadForm";
-
-import ExcelFileOutput from "../components/ExcelFileOutput";
-
+import { Box, Container, Text } from "@chakra-ui/react";
 import { Trans } from "@lingui/macro";
 import { WorkBook } from "xlsx";
 
+import ExcelUploadForm from "../components/ExcelUploadForm.tsx";
+import ExcelFileOutput from "../components/ExcelFileOutput.tsx";
+
+interface Sheet { sheetName: string; data: any }
+
 interface ParserData {
-    sheets: { sheetName: string; data: any }[];
+    sheets: Sheet[];
     workbook: WorkBook;
 }
 
@@ -23,7 +24,7 @@ const ExcelParsingPage: React.FC = () => {
     const [parserData, setParserData] = useState<ParserData | null>(null);
 
     // Register callback on myWorker
-    parserWorker.addEventListener("message", (event) => {
+    parserWorker.addEventListener("message", (event: MessageEvent<ParserData>) => {
         const workbookData = event.data;
 
         // Handle the data returned from the service worker
@@ -40,6 +41,7 @@ const ExcelParsingPage: React.FC = () => {
                 <Trans>
                     Safe Inputs PoC
                 </Trans>
+                {!displayComponent && <Text> Sample file can be found <a href="https://github.com/PHACDataHub/safe-inputs/blob/main/rspack-ui/test/test-spreadsheet.xlsx"><u>here</u></a></Text>}
             </Box>
             <Container maxW="7xl" px={{ base: 5, md: 10 }} mt={8} minH="63vh">
                 <ExcelUploadForm onSubmit={handleFileUpload} />
