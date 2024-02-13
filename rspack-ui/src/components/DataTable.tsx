@@ -144,7 +144,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
             <Box as="br" />
             <Box as="br" />
             {loading && <pre>Publishing Data....</pre>}
-            {resultData && <pre>{JSON.stringify(resultData, null, 2)}</pre>}
+            {resultData && <pre style={{maxHeight: "20rem", overflowY: "scroll"}}>{JSON.stringify(resultData, null, 2)}</pre>}
             {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
         </>
     )
