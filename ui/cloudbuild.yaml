@@ -1,20 +1,20 @@
 steps:
   - name: node:18-alpine
     id: install
-    dir: rspack-ui
+    dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - name: node:18-alpine
     id: test
-    dir: rspack-ui
+    dir: ui
     entrypoint: npm
     args: ['test']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
     entrypoint: 'bash'
-    dir: rspack-ui
+    dir: ui
     args:
       - '-c'
       - |
@@ -23,7 +23,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     id: build-if-main
     entrypoint: 'bash'
-    dir: rspack-ui
+    dir: ui
     args:
       - '-c'
       - |

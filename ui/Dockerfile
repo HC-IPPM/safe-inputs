@@ -1,21 +1,16 @@
-# 1. For build React app
+# 1. Building static react app
 FROM node:lts AS build
 
-# Set working directory
 WORKDIR /app
 
- 
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-
-# Same as npm install
 RUN npm ci
 
 COPY . /app
-
 RUN npm run build
 
-# 2. For Nginx setup
+# 2. Serve static app via nginx
 FROM docker.io/library/nginx:alpine
 
 RUN chown -R 1000:1000 /var/cache/nginx /var/run/ 
