@@ -8,7 +8,6 @@ A top level navigation page `NavPage` renders `Header`, `Footer`, and `Outlet` c
 
 ![application page layout](./react-page-layout.svg)
 
-
 ## Excel Parsing Page
 
 The `ExcelParsingPage.tsx` component renders two main components: `ExcelUploadForm.tsx` and `TableOutput.tsx`.
@@ -19,9 +18,7 @@ Using the `xlsx` package, the web worker parses the Excel Workbook file, extract
 
 `TableOutput.tsx` conditionally renders components to display certain data and metadata from the processed spreadsheet.
 
-
 ![excel parser layout](./excel-parser-layout.svg)
-
 
 ## Register the Web Worker
 
