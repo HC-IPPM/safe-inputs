@@ -5,14 +5,14 @@ metadata:
   namespace: api
 spec:
   hosts:
-  - "*"
+    - '*'
   gateways:
-  - istio-ingress/public-gateway
+    - istio-ingress/public-gateway
   http:
-  - name: gateway-to-api
-    match:
-    - uri:
-        prefix: /graphql
-    route:
-    - destination:
-        host: api.api.svc.cluster.local
+    - name: gateway-to-api
+      match:
+        - uri:
+            prefix: /graphql
+      route:
+        - destination:
+            host: api.api.svc.cluster.local

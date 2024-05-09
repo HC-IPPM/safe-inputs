@@ -17,22 +17,22 @@ spec:
         app: api
     spec:
       containers:
-      - name: api
-        image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-88e17d6-1715278179 # {"$imagepolicy": "flux-system:api"}
-        # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-49b1120-1677095699 # {"$imagepolicy": "flux-system:api"}
+        - name: api
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-88e17d6-1715278179 # {"$imagepolicy": "flux-system:api"}
+          # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-49b1120-1677095699 # {"$imagepolicy": "flux-system:api"}
 
-        envFrom:
-        # - secretRef:
-        #     name: nats-jwt-secret
-        securityContext:
-          # No new privs for process or it's children
-          # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
-          allowPrivilegeEscalation: false
-        resources:
-          limits:
-            cpu: 300m
-            memory: 70Mi
-          requests:
-            cpu: 300m
-            memory: 70Mi
+          envFrom:
+          # - secretRef:
+          #     name: nats-jwt-secret
+          securityContext:
+            # No new privs for process or it's children
+            # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
+            allowPrivilegeEscalation: false
+          resources:
+            limits:
+              cpu: 300m
+              memory: 70Mi
+            requests:
+              cpu: 300m
+              memory: 70Mi
 status: {}
