@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useMutation, gql } from '@apollo/client'
+import React, { useEffect, useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
 import {
   Tr,
   Th,
@@ -10,7 +10,7 @@ import {
   TableContainer,
   Button,
   Box,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
 import {
   flexRender,
@@ -18,52 +18,52 @@ import {
   getPaginationRowModel,
   useReactTable,
   RowData,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 
-import { Pagination } from '@dts-stn/service-canada-design-system'
-import TableCell from './TableCell.tsx'
-import { RowError, validateData } from '../schema/utils.ts'
+import { Pagination } from '@dts-stn/service-canada-design-system';
+import TableCell from './TableCell.tsx';
+import { RowError, validateData } from '../schema/utils.ts';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-    rowErrors: RowError[]
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    rowErrors: RowError[];
   }
 }
 
 interface DataTableProps {
-  initialData: any[]
+  initialData: any[];
 }
 
 const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
   const columns: any[] = Object.keys(initialData[0]).map((header) => ({
     id: header,
     accessorFn: (row: any) => row[header],
-  }))
-  const [data, setData] = useState(initialData)
-  const [rowErrors, setRowErrors] = useState<RowError[]>([])
+  }));
+  const [data, setData] = useState(initialData);
+  const [rowErrors, setRowErrors] = useState<RowError[]>([]);
 
   useEffect(() => {
-    setRowErrors(validateData(data))
-  }, [data])
+    setRowErrors(validateData(data));
+  }, [data]);
 
   const updateData = (rowIndex: number, columnId: string, value: any) => {
     setData((old) =>
       old.map((row, index) => {
         if (index === rowIndex) {
-          const oldValue = old[rowIndex][columnId]
+          const oldValue = old[rowIndex][columnId];
           if (typeof oldValue === 'number') {
-            value = parseInt(value)
+            value = parseInt(value);
           }
           return {
             ...old[rowIndex]!,
             [columnId]: value,
-          }
+          };
         }
-        return row
+        return row;
       }),
-    )
-  }
+    );
+  };
 
   const table = useReactTable({
     data,
@@ -78,21 +78,21 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
     defaultColumn: {
       cell: TableCell,
     },
-  })
+  });
 
   const VERIFY_JSON_FORMAT_MUTATION = gql`
     mutation verifyJsonFormat($testSheet: JSON!) {
       verifyJsonFormat(sheetData: $testSheet)
     }
-  `
+  `;
 
   const [publishData, { loading, error, data: resultData }] = useMutation(
     VERIFY_JSON_FORMAT_MUTATION,
-  )
+  );
 
   const handleButtonClick = async () => {
-    publishData({ variables: { testSheet: data } })
-  }
+    publishData({ variables: { testSheet: data } });
+  };
 
   return (
     <>
@@ -125,7 +125,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
                         cell.getContext(),
                       )}
                     </Td>
-                  )
+                  );
                 })}
               </Tr>
             ))}
@@ -162,7 +162,7 @@ const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
       )}
       {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
     </>
-  )
-}
+  );
+};
 
-export default DataTable
+export default DataTable;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import {
   Box,
@@ -13,52 +13,52 @@ import {
   Th,
   Td,
   Tbody,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import { FcMinus, FcPlus } from 'react-icons/fc'
+import { FcMinus, FcPlus } from 'react-icons/fc';
 
-import { Trans } from '@lingui/macro'
-import { FullProperties, WorkBook } from 'xlsx'
+import { Trans } from '@lingui/macro';
+import { FullProperties, WorkBook } from 'xlsx';
 
 interface ParserData {
-  sheets: object | null
-  workbook: WorkBook
+  sheets: object | null;
+  workbook: WorkBook;
 }
 
 interface MyComponentProps {
-  shouldDisplayComponent: boolean
-  parserData: ParserData | null
+  shouldDisplayComponent: boolean;
+  parserData: ParserData | null;
 }
 
 const dateToStr = (d: Date | undefined) => {
-  if (!d) return 'N/A'
+  if (!d) return 'N/A';
   return `${d.toLocaleDateString(navigator.language)} - ${d.toLocaleTimeString(
     navigator.language,
-  )}`
-}
+  )}`;
+};
 
 const getColVal = (properties: FullProperties, prop: keyof FullProperties) => {
-  const d = properties[prop]
+  const d = properties[prop];
   if (prop === 'LastPrinted' && d && typeof d === 'string')
-    return dateToStr(new Date(d))
+    return dateToStr(new Date(d));
   if (prop === 'CreatedDate' || prop === 'ModifiedDate')
-    return dateToStr(properties[prop])
-  return properties[prop] || 'N/A'
-}
+    return dateToStr(properties[prop]);
+  return properties[prop] || 'N/A';
+};
 
 const col = (
   properties: FullProperties,
   prop: keyof FullProperties,
   title?: string,
 ) => {
-  const v = getColVal(properties, prop)
+  const v = getColVal(properties, prop);
   return (
     <>
       <Th>{title || prop}</Th>
       <Td>{v}</Td>
     </>
-  )
-}
+  );
+};
 
 const TableOutput: React.FC<MyComponentProps> = ({
   shouldDisplayComponent,
@@ -66,7 +66,7 @@ const TableOutput: React.FC<MyComponentProps> = ({
 }) => {
   const p =
     (parserData && parserData.workbook && parserData.workbook.Props) ||
-    undefined
+    undefined;
   return (
     <>
       {shouldDisplayComponent && p && (
@@ -180,7 +180,7 @@ const TableOutput: React.FC<MyComponentProps> = ({
         </Accordion>
       )}
     </>
-  )
-}
+  );
+};
 
-export default TableOutput
+export default TableOutput;

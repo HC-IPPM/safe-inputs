@@ -1,5 +1,5 @@
-import { Button, Text } from '@chakra-ui/react'
-import { useLingui } from '@lingui/react'
+import { Button, Text } from '@chakra-ui/react';
+import { useLingui } from '@lingui/react';
 
 const LanguageButtonStyle = {
   w: '20px',
@@ -16,13 +16,13 @@ const LanguageButtonStyle = {
     textDecor: 'underline',
     borderColor: '#FFFFFF',
   },
-}
+};
 
 // Function for the language Button.
 // Button will change the state of the Language from EN/FR.
 // TODO: Languages should be initially set by window language detector
 export default function LanguageButton() {
-  const { i18n } = useLingui()
+  const { i18n } = useLingui();
 
   return (
     <>
@@ -50,5 +50,5 @@ export default function LanguageButton() {
         </>
       )}
     </>
-  )
+  );
 }
