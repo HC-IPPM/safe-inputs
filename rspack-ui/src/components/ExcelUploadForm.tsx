@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   Formik,
   Form,
@@ -6,18 +6,18 @@ import {
   ErrorMessage,
   FormikHelpers,
   FieldProps,
-} from 'formik'
-import * as Yup from 'yup'
-import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react'
+} from 'formik';
+import * as Yup from 'yup';
+import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
 
-import { Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro';
 
 interface ExcelUploadFormValues {
-  file: File | null
+  file: File | null;
 }
 
 interface ExcelUploadFormProps {
-  onSubmit: (file: File) => void
+  onSubmit: (file: File) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -29,14 +29,14 @@ const validationSchema = Yup.object().shape({
         [
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ].includes(value.type)
-      )
+      );
     }),
-})
+});
 
 const ExcelUploadForm: React.FC<ExcelUploadFormProps> = ({ onSubmit }) => {
   const initialValues: ExcelUploadFormValues = {
     file: null,
-  }
+  };
 
   return (
     <Formik
@@ -46,8 +46,8 @@ const ExcelUploadForm: React.FC<ExcelUploadFormProps> = ({ onSubmit }) => {
         values: ExcelUploadFormValues,
         actions: FormikHelpers<ExcelUploadFormValues>,
       ) => {
-        onSubmit(values.file!)
-        actions.setSubmitting(false)
+        onSubmit(values.file!);
+        actions.setSubmitting(false);
       }}
     >
       {({ setFieldValue, isSubmitting, errors }) => (
@@ -75,7 +75,7 @@ const ExcelUploadForm: React.FC<ExcelUploadFormProps> = ({ onSubmit }) => {
                       form.setFieldValue(
                         field.name,
                         event.currentTarget.files![0],
-                      )
+                      );
                     }}
                   />
                 )}
@@ -97,7 +97,7 @@ const ExcelUploadForm: React.FC<ExcelUploadFormProps> = ({ onSubmit }) => {
         </Form>
       )}
     </Formik>
-  )
-}
+  );
+};
 
-export default ExcelUploadForm
+export default ExcelUploadForm;

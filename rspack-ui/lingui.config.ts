@@ -1,4 +1,4 @@
-import { LinguiConfig } from '@lingui/conf'
+import { LinguiConfig } from '@lingui/conf';
 
 const config: Partial<LinguiConfig> = {
   locales: ['en', 'fr'],
@@ -10,6 +10,6 @@ const config: Partial<LinguiConfig> = {
     },
   ],
   format: 'po',
-}
+};
 
-export default config
+export default config;

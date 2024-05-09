@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import {
   Box,
@@ -6,33 +6,33 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import { FcMinus, FcPlus } from 'react-icons/fc'
+import { FcMinus, FcPlus } from 'react-icons/fc';
 
-import { WorkBook } from 'xlsx'
-import DataTable from './DataTable.tsx'
+import { WorkBook } from 'xlsx';
+import DataTable from './DataTable.tsx';
 
 interface SheetData {
-  sheetName: string
-  data: any[]
+  sheetName: string;
+  data: any[];
 }
 
 interface ParserData {
-  sheets: SheetData[]
-  workbook: WorkBook
+  sheets: SheetData[];
+  workbook: WorkBook;
 }
 
 interface ExcelFileOutputProps {
-  shouldDisplayComponent: boolean
-  parserData: ParserData | null
+  shouldDisplayComponent: boolean;
+  parserData: ParserData | null;
 }
 
 const ExcelFileOutput: React.FC<ExcelFileOutputProps> = ({
   shouldDisplayComponent,
   parserData,
 }) => {
-  const p = parserData && parserData.workbook && parserData.workbook.Props
+  const p = parserData && parserData.workbook && parserData.workbook.Props;
   return (
     <>
       {shouldDisplayComponent &&
@@ -79,7 +79,7 @@ const ExcelFileOutput: React.FC<ExcelFileOutputProps> = ({
             ),
         )}
     </>
-  )
-}
+  );
+};
 
-export default ExcelFileOutput
+export default ExcelFileOutput;

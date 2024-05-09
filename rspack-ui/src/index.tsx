@@ -1,27 +1,27 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
-import './index.css'
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import './index.css';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
-import { i18n } from '@lingui/core'
-import { I18nProvider } from '@lingui/react'
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
 
 import {
   ChakraProvider,
   extendTheme,
   ThemeConfig,
   withDefaultColorScheme,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { messages as enMessages } from './i18n/locales/en/messages.ts'
-import { messages as frMessages } from './i18n/locales/fr/messages.ts'
+import { messages as enMessages } from './i18n/locales/en/messages.ts';
+import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
-import NavPage from './pages/navPage.tsx'
-import TermsAndConditions from './pages/termsAndConditions.tsx'
-import ExcelParsingPage from './pages/excelParser.tsx'
+import NavPage from './pages/navPage.tsx';
+import TermsAndConditions from './pages/termsAndConditions.tsx';
+import ExcelParsingPage from './pages/excelParser.tsx';
 
 //  _   _
 // | |_| |__   ___ _ __ ___   ___
@@ -32,7 +32,7 @@ import ExcelParsingPage from './pages/excelParser.tsx'
 const themeConfig: ThemeConfig = {
   useSystemColorMode: true,
   initialColorMode: 'light',
-}
+};
 
 const theme = extendTheme(
   themeConfig,
@@ -64,7 +64,7 @@ const theme = extendTheme(
       },
     },
   },
-)
+);
 
 //  _ _  ___
 // (_) |( _ ) _ __
@@ -75,9 +75,9 @@ const theme = extendTheme(
 i18n.load({
   en: enMessages,
   fr: frMessages,
-})
+});
 
-i18n.activate('en')
+i18n.activate('en');
 
 //                     _
 //  _ __ ___ _ __   __| | ___ _ __
@@ -85,12 +85,12 @@ i18n.activate('en')
 // | | |  __/ | | | (_| |  __/ |
 // |_|  \___|_| |_|\__,_|\___|_|
 
-const container = document.getElementById('root')
-const root = createRoot(container!)
+const container = document.getElementById('root');
+const root = createRoot(container!);
 const client = new ApolloClient({
   uri: '/graphql',
   cache: new InMemoryCache(),
-})
+});
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -111,4 +111,4 @@ root.render(
       </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode>,
-)
+);

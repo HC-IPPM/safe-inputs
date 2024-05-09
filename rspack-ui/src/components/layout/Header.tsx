@@ -1,14 +1,14 @@
-import { Trans } from '@lingui/macro'
-import { HStack, Box, Container, Link } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro';
+import { HStack, Box, Container, Link } from '@chakra-ui/react';
 
-import LanguageButton from '../LanguageButton.tsx'
+import LanguageButton from '../LanguageButton.tsx';
 
-import CanadaLogoEn from '../../assets/sig-blk-en.svg'
-import CanadaLogoFr from '../../assets/sig-blk-fr.svg'
-import { useLingui } from '@lingui/react'
+import CanadaLogoEn from '../../assets/sig-blk-en.svg';
+import CanadaLogoFr from '../../assets/sig-blk-fr.svg';
+import { useLingui } from '@lingui/react';
 
 export default function Header() {
-  const { i18n } = useLingui()
+  const { i18n } = useLingui();
 
   return (
     <>
@@ -37,5 +37,5 @@ export default function Header() {
         </Container>
       </Box>
     </>
-  )
+  );
 }

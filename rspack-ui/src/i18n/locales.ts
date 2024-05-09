@@ -3,4 +3,4 @@ enum Locale {
   FRENCH = 'fr',
 }
 
-export default Locale
+export default Locale;

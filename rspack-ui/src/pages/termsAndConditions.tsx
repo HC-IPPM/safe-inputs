@@ -1,4 +1,4 @@
-import { LinkIcon } from '@chakra-ui/icons'
+import { LinkIcon } from '@chakra-ui/icons';
 import {
   Box,
   Container,
@@ -7,9 +7,9 @@ import {
   ListItem,
   Text,
   UnorderedList,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import { Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro';
 
 export default function TermsAndConditions() {
   function NoticeOfAgreement() {
@@ -32,7 +32,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function Privacy() {
     return (
@@ -71,7 +71,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function AccessToInformation() {
     return (
@@ -101,7 +101,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function DataSecurityAndUse() {
     return (
@@ -125,7 +125,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function IntellectualPropertyCopyrightAndTrademark() {
     return (
@@ -193,7 +193,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function DataHandling() {
     return (
@@ -246,7 +246,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
 
   function LimitationOfLiability() {
@@ -275,7 +275,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function TermsOfUse() {
     return (
@@ -348,7 +348,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function NoticeOfChange() {
     return (
@@ -373,7 +373,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function Termination() {
     return (
@@ -410,7 +410,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
   function Jurisdiction() {
     return (
@@ -434,7 +434,7 @@ export default function TermsAndConditions() {
           </ListItem>
         </UnorderedList>
       </>
-    )
+    );
   }
 
   return (
@@ -478,5 +478,5 @@ export default function TermsAndConditions() {
       </Container>
       <br />
     </>
-  )
+  );
 }

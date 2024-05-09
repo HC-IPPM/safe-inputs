@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import {
   Box,
@@ -7,17 +7,17 @@ import {
   SimpleGrid,
   Container,
   Spacer,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import { Link as ReactRouterLink } from 'react-router-dom'
+import { Link as ReactRouterLink } from 'react-router-dom';
 
-import { Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro';
 
 // import CanadaWhiteFont from '../../assets/wmms-blk.svg'
 
 type CanadaWithFlagProps = {
-  textColor?: 'black' | 'white'
-}
+  textColor?: 'black' | 'white';
+};
 
 export const CanadaWithFlag = ({
   textColor = 'black',
@@ -48,15 +48,15 @@ export const CanadaWithFlag = ({
         />
       </g>
     </svg>
-  )
-}
+  );
+};
 
 export default function Footer() {
   const LinkStyle = {
     fontSize: { base: '10px', sm: '12px', md: '13px', lg: '16px' },
     fontFamily: 'sans-serif',
     _hover: { color: '#0089c7', textDecoration: 'underline' },
-  }
+  };
 
   return (
     <>
@@ -138,5 +138,5 @@ export default function Footer() {
       {/* This box adds a small white box under the sticky footer to give a small seperation between the footer and the true bottom of the page  */}
       <Box h="5px" bg="white" position="relative" bottom="0px" w={'100%'}></Box>
     </>
-  )
+  );
 }
