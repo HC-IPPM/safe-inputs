@@ -1,11 +1,11 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
+import React from 'react'
+import { createRoot } from 'react-dom/client'
 
-import "./index.css"
+import './index.css'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
-import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
+import { i18n } from '@lingui/core'
+import { I18nProvider } from '@lingui/react'
 
 import {
   ChakraProvider,
@@ -16,16 +16,15 @@ import {
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { messages as enMessages } from "./i18n/locales/en/messages.ts";
-import { messages as frMessages } from "./i18n/locales/fr/messages.ts";
+import { messages as enMessages } from './i18n/locales/en/messages.ts'
+import { messages as frMessages } from './i18n/locales/fr/messages.ts'
 
-import NavPage from "./pages/navPage.tsx";
-import TermsAndConditions from "./pages/termsAndConditions.tsx";
-import ExcelParsingPage from "./pages/excelParser.tsx";
+import NavPage from './pages/navPage.tsx'
+import TermsAndConditions from './pages/termsAndConditions.tsx'
+import ExcelParsingPage from './pages/excelParser.tsx'
 
-
-//  _   _                         
-// | |_| |__   ___ _ __ ___   ___ 
+//  _   _
+// | |_| |__   ___ _ __ ___   ___
 // | __| '_ \ / _ \ '_ ` _ \ / _ \
 // | |_| | | |  __/ | | | | |  __/
 //  \__|_| |_|\___|_| |_| |_|\___|
@@ -67,32 +66,31 @@ const theme = extendTheme(
   },
 )
 
-//  _ _  ___        
-// (_) |( _ ) _ __  
-// | | |/ _ \| '_ \ 
+//  _ _  ___
+// (_) |( _ ) _ __
+// | | |/ _ \| '_ \
 // | | | (_) | | | |
 // |_|_|\___/|_| |_|
 
 i18n.load({
-  "en": enMessages,
-  "fr": frMessages,
-});
+  en: enMessages,
+  fr: frMessages,
+})
 
-i18n.activate("en");
+i18n.activate('en')
 
-//                     _           
-//  _ __ ___ _ __   __| | ___ _ __ 
+//                     _
+//  _ __ ___ _ __   __| | ___ _ __
 // | '__/ _ \ '_ \ / _` |/ _ \ '__|
-// | | |  __/ | | | (_| |  __/ |   
-// |_|  \___|_| |_|\__,_|\___|_|   
+// | | |  __/ | | | (_| |  __/ |
+// |_|  \___|_| |_|\__,_|\___|_|
 
-
-const container = document.getElementById('root');
-const root = createRoot(container!);
+const container = document.getElementById('root')
+const root = createRoot(container!)
 const client = new ApolloClient({
   uri: '/graphql',
   cache: new InMemoryCache(),
-});
+})
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -102,12 +100,15 @@ root.render(
             <Routes>
               <Route path="/" element={<NavPage />}>
                 <Route path="" element={<ExcelParsingPage />}></Route>
-                <Route path="/termsAndConditions" element={<TermsAndConditions />}></Route>
+                <Route
+                  path="/termsAndConditions"
+                  element={<TermsAndConditions />}
+                ></Route>
               </Route>
             </Routes>
           </I18nProvider>
         </ChakraProvider>
       </ApolloProvider>
     </BrowserRouter>
-  </React.StrictMode >
+  </React.StrictMode>,
 )

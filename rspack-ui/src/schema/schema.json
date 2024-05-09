@@ -1,88 +1,75 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "caseNumber": {
-            "type": "number",
-            "description": "Unique case number assigned to the patient."
-        },
-        "patientName": {
-            "type": "string",
-            "description": "The patient's name."
-        },
-        "age": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Age of the patient in years."
-        },
-        "gender": {
-            "type": "string",
-            "enum": [
-                "Male",
-                "Female",
-                "Other"
-            ],
-            "description": "Gender of the patient."
-        },
-        "diagnosisDate": {
-            "type": "string",
-            "description": "Date of diagnosis in YYYY-MM-DD format.",
-            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-        },
-        "treatmentStatus": {
-            "type": "string",
-            "enum": [
-                "In Treatment",
-                "Recovered",
-                "Deceased",
-                "Unknown"
-            ],
-            "description": "Current treatment status of the patient."
-        },
-        "hasInsurance": {
-            "type": "string",
-            "description": "Indicates whether the patient has health insurance.",
-            "enum": [
-                "true", "false"
-            ]
-        },
-        "insuranceProvider": {
-            "type": "string",
-            "description": "Name of the patient's health insurance provider."
-        },
-        "postalCode": {
-            "type": "string",
-            "description": "Postal code of the patient's address.",
-            "pattern": "^[A-Za-z]\\d[A-Za-z][ -]?\\d[A-Za-z]\\d$"
-        },
-        "treatingPhysician": {
-            "type": "string",
-            "description": "Name of the physician treating the patient."
-        },
-        "medication": {
-            "type": "string",
-            "description": "List of medications prescribed to the patient."
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "caseNumber": {
+      "type": "number",
+      "description": "Unique case number assigned to the patient."
     },
-    "required": [
-        "caseNumber",
-        "patientName",
-        "age",
-        "gender",
-        "diagnosisDate",
-        "treatmentStatus",
-        "hasInsurance"
-    ],
-    "if": {
-        "properties": {
-            "hasInsurance": {
-                "const": "true"
-            }
-        }
+    "patientName": {
+      "type": "string",
+      "description": "The patient's name."
     },
-    "then": {
-        "required": [
-            "insuranceProvider"
-        ]
+    "age": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Age of the patient in years."
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["Male", "Female", "Other"],
+      "description": "Gender of the patient."
+    },
+    "diagnosisDate": {
+      "type": "string",
+      "description": "Date of diagnosis in YYYY-MM-DD format.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "treatmentStatus": {
+      "type": "string",
+      "enum": ["In Treatment", "Recovered", "Deceased", "Unknown"],
+      "description": "Current treatment status of the patient."
+    },
+    "hasInsurance": {
+      "type": "string",
+      "description": "Indicates whether the patient has health insurance.",
+      "enum": ["true", "false"]
+    },
+    "insuranceProvider": {
+      "type": "string",
+      "description": "Name of the patient's health insurance provider."
+    },
+    "postalCode": {
+      "type": "string",
+      "description": "Postal code of the patient's address.",
+      "pattern": "^[A-Za-z]\\d[A-Za-z][ -]?\\d[A-Za-z]\\d$"
+    },
+    "treatingPhysician": {
+      "type": "string",
+      "description": "Name of the physician treating the patient."
+    },
+    "medication": {
+      "type": "string",
+      "description": "List of medications prescribed to the patient."
     }
+  },
+  "required": [
+    "caseNumber",
+    "patientName",
+    "age",
+    "gender",
+    "diagnosisDate",
+    "treatmentStatus",
+    "hasInsurance"
+  ],
+  "if": {
+    "properties": {
+      "hasInsurance": {
+        "const": "true"
+      }
+    }
+  },
+  "then": {
+    "required": ["insuranceProvider"]
+  }
 }

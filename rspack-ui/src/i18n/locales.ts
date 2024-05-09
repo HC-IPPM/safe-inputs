@@ -1,6 +1,6 @@
 enum Locale {
-    ENGLISH = 'en',
-    FRENCH = 'fr',
+  ENGLISH = 'en',
+  FRENCH = 'fr',
 }
 
-export default Locale;
+export default Locale
