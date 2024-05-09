@@ -4,4 +4,4 @@
 deploy
 **/nats.creds
 
-.vscode/*
+.vscode/chrome
