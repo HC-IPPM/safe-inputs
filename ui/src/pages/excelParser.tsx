@@ -49,7 +49,7 @@ const ExcelParsingPage: React.FC = () => {
           <Text>
             {' '}
             Sample file can be found{' '}
-            <a href="https://github.com/PHACDataHub/safe-inputs/blob/main/rspack-ui/test/test-spreadsheet.xlsx">
+            <a href="https://github.com/PHACDataHub/safe-inputs/blob/main/ui/test/test-spreadsheet.xlsx">
               <u>here</u>
             </a>
           </Text>
