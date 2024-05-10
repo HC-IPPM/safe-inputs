@@ -2,5 +2,3 @@ node_modules
 dist
 Dockerfile
 coverage
-kubernetes
-kustomization.yaml

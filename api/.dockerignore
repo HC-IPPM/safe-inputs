@@ -1,7 +1,6 @@
 **/*.env
 *.yaml
 node_modules
-k8s
 coverage
 .*rc
 Dockerfile
