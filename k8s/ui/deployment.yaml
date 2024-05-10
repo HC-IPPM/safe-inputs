@@ -24,23 +24,23 @@ spec:
         # seems to succeed only when specific uid/guid is set
         runAsNonRoot: true
       containers:
-      - name: ui
-        image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-832e1e6-1715367318 # {"$imagepolicy": "flux-system:ui"}
-        # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-619bf01-1675956654 # {"$imagepolicy": "flux-system:ui"}
+        - name: ui
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-832e1e6-1715367318 # {"$imagepolicy": "flux-system:ui"}
+          # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-619bf01-1675956654 # {"$imagepolicy": "flux-system:ui"}
 
-        # Container specific security settings:
-        securityContext:
-          # No new privs for process or it's children
-          # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
-          allowPrivilegeEscalation: false
-          # TODO: npm checks for updates and writes a file
-          # Explore disabling check or removing npm
-          # readOnlyRootFilesystem: true
-        resources:
-          limits:
-            cpu: 200m
-            memory: 45Mi
-          requests:
-            cpu: 200m
-            memory: 45Mi
+          # Container specific security settings:
+          securityContext:
+            # No new privs for process or it's children
+            # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
+            allowPrivilegeEscalation: false
+            # TODO: npm checks for updates and writes a file
+            # Explore disabling check or removing npm
+            # readOnlyRootFilesystem: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 45Mi
+            requests:
+              cpu: 200m
+              memory: 45Mi
 status: {}

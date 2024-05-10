@@ -5,15 +5,14 @@ metadata:
   namespace: ui
 spec:
   hosts:
-  - "*"
+    - '*'
   gateways:
-  - istio-ingress/public-gateway
+    - istio-ingress/public-gateway
   http:
-  - name: gateway-to-ui
-    match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: ui.ui.svc.cluster.local
-
+    - name: gateway-to-ui
+      match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: ui.ui.svc.cluster.local
