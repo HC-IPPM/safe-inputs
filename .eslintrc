@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "extends": [
+    "standard",
+    "prettier",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": ["jest"],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "all",
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_.+",
+        "argsIgnorePattern": "^_.+"
+      }
+    ],
+    "no-use-before-define": ["error", { "functions": true, "classes": true }],
+    "no-throw-literal": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*test.js", "**/*test.ts", "**/*test.tsx"],
+      "env": {
+        "jest/globals": true
+      }
+    }
+  ]
+}

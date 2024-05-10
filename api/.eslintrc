@@ -1,24 +1,18 @@
 {
-  "extends": [
-    "standard",
-    "prettier",
-    "plugin:import/errors",
-    "plugin:import/warnings"
-  ],
-  "plugins": ["jest"],
+  "plugins": ["node"],
+  "extends": ["../.eslintrc", "plugin:node/recommended"],
   "env": {
-    "jest/globals": true
+    "node": true
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
   },
   "rules": {
-    "comma-dangle": ["error", "always-multiline"],
-    "no-unused-vars": [
+    "node/no-unsupported-features/es-syntax": [
       "error",
-      {
-        "vars": "all",
-        "args": "all",
-        "varsIgnorePattern": "_",
-        "argsIgnorePattern": "_"
-      }
-    ]
+      { "ignores": ["modules"] }
+    ],
+    "no-console": 0
   }
 }
