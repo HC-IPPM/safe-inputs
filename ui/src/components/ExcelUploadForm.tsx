@@ -1,11 +1,12 @@
 import React from 'react';
+import type {
+  FormikHelpers,
+  FieldProps} from 'formik';
 import {
   Formik,
   Form,
   Field,
   ErrorMessage,
-  FormikHelpers,
-  FieldProps,
 } from 'formik';
 import * as Yup from 'yup';
 import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';

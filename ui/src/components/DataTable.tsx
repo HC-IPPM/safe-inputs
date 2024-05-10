@@ -12,17 +12,19 @@ import {
   Box,
 } from '@chakra-ui/react';
 
+import type {
+  RowData} from '@tanstack/react-table';
 import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-  RowData,
 } from '@tanstack/react-table';
 
 import { Pagination } from '@dts-stn/service-canada-design-system';
 import TableCell from './TableCell.tsx';
-import { RowError, validateData } from '../schema/utils.ts';
+import type { RowError} from '../schema/utils.ts';
+import { validateData } from '../schema/utils.ts';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Container, Text } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
-import { WorkBook } from 'xlsx';
+import type { WorkBook } from 'xlsx';
 
 import ExcelUploadForm from '../components/ExcelUploadForm.tsx';
 import ExcelFileOutput from '../components/ExcelFileOutput.tsx';

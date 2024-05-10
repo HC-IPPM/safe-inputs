@@ -18,7 +18,7 @@ import {
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
 import { Trans } from '@lingui/macro';
-import { FullProperties, WorkBook } from 'xlsx';
+import type { FullProperties, WorkBook } from 'xlsx';
 
 interface ParserData {
   sheets: object | null;
