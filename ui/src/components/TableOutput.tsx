@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Box,
   Accordion,
@@ -14,10 +12,11 @@ import {
   Td,
   Tbody,
 } from '@chakra-ui/react';
+import { Trans } from '@lingui/macro';
+import React from 'react';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
-import { Trans } from '@lingui/macro';
 import type { FullProperties, WorkBook } from 'xlsx';
 
 interface ParserData {

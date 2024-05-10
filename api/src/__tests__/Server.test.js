@@ -1,7 +1,8 @@
-import request from 'supertest';
-import { Server } from '../Server.js';
-import { jest } from '@jest/globals'; // support for ESM modules
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { jest } from '@jest/globals'; // support for ESM modules
+import request from 'supertest';
+
+import { Server } from '../Server.js';
 
 // ----- TEST SET UP -----
 

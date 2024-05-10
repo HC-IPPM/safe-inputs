@@ -1,8 +1,9 @@
 // import express from 'express'
 import { createServer } from 'http';
-import { createYoga } from 'graphql-yoga';
+
 import { maxAliasesPlugin } from '@escape.tech/graphql-armor-max-aliases';
 import { maxDepthPlugin } from '@escape.tech/graphql-armor-max-depth';
+import { createYoga } from 'graphql-yoga';
 // Explore https://the-guild.dev/graphql/envelop/plugins for more The Guild pluggins
 
 export function Server({ schema, context = {} }) {

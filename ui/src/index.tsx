@@ -1,11 +1,5 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-
 import './index.css';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-
-import { i18n } from '@lingui/core';
-import { I18nProvider } from '@lingui/react';
 
 import type { ThemeConfig } from '@chakra-ui/react';
 import {
@@ -13,15 +7,20 @@ import {
   extendTheme,
   withDefaultColorScheme,
 } from '@chakra-ui/react';
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
+
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { messages as enMessages } from './i18n/locales/en/messages.ts';
 import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
+import ExcelParsingPage from './pages/excelParser.tsx';
 import NavPage from './pages/navPage.tsx';
 import TermsAndConditions from './pages/termsAndConditions.tsx';
-import ExcelParsingPage from './pages/excelParser.tsx';
 
 //  _   _
 // | |_| |__   ___ _ __ ___   ___

@@ -1,10 +1,9 @@
-import React from 'react';
+import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
+import { Trans } from '@lingui/macro';
 import type { FormikHelpers, FieldProps } from 'formik';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React from 'react';
 import * as Yup from 'yup';
-import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
-
-import { Trans } from '@lingui/macro';
 
 interface ExcelUploadFormValues {
   file: File | null;

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Box,
   Accordion,
@@ -7,10 +5,12 @@ import {
   AccordionButton,
   AccordionPanel,
 } from '@chakra-ui/react';
+import React from 'react';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
 import type { WorkBook } from 'xlsx';
+
 import DataTable from './DataTable.tsx';
 
 interface SheetData {

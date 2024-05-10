@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import {
   Tr,
@@ -12,6 +11,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 
+import { Pagination } from '@dts-stn/service-canada-design-system';
 import type { RowData } from '@tanstack/react-table';
 import {
   flexRender,
@@ -20,10 +20,13 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { Pagination } from '@dts-stn/service-canada-design-system';
-import TableCell from './TableCell.tsx';
+import React, { useEffect, useState } from 'react';
+
 import type { RowError } from '../schema/utils.ts';
+
 import { validateData } from '../schema/utils.ts';
+
+import TableCell from './TableCell.tsx';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
