@@ -1,0 +1,15 @@
+{
+  "name": "safe-inputs",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "scripts": {
+    "prettier": "prettier -w ."
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^2.8.3"
+  }
+}
