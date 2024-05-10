@@ -12,8 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 
-import type {
-  RowData} from '@tanstack/react-table';
+import type { RowData } from '@tanstack/react-table';
 import {
   flexRender,
   getCoreRowModel,
@@ -23,7 +22,7 @@ import {
 
 import { Pagination } from '@dts-stn/service-canada-design-system';
 import TableCell from './TableCell.tsx';
-import type { RowError} from '../schema/utils.ts';
+import type { RowError } from '../schema/utils.ts';
 import { validateData } from '../schema/utils.ts';
 
 declare module '@tanstack/react-table' {

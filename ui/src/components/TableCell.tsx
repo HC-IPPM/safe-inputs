@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { Table } from '@tanstack/react-table';
 import { Input, Tooltip } from '@chakra-ui/react';
 import type { ErrorObject } from 'ajv';
-import type { RowError} from '../schema/utils.ts';
+import type { RowError } from '../schema/utils.ts';
 import { constructErrorMessage } from '../schema/utils.ts';
 
 type TableCellProps = {

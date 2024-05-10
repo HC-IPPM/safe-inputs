@@ -7,8 +7,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 
-import type {
-  ThemeConfig} from '@chakra-ui/react';
+import type { ThemeConfig } from '@chakra-ui/react';
 import {
   ChakraProvider,
   extendTheme,
