@@ -1,6 +1,6 @@
 {
-  "plugins": ["node"],
   "extends": ["../.eslintrc", "plugin:node/recommended"],
+  "plugins": ["node"],
   "env": {
     "node": true
   },

@@ -13,7 +13,7 @@ import {
   Tbody,
 } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
-import React from 'react';
+import type React from 'react';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 

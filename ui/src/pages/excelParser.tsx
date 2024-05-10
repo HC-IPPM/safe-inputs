@@ -1,6 +1,7 @@
 import { Box, Container, Text } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import type { WorkBook } from 'xlsx';
 
 import ExcelFileOutput from '../components/ExcelFileOutput.tsx';

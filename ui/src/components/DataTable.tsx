@@ -20,7 +20,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
 import type { RowError } from '../schema/utils.ts';
 

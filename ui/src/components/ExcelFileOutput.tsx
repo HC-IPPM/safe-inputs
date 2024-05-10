@@ -5,7 +5,7 @@ import {
   AccordionButton,
   AccordionPanel,
 } from '@chakra-ui/react';
-import React from 'react';
+import type React from 'react';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
