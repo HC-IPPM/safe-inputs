@@ -20,7 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./flux
+  path: ./k8s/flux
   prune: true
   sourceRef:
     kind: GitRepository
@@ -33,7 +33,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./istio
+  path: ./k8s/istio
   prune: true
   sourceRef:
     kind: GitRepository
@@ -46,7 +46,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./ui
+  path: ./k8s/ui
   prune: true
   sourceRef:
     kind: GitRepository
@@ -60,7 +60,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./api
+  path: ./k8s/api
   prune: true
   sourceRef:
     kind: GitRepository
@@ -74,7 +74,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./certmanager
+  path: ./k8s/certmanager
   prune: true
   sourceRef:
     kind: GitRepository
