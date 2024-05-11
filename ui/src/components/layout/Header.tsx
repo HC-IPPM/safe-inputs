@@ -25,7 +25,7 @@ export default function Header() {
               minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
               href="/"
             >
-              {i18n.locale == 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
+              {i18n.locale === 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
             </Link>
             <HStack>
               <Link href="/">

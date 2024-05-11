@@ -1,5 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals'; // support for ESM modules
+import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
 import request from 'supertest';
 
 import { Server } from '../Server.js';
@@ -26,7 +26,7 @@ const resolvers = {
   },
   Mutation: {
     verifyJsonFormat(_parent, { sheetData }, { publish }, _info) {
-      const test = publish(sheetData);
+      const _test = publish(sheetData);
       return sheetData;
     },
   },
