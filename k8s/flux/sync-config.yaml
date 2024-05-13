@@ -80,3 +80,17 @@ spec:
     kind: GitRepository
     name: flux-system
   timeout: 2m0s
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: mongodb
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/mongo
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 2m0s
