@@ -1,30 +1,26 @@
 {
   "name": "rspack-react-ts-starter",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rspack build",
+    "compile": "lingui compile --typescript",
+    "dev": "rspack serve",
+    "extract": "lingui extract",
+    "test": "jest"
+  },
   "babel": {
     "plugins": [
       "macros"
     ]
   },
-  "scripts": {
-    "dev": "rspack serve",
-    "build": "rspack build",
-    "test": "jest",
-    "extract": "lingui extract",
-    "compile": "lingui compile --typescript"
-  },
   "dependencies": {
     "@apollo/client": "^3.9.4",
-    "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.5",
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.4.9",
     "@dts-stn/service-canada-design-system": "^1.67.3",
     "@lingui/react": "^4.4.0",
     "@tanstack/react-table": "^8.10.7",
-    "@testing-library/jest-dom": "^6.1.4",
-    "babel-loader": "^9.1.3",
     "formik": "^2.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,11 +31,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@lingui/cli": "^4.4.0",
     "@lingui/macro": "^4.4.0",
     "@rspack/cli": "^0.3.0",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.3.78",
+    "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.7",
     "@types/react": "^18.2.0",
@@ -47,6 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "babel-jest": "^29.7.0",
+    "babel-loader": "^9.1.3",
     "babel-plugin-macros": "^3.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
