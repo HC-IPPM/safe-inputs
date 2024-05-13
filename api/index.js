@@ -1,7 +1,9 @@
 import 'dotenv/config';
-import { Server } from './src/Server.js';
+// eslint-ignore
+import { connect, JSONCodec, jwtAuthenticator } from 'nats'; // eslint-disable-line no-unused-vars
+
 import { schema } from './src/schema.js';
-import { connect, JSONCodec, jwtAuthenticator } from 'nats';
+import { Server } from './src/Server.js';
 
 const {
   PORT = 3000,
@@ -33,8 +35,12 @@ function publish(payload) {
   js.publish(`safeInputsRawSheetData`, jc.encode(payload));
 }
 
-process.on('SIGTERM', () => process.exit(0));
-process.on('SIGINT', () => process.exit(0));
+process.on('SIGTERM', () => {
+  throw new Error('SIGTERM');
+});
+process.on('SIGINT', () => {
+  throw new Error('SIGINT');
+});
 (async () => {
   const server = new Server({
     schema,

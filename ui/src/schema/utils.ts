@@ -1,4 +1,5 @@
-import Ajv, { ErrorObject } from 'ajv';
+import type { ErrorObject } from 'ajv';
+import Ajv from 'ajv';
 
 import schema from './schema.json';
 

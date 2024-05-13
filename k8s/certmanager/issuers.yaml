@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     email: michael.williamson@phac-aspc.gc.ca
-    preferredChain: ""
+    preferredChain: ''
     privateKeySecretRef:
       name: letsencrypt-prod
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -26,7 +26,7 @@ metadata:
 spec:
   acme:
     email: michael.williamson@phac-aspc.gc.ca
-    preferredChain: ""
+    preferredChain: ''
     privateKeySecretRef:
       name: letsencrypt-staging
     server: https://acme-staging-v02.api.letsencrypt.org/directory

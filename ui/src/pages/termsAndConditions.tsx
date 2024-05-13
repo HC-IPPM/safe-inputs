@@ -152,9 +152,10 @@ export default function TermsAndConditions() {
                 used, in whole or in part, in connection with any business,
                 products or service, or otherwise used, in a manner that is
                 likely to lead to the belief that such business product, service
-                or other use, has received the Government of Canada's approval
-                and may not be copied, reproduced, imitated, or used, in whole
-                or in part, without the prior written permission of tbs.
+                or other use, has received the Government of Canada{`'`}s
+                approval and may not be copied, reproduced, imitated, or used,
+                in whole or in part, without the prior written permission of
+                tbs.
               </Text>
             </Trans>
           </ListItem>
@@ -222,8 +223,8 @@ export default function TermsAndConditions() {
                 electronic information and information infrastructures
                 designated as being of importance to the Government of Canada in
                 accordance with cyber security and information assurance aspect
-                of TBS's mandate under the Policy on Government Security and the
-                Policy on Service and Digital.
+                of TBS{`'`}s mandate under the Policy on Government Security and
+                the Policy on Service and Digital.
               </Text>
             </Trans>
           </ListItem>

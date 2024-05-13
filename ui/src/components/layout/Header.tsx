@@ -1,11 +1,11 @@
-import { Trans } from '@lingui/macro';
 import { HStack, Box, Container, Link } from '@chakra-ui/react';
+import { Trans } from '@lingui/macro';
 
-import LanguageButton from '../LanguageButton.tsx';
+import { useLingui } from '@lingui/react';
 
 import CanadaLogoEn from '../../assets/sig-blk-en.svg';
 import CanadaLogoFr from '../../assets/sig-blk-fr.svg';
-import { useLingui } from '@lingui/react';
+import LanguageButton from '../LanguageButton.tsx';
 
 export default function Header() {
   const { i18n } = useLingui();
@@ -25,7 +25,7 @@ export default function Header() {
               minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
               href="/"
             >
-              {i18n.locale == 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
+              {i18n.locale === 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
             </Link>
             <HStack>
               <Link href="/">

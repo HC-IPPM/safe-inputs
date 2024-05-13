@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Box,
   Accordion,
@@ -10,7 +8,8 @@ import {
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
-import { WorkBook } from 'xlsx';
+import type { WorkBook } from 'xlsx';
+
 import DataTable from './DataTable.tsx';
 
 interface SheetData {
@@ -23,15 +22,13 @@ interface ParserData {
   workbook: WorkBook;
 }
 
-interface ExcelFileOutputProps {
-  shouldDisplayComponent: boolean;
-  parserData: ParserData | null;
-}
-
-const ExcelFileOutput: React.FC<ExcelFileOutputProps> = ({
+const ExcelFileOutput = ({
   shouldDisplayComponent,
   parserData,
-}) => {
+}: {
+  shouldDisplayComponent: boolean;
+  parserData: ParserData | null;
+}): JSX.Element => {
   const p = parserData && parserData.workbook && parserData.workbook.Props;
   return (
     <>

@@ -1,4 +1,4 @@
-import { LinguiConfig } from '@lingui/conf';
+import type { LinguiConfig } from '@lingui/conf';
 
 const config: Partial<LinguiConfig> = {
   locales: ['en', 'fr'],

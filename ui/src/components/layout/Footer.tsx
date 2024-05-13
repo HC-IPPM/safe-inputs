@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Box,
   Link,
@@ -8,10 +6,9 @@ import {
   Container,
   Spacer,
 } from '@chakra-ui/react';
+import { Trans } from '@lingui/macro';
 
 import { Link as ReactRouterLink } from 'react-router-dom';
-
-import { Trans } from '@lingui/macro';
 
 // import CanadaWhiteFont from '../../assets/wmms-blk.svg'
 

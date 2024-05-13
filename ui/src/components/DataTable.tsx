@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import {
   Tr,
@@ -12,30 +11,23 @@ import {
   Box,
 } from '@chakra-ui/react';
 
+import { Pagination } from '@dts-stn/service-canada-design-system';
 import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-  RowData,
 } from '@tanstack/react-table';
 
-import { Pagination } from '@dts-stn/service-canada-design-system';
+import { useEffect, useState } from 'react';
+
+import type { RowError } from '../schema/utils.ts';
+
+import { validateData } from '../schema/utils.ts';
+
 import TableCell from './TableCell.tsx';
-import { RowError, validateData } from '../schema/utils.ts';
 
-declare module '@tanstack/react-table' {
-  interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-    rowErrors: RowError[];
-  }
-}
-
-interface DataTableProps {
-  initialData: any[];
-}
-
-const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
+const DataTable = ({ initialData }: { initialData: any[] }): JSX.Element => {
   const columns: any[] = Object.keys(initialData[0]).map((header) => ({
     id: header,
     accessorFn: (row: any) => row[header],

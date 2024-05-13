@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   Box,
   Accordion,
@@ -14,20 +12,15 @@ import {
   Td,
   Tbody,
 } from '@chakra-ui/react';
+import { Trans } from '@lingui/macro';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
-import { Trans } from '@lingui/macro';
-import { FullProperties, WorkBook } from 'xlsx';
+import type { FullProperties, WorkBook } from 'xlsx';
 
 interface ParserData {
   sheets: object | null;
   workbook: WorkBook;
-}
-
-interface MyComponentProps {
-  shouldDisplayComponent: boolean;
-  parserData: ParserData | null;
 }
 
 const dateToStr = (d: Date | undefined) => {
@@ -60,10 +53,13 @@ const col = (
   );
 };
 
-const TableOutput: React.FC<MyComponentProps> = ({
+const TableOutput = ({
   shouldDisplayComponent,
   parserData,
-}) => {
+}: {
+  shouldDisplayComponent: boolean;
+  parserData: ParserData | null;
+}): JSX.Element => {
   const p =
     (parserData && parserData.workbook && parserData.workbook.Props) ||
     undefined;
