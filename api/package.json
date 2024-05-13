@@ -1,10 +1,8 @@
 {
-  "name": "node-demo",
+  "name": "safe-inputs-backend",
   "version": "1.0.0",
-  "description": "demo",
-  "keywords": [],
+  "private": true,
   "license": "MIT",
-  "author": "Mike Williamson",
   "type": "module",
   "main": "index.js",
   "scripts": {

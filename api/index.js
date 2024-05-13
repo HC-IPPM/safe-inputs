@@ -1,5 +1,4 @@
 import 'dotenv/config';
-// eslint-ignore
 import { connect, JSONCodec, jwtAuthenticator } from 'nats'; // eslint-disable-line no-unused-vars
 
 import { schema } from './src/schema.js';

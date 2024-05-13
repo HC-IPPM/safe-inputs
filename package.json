@@ -1,7 +1,7 @@
 {
   "name": "safe-inputs",
   "version": "1.0.0",
-  "private": "true",
+  "private": true,
   "description": "",
   "keywords": [],
   "license": "MIT",
