@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-7dc4310-1715620770 # {"$imagepolicy": "flux-system:api"}
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-8ee9743-1715622612 # {"$imagepolicy": "flux-system:api"}
           # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-49b1120-1677095699 # {"$imagepolicy": "flux-system:api"}
 
           envFrom:
