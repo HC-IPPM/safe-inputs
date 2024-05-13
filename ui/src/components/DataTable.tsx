@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 
 import { Pagination } from '@dts-stn/service-canada-design-system';
-import type { RowData } from '@tanstack/react-table';
 import {
   flexRender,
   getCoreRowModel,
@@ -27,13 +26,6 @@ import type { RowError } from '../schema/utils.ts';
 import { validateData } from '../schema/utils.ts';
 
 import TableCell from './TableCell.tsx';
-
-declare module '@tanstack/react-table' {
-  interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-    rowErrors: RowError[];
-  }
-}
 
 const DataTable = ({ initialData }: { initialData: any[] }): JSX.Element => {
   const columns: any[] = Object.keys(initialData[0]).map((header) => ({

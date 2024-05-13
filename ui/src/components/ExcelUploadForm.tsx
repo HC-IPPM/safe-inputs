@@ -42,7 +42,7 @@ const ExcelUploadForm = ({
         actions.setSubmitting(false);
       }}
     >
-      {({ setFieldValue, isSubmitting, errors }) => (
+      {({ isSubmitting, errors }) => (
         <Form>
           <FormControl
             isInvalid={!!errors.file}

@@ -7,7 +7,6 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
-import React from 'react';
 
 import { Link as ReactRouterLink } from 'react-router-dom';
 

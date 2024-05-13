@@ -10,7 +10,10 @@ self.addEventListener('message', async (event) => {
     const fileData = await file.arrayBuffer();
 
     const workbook = read(fileData);
-    const sheets: { sheetName: string; data: any }[] = [];
+    const sheets: {
+      sheetName: string;
+      data: Record<string, string | number | boolean | null>[];
+    }[] = [];
     workbook.SheetNames.forEach((sheetName) => {
       sheets.push({
         sheetName,
