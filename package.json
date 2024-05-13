@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "private": "true",
   "description": "",
-  "scripts": {
-    "prettier": "prettier --check .",
-    "prettier:write": "prettier --write --loglevel warn .",
-    "eslint": "eslint --max-warnings 0 --cache .",
-    "eslint:fix": "eslint --fix . || true",
-    "posteslint:fix": "npm run prettier:write"
-  },
   "keywords": [],
   "license": "MIT",
+  "scripts": {
+    "eslint": "eslint --max-warnings 0 --cache .",
+    "eslint:fix": "eslint --fix . || true",
+    "posteslint:fix": "npm run prettier:write",
+    "prettier": "prettier --check .",
+    "prettier:write": "prettier --write --loglevel warn ."
+  },
   "devDependencies": {
     "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
