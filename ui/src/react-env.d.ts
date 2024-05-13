@@ -122,7 +122,7 @@ declare module '*.gif' {
   export default src;
 }
 declare module '*.svg' {
-  const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
+  const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>; // eslint-disable-line @typescript-eslint/ban-types
   const content: string;
 
   // export { ReactComponent };

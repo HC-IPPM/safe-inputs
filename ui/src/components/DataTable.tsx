@@ -20,7 +20,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import type React from 'react';
 import { useEffect, useState } from 'react';
 
 import type { RowError } from '../schema/utils.ts';
@@ -36,11 +35,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-interface DataTableProps {
-  initialData: any[];
-}
-
-const DataTable: React.FC<DataTableProps> = ({ initialData }) => {
+const DataTable = ({ initialData }: { initialData: any[] }): JSX.Element => {
   const columns: any[] = Object.keys(initialData[0]).map((header) => ({
     id: header,
     accessorFn: (row: any) => row[header],

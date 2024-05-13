@@ -5,7 +5,6 @@ import {
   AccordionButton,
   AccordionPanel,
 } from '@chakra-ui/react';
-import type React from 'react';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 
@@ -23,15 +22,13 @@ interface ParserData {
   workbook: WorkBook;
 }
 
-interface ExcelFileOutputProps {
-  shouldDisplayComponent: boolean;
-  parserData: ParserData | null;
-}
-
-const ExcelFileOutput: React.FC<ExcelFileOutputProps> = ({
+const ExcelFileOutput = ({
   shouldDisplayComponent,
   parserData,
-}) => {
+}: {
+  shouldDisplayComponent: boolean;
+  parserData: ParserData | null;
+}): JSX.Element => {
   const p = parserData && parserData.workbook && parserData.workbook.Props;
   return (
     <>

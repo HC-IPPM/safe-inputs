@@ -2,15 +2,10 @@ import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 import type { FormikHelpers, FieldProps } from 'formik';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import type React from 'react';
 import * as Yup from 'yup';
 
 interface ExcelUploadFormValues {
   file: File | null;
-}
-
-interface ExcelUploadFormProps {
-  onSubmit: (file: File) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -26,7 +21,11 @@ const validationSchema = Yup.object().shape({
     }),
 });
 
-const ExcelUploadForm: React.FC<ExcelUploadFormProps> = ({ onSubmit }) => {
+const ExcelUploadForm = ({
+  onSubmit,
+}: {
+  onSubmit: (file: File) => void;
+}): JSX.Element => {
   const initialValues: ExcelUploadFormValues = {
     file: null,
   };

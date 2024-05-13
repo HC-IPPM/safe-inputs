@@ -1,22 +1,10 @@
 import { Input, Tooltip } from '@chakra-ui/react';
 import type { Table } from '@tanstack/react-table';
 import type { ErrorObject } from 'ajv';
-import type React from 'react';
 import { useEffect, useState } from 'react';
 
 import type { RowError } from '../schema/utils.ts';
 import { constructErrorMessage } from '../schema/utils.ts';
-
-type TableCellProps = {
-  getValue: () => any;
-  row: {
-    index: number;
-  };
-  column: {
-    id: string;
-  };
-  table: Table<any>;
-};
 
 const isErrorCell = (rowError: RowError | undefined, header: string) => {
   if (!rowError || !rowError.errors || rowError.valid) {
@@ -32,12 +20,21 @@ const isErrorCell = (rowError: RowError | undefined, header: string) => {
   return match && constructErrorMessage(match);
 };
 
-const TableCell: React.FC<TableCellProps> = ({
+const TableCell = ({
   getValue,
   row: { index },
   column: { id },
   table,
-}) => {
+}: {
+  getValue: () => any;
+  row: {
+    index: number;
+  };
+  column: {
+    id: string;
+  };
+  table: Table<any>;
+}): JSX.Element => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
   const rowError = table.options.meta?.rowErrors[index];

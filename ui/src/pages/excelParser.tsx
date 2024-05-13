@@ -1,6 +1,5 @@
 import { Box, Container, Text } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
-import type React from 'react';
 import { useState } from 'react';
 import type { WorkBook } from 'xlsx';
 
@@ -17,7 +16,7 @@ interface ParserData {
   workbook: WorkBook;
 }
 
-const ExcelParsingPage: React.FC = () => {
+const ExcelParsingPage = (): JSX.Element => {
   const parserWorker = new Worker('/worker.js');
   const handleFileUpload = (file: File) => {
     parserWorker.postMessage({ type: 'file', file });
