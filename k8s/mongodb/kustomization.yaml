@@ -6,4 +6,5 @@ namespace: mongodb
 resources:
   - namespace.yaml
   - operator
-  #- instance
+  - mongodb-admin-password.enc.yaml
+  - mongodb.yaml
