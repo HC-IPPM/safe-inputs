@@ -62,7 +62,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./k8s/mongo
+  path: ./k8s/mongodb
   prune: true
   sourceRef:
     kind: GitRepository
