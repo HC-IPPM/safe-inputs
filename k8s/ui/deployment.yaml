@@ -37,10 +37,15 @@ spec:
             # Explore disabling check or removing npm
             # readOnlyRootFilesystem: true
           resources:
-            limits:
-              cpu: 200m
-              memory: 45Mi
             requests:
               cpu: 200m
-              memory: 45Mi
+              memory: 100Mi
+        - name: istio-proxy
+          image: auto
+          resources:
+            requests:
+              cpu: 100m
+              memory: 112Mi
+          securityContext:
+            allowPrivilegeEscalation: false
 status: {}

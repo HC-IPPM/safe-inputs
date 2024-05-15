@@ -50,16 +50,28 @@ spec:
             - name: mongod
               resources:
                 requests:
-                  cpu: '0.2'
-                  memory: 200M
+                  cpu: 200m
+                  memory: 200Mi
+              securityContext:
+                allowPrivilegeEscalation: false
             - name: mongodb-agent
               resources:
                 requests:
-                  cpu: '0.2'
-                  memory: 200M
+                  cpu: 200m
+                  memory: 200Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+            - name: istio-proxy
+              image: auto
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 112Mi
+              securityContext:
+                allowPrivilegeEscalation: false
           initContainers:
             - name: mongodb-agent-readinessprobe
               resources:
                 requests:
-                  cpu: '1'
-                  memory: 100M
+                  cpu: 200m
+                  memory: 200Mi
