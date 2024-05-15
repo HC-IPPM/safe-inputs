@@ -1,0 +1,5 @@
+creation_rules:
+  # for all yaml files, encrypt data / stringData fields using GCP KMS
+  - path_regex: .*.yaml
+    encrypted_regex: '^(data|stringData)$'
+    gcp_kms: projects/pdcp-cloud-005-safeinputs/locations/northamerica-northeast1/keyRings/sops/cryptoKeys/sops-key

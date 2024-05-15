@@ -29,10 +29,15 @@ spec:
             # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
             allowPrivilegeEscalation: false
           resources:
-            limits:
-              cpu: 300m
-              memory: 70Mi
             requests:
-              cpu: 300m
-              memory: 70Mi
+              cpu: 200m
+              memory: 100Mi
+        - name: istio-proxy
+          image: auto
+          resources:
+            requests:
+              cpu: 100m
+              memory: 112Mi
+          securityContext:
+            allowPrivilegeEscalation: false
 status: {}
