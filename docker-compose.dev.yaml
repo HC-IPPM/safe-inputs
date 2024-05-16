@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: mongo:6.0
+    restart: always
+    volumes:
+      - db:/data/db
+      - ./api/dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js
+    #env_file:
+    #  - ./api/.env.dev-public
+
+  api:
+    image: api:1.0
+    build:
+      dockerfile: ./node-dev.dockerfile
+      context: ./
+    volumes:
+      - ./api:/home/node-dev/project
+    #env_file:
+    #  - ./api/.env.dev-public
+    command: npm run dev
+    #command: npm run dev:debug-docker
+    ports:
+      - 3000:3000
+      - 9229:9229 # for the node debug server, when active
+    depends_on:
+      - db
+
+  ui:
+    image: ui:1.0
+    build:
+      dockerfile: ./node-dev.dockerfile
+      context: ./
+    volumes:
+      - ./ui:/home/node-dev/project
+    #env_file:
+    #  - ./ui/.env.dev-public
+    command: npm run dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - api
+
+volumes:
+  db:
+    driver: local

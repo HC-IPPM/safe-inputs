@@ -3,7 +3,8 @@
 node_modules
 coverage
 .*rc
-Dockerfile
+Dockerfile.*
 README.md
 src/__tests__
 setupTests.js
+dev-db-init.js
