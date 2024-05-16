@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: mongo:6.0
+    image: mongo:6.0 # keep on same major version as k8s mongo, seems to be 6 currently
     restart: always
     volumes:
       - db:/data/db
