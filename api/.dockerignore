@@ -1,4 +1,4 @@
-**/*.env
+.env*
 *.yaml
 node_modules
 coverage
