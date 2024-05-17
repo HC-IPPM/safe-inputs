@@ -25,7 +25,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: ui
-          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-1b1bacc-1715629646 # {"$imagepolicy": "flux-system:ui"}
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-057748b-1715982913 # {"$imagepolicy": "flux-system:ui"}
           # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-619bf01-1675956654 # {"$imagepolicy": "flux-system:ui"}
 
           # Container specific security settings:
