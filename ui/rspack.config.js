@@ -1,6 +1,9 @@
 /**
  * @type {import('@rspack/cli').Configuration}
  */
+
+const rspack = require('@rspack/core'); // eslint-disable-line @typescript-eslint/no-var-requires
+
 module.exports = {
   context: __dirname,
   entry: {
@@ -10,14 +13,12 @@ module.exports = {
   output: {
     filename: '[name].js',
   },
-  builtins: {
-    html: [
-      {
-        template: './index.html',
-        favicon: './src/assets/favicon_canadaFlag.ico',
-      },
-    ],
-  },
+  plugins: [
+    new rspack.HtmlRspackPlugin({
+      template: './index.html',
+      favicon: './src/assets/favicon_canadaFlag.ico',
+    }),
+  ],
   module: {
     rules: [
       {
@@ -25,7 +26,7 @@ module.exports = {
         use: ['@svgr/webpack'],
       },
       {
-        test: /\.tsx$/,
+        test: /\.(tsx|ts)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
