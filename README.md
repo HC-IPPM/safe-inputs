@@ -17,7 +17,6 @@ The Safe Inputs solution follows a design pattern outlined in this [article](htt
 ### Additional Safe Inputs sub-proof-of-concepts
 
 - The [user interface](https://safeinputs.alpha.canada.ca/) is made up of reusable react components that can be used to spin-up a government-style web application for a project using the building blocks.
-- The [dev container](./.devcontainer) sets up the github codespaces environment, enabling development in open source technologies using computers without ADMIN privileges.
 - Demonstrates using [GitOps](https://www.youtube.com/watch?v=El1Eh-qaVKU) to eliminate configuration drift and the [security benefits of pull-based CI/CD pipelines](https://alex.kaskaso.li/post/pull-based-pipelines).
 - The API acts as the initiation point for a [real-time data pipeline (proof-of-concept)](https://github.com/PHACDataHub/nats-data-pipeline-demo) using NATS cloud-native messaging system.
 
