@@ -1,1 +1,11 @@
+# generated (test artifact)
 **/coverage
+
+# generated (build output)
+ui/dist
+
+# generated (by the sops cli)
+k8s/**/*.enc.yaml
+
+# not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
+k8s/mongodb/operator
