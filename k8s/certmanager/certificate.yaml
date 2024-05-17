@@ -4,10 +4,10 @@ metadata:
   name: ingress-cert
   namespace: istio-ingress
 spec:
-  commonName: safeinputs.phac.alpha.canada.ca
+  commonName: safeinputs.alpha.phac-aspc.gc.ca
   dnsNames:
-    - safeinputs.phac.alpha.canada.ca
-    - entreessecurisees.aspc.alpha.canada.ca
+    - safeinputs.alpha.phac-aspc.gc.ca
+    - entreessecurisees.alpha.phac-aspc.gc.ca
   issuerRef:
     kind: Issuer
     # name: letsencrypt-staging
