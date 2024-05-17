@@ -1,7 +1,12 @@
-**/*.env
-**/node_modules
-**/coverage
-deploy
+**/.env*
+!**/.env.dev-public
 **/nats.creds
+
+**/node_modules
+
+**/coverage
+
+deploy
+
 .eslintcache
 .vscode/chrome

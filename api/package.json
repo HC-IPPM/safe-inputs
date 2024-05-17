@@ -6,9 +6,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
+    "dev": "node --watch --experimental-vm-modules index.js",
+    "dev:debug": "node --inspect-brk --watch --experimental-vm-modules index.js",
+    "dev:debug-docker": "node --inspect-brk='0.0.0.0:9229' --watch --experimental-vm-modules index.js",
     "start": "node --experimental-vm-modules index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:debug": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache"
   },
   "jest": {
     "setupFilesAfterEnv": [

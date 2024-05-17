@@ -30,7 +30,7 @@ steps:
         if [[ "$BRANCH_NAME" == "main" ]]
         then
           image=$(cat /workspace/imagename)
-          docker build -t $image .
+          docker build -t $image ./Dockerfile.prod
         else
           exit 0
         fi
