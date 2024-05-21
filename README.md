@@ -26,7 +26,7 @@ We'd love to explore implementing this project with you! We're looking for feedb
 
 ## Development
 
-The local development environment requires docker and can be launched using `docker compose -f ./docker-compose.dev.yaml up`. One ready, the UI will be served on `localhost:8080`, and the api will be served on `localhost:3000`. To run the api with a node debugger session, temporarily edit `docker-compose.dev.yaml` to replace the api container's command with `npm run dev:debug-docker`.
+The local development environment requires docker and can be launched using `npm run dev` from the repo root (short hand for `docker compose -f ./docker-compose.dev.yaml up`). One ready, the UI will be served on `localhost:8080`, and the api will be served on `localhost:3000`. To run the api with a node debugger session, temporarily edit `docker-compose.dev.yaml` to replace the api container's command with `npm run dev:debug-docker`.
 
 ### Additional dev env notes
 

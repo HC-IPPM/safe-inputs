@@ -6,6 +6,7 @@
   "keywords": [],
   "license": "MIT",
   "scripts": {
+    "dev": "docker compose -f ./docker-compose.dev.yaml up",
     "eslint": "eslint --max-warnings 0 --cache .",
     "eslint:fix": "eslint --fix . || true",
     "posteslint:fix": "npm run prettier:write",
