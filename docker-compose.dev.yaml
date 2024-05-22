@@ -5,7 +5,7 @@ volumes:
     driver: local
 
 networks:
-  dev-loopback:
+  host-loopback:
     driver: bridge
     driver_opts:
       # the default docker bridge driver behaviour is to bind exposed ports on 0.0.0.0, making them accessible
@@ -14,7 +14,7 @@ networks:
       # Configuring this network to bind on loopback instead, so that only incoming traffic from the host machine
       # can reach our containers on their dev ports
       com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
-  db:
+  db-internal:
     driver: bridge
     # the DB can stay isolated, doesn't need to talk to the internet like the api and ui (which need to reach NPM)
     # and doesn't need to be reachable from the host machine (use `npm run dev:mongosh` when a mongo shell is needed)
@@ -30,7 +30,7 @@ services:
     env_file:
       - ./api/.env.dev-public
     networks:
-      - db
+      - db-internal
     ports:
       - 27017:27017
 
@@ -46,8 +46,8 @@ services:
     command: npm run dev
     #command: npm run dev:debug-docker
     networks:
-      - db
-      - dev-loopback
+      - db-internal
+      - host-loopback
     ports:
       - 3000:3000
       - 9229:9229 # for the node debug server, when active
@@ -65,7 +65,7 @@ services:
       - ./ui/.env.dev-public
     command: npm run dev
     networks:
-      - dev-loopback
+      - host-loopback
     ports:
       - 8080:8080
     depends_on:
