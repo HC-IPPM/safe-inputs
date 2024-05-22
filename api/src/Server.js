@@ -6,6 +6,14 @@ import { createYoga } from '@graphql-yoga/node';
 
 // Explore https://the-guild.dev/graphql/envelop/plugins for more The Guild pluggins
 
+import { connect_db } from './db_utils.js';
+
+// priming the DB connection, ok if this fails, will reassert connection before handling
+// any given request
+connect_db().catch((err) => {
+  console.error(err);
+});
+
 export function Server({ schema, context = {} }) {
   const yoga = createYoga({
     schema,
@@ -16,7 +24,12 @@ export function Server({ schema, context = {} }) {
     ],
     graphqlEndpoint: '/graphql',
   });
-  const server = createServer(yoga);
+
+  // reassert the DB connection before attempting to handle a request. An existing
+  // DB connection will be reused
+  const server = createServer((request, response) =>
+    connect_db().then(yoga(request, response)),
+  );
 
   return server;
 }

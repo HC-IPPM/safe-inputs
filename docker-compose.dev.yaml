@@ -1,14 +1,33 @@
 version: '3.8'
 
+networks:
+  host-loopback:
+    driver: bridge
+    driver_opts:
+      # the default docker bridge driver behaviour is to bind exposed ports on 0.0.0.0, making them accessible
+      # from the local network. Not good, unless you're on a known-safe network (ha) and specifically want to
+      # serve dev traffic from other local devices (e.g. testing on mobile devices).
+      # Configuring this network to bind on loopback instead, so that only incoming traffic from the host machine
+      # can reach our containers on their dev ports
+      com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
+  db-internal:
+    driver: bridge
+    # the DB can stay isolated, doesn't need to talk to the internet like the api and ui (which need to reach NPM)
+    # and doesn't need to be reachable from the host machine (use `npm run dev:mongosh` when a mongo shell is needed)
+    internal: true
+
 services:
   db:
     image: mongo:6.0 # keep on same major version as k8s mongo, seems to be 6 currently
     restart: always
     volumes:
-      - db:/data/db
-      - ./api/dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js
+      - ./api/dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js:ro
     env_file:
       - ./api/.env.dev-public
+    networks:
+      - db-internal
+    ports:
+      - 27017:27017
 
   api:
     image: api:1.0
@@ -21,6 +40,9 @@ services:
       - ./api/.env.dev-public
     command: npm run dev
     #command: npm run dev:debug-docker
+    networks:
+      - db-internal
+      - host-loopback
     ports:
       - 3000:3000
       - 9229:9229 # for the node debug server, when active
@@ -37,11 +59,9 @@ services:
     env_file:
       - ./ui/.env.dev-public
     command: npm run dev
+    networks:
+      - host-loopback
     ports:
       - 8080:8080
     depends_on:
       - api
-
-volumes:
-  db:
-    driver: local
