@@ -14,6 +14,10 @@ networks:
       # Configuring this network to bind on loopback instead, so that only incoming traffic from the host machine
       # can reach our containers on their dev ports
       com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
+  db:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
 
 services:
   db:
@@ -25,7 +29,7 @@ services:
     env_file:
       - ./api/.env.dev-public
     networks:
-      - dev-loopback
+      - db
     ports:
       - 27017:27017
 
@@ -41,6 +45,7 @@ services:
     command: npm run dev
     #command: npm run dev:debug-docker
     networks:
+      - db
       - dev-loopback
     ports:
       - 3000:3000
