@@ -7,6 +7,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "docker compose -f ./docker-compose.dev.yaml up",
+    "dev:down": "docker compose -f ./docker-compose.dev.yaml down",
+    "dev:mongosh": "docker compose -f ./docker-compose.dev.yaml exec -i -t db mongosh",
     "eslint": "eslint --max-warnings 0 --cache .",
     "eslint:fix": "eslint --fix . || true",
     "posteslint:fix": "npm run prettier:write",

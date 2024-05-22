@@ -16,8 +16,9 @@ networks:
       com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
   db:
     driver: bridge
-    driver_opts:
-      com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
+    # the DB can stay isolated, doesn't need to talk to the internet like the api and ui (which need to reach NPM)
+    # and doesn't need to be reachable from the host machine (use `npm run dev:mongosh` when a mongo shell is needed)
+    internal: true
 
 services:
   db:
