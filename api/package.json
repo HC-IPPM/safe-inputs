@@ -27,6 +27,7 @@
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
     "graphql-type-json": "^0.3.2",
+    "mongoose": "^8.4.0",
     "nats": "^2.11.0"
   },
   "devDependencies": {

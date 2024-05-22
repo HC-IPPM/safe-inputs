@@ -1,9 +1,5 @@
 version: '3.8'
 
-volumes:
-  db:
-    driver: local
-
 networks:
   host-loopback:
     driver: bridge
@@ -25,7 +21,6 @@ services:
     image: mongo:6.0 # keep on same major version as k8s mongo, seems to be 6 currently
     restart: always
     volumes:
-      - db:/data/db
       - ./api/dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js
     env_file:
       - ./api/.env.dev-public
