@@ -25,7 +25,7 @@ export const schema = new GraphQLSchema({
 
   mutation: new GraphQLObjectType({
     // GraphQL ensures that variables match the types defined in the schema. This mutation acts as a filter;
-    // allowing only valid JSON formated data through. (And if valid will be publish via nats.)
+    // allowing only valid JSON formated data through
     name: 'Mutation',
     fields: {
       verifyJsonFormat: {
@@ -33,9 +33,8 @@ export const schema = new GraphQLSchema({
         args: {
           sheetData: { type: new GraphQLNonNull(GraphQLJSON) },
         },
-        async resolve(_parent, { sheetData }, { publish }, _info) {
+        async resolve(_parent, { sheetData }, _info) {
           console.log(JSON.stringify(sheetData));
-          publish(sheetData); // where the NATs publish is called from index.js
           return sheetData;
         },
       },
