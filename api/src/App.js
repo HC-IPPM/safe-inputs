@@ -1,9 +1,11 @@
+import { ExpressAuth } from '@auth/express';
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import { maxAliasesPlugin } from '@escape.tech/graphql-armor-max-aliases';
 import { maxDepthPlugin } from '@escape.tech/graphql-armor-max-depth';
 import { createYoga } from '@graphql-yoga/node';
 import express from 'express';
 
-import { connect_db } from './db_utils.js';
+import { connect_db, get_db_connection } from './db_utils.js';
 
 // priming the DB connection asynchronously on module load, ok if this fails,
 // will reassert connection before handling any given request
@@ -14,8 +16,17 @@ connect_db().catch((err) => {
 export function App({ schema, context = {} }) {
   const app = express();
 
-  // reassert the DB connection before attempting to handle a request. An existing DB connection will be reused
+  // reassert mongodb connection before trying to handle any requests
   app.use((_req, _res, next) => connect_db().then(() => next()));
+
+  app.set('trust proxy', true); // auth.js needs to be able to read the `X-Forwarded-*` header, if/when behind a proxy
+  app.use(
+    '/auth/*',
+    ExpressAuth({
+      providers: [],
+      adapter: MongoDBAdapter(get_db_connection().connect()),
+    }),
+  );
 
   const yoga = createYoga({
     schema,

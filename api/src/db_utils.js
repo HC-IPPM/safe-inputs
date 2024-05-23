@@ -26,6 +26,10 @@ export async function connect_db() {
   }
 }
 
+export function get_db_connection() {
+  return mongoose.connection.getClient();
+}
+
 export function get_db_connection_status() {
   return mongoose.connection.states[mongoose.connection.readyState];
 }
