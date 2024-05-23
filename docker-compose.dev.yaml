@@ -36,8 +36,7 @@ services:
       context: ./
     volumes:
       - ./api:/home/node-dev/project
-    env_file:
-      - ./api/.env.dev-public
+      - ./api/.env.dev-public:/home/node-dev/project/.env:ro
     command: npm run dev
     #command: npm run dev:debug-docker
     networks:
@@ -56,8 +55,7 @@ services:
       context: ./
     volumes:
       - ./ui:/home/node-dev/project
-    env_file:
-      - ./ui/.env.dev-public
+      - ./ui/.env.dev-public:/home/node-dev/project/.env:ro
     command: npm run dev
     networks:
       - host-loopback
