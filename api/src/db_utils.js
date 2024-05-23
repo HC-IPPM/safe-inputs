@@ -16,12 +16,13 @@ export async function connect_db() {
   // and tests need to be updated to, most likely, mock away DB connections
   if (process.env.IS_DEV_ENV && !process.env.IS_TEST_ENV) {
     console.log('Attempting MongoDB connection...');
+
     return await mongoose
       .connect(get_connection_str(), {
         serverSelectionTimeoutMS: 7500,
         heartbeatFrequencyMS: 10000,
       })
-      .then(() => console.log('MongoDB connected!'));
+      .then(() => queueMicrotask(() => console.log('MongoDB connected!')));
   }
 }
 
