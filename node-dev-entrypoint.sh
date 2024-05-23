@@ -76,4 +76,12 @@ inotifywait -e close_write,moved_to,create -m . | while read -r directory events
     
     start_container_command
   fi
+
+  if echo "$filename" | grep -q "^\.env.*"; then
+    echo "Host's .env has been modified; restarting container command"
+
+    kill_container_command
+    
+    start_container_command
+  fi
 done

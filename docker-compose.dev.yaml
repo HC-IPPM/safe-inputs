@@ -30,13 +30,13 @@ services:
       - 27017:27017
 
   api:
-    image: api:1.0
+    image: safe-inputs-api:1.1
     build:
       dockerfile: ./node-dev.dockerfile
       context: ./
     volumes:
       - ./api:/home/node-dev/project
-      - ./api/.env.dev-public:/home/node-dev/project/.env:ro
+      - ./api/.env.dev-public:/home/node-dev/project/.env
     command: npm run dev
     #command: npm run dev:debug-docker
     networks:
@@ -49,13 +49,13 @@ services:
       - db
 
   ui:
-    image: ui:1.0
+    image: safe-inputs-ui:1.1
     build:
       dockerfile: ./node-dev.dockerfile
       context: ./
     volumes:
       - ./ui:/home/node-dev/project
-      - ./ui/.env.dev-public:/home/node-dev/project/.env:ro
+      - ./ui/.env.dev-public:/home/node-dev/project/.env
     command: npm run dev
     networks:
       - host-loopback
