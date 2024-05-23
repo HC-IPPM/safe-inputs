@@ -1,12 +1,22 @@
-import { createServer } from 'http';
-
 import { maxAliasesPlugin } from '@escape.tech/graphql-armor-max-aliases';
 import { maxDepthPlugin } from '@escape.tech/graphql-armor-max-depth';
 import { createYoga } from '@graphql-yoga/node';
+import express from 'express';
 
 import { connect_db } from './db_utils.js';
 
-export function Server({ schema, context = {} }) {
+// priming the DB connection asynchronously on module load, ok if this fails,
+// will reassert connection before handling any given request
+connect_db().catch((err) => {
+  console.error(err);
+});
+
+export function App({ schema, context = {} }) {
+  const app = express();
+
+  // reassert the DB connection before attempting to handle a request. An existing DB connection will be reused
+  app.use((_req, _res, next) => connect_db().then(() => next()));
+
   const yoga = createYoga({
     schema,
     context,
@@ -18,11 +28,7 @@ export function Server({ schema, context = {} }) {
     graphqlEndpoint: '/graphql',
   });
 
-  // reassert the DB connection before attempting to handle a request. An existing
-  // DB connection will be reused
-  const server = createServer((request, response) =>
-    connect_db().then(yoga(request, response)),
-  );
+  app.use(yoga.graphqlEndpoint, yoga);
 
-  return server;
+  return app;
 }

@@ -1,8 +1,7 @@
 import 'dotenv/config';
 
-import { connect_db } from './src/db_utils.js';
+import { App } from './src/App.js';
 import { schema } from './src/schema.js';
-import { Server } from './src/Server.js';
 
 const { PORT = 3000, HOST = '0.0.0.0' } = process.env;
 
@@ -13,16 +12,11 @@ process.on('SIGINT', () => {
   throw new Error('SIGINT');
 });
 
-const server = new Server({
+const app = new App({
   schema,
   context: {},
 });
 
-// priming the DB connection (async), ok if this fails, will reassert connection before handling any given request
-connect_db().catch((err) => {
-  console.error(err);
-});
-
-server.listen({ port: PORT, host: HOST }, () =>
+app.listen({ port: PORT, host: HOST }, () =>
   console.log(`🚀 Safe-inputs API listening on ${HOST}:${PORT}`),
 );
