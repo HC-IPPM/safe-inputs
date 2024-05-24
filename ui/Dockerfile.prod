@@ -1,5 +1,5 @@
 # 1. Building static react app
-FROM node:lts AS build
+FROM node:lts-alpine3.19 AS build
 
 WORKDIR /app
 

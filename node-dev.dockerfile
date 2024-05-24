@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:lts-alpine3.19
 
 # dependencies used in the entrypoint script
 RUN apk add --no-cache inotify-tools \

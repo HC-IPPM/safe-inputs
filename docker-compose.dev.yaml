@@ -30,7 +30,7 @@ services:
       - 27017:27017
 
   api:
-    image: safe-inputs-api:1.1
+    image: safe-inputs-api:1.2
     build:
       dockerfile: ./node-dev.dockerfile
       context: ./
@@ -49,7 +49,7 @@ services:
       - db
 
   ui:
-    image: safe-inputs-ui:1.1
+    image: safe-inputs-ui:1.2
     build:
       dockerfile: ./node-dev.dockerfile
       context: ./
