@@ -2,7 +2,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
 import request from 'supertest';
 
-import { Server } from '../Server.js';
+import { App } from '../App.js';
 
 // ----- TEST SET UP -----
 
@@ -36,12 +36,12 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 // ----- TESTS -----
 
-describe('Server', () => {
+describe('App', () => {
   describe('given a schema and resolver', () => {
-    it('returns an express server', async () => {
-      const server = new Server({ schema });
+    it('returns an express app', async () => {
+      const app = new App({ schema });
 
-      const response = await request(server)
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -54,8 +54,8 @@ describe('Server', () => {
 
   describe('given an overly complex query', () => {
     it('rejects it', async () => {
-      const server = new Server({ schema });
-      const response = await request(server)
+      const app = new App({ schema });
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -72,8 +72,8 @@ describe('Server', () => {
 
   describe('given a simple query', () => {
     it('executes it', async () => {
-      const server = new Server({ schema });
-      const response = await request(server)
+      const app = new App({ schema });
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -87,9 +87,9 @@ describe('Server', () => {
   describe('given a mutation query', () => {
     it('calls the context', async () => {
       const publish = jest.fn();
-      const server = new Server({ schema, context: { publish } });
+      const app = new App({ schema, context: { publish } });
 
-      const response = await request(server)
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
