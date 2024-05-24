@@ -15,7 +15,7 @@ export async function connect_db() {
   // TODO: temporary conditional! the kubernetes environment isn't ready for the api to attempt DB connections,
   // and tests need to be updated to, most likely, mock away DB connections
   if (process.env.IS_DEV_ENV && !process.env.IS_TEST_ENV) {
-    console.log('Attempting MongoDB connection...');
+    queueMicrotask(() => console.log('Attempting MongoDB connection...'));
 
     return await mongoose
       .connect(get_connection_str(), {
