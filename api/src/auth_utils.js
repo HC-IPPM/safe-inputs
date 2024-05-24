@@ -25,3 +25,7 @@ export const sendVerificationRequestGCNotify = async ({ identifier, url }) => {
     throw new Error(JSON.stringify(errors));
   }
 };
+
+export const sendVerificationRequestConsole = async ({ url }) => {
+  console.log(`\x1b[31mDEV MODE, your session auth url is:\x1b[0m ${url}`);
+};

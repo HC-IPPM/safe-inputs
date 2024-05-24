@@ -5,10 +5,17 @@ import { maxDepthPlugin } from '@escape.tech/graphql-armor-max-depth';
 import { createYoga } from '@graphql-yoga/node';
 import express from 'express';
 
-import { sendVerificationRequestGCNotify } from './auth_utils.js';
+import {
+  sendVerificationRequestGCNotify,
+  sendVerificationRequestConsole,
+} from './auth_utils.js';
 import { connect_db, get_db_connection } from './db_utils.js';
 
-const { IS_DEV_ENV = false, MAX_SESSION_AGE = 24 * 60 * 60 } = process.env;
+const {
+  IS_DEV_ENV = false,
+  ENABLE_DEV_GCNOTIFY = false,
+  MAX_SESSION_AGE = 24 * 60 * 60,
+} = process.env;
 
 // priming the DB connection asynchronously on module load, ok if this fails,
 // will reassert connection before handling any given request
@@ -31,7 +38,10 @@ export function App({ schema, context = {} }) {
           id: 'gcnotify',
           type: 'email',
           maxAge: MAX_SESSION_AGE,
-          sendVerificationRequest: sendVerificationRequestGCNotify,
+          sendVerificationRequest:
+            IS_DEV_ENV && !ENABLE_DEV_GCNOTIFY
+              ? sendVerificationRequestConsole
+              : sendVerificationRequestGCNotify,
         },
       ],
       adapter: MongoDBAdapter(get_db_connection().connect()),
