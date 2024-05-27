@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
+  "engines": {
+    "node": "^20"
+  },
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -10,8 +13,11 @@
     "dev:debug": "node --inspect-brk --watch --experimental-vm-modules index.js",
     "dev:debug-docker": "node --inspect-brk='0.0.0.0:9229' --watch --experimental-vm-modules index.js",
     "start": "node --experimental-vm-modules index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
-    "test:debug": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache"
+    "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
+    "pretest": "npm run test:down",
+    "test:down": "docker compose -f ./docker-compose.dev-test.yaml down",
+    "jest": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text",
+    "jest:debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -20,15 +26,18 @@
     "verbose": true
   },
   "dependencies": {
+    "@auth/express": "^0.5.5",
+    "@auth/mongodb-adapter": "^3.1.0",
     "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
     "@escape.tech/graphql-armor-max-depth": "^1.8.1",
     "@graphql-tools/schema": "^10.0.3",
     "@graphql-yoga/node": "^3.3.0",
     "dotenv": "^16.0.3",
+    "express": "^4.19.2",
     "graphql": "^16.6.0",
     "graphql-type-json": "^0.3.2",
-    "mongoose": "^8.4.0",
-    "nats": "^2.11.0"
+    "mongodb": "^6.6.2",
+    "mongoose": "^8.4.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

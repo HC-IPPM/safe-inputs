@@ -1,8 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
-import request from 'supertest';
+import mongoose from 'mongoose';
+import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
 
-import { Server } from '../Server.js';
+import { create_app } from '../create_app.js';
 
 // ----- TEST SET UP -----
 
@@ -25,8 +25,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    verifyJsonFormat(_parent, { sheetData }, { publish }, _info) {
-      const _test = publish(sheetData);
+    verifyJsonFormat(_parent, { sheetData }, _info) {
       return sheetData;
     },
   },
@@ -36,12 +35,17 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 // ----- TESTS -----
 
-describe('Server', () => {
-  describe('given a schema and resolver', () => {
-    it('returns an express server', async () => {
-      const server = new Server({ schema });
+describe('create_app', () => {
+  afterEach(() => {
+    // necessary cleanup to prevent Jest from being held open by a dangling DB handler
+    return mongoose.connection.close();
+  });
 
-      const response = await request(server)
+  describe('given a schema and resolver', () => {
+    it('returns an express app', async () => {
+      const app = await create_app({ schema });
+
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -54,8 +58,9 @@ describe('Server', () => {
 
   describe('given an overly complex query', () => {
     it('rejects it', async () => {
-      const server = new Server({ schema });
-      const response = await request(server)
+      const app = await create_app({ schema });
+
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -72,8 +77,9 @@ describe('Server', () => {
 
   describe('given a simple query', () => {
     it('executes it', async () => {
-      const server = new Server({ schema });
-      const response = await request(server)
+      const app = await create_app({ schema });
+
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
@@ -85,22 +91,19 @@ describe('Server', () => {
   });
 
   describe('given a mutation query', () => {
-    it('calls the context', async () => {
-      const publish = jest.fn();
-      const server = new Server({ schema, context: { publish } });
+    it('executes it', async () => {
+      const app = await create_app({ schema });
 
-      const response = await request(server)
+      const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
                 verifyJsonFormat(sheetData: "a")
              }`,
-          // contextValue: {publish},
         });
 
       expect(response.body).not.toHaveProperty('errors');
-      expect(publish).toHaveBeenCalledTimes(1);
     });
   });
 });

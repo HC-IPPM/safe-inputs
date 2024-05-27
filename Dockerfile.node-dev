@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:lts-alpine3.19
 
 # dependencies used in the entrypoint script
 RUN apk add --no-cache inotify-tools \
@@ -30,11 +30,12 @@ VOLUME /home/node-dev/project/node_modules
 # This entrypoint syncs the container's node modules against the host workdir's package-lock.json.
 # Uses inotify-tools to watch for changes to package-lock.json, kills and restarts the container
 # command as needed. Note that it's 
-COPY --chown=node-dev ./node-dev-entrypoint.sh ../entrypoint.sh
+COPY --chown=node-dev ./node-dev-entrypoint.watch.sh ../node-dev-entrypoint.watch.sh
+COPY --chown=node-dev ./node-dev-entrypoint.once.sh ../node-dev-entrypoint.once.sh
 # When this image is built on windows, the entrypoint's newlines tend to get mangled.
 # `dos2unix` fixes that if it's the case, harmless to run if not
-RUN dos2unix ../entrypoint.sh
-ENTRYPOINT [ "../entrypoint.sh" ]
+RUN dos2unix ../node-dev-entrypoint.*
+ENTRYPOINT [ "../node-dev-entrypoint.watch.sh" ]
 
 
 # Default, specify the appropriate command in your docker-compose.yaml/in your `docker` args/etc 

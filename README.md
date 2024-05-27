@@ -18,7 +18,6 @@ The Safe Inputs solution follows a design pattern outlined in this [article](htt
 
 - The [user interface](https://safeinputs.alpha.phac-aspc.gc.ca/) is made up of reusable react components that can be used to spin-up a government-style web application for a project using the building blocks.
 - Demonstrates using [GitOps](https://www.youtube.com/watch?v=El1Eh-qaVKU) to eliminate configuration drift and the [security benefits of pull-based CI/CD pipelines](https://alex.kaskaso.li/post/pull-based-pipelines).
-- The API acts as the initiation point for a [real-time data pipeline (proof-of-concept)](https://github.com/PHACDataHub/nats-data-pipeline-demo) using NATS cloud-native messaging system.
 
 ### Surveillance Team call out
 
@@ -27,6 +26,10 @@ We'd love to explore implementing this project with you! We're looking for feedb
 ## Development
 
 The local development environment requires docker and can be launched using `npm run dev` from the repo root (short hand for `docker compose -f ./docker-compose.dev.yaml up`). One ready, the UI will be served on `localhost:8080`, and the api will be served on `localhost:3000`. To run the api with a node debugger session, temporarily edit `docker-compose.dev.yaml` to replace the api container's command with `npm run dev:debug-docker`.
+
+### Running tests
+
+TODO
 
 ### Additional dev env notes
 

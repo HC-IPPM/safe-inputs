@@ -5,7 +5,7 @@
     "node": true
   },
   "parserOptions": {
-    "ecmaVersion": "2022",
+    "ecmaVersion": 2022,
     "sourceType": "module",
     "allowImportExportEverywhere": true
   },
@@ -14,6 +14,7 @@
       "error",
       { "ignores": ["modules"] }
     ],
-    "no-console": 0
+    "no-console": 0,
+    "no-use-before-define": 1
   }
 }
