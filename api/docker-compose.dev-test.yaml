@@ -15,6 +15,12 @@ networks:
     # the DB can stay isolated, doesn't need to talk to the internet like the api and ui (which need to reach NPM)
     # and doesn't need to be reachable from the host machine (use `npm run dev:mongosh` when a mongo shell is needed)
     internal: true
+  cloudbuild:
+    driver: bridge
+    # in cloudbuild, the only functioning network is the pre-existing network named `cloudbuild`.
+    # For the DB and API to speak to eachother, they both need to connect to this (external) network.
+    name: cloudbuild
+    external: true
 
 services:
   db-test:
@@ -26,7 +32,7 @@ services:
     env_file:
       - ./.env.dev-public
     networks:
-      - db-internal-test
+      - ${DOCKER_NETWORK:-db-internal-test} # see `cloudbuild` network and comment above
     ports:
       - 27017:27017
     command: mongod --quiet
@@ -45,7 +51,7 @@ services:
     command: npm run jest
     #command: npm run jest:debug
     networks:
-      - db-internal-test
+      - ${DOCKER_NETWORK:-db-internal-test}
       - host-loopback-test
     ports:
       - 9230:9229 # for the node debug server, when active

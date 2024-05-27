@@ -9,7 +9,7 @@ steps:
 
       # disable TTY output for the compose environment, the ansi characters printed when a TTY is attached
       # are just junk characters to the GCP cloudbuild logs
-      DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
+      DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name
