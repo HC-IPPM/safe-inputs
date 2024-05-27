@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
 
-import { App } from '../App.js';
+import { create_app } from '../create_app.js';
 
 // ----- TEST SET UP -----
 
@@ -34,10 +34,10 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 // ----- TESTS -----
 
-describe('App', () => {
+describe('create_app', () => {
   describe('given a schema and resolver', () => {
     it('returns an express app', async () => {
-      const app = new App({ schema });
+      const app = await create_app({ schema });
 
       const response = await request(app)
         .post('/graphql')
@@ -52,7 +52,8 @@ describe('App', () => {
 
   describe('given an overly complex query', () => {
     it('rejects it', async () => {
-      const app = new App({ schema });
+      const app = await create_app({ schema });
+
       const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
@@ -70,7 +71,8 @@ describe('App', () => {
 
   describe('given a simple query', () => {
     it('executes it', async () => {
-      const app = new App({ schema });
+      const app = await create_app({ schema });
+
       const response = await request(app)
         .post('/graphql')
         .set('Accept', 'application/json')
@@ -84,7 +86,7 @@ describe('App', () => {
 
   describe('given a mutation query', () => {
     it('executes it', async () => {
-      const app = new App({ schema });
+      const app = await create_app({ schema });
 
       const response = await request(app)
         .post('/graphql')

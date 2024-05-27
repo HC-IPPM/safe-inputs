@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { App } from './src/App.js';
+import { create_app } from './src/create_app.js';
 
 import { schema } from './src/schema.js';
 
@@ -13,7 +13,7 @@ process.on('SIGINT', () => {
   throw new Error('SIGINT');
 });
 
-const app = new App({
+const app = await create_app({
   schema,
   context: {},
 });

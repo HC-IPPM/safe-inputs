@@ -8,22 +8,21 @@ function get_connection_str() {
     .replace('{MDB_NAME}', MDB_NAME);
 }
 
-// Connect to MongoDB with Mongoose. Note that this is async, but generally doesn't need to be awaited when called.
-// It's safe to let the connection happen fully async because further mongoose opperations are also async and will
-// buffer until the connection's made
 export async function connect_db() {
   // TODO: temporary conditional! the kubernetes environment isn't ready for the api to attempt DB connections yet
   if (process.env.IS_LOCAL_ENV) {
-    return await mongoose.connect(get_connection_str(), {
-      serverSelectionTimeoutMS: 7500,
-      heartbeatFrequencyMS: 10000,
-    });
+    queueMicrotask(() => console.log('Attempting MongoDB connection...'));
+
+    return await mongoose
+      .connect(get_connection_str(), {
+        serverSelectionTimeoutMS: 7500,
+        heartbeatFrequencyMS: 10000,
+      })
+      .then(() => queueMicrotask(() => console.log('MongoDB connected!')));
   }
 }
 
-export async function get_db_client() {
-  await connect_db();
-
+export function get_db_client() {
   return mongoose.connection.getClient();
 }
 
