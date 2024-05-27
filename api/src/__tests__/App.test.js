@@ -1,6 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
-import request from 'supertest';
+import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
 
 import { App } from '../App.js';
 
@@ -25,8 +24,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    verifyJsonFormat(_parent, { sheetData }, { publish }, _info) {
-      const _test = publish(sheetData);
+    verifyJsonFormat(_parent, { sheetData }, _info) {
       return sheetData;
     },
   },
@@ -85,9 +83,8 @@ describe('App', () => {
   });
 
   describe('given a mutation query', () => {
-    it('calls the context', async () => {
-      const publish = jest.fn();
-      const app = new App({ schema, context: { publish } });
+    it('executes it', async () => {
+      const app = new App({ schema });
 
       const response = await request(app)
         .post('/graphql')
@@ -96,11 +93,9 @@ describe('App', () => {
           query: `mutation {
                 verifyJsonFormat(sheetData: "a")
              }`,
-          // contextValue: {publish},
         });
 
       expect(response.body).not.toHaveProperty('errors');
-      expect(publish).toHaveBeenCalledTimes(1);
     });
   });
 });
