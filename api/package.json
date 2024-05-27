@@ -13,8 +13,11 @@
     "dev:debug": "node --inspect-brk --watch --experimental-vm-modules index.js",
     "dev:debug-docker": "node --inspect-brk='0.0.0.0:9229' --watch --experimental-vm-modules index.js",
     "start": "node --experimental-vm-modules index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
-    "test:debug": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache"
+    "test": "docker compose -f ./docker-compose.dev-test.yaml up --abort-on-container-exit --exit-code-from api-test",
+    "pretest": "npm run test:down",
+    "test:down": "docker compose -f ./docker-compose.dev-test.yaml down",
+    "jest": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text",
+    "jest:debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache"
   },
   "jest": {
     "setupFilesAfterEnv": [

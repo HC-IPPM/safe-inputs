@@ -1,7 +1,7 @@
 version: '3.8'
 
 networks:
-  host-loopback:
+  host-loopback-test:
     driver: bridge
     driver_opts:
       # the default docker bridge driver behaviour is to bind exposed ports on 0.0.0.0, making them accessible
@@ -10,60 +10,46 @@ networks:
       # Configuring this network to bind on loopback instead, so that only incoming traffic from the host machine
       # can reach our containers on their dev ports
       com.docker.network.bridge.host_binding_ipv4: '127.0.0.1'
-  db-internal:
+  db-internal-test:
     driver: bridge
     # the DB can stay isolated, doesn't need to talk to the internet like the api and ui (which need to reach NPM)
     # and doesn't need to be reachable from the host machine (use `npm run dev:mongosh` when a mongo shell is needed)
     internal: true
 
 services:
-  db:
+  db-test:
     image: mongo:6.0 # keep on same major version as k8s mongo, seems to be 6 currently
     tty: true # coloured output
     restart: always # always reinitialize, with a clean data volume
     volumes:
-      - ./api/dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js:ro
+      - ./dev-db-init.js:/docker-entrypoint-initdb.d/dev-db-init.js:ro
     env_file:
-      - ./api/.env.dev-public
+      - ./.env.dev-public
     networks:
-      - db-internal
+      - db-internal-test
     ports:
       - 27017:27017
     command: mongod --quiet
 
-  api:
-    image: safe-inputs-api:1.2
+  api-test:
+    image: safe-inputs-api-test:1.0
     tty: true # coloured output
     build:
       dockerfile: ./Dockerfile.node-dev
-      context: ./
+      context: ../
     volumes:
-      - ./api:/home/node-dev/project
-      - ./api/.env.dev-public:/home/node-dev/project/.env
-    command: npm run dev
-    #command: npm run dev:debug-docker
+      - .:/home/node-dev/project
+      - ./.env.dev-public:/home/node-dev/project/.env
+    entrypoint:
+      - ../node-dev-entrypoint.once.sh
+    command: npm run jest
+    #command: npm run jest:debug
     networks:
-      - db-internal
-      - host-loopback
+      - db-internal-test
+      - host-loopback-test
     ports:
-      - 3000:3000
-      - 9229:9229 # for the node debug server, when active
+      - 9230:9229 # for the node debug server, when active
     depends_on:
-      - db
-
-  ui:
-    image: safe-inputs-ui:1.2
-    tty: true # coloured output
-    build:
-      dockerfile: ./Dockerfile.node-dev
-      context: ./
-    volumes:
-      - ./ui:/home/node-dev/project
-      - ./ui/.env.dev-public:/home/node-dev/project/.env
-    command: npm run dev
-    networks:
-      - host-loopback
-    ports:
-      - 8080:8080
-    depends_on:
-      - api
+      - db-test
+    links:
+      - db-test:db # alias db-test container host name for compatability with .env.dev-public configuration
