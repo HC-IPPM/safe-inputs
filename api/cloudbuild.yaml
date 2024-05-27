@@ -1,15 +1,13 @@
 steps:
-  - name: node:18-alpine
-    id: install
-    dir: api
-    entrypoint: npm
-    args: ['ci', '--no-optional']
+  - id: 'Run tests'
+    name: 'gcr.io/cloud-builders/docker'
+    script: |
+      #!/usr/bin/env bash
+      set -o errexit
+      set -o pipefail
+      set -o nounset
 
-  - name: node:18-alpine
-    id: test
-    dir: api
-    entrypoint: npm
-    args: ['test']
+      docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
   - name: 'gcr.io/cloud-builders/docker'
     id: generate-image-name

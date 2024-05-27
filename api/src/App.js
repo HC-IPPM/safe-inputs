@@ -12,8 +12,8 @@ import {
 import { connect_db, get_db_connection } from './db_utils.js';
 
 const {
-  IS_DEV_ENV = false,
-  ENABLE_DEV_GCNOTIFY = false,
+  IS_LOCAL_ENV = false,
+  FORCE_ENABLE_GCNOTIFY = false,
   MAX_SESSION_AGE = 24 * 60 * 60,
 } = process.env;
 
@@ -39,13 +39,13 @@ export function App({ schema, context = {} }) {
           type: 'email',
           maxAge: MAX_SESSION_AGE,
           sendVerificationRequest:
-            IS_DEV_ENV && !ENABLE_DEV_GCNOTIFY
+            IS_LOCAL_ENV && !FORCE_ENABLE_GCNOTIFY
               ? sendVerificationRequestConsole
               : sendVerificationRequestGCNotify,
         },
       ],
       adapter: MongoDBAdapter(get_db_connection().connect()),
-      debug: IS_DEV_ENV,
+      debug: IS_LOCAL_ENV,
     }),
   );
 
