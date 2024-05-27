@@ -15,13 +15,20 @@ const {
   IS_LOCAL_ENV = false,
   FORCE_ENABLE_GCNOTIFY = false,
   MAX_SESSION_AGE = 24 * 60 * 60,
+  IS_TEST_ENV = false,
 } = process.env;
 
-// priming the DB connection asynchronously on module load, ok if this fails,
-// will reassert connection before handling any given request
-connect_db().catch((err) => {
-  console.error(err);
-});
+if (!IS_TEST_ENV) {
+  // priming the DB connection asynchronously on module load, ok if this fails,
+  // will reassert connection before handling any given request.
+  // Skip when running tests as leaving a potentially unresolved promise like this
+  // is something Jest will complain about. To be clear, it's good that Jest will
+  // notice that for us when it's due to an actual mistake, but we don't want this
+  // intentional prod optimization being a flase positive to Jest.
+  connect_db().catch((err) => {
+    console.error(err);
+  });
+}
 
 export function App({ schema, context = {} }) {
   const app = express();
