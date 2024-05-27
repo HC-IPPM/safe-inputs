@@ -14,18 +14,16 @@ function get_connection_str() {
 export async function connect_db() {
   // TODO: temporary conditional! the kubernetes environment isn't ready for the api to attempt DB connections yet
   if (process.env.IS_LOCAL_ENV) {
-    queueMicrotask(() => console.log('Attempting MongoDB connection...'));
-
-    return await mongoose
-      .connect(get_connection_str(), {
-        serverSelectionTimeoutMS: 7500,
-        heartbeatFrequencyMS: 10000,
-      })
-      .then(() => queueMicrotask(() => console.log('MongoDB connected!')));
+    return await mongoose.connect(get_connection_str(), {
+      serverSelectionTimeoutMS: 7500,
+      heartbeatFrequencyMS: 10000,
+    });
   }
 }
 
-export function get_db_connection() {
+export async function get_db_client() {
+  await connect_db();
+
   return mongoose.connection.getClient();
 }
 

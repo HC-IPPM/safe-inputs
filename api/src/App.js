@@ -9,7 +9,7 @@ import {
   sendVerificationRequestGCNotify,
   sendVerificationRequestConsole,
 } from './auth_utils.js';
-import { connect_db, get_db_connection } from './db_utils.js';
+import { connect_db, get_db_client } from './db_utils.js';
 
 const {
   IS_LOCAL_ENV = false,
@@ -51,7 +51,9 @@ export function App({ schema, context = {} }) {
               : sendVerificationRequestGCNotify,
         },
       ],
-      adapter: MongoDBAdapter(get_db_connection().connect()),
+      adapter: MongoDBAdapter(
+        get_db_client().then((client) => client.connect()),
+      ),
       debug: IS_LOCAL_ENV,
     }),
   );
