@@ -26,9 +26,9 @@ spec:
           env:
             - name: MDB_CONNECT_STRING
               valueFrom:
-              secretKeyRef:
-                name: mongodb-api-user-connect-string
-                key: connectionString.standardSrv
+                secretKeyRef:
+                  name: mongodb-api-user-connect-string
+                  key: connectionString.standardSrv
             - name: AUTH_SECRET
               valueFrom:
                 secretKeyRef:
