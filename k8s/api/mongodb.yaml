@@ -19,15 +19,17 @@ spec:
           db: admin
         - name: userAdminAnyDatabase
           db: admin
+      connectionStringSecretName: mongodb-admin-connect-string
       scramCredentialsSecretName: mongodb-admin-scram
-    - name: app
-      db: admin # auth db, TODO do we want the app user's auth to live in the app DB? Consider best practices but also possible quirks of k8s mongo management
+    - name: api_user
+      db: admin # auth db, TODO do we want the api user's auth to live in the app DB? Consider best practices but also possible quirks of k8s mongo management
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: mongodb-app-user-password
+        name: mongodb-api-user-password
       roles:
         - name: readWrite
           db: api_db # created manually for now, automated DB initialization TODO
-      scramCredentialsSecretName: mongodb-app-user-scram
+      connectionStringSecretName: mongodb-api-user-connect-string
+      scramCredentialsSecretName: mongodb-api-user-scram
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
 
