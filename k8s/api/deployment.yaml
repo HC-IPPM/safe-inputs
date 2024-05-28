@@ -32,8 +32,18 @@ spec:
             - name: AUTH_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: auth-js-secret
+                  name: api-secrets
                   key: auth-js-secret
+            - name: GCNotifyApiKey
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gcnotify_api_key
+            - name: GCNotifyTemplateID
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gcnotify_template_id
           resources:
             requests:
               cpu: 200m
