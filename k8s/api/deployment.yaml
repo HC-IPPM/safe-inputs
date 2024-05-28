@@ -34,6 +34,8 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: auth-js-secret
+            - name: AUTH_TRUST_HOST # https://authjs.dev/getting-started/deployment#auth_trust_host
+              value: true
             - name: GCNotifyApiKey
               valueFrom:
                 secretKeyRef:
