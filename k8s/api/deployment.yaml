@@ -23,6 +23,27 @@ spec:
             # No new privs for process or it's children
             # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
             allowPrivilegeEscalation: false
+          env:
+            - name: MDB_CONNECT_STRING
+              valueFrom:
+              secretKeyRef:
+                name: mongodb-api-user-connect-string
+                key: connectionString.standardSrv
+            - name: AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: auth-js-secret
+            - name: GCNotifyApiKey
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gcnotify_api_key
+            - name: GCNotifyTemplateID
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gcnotify_template_id
           resources:
             requests:
               cpu: 200m
