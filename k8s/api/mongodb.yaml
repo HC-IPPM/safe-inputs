@@ -49,15 +49,15 @@ spec:
             - name: mongod
               resources:
                 requests:
-                  cpu: 200m
-                  memory: 200Mi
+                  cpu: 300m
+                  memory: 300Mi
               securityContext:
                 allowPrivilegeEscalation: false
             - name: mongodb-agent
               resources:
                 requests:
-                  cpu: 200m
-                  memory: 200Mi
+                  cpu: 100m
+                  memory: 100Mi
               securityContext:
                 allowPrivilegeEscalation: false
             - name: istio-proxy
