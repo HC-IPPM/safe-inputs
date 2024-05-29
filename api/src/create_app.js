@@ -22,7 +22,7 @@ export const create_app = async ({ schema, context = {} }) => {
 
   const app = express();
 
-  app.set('trust proxy', true); // auth.js needs to be able to read the `X-Forwarded-*` header, if/when behind a proxy
+  app.set('trust proxy', true); // auth.js needs to be able to read the `X-Forwarded-*` header, if/when behind a reverse proxy
   app.use(
     '/auth/*',
     ExpressAuth({
@@ -38,6 +38,7 @@ export const create_app = async ({ schema, context = {} }) => {
         },
       ],
       adapter: MongoDBAdapter(get_db_client().connect()),
+      trustHost: true, // needs to be true if/when behind a reverse proxy https://authjs.dev/getting-started/deployment#auth_trust_host
       debug: IS_LOCAL_ENV,
     }),
   );
