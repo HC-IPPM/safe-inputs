@@ -10,6 +10,7 @@ import {
   sendVerificationRequestConsole,
 } from './auth_utils.js';
 import { connect_db, get_db_client } from './db_utils.js';
+import { get_api_route } from './route_utils.js';
 
 const {
   IS_LOCAL_ENV = false,
@@ -24,7 +25,7 @@ export const create_app = async ({ schema, context = {} }) => {
 
   app.set('trust proxy', true); // auth.js needs to be able to read the `X-Forwarded-*` header, if/when behind a reverse proxy
   app.use(
-    '/auth/*',
+    get_api_route('auth/*'),
     ExpressAuth({
       providers: [
         {
@@ -51,7 +52,7 @@ export const create_app = async ({ schema, context = {} }) => {
       maxAliasesPlugin({ n: 4 }), // default 15
       maxDepthPlugin({ n: 6 }), // Number of depth allowed | Default: 6
     ],
-    graphqlEndpoint: '/graphql',
+    graphqlEndpoint: get_api_route('graphql'),
   });
 
   app.use(yoga.graphqlEndpoint, yoga);

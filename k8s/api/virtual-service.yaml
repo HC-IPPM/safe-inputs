@@ -12,9 +12,7 @@ spec:
     - name: gateway-to-api
       match:
         - uri:
-            prefix: /graphql
-        - uri:
-            prefix: /auth
+            prefix: /api
       route:
         - destination:
             host: api.api.svc.cluster.local

@@ -4,6 +4,8 @@ import request from 'supertest'; // eslint-disable-line node/no-unpublished-impo
 
 import { create_app } from '../create_app.js';
 
+import { get_api_route } from '../route_utils.js';
+
 // ----- TEST SET UP -----
 
 // Construct a schema, using GraphQL schema language
@@ -46,7 +48,7 @@ describe('create_app', () => {
       const app = await create_app({ schema });
 
       const response = await request(app)
-        .post('/graphql')
+        .post(get_api_route('graphql'))
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -61,7 +63,7 @@ describe('create_app', () => {
       const app = await create_app({ schema });
 
       const response = await request(app)
-        .post('/graphql')
+        .post(get_api_route('graphql'))
         .set('Accept', 'application/json')
         .send({
           query:
@@ -80,7 +82,7 @@ describe('create_app', () => {
       const app = await create_app({ schema });
 
       const response = await request(app)
-        .post('/graphql')
+        .post(get_api_route('graphql'))
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -95,7 +97,7 @@ describe('create_app', () => {
       const app = await create_app({ schema });
 
       const response = await request(app)
-        .post('/graphql')
+        .post(get_api_route('graphql'))
         .set('Accept', 'application/json')
         .send({
           query: `mutation {

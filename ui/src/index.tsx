@@ -87,7 +87,7 @@ i18n.activate('en');
 const container = document.getElementById('root');
 const root = createRoot(container!);
 const client = new ApolloClient({
-  uri: '/graphql',
+  uri: '/api/graphql',
   cache: new InMemoryCache(),
 });
 root.render(
