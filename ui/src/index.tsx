@@ -18,9 +18,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { messages as enMessages } from './i18n/locales/en/messages.ts';
 import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
-import ExcelParsingPage from './pages/excelParser.tsx';
-import NavPage from './pages/navPage.tsx';
-import TermsAndConditions from './pages/termsAndConditions.tsx';
+import ExcelParser from './pages/ExcelParser.tsx';
+import NavWrapper from './pages/NavWrapper.tsx';
+import TermsAndConditions from './pages/TermsAndConditions.tsx';
 
 //  _   _
 // | |_| |__   ___ _ __ ___   ___
@@ -97,8 +97,8 @@ root.render(
         <ChakraProvider theme={theme}>
           <I18nProvider i18n={i18n}>
             <Routes>
-              <Route path="/" element={<NavPage />}>
-                <Route path="" element={<ExcelParsingPage />}></Route>
+              <Route path="/" element={<NavWrapper />}>
+                <Route path="" element={<ExcelParser />}></Route>
                 <Route
                   path="/termsAndConditions"
                   element={<TermsAndConditions />}

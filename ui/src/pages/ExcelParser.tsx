@@ -16,7 +16,7 @@ interface ParserData {
   workbook: WorkBook;
 }
 
-const ExcelParsingPage = (): JSX.Element => {
+export default function ExcelParser(): JSX.Element {
   const parserWorker = new Worker('/worker.js');
   const handleFileUpload = (file: File) => {
     parserWorker.postMessage({ type: 'file', file });
@@ -64,6 +64,4 @@ const ExcelParsingPage = (): JSX.Element => {
       </Container>
     </>
   );
-};
-
-export default ExcelParsingPage;
+}
