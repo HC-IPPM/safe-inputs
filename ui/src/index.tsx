@@ -15,6 +15,8 @@ import { createRoot } from 'react-dom/client';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { SessionProvider } from './components/auth/session.tsx';
+
 import { messages as enMessages } from './i18n/locales/en/messages.ts';
 import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
@@ -93,21 +95,23 @@ const client = new ApolloClient({
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ApolloProvider client={client}>
-        <ChakraProvider theme={theme}>
-          <I18nProvider i18n={i18n}>
-            <Routes>
-              <Route path="/" element={<NavWrapper />}>
-                <Route path="" element={<ExcelParser />}></Route>
-                <Route
-                  path="/termsAndConditions"
-                  element={<TermsAndConditions />}
-                ></Route>
-              </Route>
-            </Routes>
-          </I18nProvider>
-        </ChakraProvider>
-      </ApolloProvider>
+      <SessionProvider authBaseURL="/api/auth">
+        <ApolloProvider client={client}>
+          <ChakraProvider theme={theme}>
+            <I18nProvider i18n={i18n}>
+              <Routes>
+                <Route path="/" element={<NavWrapper />}>
+                  <Route path="" element={<ExcelParser />}></Route>
+                  <Route
+                    path="/termsAndConditions"
+                    element={<TermsAndConditions />}
+                  ></Route>
+                </Route>
+              </Routes>
+            </I18nProvider>
+          </ChakraProvider>
+        </ApolloProvider>
+      </SessionProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );
