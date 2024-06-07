@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
 
 // Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
-// Adapted to work in our non-Next.js SPA, simplified to only care about our uses cases (email auth only, etc)
+// Adapted to work in our non-Next.js SPA, simplified to only care about our uses cases (email auth only, different redirect and syncing behaviour, etc)
 
 export type SessionStatus = 'authenticated' | 'unauthenticated' | 'loading';
 export type SessionContextValue = {
@@ -56,35 +56,30 @@ export const SessionProvider = ({
     }
   }, [authBaseURL, isInitialSync]);
 
-  const value = useMemo(
-    () => ({
+  const value = useMemo(() => {
+    const sync_internal = async () => {
+      const new_session = await get_session(authBaseURL);
+
+      setLoading(false);
+      setSession(new_session);
+
+      return new_session;
+    };
+
+    return {
       authBaseURL,
       session,
       status: ((): SessionStatus =>
         loading ? 'loading' : session ? 'authenticated' : 'unauthenticated')(),
-      async _sync_internal() {
-        if (!loading) {
-          throw new Error(
-            '`_sync_internal` should only be called while `loading` is true!',
-          );
-        }
-
-        const new_session = await get_session(authBaseURL);
-
-        setLoading(false);
-        setSession(new_session);
-
-        return new_session;
-      },
       async sync() {
         if (loading) {
           return null;
         }
         setLoading(true);
 
-        return this._sync_internal();
+        return sync_internal();
       },
-      async signIn(email: string, callback_url = '/') {
+      async signIn(email: string, callback_url: string) {
         if (loading) {
           return null;
         }
@@ -92,7 +87,7 @@ export const SessionProvider = ({
 
         await email_sign_in(authBaseURL, email, callback_url);
 
-        return this._sync_internal();
+        return sync_internal();
       },
       async signOut() {
         if (loading) {
@@ -102,7 +97,7 @@ export const SessionProvider = ({
 
         await sign_out(authBaseURL);
 
-        const session = await this._sync_internal();
+        const session = await sync_internal();
 
         if (session) {
           throw new Error('Post-sync `session` should be null after sign out!');
@@ -110,9 +105,8 @@ export const SessionProvider = ({
 
         return session;
       },
-    }),
-    [session, loading, authBaseURL],
-  );
+    };
+  }, [session, loading, authBaseURL]);
 
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>

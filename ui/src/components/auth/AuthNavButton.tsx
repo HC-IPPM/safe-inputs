@@ -3,9 +3,13 @@ import { Button } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
 
+import { useLocation } from 'react-router-dom';
+
 import { useSession } from './session.tsx';
 
 export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
+  useLocation(); // re-render on route change, to sync callbackUrl value
+
   const { status, session, signOut } = useSession({
     allow_unauthenticated: true,
   });

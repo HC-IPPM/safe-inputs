@@ -1,7 +1,7 @@
 import type { Session } from '@auth/core/types';
 
 // Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
-// Adapted to work in our non-Next.js SPA, simplified to only care about our use cases (email auth only, etc)
+// Adapted to work in our non-Next.js SPA, simplified to only care about our use cases (email auth only, different redirect and syncing behaviour, etc)
 
 const get_auth_url = (auth_base_url: string, path: string) =>
   `${auth_base_url}/${path}`;
@@ -42,26 +42,22 @@ const auth_post = async (
 ) => {
   const csrf_token = await get_csrf_token(auth_base_url);
 
-  const { callback_url = window.location.href, email } = options ?? {};
-
-  const body = (() => {
-    if (typeof email !== 'undefined') {
-      return new URLSearchParams({
-        csrfToken: csrf_token,
-        callback_url,
-        email,
-      });
-    } else {
-      return new URLSearchParams({ csrfToken: csrf_token, callback_url });
-    }
-  })();
+  const { callback_url, email } = options ?? {};
 
   return await fetch(get_auth_url(auth_base_url, path), {
     method: 'post',
+    redirect: 'manual',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Auth-Return-Redirect': '0',
     },
-    body,
+    body: new URLSearchParams({
+      csrfToken: csrf_token,
+      ...(typeof callback_url !== 'undefined'
+        ? { callbackUrl: callback_url }
+        : {}),
+      ...(typeof email !== 'undefined' ? { email } : {}),
+    }),
   });
 };
 

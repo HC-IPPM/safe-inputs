@@ -8,6 +8,7 @@ import express from 'express';
 import {
   sendVerificationRequestGCNotify,
   sendVerificationRequestConsole,
+  redirectWithFix,
 } from './auth_utils.js';
 import { connect_db, get_db_client } from './db_utils.js';
 import { get_api_route } from './route_utils.js';
@@ -27,6 +28,7 @@ export const create_app = async ({ schema, context = {} }) => {
   app.use(
     get_api_route('auth/*'),
     ExpressAuth({
+      trustHost: true, // needs to be true if/when behind a reverse proxy https://authjs.dev/getting-started/deployment#auth_trust_host
       providers: [
         {
           id: 'gcnotify',
@@ -38,8 +40,10 @@ export const create_app = async ({ schema, context = {} }) => {
               : sendVerificationRequestGCNotify,
         },
       ],
+      callbacks: {
+        redirect: redirectWithFix,
+      },
       adapter: MongoDBAdapter(get_db_client().connect()),
-      trustHost: true, // needs to be true if/when behind a reverse proxy https://authjs.dev/getting-started/deployment#auth_trust_host
       debug: IS_LOCAL_ENV,
     }),
   );

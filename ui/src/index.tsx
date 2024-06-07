@@ -22,6 +22,7 @@ import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
 import ExcelParser from './pages/ExcelParser.tsx';
 import NavWrapper from './pages/NavWrapper.tsx';
+import SignIn from './pages/SignIn.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
 
 //  _   _
@@ -101,6 +102,7 @@ root.render(
             <I18nProvider i18n={i18n}>
               <Routes>
                 <Route path="/" element={<NavWrapper />}>
+                  <Route path="signin" element={<SignIn />}></Route>
                   <Route path="" element={<ExcelParser />}></Route>
                   <Route
                     path="/termsAndConditions"

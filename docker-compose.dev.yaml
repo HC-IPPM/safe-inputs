@@ -98,8 +98,9 @@ services:
     volumes:
       - ./api:/home/node-dev/project
       - ./api/.env.dev-public:/home/node-dev/project/.env
-    command: npm run dev
-    #command: npm run dev:debug-docker
+    environment:
+      - FIX_AUTH_REDIRECT_BASE=http://localhost:8080
+    command: npm run dev:${DOCKER_API_COMMAND:-docker} # 'docker' or 'docker-debug'
     networks:
       - db-internal
       - host-loopback

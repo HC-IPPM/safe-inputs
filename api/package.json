@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "node --watch --experimental-vm-modules index.js",
     "dev:debug": "node --inspect-brk --watch --experimental-vm-modules index.js",
-    "dev:debug-docker": "node --inspect-brk='0.0.0.0:9229' --watch --experimental-vm-modules index.js",
+    "dev:docker": "npm run dev",
+    "dev:docker-debug": "node --inspect-brk='0.0.0.0:9229' --watch --experimental-vm-modules index.js",
     "start": "node --experimental-vm-modules index.js",
     "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
     "pretest": "npm run test:down",
