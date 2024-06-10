@@ -99,7 +99,7 @@ services:
       - ./api:/home/node-dev/project
       - ./api/.env.dev-public:/home/node-dev/project/.env
     environment:
-      - FIX_AUTH_REDIRECT_BASE=http://localhost:8080
+      - HOST_OVERRIDE=http://localhost:8080
     command: npm run dev:${DOCKER_API_COMMAND:-docker} # 'docker' or 'docker-debug'
     networks:
       - db-internal

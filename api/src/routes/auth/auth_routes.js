@@ -5,7 +5,7 @@ import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 import {
   sendVerificationRequestGCNotify,
   sendVerificationRequestConsole,
-} from './auth_utils';
+} from './auth_utils.js';
 
 const {
   IS_LOCAL_ENV = false,
@@ -55,14 +55,14 @@ passport.deserializeUser((user, callback) =>
 const auth_router = express.Router();
 
 auth_router.post(
-  '/email',
+  '/signin/gcnotify',
   passport.authenticate('magiclink', {
     action: 'requestToken',
   }),
 );
 
 auth_router.get(
-  '/email/verify',
+  '/signin/verification-callback',
   passport.authenticate('magiclink'),
   (req, res, next) => {
     // TODO check req for post-login redirect value, use if can
@@ -71,7 +71,7 @@ auth_router.get(
   },
 );
 
-auth_router.post('/logout', (req, res, next) =>
+auth_router.post('/signout', (req, res, next) =>
   req.logout((err) => {
     if (err) {
       return next(err);
@@ -79,5 +79,21 @@ auth_router.post('/logout', (req, res, next) =>
     res.redirect(get_client_host(req));
   }),
 );
+
+auth_router.get('/session', (req, res, next) => {
+  const email = req?.session?.email;
+  const maxAge = req?.session?.cookie?.maxAge;
+
+  res.send(
+    email
+      ? {
+          email,
+          expires: maxAge ? maxAge / 1000 : null,
+        }
+      : null,
+  );
+
+  next();
+});
 
 export { auth_router };

@@ -1,7 +1,7 @@
-import type { Session } from '@auth/core/types';
 import type { PropsWithChildren } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
+import type { Session } from './auth_utils.ts';
 import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
 
 // Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
