@@ -46,7 +46,7 @@ export const create_app = async ({
       saveUninitialized: false,
       proxy: true,
       cookie: {
-        sameSite: !IS_LOCAL_ENV ? 'lax' : 'strict',
+        sameSite: IS_LOCAL_ENV ? 'lax' : 'strict',
         secure: !IS_LOCAL_ENV,
       },
       store: new MongoStore({
@@ -67,26 +67,30 @@ export const create_app = async ({
 
   const {
     generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token
-    doubleCsrfProtection, // This is the default CSRF protection middleware.
+    doubleCsrfProtection, // This is the default CSRF protection middleware
   } = doubleCsrf({
     getSecret: () => CSRF_SECRET,
+    cookieName: IS_LOCAL_ENV ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
     cookieOptions: {
-      sameSite: !IS_LOCAL_ENV ? 'lax' : 'strict',
+      sameSite: IS_LOCAL_ENV ? 'lax' : 'strict',
       secure: !IS_LOCAL_ENV,
     },
   });
-  // important: session middleware needs to come before the CSRF token route and middleware!
-  app.get('/api/auth/csrf-token', (req, res) => {
-    const csrfToken = generateToken(req, res);
-    res.json({ csrfToken });
-  });
+
+  // important: session middleware needs to come before the middleware is added!
   if (use_csrf_middleware || !IS_LOCAL_ENV) {
     app.use(doubleCsrfProtection);
   }
 
-  // Add passport and auth routes after CSRF middleware, want them protected
+  // add passport and auth routes after CSRF middleware, want them protected
   app.use(passport.authenticate('session'));
   app.use('/api/auth', auth_router);
+
+  // grouping the csrf-token path with the auth routes, need to add it after the auth router or it will be overwritten
+  app.get('/api/auth/csrf-token', (req, res) => {
+    const csrfToken = generateToken(req, res, true);
+    res.json({ csrfToken });
+  });
 
   const yoga = createYoga({
     schema,

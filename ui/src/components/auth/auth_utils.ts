@@ -49,10 +49,9 @@ const auth_post = async (
     redirect: 'manual',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'X-Auth-Return-Redirect': '0',
+      'x-csrf-token': csrf_token,
     },
     body: new URLSearchParams({
-      csrfToken: csrf_token,
       ...(typeof callback_url !== 'undefined'
         ? { callbackUrl: callback_url }
         : {}),
