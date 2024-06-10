@@ -48,13 +48,12 @@ services:
       - ./.env.dev-public:/home/node-dev/project/.env
     entrypoint:
       - ../node-dev-entrypoint.once.sh
-    command: npm run jest
-    #command: npm run jest:debug
+    command: npm run jest:${DOCKER_API_COMMAND:-docker}
     networks:
       - ${DOCKER_NETWORK:-db-internal-test}
       - host-loopback-test
     ports:
-      - 9230:9229 # for the node debug server, when active
+      - 9229:9229 # for the node debug server, when active
     depends_on:
       - db-test
     links:
