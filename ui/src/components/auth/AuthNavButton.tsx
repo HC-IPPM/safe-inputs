@@ -23,10 +23,10 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
         as="button"
       ></Button>
     );
-  } else if (session?.user) {
+  } else if (session?.email) {
     return (
       <>
-        {session.user?.email}
+        {session?.email}
         <Button {...StyleProps} onClick={() => signOut()} as="button">
           <Trans>Sign Out</Trans>
         </Button>

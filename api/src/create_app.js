@@ -39,6 +39,15 @@ export const create_app = async ({
   // parses URL-encoded payload parameters in to req.body fields
   app.use(express.urlencoded({ extended: false }));
 
+  const mongo_store = new MongoStore({
+    clientPromise: get_db_client().connect(),
+    crypto: {
+      secret: SESSION_STORE_SECRET,
+    },
+    ttl: MAX_SESSION_AGE,
+    touchAfter: MAX_SESSION_AGE * 0.9,
+  });
+
   app.use(
     session({
       secret: COOKIE_SIGNING_SECRET,
@@ -49,14 +58,7 @@ export const create_app = async ({
         sameSite: IS_LOCAL_ENV ? 'lax' : 'strict',
         secure: !IS_LOCAL_ENV,
       },
-      store: new MongoStore({
-        clientPromise: get_db_client().connect(),
-        crypto: {
-          secret: SESSION_STORE_SECRET,
-        },
-        ttl: MAX_SESSION_AGE,
-        touchAfter: MAX_SESSION_AGE * 0.8,
-      }),
+      store: mongo_store,
     }),
   );
 

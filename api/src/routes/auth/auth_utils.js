@@ -29,7 +29,7 @@ export const sendVerificationRequestGCNotify = async (
   }
 };
 
-export const sendVerificationRequestConsole = async (verification_url) => {
+export const sendVerificationRequestConsole = (verification_url) => {
   console.log(
     `\x1b[31mDEV MODE, your session auth url is:\x1b[0m ${verification_url}`,
   );

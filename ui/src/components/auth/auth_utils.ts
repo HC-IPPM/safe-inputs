@@ -1,7 +1,7 @@
 // Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
 // Adapted to work in our non-Next.js SPA, simplified to only care about our use cases (email auth only, different redirect and syncing behaviour, etc)
 
-export type Session = { email?: string; expires: number };
+export type Session = { email?: string };
 
 const get_auth_url = (auth_base_url: string, path: string) =>
   `${auth_base_url}/${path}`;
@@ -61,7 +61,8 @@ const auth_post = async (
 };
 
 export const get_session = async (auth_base_url: string) => {
-  return await auth_get<Session | null>(auth_base_url, 'session');
+  const session = await auth_get<Session>(auth_base_url, 'session');
+  return session?.email ? session : null;
 };
 
 export const email_sign_in = async (

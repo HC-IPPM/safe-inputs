@@ -23,31 +23,34 @@ passport.use(
       secret: MAGIC_LINK_SECRET,
       userFields: ['email'],
       tokenField: 'token',
+      passReqToCallbacks: true,
       verifyUserAfterToken: true,
     },
-    async function sendToken(user, token, request) {
+    async function sendToken(request, user, token) {
       const verification_url = `${get_client_host(
         request,
-      )}/api/auth/email/verify?token=${token}`;
+      )}/api/auth/signin/verify-email?token=${token}`;
 
       return IS_LOCAL_ENV && !FORCE_ENABLE_GCNOTIFY
         ? sendVerificationRequestConsole(verification_url)
         : sendVerificationRequestGCNotify(user.email, verification_url);
     },
-    async function verifyUser(user) {
+    async function verifyUser(request, user) {
       // TODO: verification logic
       // Potentially:
       //  - PHAC and HC emails can always verify
       //  - non-PHAC/HC emails only verify if they've been invited to at least one dataset?
-      return true;
+      // If we want to bother storing users in the database, we'd do it from here
+      return user;
     },
   ),
 );
 
+// Note: the user arg here is the return value of verifyUser above, and the user passed to the callback is
+// what's stored in the session store and available via the user property on authenticated express requests
 passport.serializeUser((user, callback) =>
-  process.nextTick(() => callback(null, { id: user.id, email: user.email })),
+  process.nextTick(() => callback(null, user)),
 );
-
 passport.deserializeUser((user, callback) =>
   process.nextTick(() => callback(null, user)),
 );
@@ -59,12 +62,13 @@ auth_router.post(
   passport.authenticate('magiclink', {
     action: 'requestToken',
   }),
+  (req, res) => res.status(200).send(),
 );
 
 auth_router.get(
-  '/signin/verification-callback',
-  passport.authenticate('magiclink'),
-  (req, res, next) => {
+  '/signin/verify-email',
+  passport.authenticate('magiclink', { action: 'acceptToken' }),
+  (req, res) => {
     // TODO check req for post-login redirect value, use if can
     // url.startsWith(get_client_host(req));
     res.redirect(get_client_host(req));
@@ -80,20 +84,8 @@ auth_router.post('/signout', (req, res, next) =>
   }),
 );
 
-auth_router.get('/session', (req, res, next) => {
-  const email = req?.session?.email;
-  const maxAge = req?.session?.cookie?.maxAge;
-
-  res.send(
-    email
-      ? {
-          email,
-          expires: maxAge ? maxAge / 1000 : null,
-        }
-      : null,
-  );
-
-  next();
-});
+auth_router.get('/session', (req, res) =>
+  res.send({ email: req?.user?.email }),
+);
 
 export { auth_router };
