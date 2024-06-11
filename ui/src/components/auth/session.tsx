@@ -8,6 +8,8 @@ import {
   useLayoutEffect,
 } from 'react';
 
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import type { Session } from './auth_utils.ts';
 import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
 
@@ -118,8 +120,10 @@ export const SessionProvider = ({
 export const useSession = (options?: {
   allow_unauthenticated: boolean;
 }): SessionContextValue => {
-  const value: SessionContextValue | undefined = useContext(SessionContext);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
+  const value: SessionContextValue | undefined = useContext(SessionContext);
   if (typeof value === 'undefined') {
     throw new Error('`useSession` must be wrapped in a `<SessionProvider />`');
   }
@@ -132,13 +136,14 @@ export const useSession = (options?: {
   useEffect(() => {
     if (needs_authentication) {
       // redirect to client side sign in page, if needed
-      const url = `/signin?${new URLSearchParams({
-        error: 'SessionRequired',
-        post_auth_redirect: window.location.href,
-      })}`;
-      window.location.href = url;
+      navigate(
+        `/signin?${new URLSearchParams({
+          error: 'SessionRequired',
+          post_auth_redirect: pathname,
+        })}`,
+      );
     }
-  }, [needs_authentication]);
+  }, [needs_authentication, pathname, navigate]);
 
   return value;
 };

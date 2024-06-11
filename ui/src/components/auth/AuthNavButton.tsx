@@ -35,9 +35,13 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
         {...StyleProps}
         isLoading={status === 'syncing'}
         loadingText={t`Syncing session`}
-        href={`/signin?${new URLSearchParams({
-          post_auth_redirect: pathname + (search || ''),
-        })}`}
+        href={
+          pathname.startsWith('/signin')
+            ? ''
+            : `/signin?${new URLSearchParams({
+                post_auth_redirect: pathname + (search || ''),
+              })}`
+        }
         as="a"
       >
         <Trans>Sign In</Trans>
