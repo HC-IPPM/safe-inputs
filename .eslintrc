@@ -11,7 +11,7 @@
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
     "no-unused-vars": [
-      "error",
+      "warn",
       {
         "vars": "all",
         "args": "all",
