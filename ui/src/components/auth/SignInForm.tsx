@@ -13,9 +13,9 @@ import { useForm } from 'react-hook-form';
 import { useSession } from './session.tsx';
 
 export default function SignInForm({
-  callbackUrl = 'http://google.com',
+  post_auth_redirect,
 }: {
-  callbackUrl: string;
+  post_auth_redirect?: string;
 }) {
   const { signIn } = useSession({
     allow_unauthenticated: true,
@@ -32,7 +32,7 @@ export default function SignInForm({
   } = useForm<FormFieldValues>();
 
   const onSubmit = async (values: FormFieldValues) =>
-    await signIn(values.email, callbackUrl);
+    await signIn(values.email, post_auth_redirect);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

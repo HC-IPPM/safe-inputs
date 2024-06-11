@@ -4,16 +4,16 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Session } from './auth_utils.ts';
 import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
 
-// Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
-// Adapted to work in our non-Next.js SPA, simplified to only care about our uses cases (email auth only, different redirect and syncing behaviour, etc)
-
 export type SessionStatus = 'authenticated' | 'unauthenticated' | 'loading';
 export type SessionContextValue = {
   session: Session | null;
   status: SessionStatus;
   authBaseURL: string;
   sync: () => Promise<Session | null>;
-  signIn: (email: string, callback_url: string) => Promise<Session | null>;
+  signIn: (
+    email: string,
+    post_auth_redirect?: string,
+  ) => Promise<Session | null>;
   signOut: () => Promise<null>;
 };
 
@@ -79,13 +79,13 @@ export const SessionProvider = ({
 
         return sync_internal();
       },
-      async signIn(email: string, callback_url: string) {
+      async signIn(email: string, post_auth_redirect?: string) {
         if (loading) {
           return null;
         }
         setLoading(true);
 
-        await email_sign_in(authBaseURL, email, callback_url);
+        await email_sign_in(authBaseURL, email, post_auth_redirect);
 
         return sync_internal();
       },
@@ -132,7 +132,7 @@ export const useSession = (options?: {
       // redirect to client side sign in page, if needed
       const url = `/signin?${new URLSearchParams({
         error: 'SessionRequired',
-        callbackUrl: window.location.href,
+        post_auth_redirect: window.location.href,
       })}`;
       window.location.href = url;
     }

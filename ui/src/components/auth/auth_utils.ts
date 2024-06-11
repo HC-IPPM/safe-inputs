@@ -1,5 +1,4 @@
-// Partially based on https://github.com/nextauthjs/next-auth/blob/5d532cce99ee77447454a1eb9578e61d80e451fd/packages/next-auth/src/react.tsx
-// Adapted to work in our non-Next.js SPA, simplified to only care about our use cases (email auth only, different redirect and syncing behaviour, etc)
+import _ from 'lodash';
 
 export type Session = { email?: string };
 
@@ -36,27 +35,21 @@ const auth_post = async (
   auth_base_url: string,
   path: string,
   options?: {
-    callback_url?: string;
+    post_auth_redirect?: string;
     email?: string;
   },
 ) => {
   const csrf_token = await get_csrf_token(auth_base_url);
 
-  const { callback_url, email } = options ?? {};
-
   return await fetch(get_auth_url(auth_base_url, path), {
     method: 'post',
-    redirect: 'manual',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'x-csrf-token': csrf_token,
     },
-    body: new URLSearchParams({
-      ...(typeof callback_url !== 'undefined'
-        ? { callbackUrl: callback_url }
-        : {}),
-      ...(typeof email !== 'undefined' ? { email } : {}),
-    }),
+    body: new URLSearchParams(
+      _.omitBy(options, (value) => typeof value === 'undefined'),
+    ),
   });
 };
 
@@ -68,11 +61,17 @@ export const get_session = async (auth_base_url: string) => {
 export const email_sign_in = async (
   auth_base_url: string,
   email: string,
-  callback_url: string,
+  post_auth_redirect?: string,
 ) => {
+  if (post_auth_redirect && !post_auth_redirect.startsWith('/')) {
+    throw new Error(
+      `Post auth redirect must be a relative URL, provided value is not (${post_auth_redirect})`,
+    );
+  }
+
   return await auth_post(auth_base_url, 'signin/gcnotify', {
     email,
-    callback_url,
+    post_auth_redirect,
   });
 };
 

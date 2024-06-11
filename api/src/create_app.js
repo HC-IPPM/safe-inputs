@@ -33,11 +33,8 @@ export const create_app = async ({
   // we'll need to be able to read `X-Forwarded-*` headers, both in prod and when using the dev docker setup
   app.set('trust proxy', true);
 
-  // parses JSON body payloads, converts req.body from a string to object
-  app.use(express.json());
-
-  // parses URL-encoded payload parameters in to req.body fields
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json()); // parses JSON body payloads, converts req.body from a string to object
+  app.use(express.urlencoded({ extended: false })); // parses URL-encoded payload parameters on POST/PUT in to req.body fields
 
   const mongo_store = new MongoStore({
     clientPromise: get_db_client().connect(),

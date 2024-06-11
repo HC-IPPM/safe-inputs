@@ -2,10 +2,16 @@ import { Box, Container } from '@chakra-ui/react';
 
 import { Trans } from '@lingui/macro';
 
+import { useSearchParams } from 'react-router-dom';
+
 import { useSession } from '../components/auth/session.tsx';
 import SignInForm from '../components/auth/SignInForm.tsx';
 
 export default function SignIn() {
+  const [URLSearchParams] = useSearchParams();
+  const post_auth_redirect =
+    URLSearchParams.get('post_auth_redirect') || undefined;
+
   const { status } = useSession({
     allow_unauthenticated: true,
   });
@@ -16,7 +22,7 @@ export default function SignIn() {
     } else if (status === 'loading') {
       return <>loading</>;
     } else if (status === 'unauthenticated') {
-      return <SignInForm />;
+      return <SignInForm post_auth_redirect={post_auth_redirect} />;
     } else {
       throw new Error('Unknown authentication status!');
     }

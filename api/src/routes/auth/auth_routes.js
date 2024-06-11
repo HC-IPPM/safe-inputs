@@ -7,15 +7,22 @@ import {
   sendVerificationRequestConsole,
 } from './auth_utils.js';
 
+const get_post_auth_redirect = (req) => {
+  const post_auth_redirect =
+    req.body.post_auth_redirect || req.query.post_auth_redirect;
+
+  // only allow relative redirects to prevent cross origin redirects
+  const provided_redirect_is_relative =
+    post_auth_redirect && post_auth_redirect.startsWith('/');
+
+  return provided_redirect_is_relative ? post_auth_redirect : '/';
+};
+
 const {
   IS_LOCAL_ENV = false,
   FORCE_ENABLE_GCNOTIFY = false,
   MAGIC_LINK_SECRET,
-  HOST_OVERRIDE,
 } = process.env;
-
-// TODO: make sure this works behind the proxy
-const get_client_host = (req) => HOST_OVERRIDE || req.host;
 
 passport.use(
   new MagicLinkStrategy(
@@ -26,16 +33,19 @@ passport.use(
       passReqToCallbacks: true,
       verifyUserAfterToken: true,
     },
-    async function sendToken(request, user, token) {
-      const verification_url = `${get_client_host(
-        request,
-      )}/api/auth/signin/verify-email?token=${token}`;
+    async function sendToken(req, user, token) {
+      const verification_url = `${
+        req.headers.origin
+      }/api/auth/signin/verify-email?${new URLSearchParams({
+        token,
+        post_auth_redirect: get_post_auth_redirect(req),
+      })}`;
 
       return IS_LOCAL_ENV && !FORCE_ENABLE_GCNOTIFY
         ? sendVerificationRequestConsole(verification_url)
         : sendVerificationRequestGCNotify(user.email, verification_url);
     },
-    async function verifyUser(request, user) {
+    async function verifyUser(_req, user) {
       // TODO: verification logic
       // Potentially:
       //  - PHAC and HC emails can always verify
@@ -62,16 +72,16 @@ auth_router.post(
   passport.authenticate('magiclink', {
     action: 'requestToken',
   }),
-  (req, res) => res.status(200).send(),
+  (_req, res) => res.status(200).send(),
 );
 
 auth_router.get(
   '/signin/verify-email',
   passport.authenticate('magiclink', { action: 'acceptToken' }),
   (req, res) => {
-    // TODO check req for post-login redirect value, use if can
-    // url.startsWith(get_client_host(req));
-    res.redirect(get_client_host(req));
+    const a = get_post_auth_redirect(req);
+    debugger;
+    res.redirect(get_post_auth_redirect(req));
   },
 );
 
@@ -80,7 +90,7 @@ auth_router.post('/signout', (req, res, next) =>
     if (err) {
       return next(err);
     }
-    res.redirect(get_client_host(req));
+    res.status(200).send();
   }),
 );
 

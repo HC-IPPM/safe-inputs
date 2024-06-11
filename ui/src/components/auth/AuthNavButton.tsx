@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { useSession } from './session.tsx';
 
 export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
-  useLocation(); // re-render on route change, to sync callbackUrl value
+  const { pathname, search } = useLocation();
 
   const { status, session, signOut } = useSession({
     allow_unauthenticated: true,
@@ -37,7 +37,7 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
       <Button
         {...StyleProps}
         href={`/signin?${new URLSearchParams({
-          callbackUrl: window.location.href,
+          post_auth_redirect: pathname + (search || ''),
         })}`}
         as="a"
       >
