@@ -19,7 +19,7 @@ export default function SignIn() {
   const content = (() => {
     if (status === 'authenticated') {
       return <>authenticated</>;
-    } else if (status === 'loading') {
+    } else if (status === 'syncing') {
       return <>loading</>;
     } else if (status === 'unauthenticated') {
       return <SignInForm post_auth_redirect={post_auth_redirect} />;

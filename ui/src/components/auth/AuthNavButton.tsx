@@ -14,20 +14,17 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
     allow_unauthenticated: true,
   });
 
-  if (status === 'loading') {
-    return (
-      <Button
-        {...StyleProps}
-        isLoading={true}
-        loadingText={t`Checking session...`}
-        as="button"
-      ></Button>
-    );
-  } else if (session?.email) {
+  if (session?.email) {
     return (
       <>
         {session?.email}
-        <Button {...StyleProps} onClick={() => signOut()} as="button">
+        <Button
+          {...StyleProps}
+          isLoading={status === 'syncing'}
+          loadingText={t`Syncing session`}
+          onClick={() => signOut()}
+          as="button"
+        >
           <Trans>Sign Out</Trans>
         </Button>
       </>
@@ -36,6 +33,8 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
     return (
       <Button
         {...StyleProps}
+        isLoading={status === 'syncing'}
+        loadingText={t`Syncing session`}
         href={`/signin?${new URLSearchParams({
           post_auth_redirect: pathname + (search || ''),
         })}`}

@@ -1,20 +1,24 @@
 import type { PropsWithChildren } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useLayoutEffect,
+} from 'react';
 
 import type { Session } from './auth_utils.ts';
 import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
 
-export type SessionStatus = 'authenticated' | 'unauthenticated' | 'loading';
+export type SessionStatus = 'authenticated' | 'unauthenticated' | 'syncing';
 export type SessionContextValue = {
   session: Session | null;
   status: SessionStatus;
   authBaseURL: string;
-  sync: () => Promise<Session | null>;
-  signIn: (
-    email: string,
-    post_auth_redirect?: string,
-  ) => Promise<Session | null>;
-  signOut: () => Promise<null>;
+  schedule_sync: () => void;
+  signIn: (email: string, post_auth_redirect?: string) => Promise<Response>;
+  signOut: () => Promise<Response>;
 };
 
 export const SessionContext = createContext<SessionContextValue | undefined>(
@@ -25,15 +29,14 @@ export const SessionProvider = ({
   children,
   authBaseURL,
 }: PropsWithChildren<{ authBaseURL: string }>) => {
-  const [isInitialSync, setIsInitialSync] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [needsSync, setNeedsSync] = useState(true);
 
   useEffect(() => {
-    if (isInitialSync) {
+    if (needsSync) {
       let cancel_sync = false;
 
-      const sync_session = async () => {
+      const sync_session_initial = async () => {
         try {
           const session = await get_session(authBaseURL);
 
@@ -42,71 +45,70 @@ export const SessionProvider = ({
           }
         } finally {
           if (!cancel_sync) {
-            setLoading(false);
-            setIsInitialSync(false);
+            setNeedsSync(false);
           }
         }
       };
 
-      sync_session();
+      sync_session_initial();
 
       return () => {
         cancel_sync = true;
       };
     }
-  }, [authBaseURL, isInitialSync]);
+  }, [authBaseURL, needsSync]);
 
-  const value = useMemo(() => {
-    const sync_internal = async () => {
-      const new_session = await get_session(authBaseURL);
+  useLayoutEffect(() => {
+    let cancel_reopen_sync = false;
 
-      setLoading(false);
-      setSession(new_session);
-
-      return new_session;
+    const sync_on_repoen = async () => {
+      if (document.visibilityState === 'visible' && !cancel_reopen_sync) {
+        setNeedsSync(true);
+      }
     };
 
+    document.addEventListener('visibilitychange', sync_on_repoen);
+
+    return () => {
+      cancel_reopen_sync = true;
+
+      document.removeEventListener('visibilitychange', sync_on_repoen);
+    };
+  }, [authBaseURL]);
+
+  const value = useMemo(() => {
     return {
       authBaseURL,
       session,
       status: ((): SessionStatus =>
-        loading ? 'loading' : session ? 'authenticated' : 'unauthenticated')(),
-      async sync() {
-        if (loading) {
-          return null;
-        }
-        setLoading(true);
-
-        return sync_internal();
+        needsSync
+          ? 'syncing'
+          : session
+          ? 'authenticated'
+          : 'unauthenticated')(),
+      schedule_sync() {
+        setNeedsSync(true);
       },
       async signIn(email: string, post_auth_redirect?: string) {
-        if (loading) {
-          return null;
-        }
-        setLoading(true);
+        const response = await email_sign_in(
+          authBaseURL,
+          email,
+          post_auth_redirect,
+        );
 
-        await email_sign_in(authBaseURL, email, post_auth_redirect);
+        setNeedsSync(true);
 
-        return sync_internal();
+        return response;
       },
       async signOut() {
-        if (loading) {
-          return null;
-        }
-        setLoading(true);
+        const response = await sign_out(authBaseURL);
 
-        await sign_out(authBaseURL);
+        setNeedsSync(true);
 
-        const session = await sync_internal();
-
-        if (session) {
-          throw new Error('Post-sync `session` should be null after sign out!');
-        }
-
-        return session;
+        return response;
       },
     };
-  }, [session, loading, authBaseURL]);
+  }, [session, needsSync, authBaseURL]);
 
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
