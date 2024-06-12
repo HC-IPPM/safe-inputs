@@ -2,13 +2,12 @@ import _ from 'lodash';
 
 export type Session = { email?: string };
 
+const { IS_LOCAL_DEV } = ENV;
+
 const get_auth_url = (auth_base_url: string, path: string) =>
   `${auth_base_url}/${path}`;
 
-const auth_get = async <ResponseData>(
-  auth_base_url: string,
-  path: string,
-): Promise<ResponseData> => {
+const auth_get = async (auth_base_url: string, path: string) => {
   const response = await fetch(get_auth_url(auth_base_url, path), {
     headers: { 'Content-Type': 'application/json' },
   });
@@ -19,16 +18,29 @@ const auth_get = async <ResponseData>(
     throw data;
   }
 
-  return data;
+  return { response, data };
 };
 
 const get_csrf_token = async (auth_base_url: string) => {
-  const response_data = await auth_get<{ csrfToken: string }>(
-    auth_base_url,
-    'csrf-token',
-  );
+  const { data } = await auth_get(auth_base_url, 'csrf-token');
 
-  return response_data?.csrfToken ?? '';
+  if (typeof data?.csrfToken === 'string') {
+    return data.csrfToken as string;
+  } else {
+    throw new Error(
+      'CSRF response body did not contain the expected `csrfToken` string',
+    );
+  }
+};
+
+export const get_session = async (auth_base_url: string) => {
+  const { data } = await auth_get(auth_base_url, 'session');
+
+  if (typeof data?.email === 'string') {
+    return data as Session;
+  } else {
+    return null;
+  }
 };
 
 const auth_post = async (
@@ -53,11 +65,6 @@ const auth_post = async (
   });
 };
 
-export const get_session = async (auth_base_url: string) => {
-  const session = await auth_get<Session>(auth_base_url, 'session');
-  return session?.email ? session : null;
-};
-
 export const email_sign_in = async (
   auth_base_url: string,
   email: string,
@@ -69,10 +76,24 @@ export const email_sign_in = async (
     );
   }
 
-  return await auth_post(auth_base_url, 'signin/gcnotify', {
+  const response = await auth_post(auth_base_url, 'signin/gcnotify', {
     email,
     post_auth_redirect,
   });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
+  if (IS_LOCAL_DEV !== 'true' && data?.verification_url) {
+    throw new Error(
+      'The server should NEVER include the verification_url in a sign in response when not in local dev!',
+    );
+  }
+
+  return { response, data };
 };
 
 export const sign_out = async (auth_base_url: string) => {

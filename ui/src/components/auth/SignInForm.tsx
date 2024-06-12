@@ -4,6 +4,7 @@ import {
   FormControl,
   Input,
   Button,
+  Link,
 } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
@@ -13,6 +14,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useSession } from './session.tsx';
+
+const { IS_LOCAL_DEV } = ENV;
 
 export default function SignInForm({
   post_auth_redirect,
@@ -33,12 +36,19 @@ export default function SignInForm({
     formState: { errors, isSubmitting },
   } = useForm<FormFieldValues>();
 
-  const [response, setResponse] = useState<Response>();
+  const [responseStatus, setResponseStatus] = useState<Response['status']>();
+  const [devTokenResponse, setDevTokenResponse] = useState<string>();
 
-  if (typeof response === 'undefined') {
+  if (typeof responseStatus === 'undefined') {
     const onSubmit = async (values: FormFieldValues) => {
-      const response = await signIn(values.email, post_auth_redirect);
-      setResponse(response);
+      const { response, data } = await signIn(values.email, post_auth_redirect);
+      setResponseStatus(response.status);
+
+      if (IS_LOCAL_DEV === 'true') {
+        if (data?.verification_url) {
+          setDevTokenResponse(data?.verification_url);
+        }
+      }
     };
 
     return (
@@ -69,9 +79,21 @@ export default function SignInForm({
         </Button>
       </form>
     );
-  } else if (response.ok) {
-    return <>Success, email sent (UI TODO)</>;
   } else {
-    return <>Error (UI TODO)</>;
+    return (
+      <>
+        {responseStatus === 200 ? (
+          devTokenResponse ? (
+            <Link href={devTokenResponse}>
+              Click here to complete authentication (local dev only)
+            </Link>
+          ) : (
+            'Success, email sent (UI TODO)'
+          )
+        ) : (
+          'Error (UI TODO)</>'
+        )}
+      </>
+    );
   }
 }

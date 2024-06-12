@@ -2,10 +2,16 @@ import express from 'express';
 import passport from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
-import {
-  sendVerificationRequestGCNotify,
-  sendVerificationRequestConsole,
-} from './auth_utils.js';
+const {
+  IS_LOCAL_DEV = 'false',
+  FORCE_ENABLE_GCNOTIFY = 'false',
+  MAGIC_LINK_SECRET,
+  GCNotifyApiKey,
+  GCNotifyTemplateID,
+} = process.env;
+
+const send_token_via_email =
+  !(IS_LOCAL_DEV === 'true') || FORCE_ENABLE_GCNOTIFY === 'true';
 
 const get_post_auth_redirect = (req) => {
   const post_auth_redirect =
@@ -17,12 +23,6 @@ const get_post_auth_redirect = (req) => {
 
   return provided_redirect_is_relative ? post_auth_redirect : '/';
 };
-
-const {
-  IS_LOCAL_ENV = false,
-  FORCE_ENABLE_GCNOTIFY = false,
-  MAGIC_LINK_SECRET,
-} = process.env;
 
 passport.use(
   new MagicLinkStrategy(
@@ -41,9 +41,35 @@ passport.use(
         post_auth_redirect: get_post_auth_redirect(req),
       })}`;
 
-      return IS_LOCAL_ENV && !FORCE_ENABLE_GCNOTIFY
-        ? sendVerificationRequestConsole(verification_url)
-        : sendVerificationRequestGCNotify(user.email, verification_url);
+      if (send_token_via_email) {
+        const response = await fetch(
+          'https://api.notification.canada.ca/v2/notifications/email',
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              Authorization: GCNotifyApiKey,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email_address: user.email,
+              template_id: GCNotifyTemplateID,
+              personalisation: {
+                sign_in_link: verification_url,
+              },
+            }),
+          },
+        );
+
+        if (!response.ok) {
+          const { errors } = await response.json();
+          throw new Error(JSON.stringify(errors));
+        }
+
+        return response;
+      } else {
+        req.locals = { verification_url, ...req.locals };
+      }
     },
     async function verifyUser(_req, user) {
       // TODO: verification logic
@@ -72,7 +98,14 @@ auth_router.post(
   passport.authenticate('magiclink', {
     action: 'requestToken',
   }),
-  (_req, res) => res.status(200).send(),
+  (req, res) =>
+    res
+      .status(200)
+      .send(
+        send_token_via_email
+          ? {}
+          : { verification_url: req.locals.verification_url },
+      ),
 );
 
 auth_router.get(

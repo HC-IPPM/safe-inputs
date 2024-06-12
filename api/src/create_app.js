@@ -14,8 +14,8 @@ import { connect_db, get_db_client } from './db_utils.js';
 import { auth_router } from './routes/auth/auth_routes.js';
 
 const {
-  IS_LOCAL_ENV = false,
-  MAX_SESSION_AGE = 24 * 60 * 60,
+  IS_LOCAL_DEV = 'false',
+  MAX_SESSION_AGE = `${24 * 60 * 60}`,
   COOKIE_SIGNING_SECRET,
   SESSION_STORE_SECRET,
   CSRF_SECRET,
@@ -41,8 +41,8 @@ export const create_app = async ({
     crypto: {
       secret: SESSION_STORE_SECRET,
     },
-    ttl: MAX_SESSION_AGE,
-    touchAfter: MAX_SESSION_AGE * 0.9,
+    ttl: +MAX_SESSION_AGE,
+    touchAfter: +MAX_SESSION_AGE * 0.9,
   });
 
   app.use(
@@ -52,8 +52,8 @@ export const create_app = async ({
       saveUninitialized: false,
       proxy: true,
       cookie: {
-        sameSite: IS_LOCAL_ENV ? 'lax' : 'strict',
-        secure: !IS_LOCAL_ENV,
+        sameSite: IS_LOCAL_DEV === 'true' ? 'lax' : 'strict',
+        secure: !(IS_LOCAL_DEV === 'true'),
       },
       store: mongo_store,
     }),
@@ -69,15 +69,16 @@ export const create_app = async ({
     doubleCsrfProtection, // This is the default CSRF protection middleware
   } = doubleCsrf({
     getSecret: () => CSRF_SECRET,
-    cookieName: IS_LOCAL_ENV ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
+    cookieName:
+      IS_LOCAL_DEV === 'true' ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
     cookieOptions: {
-      sameSite: IS_LOCAL_ENV ? 'lax' : 'strict',
-      secure: !IS_LOCAL_ENV,
+      sameSite: IS_LOCAL_DEV === 'true' ? 'lax' : 'strict',
+      secure: !(IS_LOCAL_DEV === 'true'),
     },
   });
 
   // important: session middleware needs to come before the middleware is added!
-  if (use_csrf_middleware || !IS_LOCAL_ENV) {
+  if (use_csrf_middleware || !(IS_LOCAL_DEV === 'true')) {
     app.use(doubleCsrfProtection);
   }
 

@@ -19,8 +19,11 @@ export type SessionContextValue = {
   status: SessionStatus;
   authBaseURL: string;
   schedule_sync: () => void;
-  signIn: (email: string, post_auth_redirect?: string) => Promise<Response>;
-  signOut: () => Promise<Response>;
+  signIn: (
+    email: string,
+    post_auth_redirect?: string,
+  ) => Promise<Awaited<ReturnType<typeof email_sign_in>>>;
+  signOut: () => Promise<Awaited<ReturnType<typeof sign_out>>>;
 };
 
 export const SessionContext = createContext<SessionContextValue | undefined>(
