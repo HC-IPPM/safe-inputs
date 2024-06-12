@@ -29,21 +29,36 @@ spec:
                 secretKeyRef:
                   name: mongodb-api-user-connect-string
                   key: connectionString.standardSrv
-            - name: AUTH_SECRET
+            - name: COOKIE_SIGNING_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: auth-js-secret
-            - name: GCNotifyApiKey
+                  key: cookie_signing_secret
+            - name: SESSION_STORE_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: gcnotify_api_key
-            - name: GCNotifyTemplateID
+                  key: session_store_secret
+            - name: CSRF_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: gcnotify_template_id
+                  key: csrf_secret
+            - name: MAGIC_LINK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: magic_link_secret
+            - name: GC_NOTIFY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gc_notify_api_key
+            - name: GC_NOTIFY_TEMPLATE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gc_otify_template_id
           resources:
             requests:
               cpu: 200m

@@ -6,8 +6,8 @@ const {
   IS_LOCAL_DEV = 'false',
   FORCE_ENABLE_GCNOTIFY = 'false',
   MAGIC_LINK_SECRET,
-  GCNotifyApiKey,
-  GCNotifyTemplateID,
+  GC_NOTIFY_API_KEY,
+  GC_NOTIFY_TEMPLATE_ID,
 } = process.env;
 
 const send_token_via_email =
@@ -48,12 +48,12 @@ passport.use(
             method: 'POST',
             credentials: 'include',
             headers: {
-              Authorization: GCNotifyApiKey,
+              Authorization: GC_NOTIFY_API_KEY,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               email_address: user.email,
-              template_id: GCNotifyTemplateID,
+              template_id: GC_NOTIFY_TEMPLATE_ID,
               personalisation: {
                 sign_in_link: verification_url,
               },
