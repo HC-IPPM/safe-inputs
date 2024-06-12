@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "build": "rspack build",
+    "extract": "lingui extract",
+    "precompile": "npm run extract",
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
-    "extract": "lingui extract",
     "test": "jest"
   },
   "babel": {
