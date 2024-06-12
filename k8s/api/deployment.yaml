@@ -58,7 +58,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: gc_otify_template_id
+                  key: gc_notify_template_id
           resources:
             requests:
               cpu: 200m
