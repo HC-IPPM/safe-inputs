@@ -3,6 +3,11 @@
  */
 
 const rspack = require('@rspack/core'); // eslint-disable-line @typescript-eslint/no-var-requires
+const dotenv = require('dotenv'); // eslint-disable-line @typescript-eslint/no-var-requires
+
+const { parsed } = dotenv.config();
+
+console.log(JSON.stringify(parsed));
 
 module.exports = {
   context: __dirname,
@@ -17,6 +22,9 @@ module.exports = {
     new rspack.HtmlRspackPlugin({
       template: './index.html',
       favicon: './src/assets/favicon_canadaFlag.ico',
+    }),
+    new rspack.DefinePlugin({
+      ENV: parsed,
     }),
   ],
   module: {

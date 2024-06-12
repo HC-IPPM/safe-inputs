@@ -42,11 +42,11 @@ describe('create_app', () => {
   });
 
   describe('given a schema and resolver', () => {
-    it('returns an express app', async () => {
-      const app = await create_app({ schema });
+    it('returns an express app with the corresponding graphql endpoint', async () => {
+      const app = await create_app({ schema, use_csrf_middleware: false });
 
       const response = await request(app)
-        .post('/graphql')
+        .post('/api/graphql')
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -58,10 +58,10 @@ describe('create_app', () => {
 
   describe('given an overly complex query', () => {
     it('rejects it', async () => {
-      const app = await create_app({ schema });
+      const app = await create_app({ schema, use_csrf_middleware: false });
 
       const response = await request(app)
-        .post('/graphql')
+        .post('/api/graphql')
         .set('Accept', 'application/json')
         .send({
           query:
@@ -77,10 +77,10 @@ describe('create_app', () => {
 
   describe('given a simple query', () => {
     it('executes it', async () => {
-      const app = await create_app({ schema });
+      const app = await create_app({ schema, use_csrf_middleware: false });
 
       const response = await request(app)
-        .post('/graphql')
+        .post('/api/graphql')
         .set('Accept', 'application/json')
         .send({
           query: '{hello}',
@@ -92,10 +92,10 @@ describe('create_app', () => {
 
   describe('given a mutation query', () => {
     it('executes it', async () => {
-      const app = await create_app({ schema });
+      const app = await create_app({ schema, use_csrf_middleware: false });
 
       const response = await request(app)
-        .post('/graphql')
+        .post('/api/graphql')
         .set('Accept', 'application/json')
         .send({
           query: `mutation {
