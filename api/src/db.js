@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { get_env } from './env_utils.js';
+import { get_env } from './env.js';
 
 export async function connect_db() {
   const { MDB_CONNECT_STRING } = get_env();

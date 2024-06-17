@@ -9,12 +9,9 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 
-import { get_env } from './env_utils.js';
-import { connect_db, get_db_client } from './db_utils.js';
-import {
-  configure_passport_js,
-  get_auth_router,
-} from './routes/auth/auth_routes.js';
+import { get_env } from './env.js';
+import { connect_db, get_db_client } from './db.js';
+import { configure_passport_js, get_auth_router } from './auth.js';
 
 export const create_app = async ({ schema, context = {} }) => {
   const {

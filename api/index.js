@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { create_app } from './src/create_app.js';
-import { get_env } from './src/env_utils.js';
+import { get_env } from './src/env.js';
 import { schema } from './src/schema.js';
 
 const { HOST, PORT } = get_env();
