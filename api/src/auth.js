@@ -1,7 +1,7 @@
 import express from 'express';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
-import { get_env } from '../../env_utils.js';
+import { get_env } from './env.js';
 
 const get_post_auth_redirect = (req) => {
   const post_auth_redirect =
