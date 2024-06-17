@@ -102,12 +102,12 @@ root.render(
             <I18nProvider i18n={i18n}>
               <Routes>
                 <Route path="/" element={<NavWrapper />}>
-                  <Route path="signin" element={<SignIn />}></Route>
-                  <Route path="" element={<ExcelParser />}></Route>
+                  <Route path="" element={<ExcelParser />} />
+                  <Route path="signin" element={<SignIn />} />
                   <Route
-                    path="/termsAndConditions"
+                    path="termsAndConditions"
                     element={<TermsAndConditions />}
-                  ></Route>
+                  />
                 </Route>
               </Routes>
             </I18nProvider>
