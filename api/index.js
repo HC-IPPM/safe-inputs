@@ -1,10 +1,10 @@
 import 'dotenv/config';
 
 import { create_app } from './src/create_app.js';
-
+import { get_env } from './src/env_utils.js';
 import { schema } from './src/schema.js';
 
-const { PORT = 3000, HOST = '0.0.0.0' } = process.env;
+const { HOST, PORT } = get_env();
 
 process.on('SIGTERM', () => {
   throw new Error('SIGTERM');
@@ -18,6 +18,6 @@ const app = await create_app({
   context: {},
 });
 
-app.listen({ port: PORT, host: HOST }, () =>
+app.listen({ host: HOST, port: PORT }, () =>
   console.log(`🚀 Safe-inputs API listening on ${HOST}:${PORT}`),
 );

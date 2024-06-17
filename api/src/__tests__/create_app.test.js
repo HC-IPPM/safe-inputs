@@ -1,6 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import mongoose from 'mongoose';
 import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
+import { jest } from '@jest/globals';
 
 import { create_app } from '../create_app.js';
 
@@ -33,17 +34,26 @@ const resolvers = {
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-// ----- TESTS -----
-
 describe('create_app', () => {
+  const ORIGINAL_ENV = process.env;
+  beforeEach(() => {
+    jest.resetModules();
+    // Need to disable CSRF protection middleware during these tests
+    process.env = { ...ORIGINAL_ENV, FORCE_DISABLE_CSRF_PROTECTION: true };
+  });
   afterEach(() => {
+    process.env = ORIGINAL_ENV;
+
     // necessary cleanup to prevent Jest from being held open by a dangling DB handler
     return mongoose.connection.close();
   });
 
   describe('given a schema and resolver', () => {
     it('returns an express app with the corresponding graphql endpoint', async () => {
-      const app = await create_app({ schema, use_csrf_middleware: false });
+      const app = await create_app({
+        schema,
+        use_csrf_middleware: false,
+      });
 
       const response = await request(app)
         .post('/api/graphql')

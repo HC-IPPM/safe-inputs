@@ -9,23 +9,23 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 
+import { get_env } from './env_utils.js';
 import { connect_db, get_db_client } from './db_utils.js';
+import {
+  configure_passport_js,
+  get_auth_router,
+} from './routes/auth/auth_routes.js';
 
-import { auth_router } from './routes/auth/auth_routes.js';
+export const create_app = async ({ schema, context = {} }) => {
+  const {
+    IS_LOCAL_DEV,
+    MAX_SESSION_AGE,
+    SESSION_STORE_SECRET,
+    COOKIE_SIGNING_SECRET,
+    CSRF_SECRET,
+    FORCE_DISABLE_CSRF_PROTECTION,
+  } = get_env();
 
-const {
-  IS_LOCAL_DEV = 'false',
-  MAX_SESSION_AGE = `${24 * 60 * 60}`,
-  COOKIE_SIGNING_SECRET,
-  SESSION_STORE_SECRET,
-  CSRF_SECRET,
-} = process.env;
-
-export const create_app = async ({
-  schema,
-  context = {},
-  use_csrf_middleware = true, // only intended for certain test cases, TODO: consider different pattern for disabling CSRF
-}) => {
   await connect_db();
 
   const app = express();
@@ -52,16 +52,16 @@ export const create_app = async ({
       saveUninitialized: false,
       proxy: true,
       cookie: {
-        sameSite: IS_LOCAL_DEV === 'true' ? 'lax' : 'strict',
-        secure: !(IS_LOCAL_DEV === 'true'),
+        sameSite: IS_LOCAL_DEV ? 'lax' : 'strict',
+        secure: !IS_LOCAL_DEV,
       },
       store: mongo_store,
     }),
   );
 
   // required by csrf-csrf's middleware, parses and signs/validates cookies, makes them available via req.cookies and req.signedCookies (signed cookies
-  // are validated with COOKIE_SIGNING_SECRET) compatible with express-session middleware IF the secret common (still recommended to add session
-  // middleware before the cookieParser in app.use order)
+  // are validated with COOKIE_SIGNING_SECRET) compatible with express-session middleware IF the cookie signing secret is the same between them (still
+  // recommended to add session middleware before the cookieParser in app.use order)
   app.use(cookieParser(COOKIE_SIGNING_SECRET));
 
   const {
@@ -69,22 +69,22 @@ export const create_app = async ({
     doubleCsrfProtection, // This is the default CSRF protection middleware
   } = doubleCsrf({
     getSecret: () => CSRF_SECRET,
-    cookieName:
-      IS_LOCAL_DEV === 'true' ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
+    cookieName: IS_LOCAL_DEV ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
     cookieOptions: {
-      sameSite: IS_LOCAL_DEV === 'true' ? 'lax' : 'strict',
-      secure: !(IS_LOCAL_DEV === 'true'),
+      sameSite: IS_LOCAL_DEV ? 'lax' : 'strict',
+      secure: !IS_LOCAL_DEV,
     },
   });
 
-  // important: session middleware needs to come before the middleware is added!
-  if (use_csrf_middleware || !(IS_LOCAL_DEV === 'true')) {
+  // important: session middleware needs to come before the CSRF middleware is added!
+  if (!FORCE_DISABLE_CSRF_PROTECTION) {
     app.use(doubleCsrfProtection);
   }
 
   // add passport and auth routes after CSRF middleware, want them protected
+  configure_passport_js(passport); //side-effects based
   app.use(passport.authenticate('session'));
-  app.use('/api/auth', auth_router);
+  app.use('/api/auth', get_auth_router(passport));
 
   // grouping the csrf-token path with the auth routes, need to add it after the auth router or it will be overwritten
   app.get('/api/auth/csrf-token', (req, res) => {
