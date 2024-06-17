@@ -5,6 +5,8 @@ import { Trans, t } from '@lingui/macro';
 
 import { useLocation } from 'react-router-dom';
 
+import { useSpinDelay } from 'spin-delay';
+
 import { Link } from '../Link.tsx';
 
 import { useSession } from './session.tsx';
@@ -16,7 +18,7 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
     allow_unauthenticated: true,
   });
 
-  const showLoading = status === 'syncing';
+  const showLoading = useSpinDelay(status === 'syncing');
 
   if (session?.email) {
     return (
