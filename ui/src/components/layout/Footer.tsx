@@ -1,14 +1,7 @@
-import {
-  Box,
-  Link,
-  Text,
-  SimpleGrid,
-  Container,
-  Spacer,
-} from '@chakra-ui/react';
+import { Box, Text, SimpleGrid, Container, Spacer } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
-import { RouterLink } from '../RouterLink.tsx';
+import { Link } from '../Link.tsx';
 
 // import CanadaWhiteFont from '../../assets/wmms-blk.svg'
 
@@ -88,9 +81,9 @@ export default function Footer() {
               <SimpleGrid columns={[1, null, 2]} gap={{ base: 3, md: 0 }}>
                 <Box pt={{ base: 6, md: 20 }}>
                   <Trans>
-                    <RouterLink to="/termsAndConditions" {...LinkStyle}>
+                    <Link to="/termsAndConditions" {...LinkStyle}>
                       <Text>Terms and Conditions</Text>
-                    </RouterLink>
+                    </Link>
                   </Trans>
                 </Box>
                 <Box pt={{ base: 0, md: 20 }}>

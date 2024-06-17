@@ -7,7 +7,7 @@ import CanadaLogoEn from '../../assets/sig-blk-en.svg';
 import CanadaLogoFr from '../../assets/sig-blk-fr.svg';
 import AuthNavButton from '../auth/AuthNavButton.tsx';
 import LanguageButton from '../LanguageButton.tsx';
-import { RouterLink } from '../RouterLink.tsx';
+import { Link } from '../Link.tsx';
 
 const NavButtonStyle = {
   h: '30px',
@@ -33,7 +33,7 @@ export default function Header() {
       <Box bg="#EEEEEE">
         <Container maxW="7xl" px={{ base: 5, md: 10 }} py={4}>
           <HStack justify="space-between">
-            <RouterLink
+            <Link
               to="/"
               bg="transparent"
               h="auto"
@@ -44,13 +44,13 @@ export default function Header() {
               minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
             >
               {i18n.locale === 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
-            </RouterLink>
+            </Link>
             <HStack spacing="2">
               <AuthNavButton {...NavButtonStyle} />
               <LanguageButton {...NavButtonStyle} />
-              <RouterLink to="/">
+              <Link to="/">
                 <Trans>Home</Trans>
-              </RouterLink>
+              </Link>
             </HStack>
           </HStack>
         </Container>

@@ -5,7 +5,7 @@ import { Trans, t } from '@lingui/macro';
 
 import { useLocation } from 'react-router-dom';
 
-import { RouterLink } from '../RouterLink.tsx';
+import { Link } from '../Link.tsx';
 
 import { useSession } from './session.tsx';
 
@@ -36,7 +36,7 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
   } else {
     return (
       <Button
-        as={RouterLink}
+        as={Link}
         to={
           pathname.startsWith('/signin')
             ? window.location
