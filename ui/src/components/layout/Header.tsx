@@ -1,12 +1,13 @@
-import { HStack, VStack, Box, Container, Link } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
+import { HStack, Box, Container } from '@chakra-ui/react';
 
+import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import CanadaLogoEn from '../../assets/sig-blk-en.svg';
 import CanadaLogoFr from '../../assets/sig-blk-fr.svg';
 import AuthNavButton from '../auth/AuthNavButton.tsx';
 import LanguageButton from '../LanguageButton.tsx';
+import { Link } from '../Link.tsx';
 
 const NavButtonStyle = {
   h: '30px',
@@ -33,6 +34,7 @@ export default function Header() {
         <Container maxW="7xl" px={{ base: 5, md: 10 }} py={4}>
           <HStack justify="space-between">
             <Link
+              to="/"
               bg="transparent"
               h="auto"
               _hover={{
@@ -40,14 +42,13 @@ export default function Header() {
               }}
               maxW={{ base: '250px', sm: '300px', md: '365px', lg: '400px' }}
               minW={{ base: '180px', sm: '265px', md: '400px', lg: '365px' }}
-              href="/"
             >
               {i18n.locale === 'en' ? <CanadaLogoEn /> : <CanadaLogoFr />}
             </Link>
             <HStack spacing="2">
               <AuthNavButton {...NavButtonStyle} />
               <LanguageButton {...NavButtonStyle} />
-              <Link href="/">
+              <Link to="/">
                 <Trans>Home</Trans>
               </Link>
             </HStack>

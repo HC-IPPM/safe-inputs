@@ -3,13 +3,14 @@ import {
   Box,
   Container,
   Divider,
-  Link,
   ListItem,
   Text,
   UnorderedList,
 } from '@chakra-ui/react';
 
 import { Trans } from '@lingui/macro';
+
+import { Link } from '../components/Link.tsx';
 
 export default function TermsAndConditions() {
   function NoticeOfAgreement() {

@@ -5,6 +5,10 @@ import { Trans, t } from '@lingui/macro';
 
 import { useLocation } from 'react-router-dom';
 
+import { useSpinDelay } from 'spin-delay';
+
+import { Link } from '../Link.tsx';
+
 import { useSession } from './session.tsx';
 
 export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
@@ -14,16 +18,18 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
     allow_unauthenticated: true,
   });
 
+  const showLoading = useSpinDelay(status === 'syncing');
+
   if (session?.email) {
     return (
       <>
         {session?.email}
         <Button
+          as="button"
           {...StyleProps}
-          isLoading={status === 'syncing'}
+          isLoading={showLoading}
           loadingText={t`Syncing session`}
           onClick={() => signOut()}
-          as="button"
         >
           <Trans>Sign Out</Trans>
         </Button>
@@ -32,17 +38,17 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
   } else {
     return (
       <Button
-        {...StyleProps}
-        isLoading={status === 'syncing'}
-        loadingText={t`Syncing session`}
-        href={
+        as={Link}
+        to={
           pathname.startsWith('/signin')
-            ? ''
+            ? window.location
             : `/signin?${new URLSearchParams({
                 post_auth_redirect: pathname + (search || ''),
               })}`
         }
-        as="a"
+        {...StyleProps}
+        isLoading={showLoading}
+        loadingText={t`Syncing session`}
       >
         <Trans>Sign In</Trans>
       </Button>
