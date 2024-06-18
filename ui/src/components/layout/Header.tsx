@@ -3,11 +3,12 @@ import { HStack, Box, Container } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
-import CanadaLogoEn from '../../assets/sig-blk-en.svg';
-import CanadaLogoFr from '../../assets/sig-blk-fr.svg';
-import AuthNavButton from '../auth/AuthNavButton.tsx';
-import LanguageButton from '../LanguageButton.tsx';
-import { Link } from '../Link.tsx';
+import CanadaLogoEn from 'src/assets/sig-blk-en.svg';
+import CanadaLogoFr from 'src/assets/sig-blk-fr.svg';
+
+import AuthNavButton from 'src/components/auth/AuthNavButton.tsx';
+import LanguageButton from 'src/components/LanguageButton.tsx';
+import { Link } from 'src/components/Link.tsx';
 
 const NavButtonStyle = {
   h: '30px',

@@ -10,7 +10,7 @@ import {
 
 import { Trans } from '@lingui/macro';
 
-import { Link } from '../components/Link.tsx';
+import { Link } from 'src/components/Link.tsx';
 
 export default function TermsAndConditions() {
   function NoticeOfAgreement() {

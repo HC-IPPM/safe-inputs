@@ -3,8 +3,8 @@ import { Trans } from '@lingui/macro';
 import { useState } from 'react';
 import type { WorkBook } from 'xlsx';
 
-import ExcelFileOutput from '../components/ExcelFileOutput.tsx';
-import ExcelUploadForm from '../components/ExcelUploadForm.tsx';
+import ExcelFileOutput from 'src/components/ExcelFileOutput.tsx';
+import ExcelUploadForm from 'src/components/ExcelUploadForm.tsx';
 
 interface Sheet {
   sheetName: string;

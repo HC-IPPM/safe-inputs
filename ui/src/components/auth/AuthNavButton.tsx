@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useSpinDelay } from 'spin-delay';
 
-import { Link } from '../Link.tsx';
+import { Link } from 'src/components/Link.tsx';
 
 import { useSession } from './session.tsx';
 

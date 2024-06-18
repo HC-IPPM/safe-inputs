@@ -4,8 +4,8 @@ import { Trans } from '@lingui/macro';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useSession } from '../components/auth/session.tsx';
-import SignInForm from '../components/auth/SignInForm.tsx';
+import { useSession } from 'src/components/auth/session.tsx';
+import SignInForm from 'src/components/auth/SignInForm.tsx';
 
 export default function SignIn() {
   const navigate = useNavigate();
