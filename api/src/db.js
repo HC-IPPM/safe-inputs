@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { get_env } from './env.js';
 
-export async function connect_db() {
+export const connect_db = async () => {
   const { MDB_CONNECT_STRING } = get_env();
 
   queueMicrotask(() => console.log('Attempting MongoDB connection...'));
@@ -12,12 +12,9 @@ export async function connect_db() {
       heartbeatFrequencyMS: 10000,
     })
     .then(() => queueMicrotask(() => console.log('MongoDB connected!')));
-}
+};
 
-export function get_db_client() {
-  return mongoose.connection.getClient();
-}
+export const get_db_client = () => mongoose.connection.getClient();
 
-export function get_db_connection_status() {
-  return mongoose.connection.states[mongoose.connection.readyState];
-}
+export const get_db_connection_status = () =>
+  mongoose.connection.states[mongoose.connection.readyState];

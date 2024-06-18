@@ -20,7 +20,7 @@ const should_send_token_via_email = () => {
   return !IS_LOCAL_DEV || FORCE_ENABLE_GCNOTIFY;
 };
 
-const configure_passport_js = (passport) => {
+export const configure_passport_js = (passport) => {
   const {
     IS_LOCAL_DEV,
     FORCE_ENABLE_GCNOTIFY,
@@ -97,7 +97,7 @@ const configure_passport_js = (passport) => {
   );
 };
 
-const get_auth_router = (passport) => {
+export const get_auth_router = (passport) => {
   const auth_router = express.Router();
 
   auth_router.post(
@@ -138,5 +138,3 @@ const get_auth_router = (passport) => {
 
   return auth_router;
 };
-
-export { configure_passport_js, get_auth_router };
