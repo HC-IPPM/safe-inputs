@@ -1,2 +1,8 @@
 # generated (build output)
 ui/dist
+
+# generated (by lingui)
+ui/src/i18n/locales
+
+# not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
+k8s/mongodb-operator/operator

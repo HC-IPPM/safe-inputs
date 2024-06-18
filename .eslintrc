@@ -4,10 +4,14 @@
     "standard",
     "prettier",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": ["jest"],
   "rules": {
+    "array-callback-return": 1,
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
     "no-unused-vars": [
@@ -20,7 +24,7 @@
         "argsIgnorePattern": "^_.+"
       }
     ],
-    "no-use-before-define": ["error", { "functions": true, "classes": true }],
+    "no-use-before-define": "off", // covered by @typescript-eslint/no-use-before-define
     "no-throw-literal": "error",
     "import/order": [
       "warn",
@@ -40,7 +44,28 @@
         // We can group imports further by adding rules here, the order they're defined in breaks ties when group and position are equal
         "pathGroups": []
       }
-    ]
+    ],
+    "no-restricted-imports": ["error", { "patterns": ["../*"] }],
+    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_.+" }
+    ],
+    "@typescript-eslint/no-redeclare": "error",
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          "React.FunctionalComponent": {
+            "message": "FunctionalComponent is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
+          },
+          "React.FC": {
+            "message": "FC is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
+          }
+        }
+      }
+    ],
+    "@typescript-eslint/consistent-type-imports": "error"
   },
   "overrides": [
     {
