@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
-import Footer from '../components/layout/Footer.tsx';
-import Header from '../components/layout/Header.tsx';
+import Footer from 'src/components/layout/Footer.tsx';
+import Header from 'src/components/layout/Header.tsx';
 
 // This is the component that renders the header and footer for all pages
 

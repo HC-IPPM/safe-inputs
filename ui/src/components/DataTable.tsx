@@ -21,9 +21,8 @@ import {
 
 import { useEffect, useState } from 'react';
 
-import type { RowError } from '../schema/utils.ts';
-
-import { validateData } from '../schema/utils.ts';
+import type { RowError } from 'src/schema/utils.ts';
+import { validateData } from 'src/schema/utils.ts';
 
 import TableCell from './TableCell.tsx';
 

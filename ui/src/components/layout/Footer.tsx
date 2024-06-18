@@ -1,9 +1,9 @@
 import { Box, Text, SimpleGrid, Container, Spacer } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
-import { Link } from '../Link.tsx';
+import { Link } from 'src/components/Link.tsx';
 
-// import CanadaWhiteFont from '../../assets/wmms-blk.svg'
+// import CanadaWhiteFont from 'src/assets/wmms-blk.svg'
 
 type CanadaWithFlagProps = {
   textColor?: 'black' | 'white';

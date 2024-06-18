@@ -3,8 +3,8 @@ import type { Table } from '@tanstack/react-table';
 import type { ErrorObject } from 'ajv';
 import { useEffect, useState } from 'react';
 
-import type { RowError } from '../schema/utils.ts';
-import { constructErrorMessage } from '../schema/utils.ts';
+import type { RowError } from 'src/schema/utils.ts';
+import { constructErrorMessage } from 'src/schema/utils.ts';
 
 const isErrorCell = (rowError: RowError | undefined, header: string) => {
   if (!rowError || !rowError.errors || rowError.valid) {

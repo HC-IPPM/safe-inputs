@@ -2,6 +2,8 @@
  * @type {import('@rspack/cli').Configuration}
  */
 
+const path = require('node:path'); // eslint-disable-line @typescript-eslint/no-var-requires
+
 const rspack = require('@rspack/core'); // eslint-disable-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv'); // eslint-disable-line @typescript-eslint/no-var-requires
 
@@ -17,6 +19,9 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
+  },
+  resolve: {
+    tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
   },
   plugins: [
     new rspack.HtmlRspackPlugin({

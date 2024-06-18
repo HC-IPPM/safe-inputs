@@ -18,6 +18,11 @@
   "settings": {
     "react": {
       "version": "18"
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["./", "node_modules/"]
+      }
     }
   },
   "rules": {
@@ -42,7 +47,8 @@
       }
     ],
     "@typescript-eslint/consistent-type-imports": "error",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "no-restricted-imports": ["error", { "patterns": ["../*"] }]
   },
   "globals": {
     "window": true
