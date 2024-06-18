@@ -22,13 +22,6 @@
     "jest:docker-debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "test:down": "docker compose -f ./docker-compose.dev-test.yaml down"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "setupFilesAfterEnv": [
-      "./setupTests.js"
-    ],
-    "verbose": true
-  },
   "dependencies": {
     "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
     "@escape.tech/graphql-armor-max-depth": "^1.8.1",
