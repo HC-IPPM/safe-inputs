@@ -9,9 +9,9 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 
-import { get_env } from './env.js';
-import { connect_db, get_db_client } from './db.js';
 import { configure_passport_js, get_auth_router } from './auth.js';
+import { connect_db, get_db_client } from './db.js';
+import { get_env } from './env.js';
 
 export const create_app = async ({ schema, context = {} }) => {
   const {
@@ -79,7 +79,7 @@ export const create_app = async ({ schema, context = {} }) => {
   }
 
   // add passport and auth routes after CSRF middleware, want them protected
-  configure_passport_js(passport); //side-effects based
+  configure_passport_js(passport); // side-effects based
   app.use(passport.authenticate('session'));
   app.use('/api/auth', get_auth_router(passport));
 

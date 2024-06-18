@@ -3,8 +3,8 @@ kind: ClusterRole
 metadata:
   name: read-access-for-service-binding
   labels:
-    servicebinding.io/controller: "true"
+    servicebinding.io/controller: 'true'
 rules:
-  - apiGroups: ["mongodbcommunity.mongodb.com"]
-    resources: ["mongodbcommunity", "mongodbcommunity/status"]
-    verbs: ["get", "list", "watch"]
+  - apiGroups: ['mongodbcommunity.mongodb.com']
+    resources: ['mongodbcommunity', 'mongodbcommunity/status']
+    verbs: ['get', 'list', 'watch']

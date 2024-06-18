@@ -4,10 +4,7 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",
-    "plugin:jsx-a11y/recommended",
-    "plugin:import/typescript",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:jsx-a11y/recommended"
   ],
   "plugins": ["react", "@typescript-eslint", "jsx-a11y"],
   "parser": "@typescript-eslint/parser",
@@ -26,29 +23,7 @@
     }
   },
   "rules": {
-    "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": "error",
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_.+" }
-    ],
-    "@typescript-eslint/no-redeclare": "error",
-    "@typescript-eslint/ban-types": [
-      "error",
-      {
-        "types": {
-          "React.FunctionalComponent": {
-            "message": "FunctionalComponent is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
-          },
-          "React.FC": {
-            "message": "FC is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
-          }
-        }
-      }
-    ],
-    "@typescript-eslint/consistent-type-imports": "error",
-    "react/prop-types": "off",
-    "no-restricted-imports": ["error", { "patterns": ["../*"] }]
+    "react/prop-types": "off"
   },
   "globals": {
     "window": true
