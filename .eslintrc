@@ -64,8 +64,7 @@
           }
         }
       }
-    ],
-    "@typescript-eslint/consistent-type-imports": "error"
+    ]
   },
   "overrides": [
     {
@@ -74,5 +73,10 @@
         "jest/globals": true
       }
     }
+  ],
+  "ignorePatterns": [
+    "ui/dist", // generated (build output)
+    "ui/src/i18n/locales", // generated (by lingui)
+    "k8s/mongodb-operator/operator" // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
   ]
 }
