@@ -9,12 +9,8 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "plugins": ["jest"],
-  "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    }
-  },
+  "plugins": ["jest", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
@@ -81,6 +77,6 @@
   ],
   "ignorePatterns": [
     "k8s/mongodb-operator/operator", // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
-    "*/dist" // generated (build outputs)
+    "**/dist" // generated (build outputs)
   ]
 }
