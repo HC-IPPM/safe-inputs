@@ -7,13 +7,20 @@ import cookieParser from 'cookie-parser';
 import { doubleCsrf } from 'csrf-csrf';
 import express from 'express';
 import session from 'express-session';
+import type { GraphQLSchema } from 'graphql';
 import passport from 'passport';
 
-import { configure_passport_js, get_auth_router } from './auth.js';
-import { connect_db, get_db_client } from './db.js';
-import { get_env } from './env.js';
+import { configure_passport_js, get_auth_router } from './auth.ts';
+import { connect_db, get_db_client } from './db.ts';
+import { get_env } from './env.ts';
 
-export const create_app = async ({ schema, context = {} }) => {
+export const create_app = async ({
+  schema,
+  context = {},
+}: {
+  schema: GraphQLSchema;
+  context?: any;
+}) => {
   const {
     IS_LOCAL_DEV,
     MAX_SESSION_AGE,

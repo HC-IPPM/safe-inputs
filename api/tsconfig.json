@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "node16",
+    "module": "NodeNext",
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
@@ -16,5 +16,5 @@
     "sourceMap": true,
     "baseUrl": "./"
   },
-  "include": ["./src/", "./*.ts"]
+  "include": ["./src/"]
 }

@@ -1,11 +1,13 @@
 import express from 'express';
+
+import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
-import { get_env } from './env.js';
+import { get_env } from './env.ts';
 
-const get_post_auth_redirect = (req) => {
+const get_post_auth_redirect = (req: Express.Request) => {
   const post_auth_redirect =
-    req.body.post_auth_redirect || req.query.post_auth_redirect;
+    req.body?.post_auth_redirect || req.query?.post_auth_redirect;
 
   // only allow relative redirects to prevent cross origin redirects
   const provided_redirect_is_relative =
@@ -20,14 +22,9 @@ const should_send_token_via_email = () => {
   return !IS_LOCAL_DEV || FORCE_ENABLE_GCNOTIFY;
 };
 
-export const configure_passport_js = (passport) => {
-  const {
-    IS_LOCAL_DEV,
-    FORCE_ENABLE_GCNOTIFY,
-    MAGIC_LINK_SECRET,
-    GC_NOTIFY_API_KEY,
-    GC_NOTIFY_TEMPLATE_ID,
-  } = get_env();
+export const configure_passport_js = (passport: PassportStatic) => {
+  const { MAGIC_LINK_SECRET, GC_NOTIFY_API_KEY, GC_NOTIFY_TEMPLATE_ID } =
+    get_env();
 
   passport.use(
     new MagicLinkStrategy(
@@ -38,7 +35,11 @@ export const configure_passport_js = (passport) => {
         passReqToCallbacks: true,
         verifyUserAfterToken: true,
       },
-      async function sendToken(req, user, token) {
+      async function sendToken(
+        req: Express.Request,
+        user: Express.User,
+        token: string,
+      ) {
         const verification_url = `${
           req.headers.origin
         }/api/auth/signin/verify-email?${new URLSearchParams({
@@ -46,7 +47,7 @@ export const configure_passport_js = (passport) => {
           post_auth_redirect: get_post_auth_redirect(req),
         })}`;
 
-        if (should_send_token_via_email(IS_LOCAL_DEV, FORCE_ENABLE_GCNOTIFY)) {
+        if (should_send_token_via_email()) {
           const response = await fetch(
             'https://api.notification.canada.ca/v2/notifications/email',
             {
@@ -76,7 +77,7 @@ export const configure_passport_js = (passport) => {
           req.locals = { verification_url, ...req.locals };
         }
       },
-      async function verifyUser(_req, user) {
+      async function verifyUser(_req: Express.Request, user: Express.User) {
         // TODO: verification logic
         // Potentially:
         //  - PHAC and HC emails can always verify
@@ -89,20 +90,21 @@ export const configure_passport_js = (passport) => {
 
   // Note: the user arg here is the return value of verifyUser above, and the user passed to the callback is
   // what's stored in the session store and available via the user property on authenticated express requests
-  passport.serializeUser((user, callback) =>
+  passport.serializeUser((user: Express.User, callback) =>
     process.nextTick(() => callback(null, user)),
   );
-  passport.deserializeUser((user, callback) =>
+  passport.deserializeUser((user: Express.User, callback) =>
     process.nextTick(() => callback(null, user)),
   );
 };
 
-export const get_auth_router = (passport) => {
+export const get_auth_router = (passport: PassportStatic) => {
   const auth_router = express.Router();
 
   auth_router.post(
     '/signin/gcnotify',
     passport.authenticate('magiclink', {
+      // @ts-expect-error magiclink's "action" parameterisn't part of passport.js's typing. Extending pasport.js' types is complicated by their export pattern
       action: 'requestToken',
     }),
     (req, res) =>
@@ -111,12 +113,13 @@ export const get_auth_router = (passport) => {
         .send(
           should_send_token_via_email()
             ? {}
-            : { verification_url: req.locals.verification_url },
+            : { verification_url: req?.locals?.verification_url },
         ),
   );
 
   auth_router.get(
     '/signin/verify-email',
+    // @ts-expect-error magiclink's "action" parameterisn't part of passport.js's typing. Extending pasport.js' types is complicated by their export pattern
     passport.authenticate('magiclink', { action: 'acceptToken' }),
     (req, res) => {
       res.redirect(get_post_auth_redirect(req));

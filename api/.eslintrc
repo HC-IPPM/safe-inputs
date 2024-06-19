@@ -4,6 +4,13 @@
   "env": {
     "node": true
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "@typescript-eslint/parser": ["./", "node_modules/"]
+      }
+    }
+  },
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",

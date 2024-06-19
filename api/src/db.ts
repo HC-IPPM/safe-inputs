@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { get_env } from './env.js';
+import { get_env } from './env.ts';
 
 export const connect_db = async () => {
   const { MDB_CONNECT_STRING } = get_env();
@@ -16,6 +16,3 @@ export const connect_db = async () => {
 };
 
 export const get_db_client = () => mongoose.connection.getClient();
-
-export const get_db_connection_status = () =>
-  mongoose.connection.states[mongoose.connection.readyState];

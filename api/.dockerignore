@@ -5,6 +5,10 @@ coverage
 .*rc
 Dockerfile.*
 README.md
-src/__tests__
-setupTests.js
 dev-db-init.js
+nodemon.json
+.eslintrc
+jest.config.ts
+src/**/__tests__
+src/setupTests.js
+dist

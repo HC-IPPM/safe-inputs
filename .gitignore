@@ -6,6 +6,8 @@
 
 **/coverage
 
+*/dist
+
 deploy
 
 .eslintcache

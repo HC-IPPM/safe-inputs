@@ -10,8 +10,12 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "plugins": ["jest"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    }
+  },
   "rules": {
-    "array-callback-return": 1,
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
     "no-unused-vars": [
@@ -26,6 +30,7 @@
     ],
     "no-use-before-define": "off", // covered by @typescript-eslint/no-use-before-define
     "no-throw-literal": "error",
+    "no-restricted-imports": ["error", { "patterns": ["../*"] }],
     "import/order": [
       "warn",
       {
@@ -45,7 +50,6 @@
         "pathGroups": []
       }
     ],
-    "no-restricted-imports": ["error", { "patterns": ["../*"] }],
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/no-unused-vars": [
       "warn",
@@ -75,8 +79,7 @@
     }
   ],
   "ignorePatterns": [
-    "ui/dist", // generated (build output)
-    "ui/src/i18n/locales", // generated (by lingui)
-    "k8s/mongodb-operator/operator" // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
+    "k8s/mongodb-operator/operator", // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
+    "*/dist" // generated (build outputs)
   ]
 }
