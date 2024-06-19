@@ -9,7 +9,8 @@
     "precompile": "npm run extract",
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
-    "test": "jest"
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
   },
   "babel": {
     "plugins": [

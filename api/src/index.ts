@@ -1,8 +1,10 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 
-import { create_app } from './src/create_app.js';
-import { get_env } from './src/env.js';
-import { schema } from './src/schema.js';
+import { create_app } from './create_app.ts';
+import { get_env } from './env.ts';
+import { schema } from './schema.ts';
+
+dotenv.config({ path: '.env' }); // relative to the call point, e.g. the service root
 
 const { HOST, PORT } = get_env();
 

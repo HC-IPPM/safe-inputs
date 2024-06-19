@@ -2,7 +2,7 @@
 **/coverage
 
 # generated (build output)
-ui/dist
+*/dist
 
 # generated (by the sops cli)
 k8s/**/*.enc.yaml

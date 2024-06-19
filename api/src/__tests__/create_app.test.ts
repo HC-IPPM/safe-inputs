@@ -1,9 +1,10 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals';
+import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
 import mongoose from 'mongoose';
+
 import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
 
-import { create_app } from '../create_app.js';
+import { create_app } from '../create_app.ts';
 
 // ----- TEST SET UP -----
 
@@ -26,7 +27,11 @@ const resolvers = {
     },
   },
   Mutation: {
-    verifyJsonFormat(_parent, { sheetData }, _info) {
+    verifyJsonFormat(
+      _parent: any,
+      { sheetData }: { sheetData: JSON },
+      _info: any,
+    ) {
       return sheetData;
     },
   },
@@ -39,7 +44,7 @@ describe('create_app', () => {
   beforeEach(() => {
     jest.resetModules();
     // Need to disable CSRF protection middleware during these tests
-    process.env = { ...ORIGINAL_ENV, FORCE_DISABLE_CSRF_PROTECTION: true };
+    process.env = { ...ORIGINAL_ENV, FORCE_DISABLE_CSRF_PROTECTION: 'true' };
   });
   afterEach(() => {
     process.env = ORIGINAL_ENV;
@@ -52,7 +57,6 @@ describe('create_app', () => {
     it('returns an express app with the corresponding graphql endpoint', async () => {
       const app = await create_app({
         schema,
-        use_csrf_middleware: false,
       });
 
       const response = await request(app)
@@ -68,7 +72,7 @@ describe('create_app', () => {
 
   describe('given an overly complex query', () => {
     it('rejects it', async () => {
-      const app = await create_app({ schema, use_csrf_middleware: false });
+      const app = await create_app({ schema });
 
       const response = await request(app)
         .post('/api/graphql')
@@ -87,7 +91,7 @@ describe('create_app', () => {
 
   describe('given a simple query', () => {
     it('executes it', async () => {
-      const app = await create_app({ schema, use_csrf_middleware: false });
+      const app = await create_app({ schema });
 
       const response = await request(app)
         .post('/api/graphql')
@@ -102,7 +106,7 @@ describe('create_app', () => {
 
   describe('given a mutation query', () => {
     it('executes it', async () => {
-      const app = await create_app({ schema, use_csrf_middleware: false });
+      const app = await create_app({ schema });
 
       const response = await request(app)
         .post('/api/graphql')

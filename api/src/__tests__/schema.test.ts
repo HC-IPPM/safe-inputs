@@ -1,8 +1,8 @@
 // eslint-disable-next-line
-import { jest } from '@jest/globals'; // support for ESM modules
+//import { jest } from '@jest/globals'; // support for ESM modules
 import { graphql } from 'graphql';
 
-import { schema } from '../schema.js';
+import { schema } from '../schema.ts';
 
 describe('schema', () => {
   describe('query', () => {
@@ -28,7 +28,7 @@ describe('schema', () => {
           variableValues: { testObject: { name: 'John', age: 30, car: null } },
         });
 
-        expect(typeof response.data.verifyJsonFormat === 'object').toBe(true);
+        expect(typeof response.data?.verifyJsonFormat === 'object').toBe(true);
       });
     });
 
@@ -44,7 +44,7 @@ describe('schema', () => {
         });
 
         expect(response).toEqual({ data: { verifyJsonFormat: 'a' } });
-        expect(typeof response.data.verifyJsonFormat === 'string').toBe(true);
+        expect(typeof response.data?.verifyJsonFormat === 'string').toBe(true);
       });
     });
 
@@ -54,7 +54,7 @@ describe('schema', () => {
           schema,
           source: 'mutation {verifyJsonFormat(sheetData: a)}',
         });
-        const [err] = response.errors;
+        const [err] = response.errors || [];
 
         expect(err.message).toEqual(
           'Expected value of type "JSON!", found a; JSON cannot represent value: a',
@@ -68,7 +68,7 @@ describe('schema', () => {
           schema,
           source: 'mutation {verifyJsonFormat(sheetData: }',
         });
-        const [err] = response.errors;
+        const [err] = response.errors || [];
 
         expect(err.message).toEqual('Syntax Error: Unexpected "}".');
       });
