@@ -6,7 +6,7 @@
     "plugin:react/jsx-runtime",
     "plugin:jsx-a11y/recommended"
   ],
-  "plugins": ["react", "@typescript-eslint", "jsx-a11y"],
+  "plugins": ["react", "jsx-a11y"],
   "env": {
     "browser": true,
     "es6": true
@@ -17,7 +17,7 @@
     },
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["./", "node_modules/"]
+        "moduleDirectory": ["./", "./node_modules/"]
       }
     }
   },
@@ -25,7 +25,6 @@
     "react/prop-types": "off"
   },
   "ignorePatterns": [
-    "dist", // generated (build output)
     "src/i18n/locales" // generated (by lingui)
   ]
 }

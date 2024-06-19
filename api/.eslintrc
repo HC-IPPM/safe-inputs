@@ -1,26 +1,21 @@
 {
   "extends": ["../.eslintrc", "plugin:node/recommended"],
-  "plugins": ["node"],
   "env": {
     "node": true
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "@typescript-eslint/parser": ["./", "node_modules/"]
+        "moduleDirectory": ["./", "./node_modules/"]
       }
     }
-  },
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "allowImportExportEverywhere": true
   },
   "rules": {
     "node/no-unsupported-features/es-syntax": [
       "error",
       { "ignores": ["modules"] }
     ],
+    "node/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
     "no-console": 0
   }
 }

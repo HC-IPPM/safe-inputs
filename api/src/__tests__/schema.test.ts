@@ -2,7 +2,7 @@
 //import { jest } from '@jest/globals'; // support for ESM modules
 import { graphql } from 'graphql';
 
-import { schema } from '../schema.ts';
+import { schema } from 'src/schema.ts';
 
 describe('schema', () => {
   describe('query', () => {
