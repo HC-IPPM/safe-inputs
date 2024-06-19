@@ -3,15 +3,16 @@ import { pathsToModuleNameMapper } from 'ts-jest'; // eslint-disable-line node/n
 import { compilerOptions } from './tsconfig.json';
 
 export default {
+  // api specific
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['./src/setup_tests.ts'],
+
+  // common
   preset: 'ts-jest',
   roots: ['<rootDir>'],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>',
   }),
-
   verbose: true,
-
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['./src/setup_tests.ts'],
 };
