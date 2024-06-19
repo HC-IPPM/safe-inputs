@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
+    // api specific
     "target": "ES2022",
     "lib": ["ES2023"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+
+    // common (can't extract to shared file because using `extends` breaks the pathsToModuleNameMapper pattern in our jest configs)
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
