@@ -1,8 +1,8 @@
-import { pathsToModuleNameMapper } from 'ts-jest'; // eslint-disable-line node/no-unpublished-import
+const { pathsToModuleNameMapper } = require('ts-jest'); // eslint-disable-line node/no-unpublished-require
 
-import { compilerOptions } from './tsconfig.json';
+const { compilerOptions } = require('./tsconfig.json');
 
-export default {
+module.exports = {
   // api specific
   testEnvironment: 'node',
   setupFilesAfterEnv: ['./src/setup_tests.ts'],

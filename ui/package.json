@@ -63,7 +63,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "react-test-renderer": "^18.2.0",
     "swc-loader": "^0.2.3",
-    "ts-jest": "^29.1.1",
+    "ts-jest": "^29.1.5",
     "type-fest": "^4.20.1",
     "typescript": "^5.0.4"
   }
