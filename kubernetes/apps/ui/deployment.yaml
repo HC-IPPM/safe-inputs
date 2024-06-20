@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ui
+  name: ui
+  namespace: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      # Pod wide security settings:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        # seems to succeed only when specific uid/guid is set
+        runAsNonRoot: true
+      containers:
+        - name: ui
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-bd0518c-1718892714 # {"$imagepolicy": "flux-system:ui"}
+          # image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui:main-619bf01-1675956654 # {"$imagepolicy": "flux-system:ui"}
+
+          # Container specific security settings:
+          securityContext:
+            # No new privs for process or it's children
+            # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
+            allowPrivilegeEscalation: false
+            # TODO: npm checks for updates and writes a file
+            # Explore disabling check or removing npm
+            # readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+        - name: istio-proxy
+          image: auto
+          resources:
+            requests:
+              cpu: 100m
+              memory: 112Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+status: {}

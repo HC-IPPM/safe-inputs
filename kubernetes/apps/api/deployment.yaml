@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api
+  name: api
+  namespace: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-483cc15-1718720835 # {"$imagepolicy": "flux-system:api"}
+          securityContext:
+            # No new privs for process or it's children
+            # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
+            allowPrivilegeEscalation: false
+          env:
+            - name: MDB_CONNECT_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-api-user-connect-string
+                  key: connectionString.standardSrv
+            - name: COOKIE_SIGNING_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: cookie_signing_secret
+            - name: SESSION_STORE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: session_store_secret
+            - name: CSRF_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: csrf_secret
+            - name: MAGIC_LINK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: magic_link_secret
+            - name: GC_NOTIFY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gc_notify_api_key
+            - name: GC_NOTIFY_TEMPLATE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: gc_notify_template_id
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+        - name: istio-proxy
+          image: auto
+          resources:
+            requests:
+              cpu: 100m
+              memory: 112Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+status: {}

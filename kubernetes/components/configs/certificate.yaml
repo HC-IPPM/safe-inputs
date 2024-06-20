@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mesh-gateway-cert
+  namespace: istio-ingress
+spec:
+  dnsNames: []
+  issuerRef:
+    kind: ClusterIssuer
+    name: issuer
+  privateKey:
+    rotationPolicy: Always
+    algorithm: RSA
+    encoding: PKCS8
+    size: 4096
+  secretName: tlskeys

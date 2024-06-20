@@ -1,0 +1,21 @@
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: coraza-waf
+  namespace: istio-ingress
+spec:
+  # We only need a selector in case this is an app injection, not namespace
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  url: oci://ghcr.io/corazawaf/coraza-proxy-wasm:0.5.0
+  imagePullPolicy: IfNotPresent
+  phase: AUTHN
+  pluginConfig:
+    rules: |
+      Include @recommended-conf
+      # We set this On to test it worked
+      # After testing we should change it to DetectionOnly
+      SecRuleEngine On
+      Include @crs-setup-conf
+      Include @owasp_crs/*.conf
