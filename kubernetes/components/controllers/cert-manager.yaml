@@ -38,3 +38,4 @@ spec:
         namespace: cert-manager
     extraArgs:
     - "--issuer-ambient-credentials=true"
+    enableCertificateOwnerRef: true
