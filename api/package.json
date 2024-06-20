@@ -18,9 +18,9 @@
     "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
     "pretest": "npm run test:down",
     "jest:docker": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text",
+    "jest:docker-debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "test:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
     "pretest:debug": "npm run test:down",
-    "jest:docker-debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "test:down": "docker compose -f ./docker-compose.dev-test.yaml down",
     "typecheck": "tsc --noEmit"
   },

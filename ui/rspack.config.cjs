@@ -2,10 +2,10 @@
  * @type {import('@rspack/cli').Configuration}
  */
 
-const path = require('node:path'); // eslint-disable-line @typescript-eslint/no-var-requires
+const path = require('node:path');
 
-const rspack = require('@rspack/core'); // eslint-disable-line @typescript-eslint/no-var-requires
-const dotenv = require('dotenv'); // eslint-disable-line @typescript-eslint/no-var-requires
+const rspack = require('@rspack/core');
+const dotenv = require('dotenv');
 
 const { parsed } = dotenv.config();
 

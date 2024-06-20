@@ -1,8 +1,8 @@
-import { pathsToModuleNameMapper } from 'ts-jest';
+const { pathsToModuleNameMapper } = require('ts-jest');
 
-import { compilerOptions } from './tsconfig.json';
+const { compilerOptions } = require('./tsconfig.json');
 
-export default {
+module.exports = {
   // ui specific
   testEnvironment: 'jsdom',
 
