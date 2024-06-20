@@ -10,7 +10,7 @@ import session from 'express-session';
 import type { GraphQLSchema } from 'graphql';
 import passport from 'passport';
 
-import { configure_passport_js, get_auth_router } from './auth.ts';
+import { configure_passport_js, get_auth_router } from './authn.ts';
 import { connect_db, get_db_client } from './db.ts';
 import { get_env } from './env.ts';
 
