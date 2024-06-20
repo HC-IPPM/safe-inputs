@@ -39,3 +39,17 @@ spec:
     extraArgs:
     - "--issuer-ambient-credentials=true"
     enableCertificateOwnerRef: true
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    webhook:
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+    cainjector:
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
