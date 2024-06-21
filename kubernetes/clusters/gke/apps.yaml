@@ -13,3 +13,5 @@ spec:
   path: ./kubernetes/apps/gke
   prune: true
   wait: true
+  decryption:
+    provider: sops
