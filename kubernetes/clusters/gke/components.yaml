@@ -24,3 +24,50 @@ spec:
         kind: Namespace
         name: istio-ingress
 ---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: components-configs
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: components-controllers
+  interval: 5m
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./kubernetes/components/configs
+  prune: true
+  patches:
+    # configure ClusterIssuer for GKE
+    - patch: |-
+        - op: add
+          path: /spec
+          value:
+            acme:
+              email: michael.williamson@phac-aspc.gc.ca
+              preferredChain: ''
+              privateKeySecretRef:
+                name: letsencrypt-prod
+              server: https://acme-v02.api.letsencrypt.org/directory
+              solvers:
+                - dns01:
+                    cloudDNS:
+                      # The ID of the GCP project
+                      project: pdcp-cloud-005-safeinputs
+                  selector: {}
+      target:
+        kind: ClusterIssuer
+        name: issuer
+    # add DNS name
+    - patch: |-
+        - op: add
+          path: /spec/dnsNames
+          value:
+            - "safeinputs.alpha.phac-aspc.gc.ca"
+            - "entreessecurisees.alpha.phac-aspc.gc.ca"
+      target:
+        kind: Certificate
+        name: mesh-gateway-cert
