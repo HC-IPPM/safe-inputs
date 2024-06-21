@@ -5,7 +5,6 @@ namespace: api
 
 resources:
   - namespace.yaml
-  - ../mongodb-operator/operator/rbac # mongodb operator role bindings are needed in the operator's target namespace
   - mongodb-secrets.enc.yaml
   - mongodb.yaml
   - api-secrets.enc.yaml
