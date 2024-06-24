@@ -17,11 +17,14 @@
     "dev:docker-debug": "tsx --inspect-brk='0.0.0.0:9229' --watch ./src/index.ts",
     "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
     "pretest": "npm run test:down",
-    "jest:docker": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text",
-    "jest:docker-debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
-    "test:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
+    "test:watch": "DOCKER_API_COMMAND=docker-watch docker compose -f ./docker-compose.dev-test.yaml up",
+    "pretest:watch": "npm run test:down",
+    "test:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev-test.yaml up",
     "pretest:debug": "npm run test:down",
-    "test:down": "docker compose -f ./docker-compose.dev-test.yaml down"
+    "test:down": "docker compose -f ./docker-compose.dev-test.yaml down",
+    "jest:docker": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text",
+    "jest:docker-watch": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageReporters text --watchAll",
+    "jest:docker-debug": "node --experimental-vm-modules --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache"
   },
   "dependencies": {
     "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
