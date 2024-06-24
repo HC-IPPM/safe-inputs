@@ -1,0 +1,20 @@
+# allow communication between mongodb replicas and api pod
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-ingress-to-mongodb
+spec:
+ selector:
+   matchLabels:
+     app: mongodb-svc
+ action: ALLOW
+ rules: 
+  - from:
+    - source:
+        # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+        principals: 
+          # - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/mongodb-database"
+          - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/api"
+  - to:
+    - operation:
+        ports: ["27017"]

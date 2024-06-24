@@ -4,7 +4,6 @@ metadata:
   labels:
     app: api
   name: api
-  namespace: api
 spec:
   ports:
     - name: http-3000

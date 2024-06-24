@@ -1,0 +1,38 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb
+spec:
+  members: 3
+  version: '6.0.5'
+  statefulSet:
+    spec:
+      # Set persistent disk resources
+      volumeClaimTemplates:
+        - metadata:
+            name: data-volume
+          spec:
+            accessModes: ['ReadWriteOnce']
+            resources:
+              requests:
+                storage: 5Gi
+        - metadata:
+            name: logs-volume
+          spec:
+            accessModes: ['ReadWriteOnce']
+            resources:
+              requests:
+                storage: 5Gi
+
+      # Set container resources
+      template:
+        spec:
+          containers:
+            - name: istio-proxy
+              image: auto
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 112Mi
+              securityContext:
+                allowPrivilegeEscalation: false

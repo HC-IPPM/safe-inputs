@@ -4,10 +4,20 @@ kind: Kustomization
 namespace: api
 
 resources:
+  - ../../base/api
   - namespace.yaml
   - mongodb-secrets.enc.yaml
-  - mongodb.yaml
   - api-secrets.enc.yaml
-  - deployment.yaml
-  - service.yaml
   - virtual-service.yaml
+  - authzpol.yaml
+
+patches:
+  - path: ./deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: api
+
+  - path: ./mongodb-patch.yaml
+    target:
+      kind: MongoDBCommunity
+      name: mongodb
