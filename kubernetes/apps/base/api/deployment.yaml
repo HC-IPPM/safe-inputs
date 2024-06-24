@@ -64,6 +64,21 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: gc_notify_template_id
+            - name: AUTHZ_EMAIL_HOSTS_ALLOWED
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: authz_email_hosts_allowed
+            - name: AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: authz_email_hosts_can_have_privileges
+            - name: AUTHZ_SUPER_ADMINS
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: authz_super_admins
           resources:
             requests:
               cpu: 200m
