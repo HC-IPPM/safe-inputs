@@ -42,6 +42,16 @@ spec:
       target:
         kind: Namespace
         name: mongodb
+    # patch ingress with annotations
+    - patch: |-
+        - op: add
+          path: /metadata/annotations
+          value:
+            cloud.google.com/l4-rbs: enabled
+            networking.gke.io/load-balancer-ip-addresses: safeinputs-v2
+      target:
+        kind: Service
+        name: istio-ingressgateway
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
