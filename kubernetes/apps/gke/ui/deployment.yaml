@@ -1,3 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ui
+  namespace: ui
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +22,7 @@ spec:
       labels:
         app: ui
     spec:
+      serviceAccountName: ui
       # Pod wide security settings:
       securityContext:
         runAsUser: 1000

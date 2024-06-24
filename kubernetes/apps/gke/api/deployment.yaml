@@ -1,3 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: api
+  namespace: api
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +22,7 @@ spec:
       labels:
         app: api
     spec:
+      serviceAccountName: api
       containers:
         - name: api
           image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-483cc15-1718720835 # {"$imagepolicy": "flux-system:api"}
