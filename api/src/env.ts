@@ -34,73 +34,72 @@ const emailHostListOrWildcard = makeValidator((val) =>
 
 const additional_authz_validation = ({
   AUTHZ_EMAIL_HOSTS_ALLOWED,
-  AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES,
+  AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES,
   AUTHZ_SUPER_ADMINS,
 }: {
   AUTHZ_EMAIL_HOSTS_ALLOWED: string[] | '*';
-  AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES: string[];
+  AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES: string[];
   AUTHZ_SUPER_ADMINS: string[];
 }) => {
   if (
     AUTHZ_EMAIL_HOSTS_ALLOWED !== '*' &&
-    !AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES.every((privileged_host) =>
+    !AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.every((privileged_host) =>
       AUTHZ_EMAIL_HOSTS_ALLOWED.includes(privileged_host),
     )
   ) {
     throw new Error(
-      'AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES must be a subset of AUTHZ_EMAIL_HOSTS_ALLOWED',
+      'AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES must be a subset of AUTHZ_EMAIL_HOSTS_ALLOWED',
     );
   }
 
   if (
     !AUTHZ_SUPER_ADMINS.every((super_admins) =>
-      AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES.some((privledged_host) =>
+      AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.some((privledged_host) =>
         super_admins.endsWith(privledged_host),
       ),
     )
   ) {
     throw new Error(
-      'All members of AUTHZ_SUPER_ADMINS must belong to hosts found in AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES',
+      'All members of AUTHZ_SUPER_ADMINS must belong to hosts found in AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES',
     );
   }
 };
 
-export const get_env = () => {
+const boolFalseIfProd = (spec: { default: boolean }) => {
   const is_prod =
-    process.env.IS_LOCAL_DEV !== 'true' && process.env.IS_TEST_ENV !== 'true';
+    process.env.DEV_IS_LOCAL_ENV !== 'true' &&
+    process.env.DEV_IS_TEST_ENV !== 'true';
 
+  return bool({
+    ...spec,
+    choices: is_prod ? [false] : [false, true],
+  });
+};
+
+export const get_env = () => {
   // NOTE: this does not populate process.env, assumes it's already populated (e.g. via dotenv in the entrypoint file)
   const processed_env = cleanEnv(process.env, {
-    // server
-    PORT: port({ default: 3000 }),
-    HOST: host({ default: '0.0.0.0' }),
+    EXPRESS_PORT: port({ default: 3000 }),
+    EXPRESS_HOST: host({ default: '0.0.0.0' }),
 
-    // dev
-    IS_LOCAL_DEV: bool({ default: false }),
-    FORCE_ENABLE_GCNOTIFY: bool({ default: false }),
-    FORCE_DISABLE_CSRF_PROTECTION: bool({
-      default: false,
-      choices: is_prod ? [false] : [false, true],
-    }),
-
-    // MongoDB
     MDB_CONNECT_STRING: str(),
 
-    // authN
-    MAGIC_LINK_SECRET: str(),
-    GC_NOTIFY_API_KEY: str(),
-    GC_NOTIFY_TEMPLATE_ID: str(),
+    MIDDLEWARE_MAX_SESSION_AGE: num({ default: 24 * 60 * 60 }),
+    MIDDLEWARE_COOKIE_SIGNING_SECRET: str(),
+    MIDDLEWARE_SESSION_STORE_SECRET: str(),
+    MIDDLEWARE_CSRF_SECRET: str(),
 
-    // authZ
+    AUTHN_MAGIC_LINK_SECRET: str(),
+    AUTHN_GC_NOTIFY_API_KEY: str(),
+    AUTHN_GC_NOTIFY_TEMPLATE_ID: str(),
+
     AUTHZ_EMAIL_HOSTS_ALLOWED: emailHostListOrWildcard(),
-    AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES: emailHostList(),
+    AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES: emailHostList(),
     AUTHZ_SUPER_ADMINS: emailList(),
 
-    // other middleware
-    MAX_SESSION_AGE: num({ default: 24 * 60 * 60 }),
-    COOKIE_SIGNING_SECRET: str(),
-    SESSION_STORE_SECRET: str(),
-    CSRF_SECRET: str(),
+    DEV_IS_LOCAL_ENV: boolFalseIfProd({ default: false }),
+    DEV_FORCE_ENABLE_GCNOTIFY: boolFalseIfProd({ default: false }),
+    DEV_FORCE_DISABLE_CSRF_PROTECTION: boolFalseIfProd({ default: false }),
   });
 
   additional_authz_validation(processed_env);

@@ -34,46 +34,46 @@ spec:
                 secretKeyRef:
                   name: mongodb-api-user-connect-string
                   key: connectionString.standardSrv
-            - name: COOKIE_SIGNING_SECRET
+            - name: MIDDLEWARE_COOKIE_SIGNING_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: cookie_signing_secret
-            - name: SESSION_STORE_SECRET
+                  key: middleware_cookie_signing_secret
+            - name: MIDDLEWARE_SESSION_STORE_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: session_store_secret
-            - name: CSRF_SECRET
+                  key: middleware_session_store_secret
+            - name: MIDDLEWARE_CSRF_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: csrf_secret
-            - name: MAGIC_LINK_SECRET
+                  key: middleware_csrf_secret
+            - name: AUTHN_MAGIC_LINK_SECRET
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: magic_link_secret
-            - name: GC_NOTIFY_API_KEY
+                  key: authn_magic_link_secret
+            - name: AUTHN_GC_NOTIFY_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: gc_notify_api_key
-            - name: GC_NOTIFY_TEMPLATE_ID
+                  key: authn_gc_notify_api_key
+            - name: AUTHN_GC_NOTIFY_TEMPLATE_ID
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: gc_notify_template_id
+                  key: authn_gc_notify_template_id
             - name: AUTHZ_EMAIL_HOSTS_ALLOWED
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
                   key: authz_email_hosts_allowed
-            - name: AUTHZ_EMAIL_HOSTS_CAN_HAVE_PRIVILEGES
+            - name: AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: authz_email_hosts_can_have_privileges
+                  key: authz_email_hosts_allowed_privileges
             - name: AUTHZ_SUPER_ADMINS
               valueFrom:
                 secretKeyRef:

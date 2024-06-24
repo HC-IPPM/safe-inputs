@@ -22,12 +22,12 @@ export const create_app = async ({
   context?: any;
 }) => {
   const {
-    IS_LOCAL_DEV,
-    MAX_SESSION_AGE,
-    SESSION_STORE_SECRET,
-    COOKIE_SIGNING_SECRET,
-    CSRF_SECRET,
-    FORCE_DISABLE_CSRF_PROTECTION,
+    DEV_IS_LOCAL_ENV,
+    MIDDLEWARE_MAX_SESSION_AGE,
+    MIDDLEWARE_SESSION_STORE_SECRET,
+    MIDDLEWARE_COOKIE_SIGNING_SECRET,
+    MIDDLEWARE_CSRF_SECRET,
+    DEV_FORCE_DISABLE_CSRF_PROTECTION,
   } = get_env();
 
   await connect_db();
@@ -43,45 +43,45 @@ export const create_app = async ({
   const mongo_store = new MongoStore({
     clientPromise: get_db_client().connect(),
     crypto: {
-      secret: SESSION_STORE_SECRET,
+      secret: MIDDLEWARE_SESSION_STORE_SECRET,
     },
-    ttl: +MAX_SESSION_AGE,
-    touchAfter: +MAX_SESSION_AGE * 0.9,
+    ttl: +MIDDLEWARE_MAX_SESSION_AGE,
+    touchAfter: +MIDDLEWARE_MAX_SESSION_AGE * 0.9,
   });
 
   app.use(
     session({
-      secret: COOKIE_SIGNING_SECRET,
+      secret: MIDDLEWARE_COOKIE_SIGNING_SECRET,
       resave: false,
       saveUninitialized: false,
       proxy: true,
       cookie: {
-        sameSite: IS_LOCAL_DEV ? 'lax' : 'strict',
-        secure: !IS_LOCAL_DEV,
+        sameSite: DEV_IS_LOCAL_ENV ? 'lax' : 'strict',
+        secure: !DEV_IS_LOCAL_ENV,
       },
       store: mongo_store,
     }),
   );
 
   // required by csrf-csrf's middleware, parses and signs/validates cookies, makes them available via req.cookies and req.signedCookies (signed cookies
-  // are validated with COOKIE_SIGNING_SECRET) compatible with express-session middleware IF the cookie signing secret is the same between them (still
+  // are validated with MIDDLEWARE_COOKIE_SIGNING_SECRET) compatible with express-session middleware IF the cookie signing secret is the same between them (still
   // recommended to add session middleware before the cookieParser in app.use order)
-  app.use(cookieParser(COOKIE_SIGNING_SECRET));
+  app.use(cookieParser(MIDDLEWARE_COOKIE_SIGNING_SECRET));
 
   const {
     generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token
     doubleCsrfProtection, // This is the default CSRF protection middleware
   } = doubleCsrf({
-    getSecret: () => CSRF_SECRET,
-    cookieName: IS_LOCAL_DEV ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
+    getSecret: () => MIDDLEWARE_CSRF_SECRET,
+    cookieName: DEV_IS_LOCAL_ENV ? 'x-csrf-token' : '__Host-psifi.x-csrf-token',
     cookieOptions: {
-      sameSite: IS_LOCAL_DEV ? 'lax' : 'strict',
-      secure: !IS_LOCAL_DEV,
+      sameSite: DEV_IS_LOCAL_ENV ? 'lax' : 'strict',
+      secure: !DEV_IS_LOCAL_ENV,
     },
   });
 
   // important: session middleware needs to come before the CSRF middleware is added!
-  if (!FORCE_DISABLE_CSRF_PROTECTION) {
+  if (!DEV_FORCE_DISABLE_CSRF_PROTECTION) {
     app.use(doubleCsrfProtection);
   }
 

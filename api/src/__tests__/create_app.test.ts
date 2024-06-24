@@ -44,7 +44,10 @@ describe('create_app', () => {
   beforeEach(() => {
     jest.resetModules();
     // Need to disable CSRF protection middleware during these tests
-    process.env = { ...ORIGINAL_ENV, FORCE_DISABLE_CSRF_PROTECTION: 'true' };
+    process.env = {
+      ...ORIGINAL_ENV,
+      DEV_FORCE_DISABLE_CSRF_PROTECTION: 'true',
+    };
   });
   afterEach(() => {
     process.env = ORIGINAL_ENV;

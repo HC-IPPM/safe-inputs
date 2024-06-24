@@ -6,7 +6,7 @@ import { schema } from './schema.ts';
 
 dotenv.config({ path: '.env' }); // relative to the call point, e.g. the service root
 
-const { HOST, PORT } = get_env();
+const { EXPRESS_HOST, EXPRESS_PORT } = get_env();
 
 process.on('SIGTERM', () => {
   throw new Error('SIGTERM');
@@ -20,6 +20,8 @@ const app = await create_app({
   context: {},
 });
 
-app.listen({ host: HOST, port: PORT }, () =>
-  console.log(`🚀 Safe-inputs API listening on ${HOST}:${PORT}`),
+app.listen({ host: EXPRESS_HOST, port: EXPRESS_PORT }, () =>
+  console.log(
+    `🚀 Safe-inputs API listening on ${EXPRESS_HOST}:${EXPRESS_PORT}`,
+  ),
 );

@@ -17,19 +17,22 @@ const get_post_auth_redirect = (req: Express.Request) => {
 };
 
 const should_send_token_via_email = () => {
-  const { IS_LOCAL_DEV, FORCE_ENABLE_GCNOTIFY } = get_env();
+  const { DEV_IS_LOCAL_ENV, DEV_FORCE_ENABLE_GCNOTIFY } = get_env();
 
-  return !IS_LOCAL_DEV || FORCE_ENABLE_GCNOTIFY;
+  return !DEV_IS_LOCAL_ENV || DEV_FORCE_ENABLE_GCNOTIFY;
 };
 
 export const configure_passport_js = (passport: PassportStatic) => {
-  const { MAGIC_LINK_SECRET, GC_NOTIFY_API_KEY, GC_NOTIFY_TEMPLATE_ID } =
-    get_env();
+  const {
+    AUTHN_MAGIC_LINK_SECRET,
+    AUTHN_GC_NOTIFY_API_KEY,
+    AUTHN_GC_NOTIFY_TEMPLATE_ID,
+  } = get_env();
 
   passport.use(
     new MagicLinkStrategy(
       {
-        secret: MAGIC_LINK_SECRET,
+        secret: AUTHN_MAGIC_LINK_SECRET,
         userFields: ['email'],
         tokenField: 'token',
         passReqToCallbacks: true,
@@ -54,12 +57,12 @@ export const configure_passport_js = (passport: PassportStatic) => {
               method: 'POST',
               credentials: 'include',
               headers: {
-                Authorization: GC_NOTIFY_API_KEY,
+                Authorization: AUTHN_GC_NOTIFY_API_KEY,
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 email_address: user.email,
-                template_id: GC_NOTIFY_TEMPLATE_ID,
+                template_id: AUTHN_GC_NOTIFY_TEMPLATE_ID,
                 personalisation: {
                   sign_in_link: verification_url,
                 },
