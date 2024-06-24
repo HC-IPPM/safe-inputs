@@ -4,6 +4,7 @@ resources:
   - ../../base/ui
   - namespace.yaml
   - virtual-service.yaml
+  - authzpol.yaml
 
 namespace: ui
 
