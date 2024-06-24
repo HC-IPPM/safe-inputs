@@ -45,8 +45,8 @@ export const create_app = async ({
     crypto: {
       secret: MIDDLEWARE_SESSION_STORE_SECRET,
     },
-    ttl: +MIDDLEWARE_MAX_SESSION_AGE,
-    touchAfter: +MIDDLEWARE_MAX_SESSION_AGE * 0.9,
+    ttl: MIDDLEWARE_MAX_SESSION_AGE,
+    touchAfter: MIDDLEWARE_MAX_SESSION_AGE * 0.9,
   });
 
   app.use(
