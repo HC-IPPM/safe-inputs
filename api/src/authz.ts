@@ -40,7 +40,7 @@ const get_user_email = (user: string | Express.User) => {
 
 const apply_rules_to_user = (
   user: string | Express.User,
-  ...rules: ((_email: string) => boolean)[]
+  ...rules: ((email: string) => boolean)[]
 ) =>
   _.chain(user)
     .thru(get_user_email)
