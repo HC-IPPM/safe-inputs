@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
 import mongoose from 'mongoose';
 
 import request from 'supertest'; // eslint-disable-line node/no-unpublished-import

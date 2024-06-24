@@ -54,8 +54,8 @@ const additional_authz_validation = ({
 
   if (
     !AUTHZ_SUPER_ADMINS.every((super_admins) =>
-      AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.some((privledged_host) =>
-        super_admins.endsWith(privledged_host),
+      AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.some((privileged_host) =>
+        super_admins.endsWith(privileged_host),
       ),
     )
   ) {

@@ -4,7 +4,7 @@ import validator from 'validator';
 import { get_env } from './env.ts';
 
 const email_is_on_host = (email: string, allowed_hosts: string[]) =>
-  _.some(allowed_hosts, email.endsWith);
+  _.some(allowed_hosts, (host) => email.endsWith(host));
 
 const email_has_allowed_basic_host = (email: string) => {
   const { AUTHZ_EMAIL_HOSTS_ALLOWED } = get_env();
@@ -50,7 +50,7 @@ const apply_rules_to_user = (
 export const is_valid_user = (user: string | Express.User) =>
   apply_rules_to_user(user, email_has_allowed_basic_host);
 
-export const is_valid_privledged_user = (user: string | Express.User) =>
+export const is_valid_privileged_user = (user: string | Express.User) =>
   apply_rules_to_user(
     user,
     email_has_allowed_basic_host,
