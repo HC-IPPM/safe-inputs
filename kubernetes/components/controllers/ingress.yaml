@@ -97,4 +97,4 @@ roleRef:
   name: istio-ingressgateway-sds
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: istio-ingressgateway
