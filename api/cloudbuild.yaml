@@ -1,4 +1,13 @@
 steps:
+  - id: 'Check types'
+    name: 'node:lts-alpine3.19'
+    entrypoint: 'sh'
+    dir: api
+    args:
+      - '-c'
+      - |
+        npm ci && npm run typecheck
+
   - id: 'Run tests'
     name: 'gcr.io/cloud-builders/docker'
     script: |
