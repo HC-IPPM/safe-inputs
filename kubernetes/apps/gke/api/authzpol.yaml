@@ -13,7 +13,6 @@ spec:
     - source:
         # <trust-domain>/ns/<namespace>/sa/<service-account-name>
         principals: 
-          # - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/mongodb-database"
           - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/api"
   - to:
     - operation:
