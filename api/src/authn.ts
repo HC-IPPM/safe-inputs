@@ -3,7 +3,15 @@ import express from 'express';
 import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
+import { validate_user_email_allowed } from './authz.ts';
+
 import { get_env } from './env.ts';
+
+const should_send_token_via_email = () => {
+  const { DEV_IS_LOCAL_ENV, DEV_FORCE_ENABLE_GCNOTIFY } = get_env();
+
+  return !DEV_IS_LOCAL_ENV || DEV_FORCE_ENABLE_GCNOTIFY;
+};
 
 const get_post_auth_redirect = (req: Express.Request) => {
   const post_auth_redirect =
@@ -14,12 +22,6 @@ const get_post_auth_redirect = (req: Express.Request) => {
     post_auth_redirect && post_auth_redirect.startsWith('/');
 
   return provided_redirect_is_relative ? post_auth_redirect : '/';
-};
-
-const should_send_token_via_email = () => {
-  const { DEV_IS_LOCAL_ENV, DEV_FORCE_ENABLE_GCNOTIFY } = get_env();
-
-  return !DEV_IS_LOCAL_ENV || DEV_FORCE_ENABLE_GCNOTIFY;
 };
 
 export const configure_passport_js = (passport: PassportStatic) => {
@@ -36,7 +38,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
         userFields: ['email'],
         tokenField: 'token',
         passReqToCallbacks: true,
-        verifyUserAfterToken: true,
+        verifyUserAfterToken: false, // verifyUser is called before sendToken
       },
       async function sendToken(
         req: Express.Request,
@@ -81,11 +83,10 @@ export const configure_passport_js = (passport: PassportStatic) => {
         }
       },
       async function verifyUser(_req: Express.Request, user: Express.User) {
-        // TODO: verification logic
-        // Potentially:
-        //  - PHAC and HC emails can always verify
-        //  - non-PHAC/HC emails only verify if they've been invited to at least one dataset?
+        validate_user_email_allowed(user);
+
         // If we want to bother storing users in the database, we'd do it from here
+
         return user;
       },
     ),
