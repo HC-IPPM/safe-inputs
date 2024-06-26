@@ -62,11 +62,11 @@ spec:
   git:
     checkout:
       ref:
-        branch: new-cluster
+        branch: main
     commit:
       author:
         name: fluxbot
         email: fluxcd@users.noreply.github.com
       messageTemplate: "[ci skip] {{range .Changed.Images}}{{println .}}{{end}}"
     push:
-      branch: new-cluster
+      branch: main
