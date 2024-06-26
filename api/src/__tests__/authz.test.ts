@@ -1,7 +1,7 @@
 import {
-  is_valid_user,
-  is_valid_privileged_user,
-  is_valid_super_user,
+  validate_user_email_allowed,
+  validate_user_can_have_privileges,
+  validate_user_is_super_user,
 } from 'src/authz.ts';
 
 const test_both_email_string_and_user_stub = (
@@ -13,6 +13,22 @@ const test_both_email_string_and_user_stub = (
     test({ email });
   });
 
+const throws_error_with_status_code = (
+  callable: () => void,
+  expected_status_code: number,
+) => {
+  try {
+    callable();
+    return false;
+  } catch (error) {
+    return (
+      error instanceof Error &&
+      'statusCode' in error &&
+      error.statusCode === expected_status_code
+    );
+  }
+};
+
 describe('User authorization rules', () => {
   const ORIGINAL_ENV = process.env;
   beforeEach(() => {
@@ -22,7 +38,7 @@ describe('User authorization rules', () => {
     process.env = ORIGINAL_ENV;
   });
 
-  describe('is_valid_user rule...', () => {
+  describe('validate_user_email_allowed rule...', () => {
     describe('with AUTHZ_EMAIL_HOSTS_ALLOWED as wildcard', () => {
       beforeEach(() => {
         process.env = {
@@ -31,21 +47,28 @@ describe('User authorization rules', () => {
         };
       });
 
-      it('Throws on invalid email strings', async () => {
+      it('Throws a 400 on invalid email strings', async () => {
         test_both_email_string_and_user_stub(
           [
             'just-a-host.com',
             'just-a-string',
             'email-with-invalid-host@h o s t.com',
           ],
-          (email) => expect(() => is_valid_user(email)).toThrow(),
+          (email) =>
+            expect(
+              throws_error_with_status_code(
+                () => validate_user_email_allowed(email),
+                400,
+              ),
+            ).toBe(true),
         );
       });
 
-      it('Accepts any valid email', async () => {
+      it('Passes any valid email without throwing', async () => {
         test_both_email_string_and_user_stub(
           ['valid@valid.com', 'who.ever@whatever.com'],
-          (email) => expect(is_valid_user(email)).toBe(true),
+          (email) =>
+            expect(() => validate_user_email_allowed(email)).not.toThrow(),
         );
       });
     });
@@ -62,34 +85,47 @@ describe('User authorization rules', () => {
         };
       });
 
-      it('Throws on invalid email strings', async () => {
+      it('Throws a 400 on invalid email strings', async () => {
         test_both_email_string_and_user_stub(
           [
             'just-a-host.com',
             'just-a-string',
             'email-with-invalid-host@h o s t.com',
           ],
-          (email) => expect(() => is_valid_user(email)).toThrow(),
+          (email) =>
+            expect(
+              throws_error_with_status_code(
+                () => validate_user_email_allowed(email),
+                400,
+              ),
+            ).toBe(true),
         );
       });
 
-      it('Denies emails from non-approved hosts', async () => {
+      it('Throws 403 on emails from non-approved hosts', async () => {
         test_both_email_string_and_user_stub(
           ['host3@host3.com', 'host1org@host1.org'],
-          (email) => expect(is_valid_user(email)).toBe(false),
+          (email) =>
+            expect(
+              throws_error_with_status_code(
+                () => validate_user_email_allowed(email),
+                403,
+              ),
+            ).toBe(true),
         );
       });
 
-      it('Accepts emails from approved hosts', async () => {
+      it('Passes emails from approved hosts without throwing', async () => {
         test_both_email_string_and_user_stub(
           ['host1@host1.com', 'host2@host2.net'],
-          (email) => expect(is_valid_user(email)).toBe(true),
+          (email) =>
+            expect(() => validate_user_email_allowed(email)).not.toThrow(),
         );
       });
     });
   });
 
-  describe('is_valid_privileged_user rule...', () => {
+  describe('validate_user_can_have_privileges rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -99,22 +135,29 @@ describe('User authorization rules', () => {
       };
     });
 
-    it('Denies non-privileged users', async () => {
+    it('Throws 403 on non-privileged users', async () => {
       test_both_email_string_and_user_stub(
         ['admin@unprivileged.net'],
-        (email) => expect(is_valid_privileged_user(email)).toBe(false),
+        (email) =>
+          expect(
+            throws_error_with_status_code(
+              () => validate_user_can_have_privileges(email),
+              403,
+            ),
+          ).toBe(true),
       );
     });
 
-    it('Accepts privileged users', async () => {
+    it('Passes privileged users without throwing', async () => {
       test_both_email_string_and_user_stub(
         ['johndoe@privileged.com', 'admin@privileged.com'],
-        (email) => expect(is_valid_privileged_user(email)).toBe(true),
+        (email) =>
+          expect(() => validate_user_can_have_privileges(email)).not.toThrow(),
       );
     });
   });
 
-  describe('is_valid_super_user rule...', () => {
+  describe('validate_user_is_super_user rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -124,17 +167,24 @@ describe('User authorization rules', () => {
       };
     });
 
-    it('Denies non-super-admin', async () => {
+    it('Throws 403 on non-super-admin', async () => {
       test_both_email_string_and_user_stub(
         ['not-admin@privileged.com', 'admin@unprivileged.net'],
-        (email) => expect(is_valid_super_user(email)).toBe(false),
+        (email) =>
+          expect(
+            throws_error_with_status_code(
+              () => validate_user_is_super_user(email),
+              403,
+            ),
+          ).toBe(true),
       );
     });
 
-    it('Accepts super-admins', async () => {
+    it('Passes super-admins without throwing', async () => {
       test_both_email_string_and_user_stub(
         ['admin@privileged.com', 'admin2@privileged.com'],
-        (email) => expect(is_valid_super_user(email)).toBe(true),
+        (email) =>
+          expect(() => validate_user_is_super_user(email)).not.toThrow(),
       );
     });
   });
