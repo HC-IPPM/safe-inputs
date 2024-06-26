@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+spec:
+  template:
+    spec:
+      containers:
+        - name: istio-proxy
+          image: auto
+          resources:
+            requests:
+              cpu: 50m
+              memory: 112Mi
+          securityContext:
+            allowPrivilegeEscalation: false

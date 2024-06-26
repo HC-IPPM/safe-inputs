@@ -1,0 +1,16 @@
+# allow ingress to ui
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: allow-ingress-to-ui
+spec:
+ selector:
+   matchLabels:
+     app: ui
+ action: ALLOW
+ rules: 
+  - from:
+    - source:
+        # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+        principals: 
+          - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/istio-ingress/sa/istio-ingressgateway"

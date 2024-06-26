@@ -1,0 +1,72 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: api
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: api
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: api
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: ui
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: ui
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: ui
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: safeinputs-updater
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m
+  update:
+    strategy: Setters
+    path: .
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        name: fluxbot
+        email: fluxcd@users.noreply.github.com
+      messageTemplate: "[ci skip] {{range .Changed.Images}}{{println .}}{{end}}"
+    push:
+      branch: main

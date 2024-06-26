@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ui-virtual-service
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - istio-ingress/mesh-gateway
+  http:
+    - name: gateway-to-ui
+      match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: ui.ui.svc.cluster.local

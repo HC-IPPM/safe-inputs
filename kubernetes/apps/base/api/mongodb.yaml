@@ -1,0 +1,84 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mongodb-database
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: mongodb-database
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - patch
+      - delete
+      - get
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: mongodb-database
+subjects:
+  - kind: ServiceAccount
+    name: mongodb-database
+roleRef:
+  kind: Role
+  name: mongodb-database
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb
+spec:
+  type: ReplicaSet
+  security:
+    authentication:
+      modes: ['SCRAM']
+  users:
+    - name: admin
+      db: admin # auth db for this user
+      passwordSecretRef:
+        name: mongodb-secrets
+        key: admin-password
+      roles:
+        - name: clusterAdmin
+          db: admin
+        - name: userAdminAnyDatabase
+          db: admin
+      connectionStringSecretName: mongodb-admin-connect-string
+      scramCredentialsSecretName: mongodb-admin-scram
+    - name: api_user
+      db: api_db
+      passwordSecretRef:
+        name: mongodb-secrets
+        key: api-user-password
+      roles:
+        - name: readWrite
+          db: api_db
+      connectionStringSecretName: mongodb-api-user-connect-string
+      scramCredentialsSecretName: mongodb-api-user-scram
+  additionalMongodConfig:
+    storage.wiredTiger.engineConfig.journalCompressor: zlib
+
+  statefulSet:
+    spec:
+      # Set container resources
+      template:
+        spec:
+          initContainers:
+            - name: mongodb-agent-readinessprobe
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 200Mi
