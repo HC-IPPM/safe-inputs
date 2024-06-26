@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { jest } from '@jest/globals'; // eslint-disable-line node/no-unpublished-import
 import mongoose from 'mongoose';
 
 import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
@@ -44,7 +43,10 @@ describe('create_app', () => {
   beforeEach(() => {
     jest.resetModules();
     // Need to disable CSRF protection middleware during these tests
-    process.env = { ...ORIGINAL_ENV, FORCE_DISABLE_CSRF_PROTECTION: 'true' };
+    process.env = {
+      ...ORIGINAL_ENV,
+      DEV_FORCE_DISABLE_CSRF_PROTECTION: 'true',
+    };
   });
   afterEach(() => {
     process.env = ORIGINAL_ENV;

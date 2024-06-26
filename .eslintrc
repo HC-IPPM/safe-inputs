@@ -14,16 +14,7 @@
   "rules": {
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
-    "no-unused-vars": [
-      "warn",
-      {
-        "vars": "all",
-        "args": "all",
-        "ignoreRestSiblings": true,
-        "varsIgnorePattern": "^_.+",
-        "argsIgnorePattern": "^_.+"
-      }
-    ],
+    "no-unused-vars": "off", // covered by @typescript-eslint/no-unused-vars
     "no-use-before-define": "off", // covered by @typescript-eslint/no-use-before-define
     "no-throw-literal": "error",
     "no-restricted-imports": ["error", { "patterns": ["../*"] }],

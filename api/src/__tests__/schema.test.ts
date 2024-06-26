@@ -1,5 +1,3 @@
-// eslint-disable-next-line
-//import { jest } from '@jest/globals'; // support for ESM modules
 import { graphql } from 'graphql';
 
 import { schema } from 'src/schema.ts';
