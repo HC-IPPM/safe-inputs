@@ -3,6 +3,8 @@ import validator from 'validator';
 
 import { get_env } from './env.ts';
 
+import { AppError } from './error_utils.ts';
+
 const email_is_on_host = (email: string, allowed_hosts: string[]) =>
   _.some(allowed_hosts, (host) => email.endsWith(host));
 
@@ -32,7 +34,7 @@ const get_user_email = (user: string | Express.User) => {
   })();
 
   if (typeof email === 'undefined' || !validator.isEmail(email)) {
-    throw new Error(`Expected a valid email address got \`${email}\``);
+    throw new AppError(400, `Expected a valid email address got \`${email}\``);
   }
 
   return email;
