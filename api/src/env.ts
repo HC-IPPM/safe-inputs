@@ -98,6 +98,7 @@ export const get_env = () => {
     AUTHZ_SUPER_ADMINS: emailList(),
 
     DEV_IS_LOCAL_ENV: boolFalseIfProd({ default: false }),
+    DEV_IS_TEST_ENV: boolFalseIfProd({ default: false }),
     DEV_FORCE_ENABLE_GCNOTIFY: boolFalseIfProd({ default: false }),
     DEV_FORCE_DISABLE_CSRF_PROTECTION: boolFalseIfProd({ default: false }),
   });

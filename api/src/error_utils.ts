@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 
+import { get_env } from './env.ts';
+
 export type AppErrorInstance = Error & { status: number };
 
 interface AppErrorConstructor {
@@ -23,7 +25,13 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
-  console.error(err.stack); // TODO: a good structured logging library and logging utils are a TODO
+  const { DEV_IS_TEST_ENV } = get_env();
+
+  if (!DEV_IS_TEST_ENV) {
+    // TODO: a good structured logging library and logging utils are a TODO
+    // console output should be silenced when running tests, for clean test reports
+    console.error(err.stack);
+  }
 
   const status_code = 'status' in err ? err.status : 500;
 
