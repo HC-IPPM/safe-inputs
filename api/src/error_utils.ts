@@ -1,14 +1,14 @@
-export type AppErrorInstance = Error & { statusCode: number };
+export type AppErrorInstance = Error & { status: number };
 
 interface AppErrorConstructor {
-  (statusCode: number, message: string): AppErrorInstance;
-  new (statusCode: number, message: string): AppErrorInstance;
+  (status: number, message: string): AppErrorInstance;
+  new (status: number, message: string): AppErrorInstance;
 }
 
-export const AppError = function (statusCode: number, message: string) {
+export const AppError = function (status: number, message: string) {
   const error = new Error(message) as AppErrorInstance;
 
-  error.statusCode = statusCode;
+  error.status = status;
 
   return error;
 } as AppErrorConstructor;

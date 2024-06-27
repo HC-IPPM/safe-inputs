@@ -23,8 +23,8 @@ const throws_error_with_status_code = (
   } catch (error) {
     return (
       error instanceof Error &&
-      'statusCode' in error &&
-      error.statusCode === expected_status_code
+      'status' in error &&
+      error.status === expected_status_code
     );
   }
 };
