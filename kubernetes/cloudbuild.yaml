@@ -3,6 +3,7 @@ steps:
     name: 'ghcr.io/yannh/kubeconform:latest-alpine'
     dir: kubernetes
     script: |
+      #!/usr/bin/env bash
       set -euxo pipefail
 
       # mirror kustomize-controller build options
