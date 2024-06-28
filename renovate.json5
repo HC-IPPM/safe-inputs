@@ -30,7 +30,10 @@
         "./kubernetes/apps/base/api/deployment.yaml",
         "./kubernetes/apps/base/ui/deployment.yaml"
       ],
-      "pinDigest": false
+      matchUpdateTypes: ["pinDigest"],
+      "pinDigest": {
+        "enabled": false
+      } 
     },
   ]
 }
