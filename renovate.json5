@@ -30,7 +30,7 @@
         "./kubernetes/apps/base/api/deployment.yaml",
         "./kubernetes/apps/base/ui/deployment.yaml"
       ],
-      matchUpdateTypes: ["pinDigest"],
+      "matchUpdateTypes": ["pinDigest"],
       "pinDigest": {
         "enabled": false
       } 
