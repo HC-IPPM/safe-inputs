@@ -1,11 +1,11 @@
 steps:
-  - name: node:18-alpine@sha256:e37da457874383fa9217067867ec85fe8fe59f0bfa351ec9752a95438680056e
+  - name: node:20-alpine@sha256:df01469346db2bf1cfc1f7261aeab86b2960efa840fe2bd46d83ff339f463665
     id: install
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:18-alpine@sha256:e37da457874383fa9217067867ec85fe8fe59f0bfa351ec9752a95438680056e
+  - name: node:20-alpine@sha256:df01469346db2bf1cfc1f7261aeab86b2960efa840fe2bd46d83ff339f463665
     id: test
     dir: ui
     entrypoint: npm
