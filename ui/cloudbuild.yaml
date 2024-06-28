@@ -1,17 +1,17 @@
 steps:
-  - name: node:18-alpine
+  - name: node:18-alpine@sha256:e37da457874383fa9217067867ec85fe8fe59f0bfa351ec9752a95438680056e
     id: install
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: node:18-alpine
+  - name: node:18-alpine@sha256:e37da457874383fa9217067867ec85fe8fe59f0bfa351ec9752a95438680056e
     id: test
     dir: ui
     entrypoint: npm
     args: ['test']
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6ef2ed8ac8482bf314440b36bbe1e67d425fba3dfdea75254949526348cddb0b'
     id: generate-image-name
     entrypoint: 'bash'
     dir: ui
@@ -20,7 +20,7 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6ef2ed8ac8482bf314440b36bbe1e67d425fba3dfdea75254949526348cddb0b'
     id: build-if-main
     entrypoint: 'bash'
     dir: ui
@@ -35,7 +35,7 @@ steps:
           exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6ef2ed8ac8482bf314440b36bbe1e67d425fba3dfdea75254949526348cddb0b'
     id: push-if-main
     entrypoint: 'bash'
     args:

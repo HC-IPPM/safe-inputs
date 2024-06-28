@@ -1,6 +1,6 @@
 steps:
   - id: "Generate manifests"
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/cloud-builders/gcloud@sha256:0cfabe7514be679c2b3e75ec9445584e4f71d69d6e2e11934cb5fb6bde941336"
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -19,7 +19,7 @@ steps:
       done
   
   - id: Validate schema
-    name: 'ghcr.io/yannh/kubeconform:latest-alpine'
+    name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:47141997365b1f6aa914b2e801cb9772b94c2696c279e2046a4517d5bfd8a09a'
     dir: kubernetes
     args:
       - -skip=Secret
