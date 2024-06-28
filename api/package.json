@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
-    "@escape.tech/graphql-armor-max-depth": "^1.8.1",
+    "@escape.tech/graphql-armor-max-depth": "^2.0.0",
     "@graphql-tools/schema": "^10.0.3",
     "@graphql-yoga/node": "^3.3.0",
     "connect-mongo": "^5.1.0",
