@@ -15,17 +15,20 @@ steps:
         do
           echo "INFO - Generating kustomization ${file/%$kustomize_config}"
           kustomize build "${file/%$kustomize_config}" "${kustomize_flags[@]}" >> /workspace/resources.yaml
+          echo "---" >> /workspace/resources.yaml
       done
   
-  - id: "Validate schema"
-    name: "ghcr.io/yannh/kubeconform:latest-alpine"
+
+  - id: Validate schema
+    name: 'ghcr.io/yannh/kubeconform:latest-alpine'
     dir: kubernetes
     args:
-      - "-c"
-      - |
-        -skip=Secret -strict -ignore-missing-schemas \
-        -schema-location default \
-        -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
-        -verbose \
-        /workspace/resources.yaml
-
+      - -skip=Secret
+      - -strict
+      - -ignore-missing-schemas
+      - -schema-location=default
+      - >-
+        -schema-location=
+        'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+      - -verbose
+      - /workspace/resources.yaml
