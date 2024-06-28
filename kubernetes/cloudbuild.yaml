@@ -18,7 +18,6 @@ steps:
           echo "---" >> /workspace/resources.yaml
       done
   
-
   - id: Validate schema
     name: 'ghcr.io/yannh/kubeconform:latest-alpine'
     dir: kubernetes
