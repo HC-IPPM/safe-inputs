@@ -22,4 +22,15 @@
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
+  "packageRules": [
+    {
+
+      "description": "Ignore pinning for images managed by Flux",
+      "matchFileNames": [
+        "./kubernetes/apps/base/api/deployment.yaml",
+        "./kubernetes/apps/base/ui/deployment.yaml"
+      ],
+      "pinDigest": false
+    },
+  ]
 }
