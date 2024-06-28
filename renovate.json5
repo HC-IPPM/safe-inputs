@@ -22,4 +22,18 @@
       "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
     ]
   },
+  "packageRules": [
+    {
+
+      "description": "Ignore pinning for images managed by Flux",
+      "matchPackageNames": [
+        "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api",
+        "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui",
+      ],
+      "matchUpdateTypes": ["pinDigest"],
+      "pinDigest": {
+        "enabled": false
+      } 
+    },
+  ]
 }
