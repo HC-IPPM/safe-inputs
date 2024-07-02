@@ -27,7 +27,7 @@
     "test:down": "docker compose -f ./docker-compose.dev-test.yaml down"
   },
   "dependencies": {
-    "@escape.tech/graphql-armor-max-aliases": "^1.6.1",
+    "@escape.tech/graphql-armor-max-aliases": "^2.0.0",
     "@escape.tech/graphql-armor-max-depth": "^2.0.0",
     "@graphql-tools/schema": "^10.0.3",
     "@graphql-yoga/node": "^3.3.0",
