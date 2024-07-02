@@ -1,6 +1,6 @@
 steps:
-  - id: "Generate manifests"
-    name: "gcr.io/cloud-builders/gcloud@sha256:4ea6099ef6e29e15fdf62a0cfe8872e3a873fb1b6203aa871e6cfbf6d85c2824"
+  - id: 'Generate manifests'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:4ea6099ef6e29e15fdf62a0cfe8872e3a873fb1b6203aa871e6cfbf6d85c2824'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -17,7 +17,7 @@ steps:
           kustomize build "${file/%$kustomize_config}" "${kustomize_flags[@]}" >> /workspace/resources.yaml
           echo "---" >> /workspace/resources.yaml
       done
-  
+
   - id: Validate schema
     name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:47141997365b1f6aa914b2e801cb9772b94c2696c279e2046a4517d5bfd8a09a'
     dir: kubernetes

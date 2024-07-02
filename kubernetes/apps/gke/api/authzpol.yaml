@@ -2,35 +2,35 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
- name: allow-ingress-to-mongodb
+  name: allow-ingress-to-mongodb
 spec:
- selector:
-   matchLabels:
-     app: mongodb-svc
- action: ALLOW
- rules: 
-  - from:
-    - source:
-        # <trust-domain>/ns/<namespace>/sa/<service-account-name>
-        principals: 
-          - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/api"
-  - to:
-    - operation:
-        ports: ["27017"]
+  selector:
+    matchLabels:
+      app: mongodb-svc
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+            principals:
+              - 'pdcp-cloud-005-safeinputs.svc.id.goog/ns/api/sa/api'
+    - to:
+        - operation:
+            ports: ['27017']
 ---
 # allow ingress to api
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
- name: allow-ingress-to-api
+  name: allow-ingress-to-api
 spec:
- selector:
-   matchLabels:
-     app: api
- action: ALLOW
- rules: 
-  - from:
-    - source:
-        # <trust-domain>/ns/<namespace>/sa/<service-account-name>
-        principals: 
-          - "pdcp-cloud-005-safeinputs.svc.id.goog/ns/istio-ingress/sa/istio-ingressgateway"
+  selector:
+    matchLabels:
+      app: api
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+            principals:
+              - 'pdcp-cloud-005-safeinputs.svc.id.goog/ns/istio-ingress/sa/istio-ingressgateway'
