@@ -1,4 +1,4 @@
-const { pathsToModuleNameMapper } = require('ts-jest'); // eslint-disable-line node/no-unpublished-require
+const { pathsToModuleNameMapper } = require('ts-jest'); // eslint-disable-line n/no-unpublished-require
 
 const { compilerOptions } = require('./tsconfig.json');
 

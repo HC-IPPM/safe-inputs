@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import mongoose from 'mongoose';
 
-import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
+import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
 import { create_app } from 'src/create_app.ts';
 

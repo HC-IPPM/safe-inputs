@@ -1,21 +1,21 @@
 {
-  "extends": ["../.eslintrc", "plugin:node/recommended"],
+  "extends": ["../.eslintrc", "plugin:n/recommended"],
   "env": {
-    "node": true
+    "node": true,
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["./", "./node_modules/"]
-      }
-    }
+        "moduleDirectory": ["./", "./node_modules/"],
+      },
+    },
   },
   "rules": {
-    "node/no-unsupported-features/es-syntax": [
+    "n/no-unsupported-features/es-syntax": [
       "error",
-      { "ignores": ["modules"] }
+      { "ignores": ["modules"] },
     ],
-    "node/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
-    "no-console": 0
-  }
+    "n/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
+    "no-console": 0,
+  },
 }

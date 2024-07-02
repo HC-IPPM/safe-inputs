@@ -1,5 +1,5 @@
 import express from 'express';
-import request from 'supertest'; // eslint-disable-line node/no-unpublished-import
+import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
 import { AppError, errorHandler } from 'src/error_utils.ts';
 
