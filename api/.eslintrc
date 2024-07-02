@@ -15,6 +15,10 @@
       "error",
       { "ignores": ["modules"] },
     ],
+    "n/no-unsupported-features/node-builtins": [
+      "error",
+      { "ignores": ["fetch"] },
+    ],
     "n/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
     "no-console": 0,
   },
