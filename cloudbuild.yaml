@@ -1,0 +1,22 @@
+steps:
+  - id: 'Install dependencies'
+    name: 'node:lts-alpine3.19'
+    entrypoint: 'sh'
+    dir: ./
+    args:
+      - '-c'
+      - |
+        npm ci
+
+        cd ./api && npm ci
+
+        cd ../ui && npm ci
+
+  - id: 'Check prettier output'
+    name: 'node:lts-alpine3.19'
+    entrypoint: 'sh'
+    dir: ./
+    args:
+      - '-c'
+      - |
+        npm ci && npm run prettier
