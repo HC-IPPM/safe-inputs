@@ -1,39 +1,32 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":semanticCommitScopeDisabled"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:best-practices',
+    ':dependencyDashboard',
+    ':semanticCommits',
+    ':semanticCommitScopeDisabled',
   ],
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "flux": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
+  dependencyDashboardTitle: 'Renovate Dashboard 🤖',
+  flux: {
+    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
   },
-  "kubernetes": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
+  kubernetes: {
+    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
   },
-  "helm-values": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$"
-    ]
+  'helm-values': {
+    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
   },
-  "packageRules": [
+  packageRules: [
     {
-
-      "description": "Ignore pinning for images managed by Flux",
-      "matchPackageNames": [
-        "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api",
-        "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui",
+      description: 'Ignore pinning for images managed by Flux',
+      matchPackageNames: [
+        'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api',
+        'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/ui',
       ],
-      "matchUpdateTypes": ["pinDigest"],
-      "pinDigest": {
-        "enabled": false
-      } 
+      matchUpdateTypes: ['pinDigest'],
+      pinDigest: {
+        enabled: false,
+      },
     },
-  ]
+  ],
 }

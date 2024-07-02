@@ -1,9 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- gotk-components.yaml
-- gotk-sync.yaml
-
+  - gotk-components.yaml
+  - gotk-sync.yaml
 
 patches:
   # patch kustomize-controller service account to access GCP KMS for decrypting secrets

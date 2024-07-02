@@ -2,12 +2,12 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
- name: allow-ingress-to-gateway
- namespace: istio-ingress
+  name: allow-ingress-to-gateway
+  namespace: istio-ingress
 spec:
- selector:
-   matchLabels:
-     istio: ingressgateway
- action: ALLOW
- rules:
-   - {}
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  action: ALLOW
+  rules:
+    - {}

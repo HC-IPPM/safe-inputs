@@ -89,8 +89,8 @@ export const SessionProvider = ({
         needsSync
           ? 'syncing'
           : session
-          ? 'authenticated'
-          : 'unauthenticated')(),
+            ? 'authenticated'
+            : 'unauthenticated')(),
       schedule_sync() {
         setNeedsSync(true);
       },

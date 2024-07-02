@@ -12,7 +12,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "*"
+        - '*'
       tls:
         httpsRedirect: true
     - port:
@@ -20,7 +20,7 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - "*"
+        - '*'
       tls:
         mode: SIMPLE
         credentialName: tlskeys

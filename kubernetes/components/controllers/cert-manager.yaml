@@ -23,7 +23,7 @@ spec:
   chart:
     spec:
       chart: cert-manager
-      version: "v1.15.1"
+      version: 'v1.15.1'
       sourceRef:
         kind: HelmRepository
         name: cert-manager
@@ -37,7 +37,7 @@ spec:
       leaderElection:
         namespace: cert-manager
     extraArgs:
-    - "--issuer-ambient-credentials=true"
+      - '--issuer-ambient-credentials=true'
     enableCertificateOwnerRef: true
     resources:
       requests:

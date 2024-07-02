@@ -67,6 +67,6 @@ spec:
       author:
         name: fluxbot
         email: fluxcd@users.noreply.github.com
-      messageTemplate: "[ci skip] {{range .Changed.Changes}} {{println .NewValue}}{{end}}"
+      messageTemplate: '[ci skip] {{range .Changed.Changes}} {{println .NewValue}}{{end}}'
     push:
       branch: main

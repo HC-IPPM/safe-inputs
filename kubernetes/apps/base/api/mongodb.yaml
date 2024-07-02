@@ -10,13 +10,13 @@ metadata:
   name: mongodb-database
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - secrets
     verbs:
       - get
   - apiGroups:
-      - ""
+      - ''
     resources:
       - pods
     verbs:
