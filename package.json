@@ -18,8 +18,8 @@
     "posteslint:fix": "npm run prettier:write",
     "prettier": "prettier --check .",
     "prettier:write": "prettier --write --loglevel warn .",
-    "typecheck:api": "cd ./ui && npm run typecheck",
-    "typecheck:ui": "cd ./api && npm run typecheck",
+    "typecheck:api": "cd ./api && npm run typecheck",
+    "typecheck:ui": "cd ./ui && npm run typecheck",
     "typecheck": "trap 'RC=1' ERR; npm run typecheck:api; npm run typecheck:ui; exit $RC"
   },
   "devDependencies": {
