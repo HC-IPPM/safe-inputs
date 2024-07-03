@@ -1,13 +1,12 @@
 import { maxAliasesPlugin } from '@escape.tech/graphql-armor-max-aliases';
 import { maxDepthPlugin } from '@escape.tech/graphql-armor-max-depth';
-import { createYoga } from '@graphql-yoga/node';
-
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import { doubleCsrf } from 'csrf-csrf';
 import express from 'express';
 import session from 'express-session';
 import type { GraphQLSchema } from 'graphql';
+import { createYoga } from 'graphql-yoga';
 import passport from 'passport';
 
 import { configure_passport_js, get_auth_router } from './authn.ts';
