@@ -101,7 +101,7 @@ export const create_app = async ({
     context,
     plugins: [
       // Explore https://the-guild.dev/graphql/envelop/plugins for more The Guild pluggins
-      maxAliasesPlugin({ n: 4 }), // default 15, empty `allowList` is a temporary TS fix for https://github.com/Escape-Technologies/graphql-armor/pull/685
+      maxAliasesPlugin({ n: 4 }), // Number of aliases allowed | Default: 15
       maxDepthPlugin({ n: 6 }), // Number of depth allowed | Default: 6
     ],
     graphqlEndpoint: '/api/graphql',
