@@ -1,6 +1,6 @@
 import { graphql } from 'graphql';
 
-import { schema } from 'src/schema.ts';
+import { schema } from 'src/schmea/schema.ts';
 
 describe('schema', () => {
   describe('query', () => {
