@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
-import { AppError, errorHandler } from 'src/error_utils.ts';
+import { AppError, errorHandler } from './error_utils.ts';
 
 describe('AppError', () => {
   it('constructs a new error with the provided message and the additional status property', () => {

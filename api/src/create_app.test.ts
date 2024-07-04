@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
-import { create_app } from 'src/create_app.ts';
+import { create_app } from './create_app.ts';
 
 // ----- TEST SET UP -----
 

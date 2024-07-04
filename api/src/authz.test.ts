@@ -2,7 +2,7 @@ import {
   validate_user_email_allowed,
   validate_user_can_have_privileges,
   validate_user_is_super_user,
-} from 'src/authz.ts';
+} from './authz.ts';
 
 const test_both_email_string_and_user_stub = (
   emails: string[],
