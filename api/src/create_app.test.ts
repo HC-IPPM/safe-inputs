@@ -27,9 +27,9 @@ const resolvers = {
   },
   Mutation: {
     verifyJsonFormat(
-      _parent: any,
+      _parent: unknown,
       { sheetData }: { sheetData: JSON },
-      _info: any,
+      _info: unknown,
     ) {
       return sheetData;
     },
