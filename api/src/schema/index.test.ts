@@ -1,9 +1,73 @@
+import { mergeSchemas, makeExecutableSchema } from '@graphql-tools/schema';
 import { graphql } from 'graphql';
 
 import { schema } from './index.ts';
 
 describe('schema', () => {
-  describe('mutation', () => {
+  describe('schema index', () => {
+    it('exports a functional schema', async () => {
+      const response = await graphql({
+        schema,
+        source: 'query { __schema { types { kind } } }',
+      });
+
+      expect(response.errors).toBeUndefined();
+    });
+  });
+
+  describe('mergeSchemas', () => {
+    it('Sanity check: schema merging behaves as expected, `extends` keyword not necessary to merge types', async () => {
+      const schemaWithRoot = makeExecutableSchema({
+        typeDefs: `
+        type Query {
+          root: Root!
+        }
+
+        type Root {
+          a: String
+        }
+      `,
+        resolvers: {
+          Query: {
+            root: () => ({
+              a: 'A',
+            }),
+          },
+        },
+      });
+
+      const schemaB = makeExecutableSchema({
+        typeDefs: `
+        type Root {
+          b: String
+        }
+      `,
+        resolvers: {
+          Root: {
+            b: () => 'B',
+          },
+        },
+      });
+
+      const mergedSchema = mergeSchemas({
+        schemas: [schemaWithRoot, schemaB],
+      });
+
+      const response = await graphql({
+        schema: mergedSchema,
+        source: `query {
+          root {
+            a
+            b
+          }
+        }`,
+      });
+
+      expect(response).toEqual({ data: { root: { a: 'A', b: 'B' } } });
+    });
+  });
+
+  describe('TemporaryExampleMutation', () => {
     describe('verifyJsonFormat with object input', () => {
       it('will accept JSON object for SheetData field', async () => {
         const response = await graphql({
