@@ -2,8 +2,6 @@ import DataLoader from 'dataloader';
 import _ from 'lodash';
 import type { Model, Document, FilterQuery } from 'mongoose';
 
-import { get_env } from 'src/env.ts';
-
 // dataloaders for fetching children based on parent key
 export function create_dataloader_for_resources_by_foreign_key_attr<
   ModelDoc extends Document,
