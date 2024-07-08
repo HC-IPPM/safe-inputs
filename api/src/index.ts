@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 import { create_app } from './create_app.ts';
 import { get_env } from './env.ts';
-import { schema } from './schmea/index.ts';
+import { schema } from './schema/index.ts';
 
 dotenv.config({ path: '.env' }); // relative to the call point, e.g. the service root
 
