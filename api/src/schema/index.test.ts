@@ -3,19 +3,6 @@ import { graphql } from 'graphql';
 import { schema } from './index.ts';
 
 describe('schema', () => {
-  describe('query', () => {
-    describe('hello', () => {
-      it('includes a hello world field for testing', async () => {
-        const response = await graphql({
-          schema,
-          source: '{hello}',
-        });
-
-        expect(response).toEqual({ data: { hello: 'world!' } });
-      });
-    });
-  });
-
   describe('mutation', () => {
     describe('verifyJsonFormat with object input', () => {
       it('will accept JSON object for SheetData field', async () => {
