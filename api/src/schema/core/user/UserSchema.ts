@@ -11,8 +11,8 @@ export const UserSchema = makeExecutableSchema({
   
   type User {
     email: String!
-    created_at: Int!
-    last_login_at: Int
+    created_at: Float!
+    last_login_at: Float
   }
 `,
   resolvers: {
