@@ -1,3 +1,6 @@
+import { get_bilingual_keys } from './lang_utils.ts';
+import type { BilingualKeyUnion } from './lang_utils.ts';
+
 export const str_type = { type: String };
 
 export const number_type = { type: Number };
@@ -32,11 +35,10 @@ export const sparse_parent_fkey_type = () => ({
   index: true,
 });
 
-export const MakeBilingualType = <Name extends string, MongooseType>(
-  name: Name,
+export const MakeBilingualType = <Key extends string, MongooseType>(
+  key: Key,
   type: MongooseType,
 ) =>
-  ({
-    [`${name}_en`]: type,
-    [`${name}_fr`]: type,
-  }) as { [k in `${Name}_en` | `${Name}_fr`]: MongooseType };
+  Object.fromEntries(get_bilingual_keys(key).map((key) => [key, type])) as {
+    [k in BilingualKeyUnion<Key>]: MongooseType;
+  };
