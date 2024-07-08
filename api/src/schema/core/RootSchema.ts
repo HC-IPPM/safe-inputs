@@ -5,7 +5,7 @@ import { LangsUnion } from 'src/schema/lang_utils.ts';
 export const RootSchema = makeExecutableSchema({
   typeDefs: `
   type Query {
-    root(lang:String!): Root!
+    root(lang:String): Root!
   }
 
   type Root {
@@ -17,9 +17,10 @@ export const RootSchema = makeExecutableSchema({
     Query: {
       root: (
         _parent: unknown,
-        { lang }: { lang: LangsUnion },
+        { lang }: { lang?: LangsUnion },
         context: any,
       ) => {
+        // TODO: if lang arg not provided or invalid, fall back to context.req.acceptsLanguage(). If no accepted language is supported, throw something?
         context.lang = lang;
         return {};
       },
