@@ -7,7 +7,7 @@ import { get_env } from 'src/env.ts';
 // dataloaders for fetching children based on parent key
 export function create_dataloader_for_resources_by_foreign_key_attr<
   ModelDoc extends Document,
->(model: Model<ModelDoc>, fk_attr: string) {
+>(model: Model<ModelDoc>, fk_attr: string, cache = false) {
   return new DataLoader<string, { [foreign_key: string]: ModelDoc[] }>(
     async function (fk_ids) {
       const rows = await model.find({
@@ -55,14 +55,14 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
 
       return groups_in_order_of_requested_keys;
     },
-    { cache: !get_env().DEV_IS_TEST_ENV },
+    { cache },
   );
 }
 
 // dataloaders for fetching multiple documents by a primary key attribute
 export function create_dataloader_for_resource_by_primary_key<
   ModelDoc extends Document,
->(model: Model<ModelDoc>, primary_key_attr: string) {
+>(model: Model<ModelDoc>, primary_key_attr: string, cache = false) {
   return new DataLoader<string, ModelDoc>(
     async function (keys) {
       const docs = await model.find({
@@ -78,6 +78,6 @@ export function create_dataloader_for_resource_by_primary_key<
 
       return docs_in_order_of_requested_keys;
     },
-    { cache: !get_env().DEV_IS_TEST_ENV },
+    { cache },
   );
 }
