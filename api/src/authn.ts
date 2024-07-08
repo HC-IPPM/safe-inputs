@@ -3,6 +3,8 @@ import express from 'express';
 import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
+import { get_or_create_user } from 'src/schema/core/user/UserModel.ts';
+
 import { validate_user_email_allowed } from './authz.ts';
 
 import { get_env } from './env.ts';
@@ -85,9 +87,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
       async function verifyUser(_req: Express.Request, user: Express.User) {
         validate_user_email_allowed(user);
 
-        // If we want to bother storing users in the database, we'd do it from here
-
-        return user;
+        return get_or_create_user(user.email!); // verified as non-null by validate_user_email_allowed
       },
     ),
   );
