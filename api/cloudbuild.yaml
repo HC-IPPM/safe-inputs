@@ -57,3 +57,5 @@ steps:
         else
           exit 0
         fi
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
