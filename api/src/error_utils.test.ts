@@ -11,6 +11,7 @@ describe('AppError', () => {
     const appError = new AppError(status, message);
 
     expect(appError).toBeInstanceOf(Error);
+    expect(appError).toBeInstanceOf(AppError);
     expect(appError.message).toBe(message);
     expect(appError.status).toBe(status);
   });
