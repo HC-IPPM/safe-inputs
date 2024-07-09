@@ -1,5 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
+import { validate_user_is_super_user } from 'src/authz.ts';
+import { with_authz } from 'src/schema/resolver_utils.ts';
+
 import { UserModel, UserByEmailLoader } from './UserModel.ts';
 
 export const UserSchema = makeExecutableSchema({
@@ -18,12 +21,12 @@ export const UserSchema = makeExecutableSchema({
 `,
   resolvers: {
     Root: {
-      user: (
-        _parent: unknown,
-        { email }: { email: string },
-        _context: unknown,
-      ) => UserByEmailLoader.load(email),
-      users: () => UserModel.find({}),
+      user: with_authz(
+        (_parent: unknown, { email }: { email: string }, _context: unknown) =>
+          UserByEmailLoader.load(email),
+        validate_user_is_super_user,
+      ),
+      users: with_authz(() => UserModel.find({}), validate_user_is_super_user),
     },
   },
 });

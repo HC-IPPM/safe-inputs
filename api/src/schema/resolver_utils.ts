@@ -1,3 +1,10 @@
+import _ from 'lodash';
+
+import { apply_rules_to_user, validate_user_email_allowed } from 'src/authz.ts';
+import type { AuthzRule } from 'src/authz.ts';
+
+import { AppError } from 'src/error_utils.ts';
+
 import type { LangsUnion, BilingualKeyUnion } from './lang_utils.ts';
 
 export const resolve_bilingual_scalar =
@@ -8,3 +15,25 @@ export const resolve_bilingual_scalar =
     context: { lang: LangsUnion },
   ) =>
     parent[`${base_field_name}_${context.lang}`];
+
+export const with_authz =
+  <Parent, Args, Context extends { req?: { user?: Express.User } }, Result>(
+    resolver: (parent: Parent, args: Args, context: Context) => Result,
+    ...authz_rules: AuthzRule[]
+  ): ((parent: Parent, args: Args, context: Context) => Result) =>
+  (parent: Parent, args: Args, context: Context) => {
+    if (typeof context?.req?.user === 'undefined') {
+      throw new AppError(
+        401,
+        'Query contains fields requiring an authenticated session. No session found.',
+      );
+    }
+
+    apply_rules_to_user(
+      context.req.user,
+      validate_user_email_allowed,
+      ...authz_rules,
+    );
+
+    return resolver(parent, args, context);
+  };
