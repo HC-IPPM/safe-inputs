@@ -15,7 +15,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "baseUrl": "./",
     "paths": {
       "src/*": ["./src/*"]
