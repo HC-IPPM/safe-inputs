@@ -40,7 +40,6 @@ export const with_authz =
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      debugger;
       app_error_to_gql_error(error);
     }
 
