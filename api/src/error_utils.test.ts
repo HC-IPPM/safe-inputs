@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
-import { AppError, errorHandler } from './error_utils.ts';
+import { AppError, expressErrorHandler } from './error_utils.ts';
 
 describe('AppError', () => {
   it('constructs a new error with the provided message and the additional status property', () => {
@@ -16,7 +16,7 @@ describe('AppError', () => {
   });
 });
 
-describe('errorHandler middlewear', () => {
+describe('expressErrorHandler middlewear', () => {
   it('handles errors passed to next() by express routes', async () => {
     const app = express();
 
@@ -26,7 +26,7 @@ describe('errorHandler middlewear', () => {
       next(new AppError(status_code, 'error'));
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
@@ -46,7 +46,7 @@ describe('errorHandler middlewear', () => {
       throw new AppError(status_code, 'error');
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
@@ -67,7 +67,7 @@ describe('errorHandler middlewear', () => {
       throw new AppError(status_code, error_message);
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
