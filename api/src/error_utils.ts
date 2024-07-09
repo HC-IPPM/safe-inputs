@@ -6,20 +6,14 @@ import { get_env } from './env.ts';
 
 export type AppErrorInstance = Error & { status: number };
 
-interface AppErrorConstructor {
-  (status: number, message: string): AppErrorInstance;
-  new (status: number, message: string): AppErrorInstance;
+export class AppError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
 }
-
-export const AppError = function (status: number, message: string) {
-  const error = new Error(message) as AppErrorInstance;
-
-  // standard in express.js to add an HTTP status code on errors, as `status`, to be used by error handling middleware/error responses
-  // both when throwing errors and when passing them to an express `next` call
-  error.status = status;
-
-  return error;
-} as AppErrorConstructor;
 
 const handle_error_logging = (err: Error | AppErrorInstance) => {
   const { DEV_IS_TEST_ENV } = get_env();
