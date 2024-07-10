@@ -3,6 +3,11 @@ import express from 'express';
 import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 
+import {
+  get_or_create_user,
+  update_user_last_login_times,
+} from 'src/schema/core/user/UserModel.ts';
+
 import { validate_user_email_allowed } from './authz.ts';
 
 import { get_env } from './env.ts';
@@ -85,9 +90,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
       async function verifyUser(_req: Express.Request, user: Express.User) {
         validate_user_email_allowed(user);
 
-        // If we want to bother storing users in the database, we'd do it from here
-
-        return user;
+        return await get_or_create_user(user.email!); // user.email verified as non-null by validate_user_email_allowed
       },
     ),
   );
@@ -125,7 +128,9 @@ export const get_auth_router = (passport: PassportStatic) => {
     '/signin/verify-email',
     // @ts-expect-error magiclink's "action" parameterisn't part of passport.js's typing. Extending pasport.js' types is complicated by their export pattern
     passport.authenticate('magiclink', { action: 'acceptToken' }),
-    (req, res) => {
+    async (req, res) => {
+      await update_user_last_login_times(req!.user!.email!); // known to be non-null, previous handler will throw a 401 if the request doesn't have a (valid) session
+
       res.redirect(get_post_auth_redirect(req));
     },
   );

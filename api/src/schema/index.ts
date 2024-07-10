@@ -1,28 +1,15 @@
-import {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLNonNull,
-} from 'graphql';
+import { mergeSchemas } from '@graphql-tools/schema';
+
+import { GraphQLSchema, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 
 import { GraphQLJSON } from 'graphql-type-json'; // JSON is outside of the standard GraphQL scalar types
 
-export const schema = new GraphQLSchema({
-  // Defining the [GraphQL](https://graphql.org/) type definitions and resolvers in one go (which is helpful if you have many variables to
-  // keep track of)
-  query: new GraphQLObjectType({
-    // Used for testing purposes at this time.
-    name: 'Query',
-    fields: () => ({
-      hello: {
-        type: GraphQLString,
-        resolve(_parent, _args, _context, _info) {
-          return 'world!';
-        },
-      },
-    }),
-  }),
+import { RootSchema } from './core/RootSchema.ts';
+import { UserSchema } from './core/user/UserSchema.ts';
 
+// TODO: this is part of an older mockup of Safe Inputs, can be deleted eventually. Currently still used by the ui,
+// as a placeholder for sheet upload functionality. Leaving in place for now
+export const TemporaryExampleMutation = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     // GraphQL ensures that variables match the types defined in the schema. This mutation acts as a filter;
     // allowing only valid JSON formated data through
@@ -40,4 +27,8 @@ export const schema = new GraphQLSchema({
       },
     },
   }),
+});
+
+export const schema = mergeSchemas({
+  schemas: [RootSchema, UserSchema, TemporaryExampleMutation],
 });

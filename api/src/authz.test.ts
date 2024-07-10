@@ -2,16 +2,7 @@ import {
   validate_user_email_allowed,
   validate_user_can_have_privileges,
   validate_user_is_super_user,
-} from 'src/authz.ts';
-
-const test_both_email_string_and_user_stub = (
-  emails: string[],
-  test: (email: string | { email: string }) => void,
-) =>
-  emails.forEach((email) => {
-    test(email);
-    test({ email });
-  });
+} from './authz.ts';
 
 const throws_error_with_status_code = (
   callable: () => void,
@@ -48,27 +39,23 @@ describe('User authorization rules', () => {
       });
 
       it('Throws a 400 on invalid email strings', async () => {
-        test_both_email_string_and_user_stub(
-          [
-            'just-a-host.com',
-            'just-a-string',
-            'email-with-invalid-host@h o s t.com',
-          ],
-          (email) =>
-            expect(
-              throws_error_with_status_code(
-                () => validate_user_email_allowed(email),
-                400,
-              ),
-            ).toBe(true),
+        [
+          'just-a-host.com',
+          'just-a-string',
+          'email-with-invalid-host@h o s t.com',
+        ].forEach((email) =>
+          expect(
+            throws_error_with_status_code(
+              () => validate_user_email_allowed({ email }),
+              400,
+            ),
+          ).toBe(true),
         );
       });
 
       it('Passes any valid email without throwing', async () => {
-        test_both_email_string_and_user_stub(
-          ['valid@valid.com', 'who.ever@whatever.com'],
-          (email) =>
-            expect(() => validate_user_email_allowed(email)).not.toThrow(),
+        ['valid@valid.com', 'who.ever@whatever.com'].forEach((email) =>
+          expect(() => validate_user_email_allowed({ email })).not.toThrow(),
         );
       });
     });
@@ -86,40 +73,34 @@ describe('User authorization rules', () => {
       });
 
       it('Throws a 400 on invalid email strings', async () => {
-        test_both_email_string_and_user_stub(
-          [
-            'just-a-host.com',
-            'just-a-string',
-            'email-with-invalid-host@h o s t.com',
-          ],
-          (email) =>
-            expect(
-              throws_error_with_status_code(
-                () => validate_user_email_allowed(email),
-                400,
-              ),
-            ).toBe(true),
+        [
+          'just-a-host.com',
+          'just-a-string',
+          'email-with-invalid-host@h o s t.com',
+        ].forEach((email) =>
+          expect(
+            throws_error_with_status_code(
+              () => validate_user_email_allowed({ email }),
+              400,
+            ),
+          ).toBe(true),
         );
       });
 
       it('Throws 403 on emails from non-approved hosts', async () => {
-        test_both_email_string_and_user_stub(
-          ['host3@host3.com', 'host1org@host1.org'],
-          (email) =>
-            expect(
-              throws_error_with_status_code(
-                () => validate_user_email_allowed(email),
-                403,
-              ),
-            ).toBe(true),
+        ['host3@host3.com', 'host1org@host1.org'].forEach((email) =>
+          expect(
+            throws_error_with_status_code(
+              () => validate_user_email_allowed({ email }),
+              403,
+            ),
+          ).toBe(true),
         );
       });
 
       it('Passes emails from approved hosts without throwing', async () => {
-        test_both_email_string_and_user_stub(
-          ['host1@host1.com', 'host2@host2.net'],
-          (email) =>
-            expect(() => validate_user_email_allowed(email)).not.toThrow(),
+        ['host1@host1.com', 'host2@host2.net'].forEach((email) =>
+          expect(() => validate_user_email_allowed({ email })).not.toThrow(),
         );
       });
     });
@@ -136,23 +117,22 @@ describe('User authorization rules', () => {
     });
 
     it('Throws 403 on non-privileged users', async () => {
-      test_both_email_string_and_user_stub(
-        ['admin@unprivileged.net'],
-        (email) =>
-          expect(
-            throws_error_with_status_code(
-              () => validate_user_can_have_privileges(email),
-              403,
-            ),
-          ).toBe(true),
-      );
+      expect(
+        throws_error_with_status_code(
+          () =>
+            validate_user_can_have_privileges({
+              email: 'admin@unprivileged.net',
+            }),
+          403,
+        ),
+      ).toBe(true);
     });
 
     it('Passes privileged users without throwing', async () => {
-      test_both_email_string_and_user_stub(
-        ['johndoe@privileged.com', 'admin@privileged.com'],
-        (email) =>
-          expect(() => validate_user_can_have_privileges(email)).not.toThrow(),
+      ['johndoe@privileged.com', 'admin@privileged.com'].forEach((email) =>
+        expect(() =>
+          validate_user_can_have_privileges({ email }),
+        ).not.toThrow(),
       );
     });
   });
@@ -168,23 +148,19 @@ describe('User authorization rules', () => {
     });
 
     it('Throws 403 on non-super-admin', async () => {
-      test_both_email_string_and_user_stub(
-        ['not-admin@privileged.com', 'admin@unprivileged.net'],
-        (email) =>
-          expect(
-            throws_error_with_status_code(
-              () => validate_user_is_super_user(email),
-              403,
-            ),
-          ).toBe(true),
+      ['not-admin@privileged.com', 'admin@unprivileged.net'].forEach((email) =>
+        expect(
+          throws_error_with_status_code(
+            () => validate_user_is_super_user({ email }),
+            403,
+          ),
+        ).toBe(true),
       );
     });
 
     it('Passes super-admins without throwing', async () => {
-      test_both_email_string_and_user_stub(
-        ['admin@privileged.com', 'admin2@privileged.com'],
-        (email) =>
-          expect(() => validate_user_is_super_user(email)).not.toThrow(),
+      ['admin@privileged.com', 'admin2@privileged.com'].forEach((email) =>
+        expect(() => validate_user_is_super_user({ email })).not.toThrow(),
       );
     });
   });

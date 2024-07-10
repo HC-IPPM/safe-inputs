@@ -34,6 +34,7 @@
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "csrf-csrf": "^3.0.6",
+    "dataloader": "^2.2.2",
     "dotenv": "^16.0.3",
     "envalid": "^8.0.0",
     "express": "^4.19.2",

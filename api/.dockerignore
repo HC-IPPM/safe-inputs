@@ -9,6 +9,6 @@ dev-db-init.js
 nodemon.json
 .eslintrc
 jest.config.ts
-src/**/__tests__
+src/**/*.test.*
 src/setupTests.js
 dist
