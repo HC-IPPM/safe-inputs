@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:ef8bdb4f3649722231da11952310379b8433c79650078dc4a7d02e0f01587c1d'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:9ca2ae51ee5e3a4dff5aa02af60acb6a4bec63d837f6252f63e190751207c017'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -31,3 +31,5 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - /workspace/resources.yaml
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
