@@ -39,7 +39,7 @@ export const expressErrorHandler = (
   res.status(get_status_code(err)).json({ error: err.message });
 };
 
-export const app_error_to_gql_error = (err: Error | AppErrorInstance): void => {
+export const app_error_to_gql_error = (err: Error | AppErrorInstance) => {
   // yoga catches errors thrown while resloving GQL requests. These errors don't reach the express error handler, instead yoga
   // processes them and includes them in the `errors` field of the GQL response, as is expected for GraphQL. Yoga only includes messages
   // from GraphQLError instances in the client response, but we want AppError thrown by our common utils to be reported to the client too
