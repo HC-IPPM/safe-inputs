@@ -21,7 +21,12 @@ const auth_get = async (auth_base_url: string, path: string) => {
   return { response, data };
 };
 
-const get_csrf_token = async (auth_base_url: string) => {
+export const csrf_header = 'x-csrf-token';
+export const get_csrf_token = async (auth_base_url: string) => {
+  // TODO: could do with caching if every POST request needs to call it first,
+  // but that's tricky as it needs to either cache cross tabs (security risk to using local storage though)
+  // or invalidate if any other tab calls get_csrf_token/refreshes the csrf-token header.
+  // Maybe use some non-sensitive data in localstorage to track when an invalidation happens?
   const { data } = await auth_get(auth_base_url, 'csrf-token');
 
   if (typeof data?.csrfToken === 'string') {
@@ -57,7 +62,7 @@ const auth_post = async (
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'x-csrf-token': csrf_token,
+      [csrf_header]: csrf_token,
     },
     body: new URLSearchParams(
       _.omitBy(options, (value) => typeof value === 'undefined'),
