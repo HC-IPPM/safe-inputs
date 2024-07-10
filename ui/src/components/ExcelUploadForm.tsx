@@ -56,7 +56,12 @@ const ExcelUploadForm = ({
             }}
           >
             <FormLabel>
-              <Trans>Choose a spreadsheet to upload</Trans>
+              <Trans>
+                Choose a spreadsheet to upload. Sample file can be found{' '}
+                <a href="https://github.com/PHACDataHub/safe-inputs/blob/main/ui/test/test-spreadsheet.xlsx">
+                  <u>here</u>
+                </a>
+              </Trans>
             </FormLabel>
             <Center>
               <Field name="file">
