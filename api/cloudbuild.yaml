@@ -70,3 +70,4 @@ options:
   dynamic_substitutions: true
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+serviceAccount: cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com
