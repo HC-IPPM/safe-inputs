@@ -41,8 +41,6 @@ steps:
       - --table
       - --detailed-results
     env:
-      - HOME=/workspace/
-      - TUF_ROOT=/workspace/
       - SIGSTORE_NO_CACHE=true
 
 options:
