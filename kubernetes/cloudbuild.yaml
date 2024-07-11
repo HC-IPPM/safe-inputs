@@ -17,9 +17,6 @@ steps:
           kustomize build "${file/%$kustomize_config}" "${kustomize_flags[@]}" >> /workspace/resources.yaml
           echo "---" >> /workspace/resources.yaml
       done
-    volumes:
-      - name: "kyverno"
-        path: /kyverno
 
   - id: Validate schema
     name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:47141997365b1f6aa914b2e801cb9772b94c2696c279e2046a4517d5bfd8a09a'
@@ -34,9 +31,6 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - /workspace/resources.yaml
-    volumes:
-      - name: "kyverno"
-        path: /kyverno
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli'
@@ -47,12 +41,9 @@ steps:
       - --table
       - --detailed-results
     env:
-      - HOME=/kyverno/
-      - TUF_ROOT=/kyverno/
+      - HOME=/workspace/
+      - TUF_ROOT=/workspace/
       - SIGSTORE_NO_CACHE=true
-    volumes:
-      - name: "kyverno"
-        path: /kyverno
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
