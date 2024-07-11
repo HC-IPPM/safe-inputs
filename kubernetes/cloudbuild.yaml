@@ -31,5 +31,18 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - /workspace/resources.yaml
+
+  - id: Validate compliance
+    name: 'cgr.dev/chainguard/kyverno-cli:latest'
+    args:
+      - apply
+      - ./policies/
+      - -r=/workspace/resources.yaml
+      - --table
+      - --detailed-results
+    env:
+      # avoid disk writes from cosign
+      - SIGSTORE_NO_CACHE=true
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
