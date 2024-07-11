@@ -72,4 +72,10 @@ options:
   dynamic_substitutions: true
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
 serviceAccount: cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com
+
+substitutions:
+  _IMAGE: 'northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)'
+  _SERVICE_ACCOUNT_ID: 'SERVICE_ACCOUNT_ID'
+  _SERVICE_ACCOUNT: 'projects/${PROJECT_ID}/serviceAccounts/${_SERVICE_ACCOUNT_ID}'
