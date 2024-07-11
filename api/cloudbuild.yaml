@@ -50,12 +50,7 @@ steps:
 
   - id: 'Vulnerability Scanning'
     name: 'aquasec/trivy:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        image=$(cat /workspace/imagename)
-        trivy image $image
+    args: ['image', '$(cat /workspace/imagename)']
 
   - id: 'Tag and push image'
     name: 'gcr.io/cloud-builders/docker'
