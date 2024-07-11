@@ -33,7 +33,7 @@ steps:
       - /workspace/resources.yaml
 
   - id: Validate compliance
-    name: 'ghcr.io/kyverno/kyverno-cli:latest'
+    name: 'cgr.dev/chainguard/kyverno-cli'
     args:
       - apply
       - ./policies/
