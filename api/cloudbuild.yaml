@@ -72,5 +72,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
-# Ensure the correct service account is used
 serviceAccount: cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com
