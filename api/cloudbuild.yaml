@@ -15,9 +15,6 @@ steps:
       set -o errexit
       set -o pipefail
       set -o nounset
-
-      # disable TTY output for the compose environment, the ansi characters printed when a TTY is attached
-      # are just junk characters to the GCP cloudbuild logs
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
   - name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
@@ -27,7 +24,8 @@ steps:
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)"
+        echo $IMAGE_NAME > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
     id: build-if-test-branch
@@ -61,16 +59,17 @@ steps:
   - id: 'Vulnerability Scanning'
     name: 'aquasec/trivy:latest'
     entrypoint: 'trivy'
-    args: ['image', '$_IMAGE']
+    args: ['image', '$(cat /workspace/imagename)']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'tag-and-push'
     script: |
       #!/bin/sh
       set -e
-      docker build -t $_IMAGE .
-      docker push "$_IMAGE"
-      docker inspect $_IMAGE --format "$_IMAGE@{{.Id}}" >image_with_digest
+      image=$(cat /workspace/imagename)
+      docker build -t $image .
+      docker push "$image"
+      docker inspect $image --format "$image@{{.Id}}" >image_with_digest
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'generate-token'
@@ -95,17 +94,14 @@ steps:
 
 artifacts:
   images:
-  - $_IMAGE
+  - $(cat /workspace/imagename)
 
 substitutions:
-  _IMAGE: 'northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)'
   _SERVICE_ACCOUNT_ID: 'SERVICE_ACCOUNT_ID'
   _SERVICE_ACCOUNT: 'projects/${PROJECT_ID}/serviceAccounts/${_SERVICE_ACCOUNT_ID}'
 
 options:
   env:
-  - '_IMAGE=$_IMAGE'
   dynamic_substitutions: true
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-
