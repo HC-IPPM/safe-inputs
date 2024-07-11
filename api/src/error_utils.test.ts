@@ -1,7 +1,12 @@
 import express from 'express';
+import { GraphQLError } from 'graphql';
 import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
 
-import { AppError, errorHandler } from 'src/error_utils.ts';
+import {
+  AppError,
+  expressErrorHandler,
+  app_error_to_gql_error,
+} from './error_utils.ts';
 
 describe('AppError', () => {
   it('constructs a new error with the provided message and the additional status property', () => {
@@ -11,12 +16,13 @@ describe('AppError', () => {
     const appError = new AppError(status, message);
 
     expect(appError).toBeInstanceOf(Error);
+    expect(appError).toBeInstanceOf(AppError);
     expect(appError.message).toBe(message);
     expect(appError.status).toBe(status);
   });
 });
 
-describe('errorHandler middlewear', () => {
+describe('expressErrorHandler middlewear', () => {
   it('handles errors passed to next() by express routes', async () => {
     const app = express();
 
@@ -26,7 +32,7 @@ describe('errorHandler middlewear', () => {
       next(new AppError(status_code, 'error'));
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
@@ -46,7 +52,7 @@ describe('errorHandler middlewear', () => {
       throw new AppError(status_code, 'error');
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
@@ -67,7 +73,7 @@ describe('errorHandler middlewear', () => {
       throw new AppError(status_code, error_message);
     });
 
-    const mockedErrorHandler = jest.fn(errorHandler);
+    const mockedErrorHandler = jest.fn(expressErrorHandler);
     app.use(mockedErrorHandler);
 
     const response = await request(app)
@@ -77,5 +83,23 @@ describe('errorHandler middlewear', () => {
     expect(mockedErrorHandler).toHaveBeenCalled();
     expect(response.status).toBe(status_code);
     expect(response.body.error).toBe(error_message);
+  });
+});
+
+describe('app_error_to_gql_error', () => {
+  it('Returns non-AppError unmodified', () => {
+    const err = new Error('something');
+
+    expect(app_error_to_gql_error(err)).toBe(err);
+  });
+  it('Converts AppError instance to GraphQLError', () => {
+    const err = new AppError(501, 'something');
+
+    const returned_err = app_error_to_gql_error(err);
+
+    expect(returned_err).not.toBe(err);
+    expect(returned_err instanceof GraphQLError).toBe(true);
+    expect((returned_err as GraphQLError).extensions.code).toBe(err.status); // `as GraphQLError` asserted by `instanceof GraphQLError` check above
+    expect(returned_err.message).toBe(err.message);
   });
 });

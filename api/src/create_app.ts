@@ -12,7 +12,7 @@ import passport from 'passport';
 import { configure_passport_js, get_auth_router } from './authn.ts';
 import { connect_db, get_db_client } from './db.ts';
 import { get_env } from './env.ts';
-import { errorHandler } from './error_utils.ts';
+import { expressErrorHandler } from './error_utils.ts';
 
 export const create_app = async ({
   schema,
@@ -109,7 +109,7 @@ export const create_app = async ({
 
   app.use(yoga.graphqlEndpoint, yoga);
 
-  app.use(errorHandler);
+  app.use(expressErrorHandler);
 
   return app;
 };
