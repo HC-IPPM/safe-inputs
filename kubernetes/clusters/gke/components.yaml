@@ -23,16 +23,6 @@ spec:
       target:
         kind: Namespace
         name: istio-ingress
-    # patch cert-manager release with gke service account
-    - patch: |-
-        - op: add
-          path: /spec/values/serviceAccount
-          value:
-            annotations:
-              iam.gke.io/gcp-service-account: dns01-solver@phx-01j1tbke0ax.iam.gserviceaccount.com
-      target:
-        kind: HelmRelease
-        name: cert-manager
     # patch mongodb namespace with injection label
     - patch: |-
         - op: add
