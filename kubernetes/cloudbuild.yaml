@@ -31,5 +31,15 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - /workspace/resources.yaml
+
+  - id: Validate compliance
+    name: 'cgr.dev/chainguard/kyverno-cli'
+    args:
+      - apply
+      - ./policies/
+      - -r=/workspace/resources.yaml
+      - --table
+      - --detailed-results
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
