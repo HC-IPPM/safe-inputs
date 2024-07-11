@@ -40,6 +40,8 @@ steps:
       - -r=/workspace/resources.yaml
       - --table
       - --detailed-results
+    env:
+      - TUF_ROOT=/workspace/
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
