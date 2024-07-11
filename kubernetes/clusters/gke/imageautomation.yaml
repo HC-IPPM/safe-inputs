@@ -4,7 +4,7 @@ metadata:
   name: api
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/safeinputs/api
+  image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
@@ -28,7 +28,7 @@ metadata:
   name: ui
   namespace: flux-system
 spec:
-  image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/safeinputs/ui
+  image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui
   interval: 1m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
