@@ -13,21 +13,30 @@ export const resolve_bilingual_scalar =
     parent: ParentType,
     _args: unknown,
     context: { lang: LangsUnion },
+    _info: unknown,
   ) =>
     parent[`${base_field_name}_${context.lang}`];
 
 export const with_authz =
-  <Parent, Args, Context extends { req?: { user?: Express.User } }, Result>(
-    resolver: (parent: Parent, args: Args, context: Context) => Result,
+  <
+    Parent,
+    Args,
+    Context extends { req?: { user?: Express.User } },
+    Info extends { fieldName: string },
+    Result,
+  >(
+    resolver: (
+      parent: Parent,
+      args: Args,
+      context: Context,
+      info: Info,
+    ) => Result,
     ...authz_rules: AuthzRule[]
-  ): ((parent: Parent, args: Args, context: Context) => Result) =>
-  (parent: Parent, args: Args, context: Context) => {
+  ): ((parent: Parent, args: Args, context: Context, info: Info) => Result) =>
+  (parent: Parent, args: Args, context: Context, info: Info) => {
     try {
       if (typeof context?.req?.user === 'undefined') {
-        throw new AppError(
-          401,
-          'Query contains fields requiring an authenticated session. No session found.',
-        );
+        throw new AppError(401, 'No session found.');
       }
 
       // may throw an AppError, which will need to be converted to a GraphQLError per
@@ -40,8 +49,12 @@ export const with_authz =
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      if (error instanceof AppError && _.includes([401, 403], error.status)) {
+        error.message = `Field \`${info.fieldName}\` has unmet authorization requirements. ${error.message}`;
+      }
+
       throw app_error_to_gql_error(error);
     }
 
-    return resolver(parent, args, context);
+    return resolver(parent, args, context, info);
   };
