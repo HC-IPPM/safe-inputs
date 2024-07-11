@@ -49,6 +49,7 @@ steps:
     env:
       - HOME=/kyverno/
       - TUF_ROOT=/kyverno/
+      - SIGSTORE_NO_CACHE=true
     volumes:
       - name: "kyverno"
         path: /kyverno
