@@ -41,24 +41,26 @@ steps:
 
   - id: 'Generate token'
     name: 'gcr.io/cloud-builders/gcloud'
-    script: |
-      #!/bin/sh
-      set -e
-      gcloud auth print-identity-token --audiences=sigstore > /workspace/token
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        gcloud auth print-identity-token --audiences=sigstore > /workspace/token
 
   - id: 'Sign image'
     name: 'gcr.io/cloud-builders/docker'
-    script: |
-      #!/bin/sh
-      set -e
-      docker run \
-        --network=cloudbuild \
-        --mount source=home-volume,target=/builder/home \
-        --rm \
-        -e SIGSTORE_NO_CACHE=true \
-        -e HOME=/builder/home \
-        gcr.io/projectsigstore/cosign \
-        sign --identity-token=$(cat /workspace/token) $(cat /workspace/image_with_digest) -y
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        docker run \
+          --network=cloudbuild \
+          --mount source=home-volume,target=/builder/home \
+          --rm \
+          -e SIGSTORE_NO_CACHE=true \
+          -e HOME=/builder/home \
+          gcr.io/projectsigstore/cosign \
+          sign --identity-token=$(cat /workspace/token) $(cat /workspace/image_with_digest) -y
 
 artifacts:
   images:
