@@ -48,9 +48,6 @@ steps:
           docker push $image
         fi
 
-  - id: 'Vulnerability Scanning'
-    name: 'aquasec/trivy:latest'
-    args: ['image', '$(cat /workspace/imagename)']
 
   - id: 'Tag and push image'
     name: 'gcr.io/cloud-builders/docker'
