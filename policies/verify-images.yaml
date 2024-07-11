@@ -8,7 +8,7 @@ metadata:
     policies.kyverno.io/severity: medium
     kyverno.io/kyverno-version: 1.6.2
     policies.kyverno.io/minversion: 1.6.0
-    kyverno.io/kubernetes-version: "1.23"
+    kyverno.io/kubernetes-version: '1.23'
     policies.kyverno.io/subject: GitRepository
     policies.kyverno.io/description: >-
       Ensures that container images used to run Flux controllers in the cluster
@@ -22,17 +22,17 @@ spec:
     - name: verify-cosign-signature
       match:
         any:
-        - resources:
-            kinds:
-              - Pod
-              - Deployment
+          - resources:
+              kinds:
+                - Pod
+                - Deployment
       verifyImages:
         - imageReferences:
-            - "ghcr.io/fluxcd/*"
+            - 'ghcr.io/fluxcd/*'
           attestors:
             - entries:
                 - keyless:
-                    subject: "https://github.com/fluxcd/*"
-                    issuer: "https://token.actions.githubusercontent.com"
+                    subject: 'https://github.com/fluxcd/*'
+                    issuer: 'https://token.actions.githubusercontent.com'
                     rekor:
                       url: https://rekor.sigstore.dev
