@@ -33,7 +33,7 @@ steps:
       - /workspace/resources.yaml
 
   - id: Validate compliance
-    name: 'cgr.dev/chainguard/kyverno-cli'
+    name: 'cgr.dev/chainguard/kyverno-cli:latest'
     args:
       - apply
       - ./policies/
@@ -41,6 +41,7 @@ steps:
       - --table
       - --detailed-results
     env:
+      # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
 
 options:
