@@ -17,52 +17,48 @@ steps:
       set -o nounset
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
-    id: generate-image-name
+  - id: 'Generate image name'
+    name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
-    dir: api
     args:
       - '-c'
       - |
-        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)"
-        echo $IMAGE_NAME > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
-    id: build-if-test-branch
+  - id: 'Build image if test branch'
+    name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
     entrypoint: 'bash'
     dir: api
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "test-cloudbuild-changes" ]]
-        then
+        if [[ "$BRANCH_NAME" == "test-cloudbuild-changes" ]]; then
           image=$(cat /workspace/imagename)
           docker build -t $image -f ./Dockerfile.prod .
-        else
-          exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
-    id: push-if-test-branch
+  - id: 'Push image if test branch'
+    name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "test-cloudbuild-changes" ]]
-        then
+        if [[ "$BRANCH_NAME" == "test-cloudbuild-changes" ]]; then
           image=$(cat /workspace/imagename)
           docker push $image
-        else
-          exit 0
         fi
 
   - id: 'Vulnerability Scanning'
     name: 'aquasec/trivy:latest'
-    entrypoint: 'trivy'
-    args: ['image', '$(cat /workspace/imagename)']
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        image=$(cat /workspace/imagename)
+        trivy image $image
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'tag-and-push'
+  - id: 'Tag and push image'
+    name: 'gcr.io/cloud-builders/docker'
     script: |
       #!/bin/sh
       set -e
@@ -71,15 +67,15 @@ steps:
       docker push "$image"
       docker inspect $image --format "$image@{{.Id}}" >image_with_digest
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'generate-token'
+  - id: 'Generate token'
+    name: 'gcr.io/cloud-builders/gcloud'
     script: |
       #!/bin/sh
       set -e
       gcloud auth print-identity-token --audiences=sigstore > token
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'sign-image'
+  - id: 'Sign image'
+    name: 'gcr.io/cloud-builders/docker'
     script: |
       #!/bin/sh
       set -e
@@ -94,14 +90,11 @@ steps:
 
 artifacts:
   images:
-  - $(cat /workspace/imagename)
-
-substitutions:
-  _SERVICE_ACCOUNT_ID: 'SERVICE_ACCOUNT_ID'
-  _SERVICE_ACCOUNT: 'projects/${PROJECT_ID}/serviceAccounts/${_SERVICE_ACCOUNT_ID}'
+    - $(cat /workspace/imagename)
 
 options:
   env:
+    - 'IMAGE_NAME=$(cat /workspace/imagename)'
   dynamic_substitutions: true
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
