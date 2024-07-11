@@ -5,11 +5,11 @@ import type { AuthzRule } from 'src/authz.ts';
 
 import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
 
-import type { LangsUnion, BilingualKeyUnion } from './lang_utils.ts';
+import type { LangsUnion, LangSuffixedKeyUnion } from './lang_utils.ts';
 
-export const resolve_bilingual_scalar =
+export const resolve_lang_suffixed_scalar =
   <Key extends string>(base_field_name: Key) =>
-  <ParentType extends { [k in BilingualKeyUnion<Key>]: any }>(
+  <ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any }>(
     parent: ParentType,
     _args: unknown,
     context: { lang: LangsUnion },
