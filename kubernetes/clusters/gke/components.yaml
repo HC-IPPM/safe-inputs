@@ -38,7 +38,7 @@ spec:
           path: /metadata/annotations
           value:
             cloud.google.com/l4-rbs: enabled
-            networking.gke.io/load-balancer-ip-addresses: safeinputs-v2
+            networking.gke.io/load-balancer-ip-addresses: phx-01j1tbke0ax-safeinputs-ip
       target:
         kind: Service
         name: istio-ingressgateway
@@ -86,7 +86,6 @@ spec:
           path: /spec/dnsNames
           value:
             - "safeinputs.alpha.phac-aspc.gc.ca"
-            - "entreessecurisees.alpha.phac-aspc.gc.ca"
       target:
         kind: Certificate
         name: mesh-gateway-cert
