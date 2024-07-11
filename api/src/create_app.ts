@@ -78,6 +78,7 @@ export const create_app = async ({
       sameSite: DEV_IS_LOCAL_ENV ? 'lax' : 'strict',
       secure: !DEV_IS_LOCAL_ENV,
     },
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], // these are the defaults, including for documentation purposes. CSRF protection is only applied to POST, PUT, etc.
   });
 
   // important: session middleware needs to come before the CSRF middleware is added!
@@ -105,6 +106,13 @@ export const create_app = async ({
       maxDepthPlugin({ n: 6 }), // Number of depth allowed | Default: 6
     ],
     graphqlEndpoint: '/api/graphql',
+    graphiql: {
+      // GraphiQL must use GET requests or else it will be blocked by doubleCsrfProtection
+      // Note: yoga does not accept mutations in GET requests (good, we want CSRF protection on mutations,
+      // and will require auth too), so GraphiQL can't be used for testing mutations
+      method: 'GET',
+      useGETForQueries: true,
+    },
   });
 
   app.use(yoga.graphqlEndpoint, yoga);
