@@ -41,7 +41,7 @@ steps:
       - --table
       - --detailed-results
     env:
-      - TUF_ROOT=/workspace/
+      - TUF_ROOT=/workspace/.sigstore
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
