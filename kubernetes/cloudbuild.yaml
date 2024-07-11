@@ -41,8 +41,11 @@ steps:
       - --table
       - --detailed-results
     env:
-      - HOME=/workspace/
-      - TUF_ROOT=/workspace/.sigstore
+      - HOME=/kyverno/
+      - TUF_ROOT=/kyverno/
+    volumes:
+      - name: "kyverno"
+        path: /kyverno
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
