@@ -1,5 +1,12 @@
 import './index.css';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  from,
+  ApolloProvider,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
 import type { ThemeConfig } from '@chakra-ui/react';
 import {
@@ -15,6 +22,7 @@ import { createRoot } from 'react-dom/client';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
 import { SessionProvider } from './components/auth/session.tsx';
 
 import { messages as enMessages } from './i18n/locales/en/messages.ts';
@@ -89,14 +97,23 @@ i18n.activate('en');
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
-const client = new ApolloClient({
-  uri: '/api/graphql',
-  cache: new InMemoryCache(),
+
+const auth_base_url = '/api/auth';
+
+const csrfMiddleware = setContext(async () => {
+  const csrf_token = await get_csrf_token(auth_base_url);
+  return { headers: { [csrf_header]: csrf_token } };
 });
+const httpLink = new HttpLink({ uri: '/api/graphql' });
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: from([csrfMiddleware, httpLink]),
+});
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <SessionProvider authBaseURL="/api/auth">
+      <SessionProvider authBaseURL={auth_base_url}>
         <ApolloProvider client={client}>
           <ChakraProvider theme={theme}>
             <I18nProvider i18n={i18n}>
