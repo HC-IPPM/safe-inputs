@@ -23,7 +23,7 @@ spec:
       serviceAccountName: api
       containers:
         - name: api
-          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-3e54092-1720729522 # {"$imagepolicy": "flux-system:api"}
+          image: northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:main-feb8525-1720731090 # {"$imagepolicy": "flux-system:api"}
           securityContext:
             # No new privs for process or it's children
             # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
