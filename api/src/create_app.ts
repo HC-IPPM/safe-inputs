@@ -78,6 +78,7 @@ export const create_app = async ({
       sameSite: DEV_IS_LOCAL_ENV ? 'lax' : 'strict',
       secure: !DEV_IS_LOCAL_ENV,
     },
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], // these are the defaults, including for documentation purposes. CSRF protection is only applied to POST, PUT, etc.
   });
 
   // important: session middleware needs to come before the CSRF middleware is added!
