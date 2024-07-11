@@ -18,15 +18,15 @@ metadata:
 spec:
   validationFailureAction: enforce
   rules:
-  - name: validate-mtls
-    match:
-      any:
-      - resources:
-          kinds:
-          - PeerAuthentication
-    validate:
-      message: "PeerAuthentication resources may only set UNSET or STRICT for the mode."
-      pattern:
-        =(spec):
-          =(mtls):
-            =(mode): "UNSET | STRICT"
+    - name: validate-mtls
+      match:
+        any:
+          - resources:
+              kinds:
+                - PeerAuthentication
+      validate:
+        message: 'PeerAuthentication resources may only set UNSET or STRICT for the mode.'
+        pattern:
+          =(spec):
+            =(mtls):
+              =(mode): 'UNSET | STRICT'

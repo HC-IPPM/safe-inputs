@@ -8,10 +8,10 @@ metadata:
     policies.kyverno.io/severity: medium
     policies.kyverno.io/subject: Pod
     kyverno.io/kyverno-version: 1.6.0
-    kyverno.io/kubernetes-version: "1.22-1.23"
+    kyverno.io/kubernetes-version: '1.22-1.23'
     policies.kyverno.io/description: >-
       Privilege escalation, such as via set-user-ID or set-group-ID file mode, should not be allowed.
-      This policy ensures the `allowPrivilegeEscalation` field is set to `false`.      
+      This policy ensures the `allowPrivilegeEscalation` field is set to `false`.
 spec:
   validationFailureAction: audit
   background: true
@@ -19,26 +19,26 @@ spec:
     - name: privilege-escalation
       match:
         any:
-        - resources:
-            kinds:
-              - Deployment
+          - resources:
+              kinds:
+                - Deployment
       validate:
         message: >-
           Privilege escalation is disallowed. The fields
           spec.containers[*].securityContext.allowPrivilegeEscalation,
           spec.initContainers[*].securityContext.allowPrivilegeEscalation,
           and spec.ephemeralContainers[*].securityContext.allowPrivilegeEscalation
-          must be set to `false`.          
+          must be set to `false`.
         pattern:
           spec:
             template:
               spec:
                 =(ephemeralContainers):
-                - securityContext:
-                    allowPrivilegeEscalation: "false"
+                  - securityContext:
+                      allowPrivilegeEscalation: 'false'
                 =(initContainers):
-                - securityContext:
-                    allowPrivilegeEscalation: "false"
+                  - securityContext:
+                      allowPrivilegeEscalation: 'false'
                 containers:
-                - securityContext:
-                    allowPrivilegeEscalation: "false"
+                  - securityContext:
+                      allowPrivilegeEscalation: 'false'
