@@ -65,7 +65,7 @@ steps:
 
 artifacts:
   images:
-    - $(cat /workspace/imagename)
+    - '$(cat /workspace/imagename)'
 
 options:
   dynamic_substitutions: true
