@@ -53,12 +53,16 @@ steps:
     args:
       - '-c'
       - |
+        set -e
+        echo "Signing image with cosign"
+        echo "Token: $(cat /workspace/token)"
+        echo "Image with digest: $(cat /workspace/image_with_digest)"
         docker run \
           --network=cloudbuild \
-          --mount source=home-volume,target=/builder/home \
+          --mount type=bind,source=/workspace,target=/workspace \
           --rm \
           -e SIGSTORE_NO_CACHE=true \
-          -e HOME=/builder/home \
+          -e HOME=/workspace \
           gcr.io/projectsigstore/cosign \
           sign --identity-token=$(cat /workspace/token) $(cat /workspace/image_with_digest) -y
 
