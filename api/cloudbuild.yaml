@@ -63,7 +63,7 @@ steps:
 
 artifacts:
   images:
-    - 'northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
+    - $(cat /workspace/imagename)
 
 options:
   logging: CLOUD_LOGGING_ONLY
