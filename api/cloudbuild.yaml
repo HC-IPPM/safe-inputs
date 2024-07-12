@@ -62,13 +62,10 @@ steps:
 
 artifacts:
   images:
-    - name: $(cat /workspace/imagename)
+    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
 
 options:
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
 serviceAccount: 'projects/pdcp-cloud-005-safeinputs/serviceAccounts/cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com'
-substitutions:
-  _IMAGE: 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
-  _SERVICE_ACCOUNT_ID: 'cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com'
