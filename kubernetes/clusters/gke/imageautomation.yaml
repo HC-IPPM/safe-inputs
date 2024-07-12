@@ -6,6 +6,7 @@ metadata:
 spec:
   image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api
   interval: 1m0s
+  provider: gcp
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
@@ -30,6 +31,7 @@ metadata:
 spec:
   image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui
   interval: 1m0s
+  provider: gcp
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
