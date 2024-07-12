@@ -4,6 +4,8 @@ metadata:
   name: istio-ingress
   annotations:
     mesh.cloud.google.com/proxy: '{"managed": true}'
+  labels:
+    istio-injection: enabled
 spec: {}
 status: {}
 ---
