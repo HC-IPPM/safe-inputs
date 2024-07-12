@@ -63,7 +63,7 @@ steps:
 
 artifacts:
   images:
-    - $(cat /workspace/imagename)
+    - name: $(cat /workspace/imagename)
 
 options:
   logging: CLOUD_LOGGING_ONLY
