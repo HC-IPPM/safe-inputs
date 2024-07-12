@@ -15,7 +15,7 @@ metadata:
 spec:
   filterTags:
     extract: $ts
-    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+    pattern: ^switch-to-new-project-[a-fA-F0-9]+-(?P<ts>.*)
   imageRepositoryRef:
     name: api
   policy:
@@ -39,7 +39,7 @@ metadata:
 spec:
   filterTags:
     extract: $ts
-    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+    pattern: ^switch-to-new-project-[a-fA-F0-9]+-(?P<ts>.*)
   imageRepositoryRef:
     name: ui
   policy:
@@ -62,11 +62,11 @@ spec:
   git:
     checkout:
       ref:
-        branch: main
+        branch: switch-to-new-project
     commit:
       author:
         name: fluxbot
         email: fluxcd@users.noreply.github.com
       messageTemplate: '[ci skip] {{range .Changed.Changes}} {{println .NewValue}}{{end}}'
     push:
-      branch: main
+      branch: switch-to-new-project

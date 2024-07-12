@@ -21,13 +21,13 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
-    id: build-if-main
+    id: build-if-switch-to-new-project
     entrypoint: 'bash'
     dir: ui
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "main" ]]
+        if [[ "$BRANCH_NAME" == "switch-to-new-project" ]]
         then
           image=$(cat /workspace/imagename)
           docker build -t $image -f ./Dockerfile.prod .
@@ -36,12 +36,12 @@ steps:
         fi
 
   - name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
-    id: push-if-main
+    id: push-if-switch-to-new-project
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "main" ]]
+        if [[ "$BRANCH_NAME" == "switch-to-new-project" ]]
         then
           image=$(cat /workspace/imagename)
           docker push $image
