@@ -65,7 +65,7 @@ steps:
 
 artifacts:
   images:
-    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
+    - '${_IMAGE_NAME}'
 
 options:
   logging: CLOUD_LOGGING_ONLY
@@ -73,4 +73,5 @@ options:
 
 substitutions:
   _IMAGE_NAME: 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
-
+  _BRANCH_NAME: '${BRANCH_NAME}'
+  _SHORT_SHA: '${SHORT_SHA}'
