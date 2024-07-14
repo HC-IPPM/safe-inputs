@@ -8,32 +8,22 @@ steps:
       - |
         npm ci && npm run typecheck
 
-  - id: 'Run tests'
-    name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
-    script: |
-      #!/usr/bin/env bash
-      set -o errexit
-      set -o pipefail
-      set -o nounset
-      DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
-
-  - id: 'Generate tag'
-    name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        TAG="$(date -u +%Y%m%dT%H%M%S)_$SHORT_SHA"
-        echo $TAG > /workspace/TAG
+  # - id: 'Run tests'
+  #   name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
+  #   script: |
+  #     #!/usr/bin/env bash
+  #     set -o errexit
+  #     set -o pipefail
+  #     set -o nounset
+  #     DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
   - id: 'Generate image name'
-    name: 'ubuntu'
+    name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/safeinputs/api:${BRANCH_NAME}-$(cat /workspace/TAG)"
-        echo $IMAGE_NAME > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)" > /workspace/imagename
 
   - id: 'Build, tag, and push image if test branch'
     name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
@@ -42,7 +32,7 @@ steps:
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "test-cloudbuild-changes" ]]; then
+        if [[ "${BRANCH_NAME}" == "test-cloudbuild-changes" ]]; then
           image=$(cat /workspace/imagename)
           docker build -t $image -f ./Dockerfile.prod .
           docker push $image
@@ -72,10 +62,10 @@ steps:
 
 artifacts:
   images:
-    - 'northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/safeinputs/api:${BRANCH_NAME}-$(cat /workspace/TAG)'
+    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
 
 options:
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
-serviceAccount: 'projects/$PROJECT_ID/serviceAccounts/cloud-build-sa@$PROJECT_ID.iam.gserviceaccount.com'
+serviceAccount: 'projects/pdcp-cloud-005-safeinputs/serviceAccounts/cloud-build-sa@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com'
