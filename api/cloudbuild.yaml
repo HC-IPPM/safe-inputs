@@ -36,6 +36,7 @@ steps:
       - |
         if [[ "${BRANCH_NAME}" == "test-cloudbuild-changes" ]]; then
           image=$(cat /workspace/imagename)
+          echo "Using image name: $image"
           docker build -t $image -f ./Dockerfile.prod .
           docker push $image
           docker inspect $image --format "$image@{{.Id}}" > /workspace/image_with_digest
