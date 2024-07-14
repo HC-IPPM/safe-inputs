@@ -17,14 +17,13 @@ steps:
       set -o nounset
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
-  - id: 'Generate image name'
+  - id: 'Generate token'
     name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)"
-        echo $IMAGE_NAME > /workspace/imagename
+        gcloud auth print-identity-token --audiences=sigstore > /workspace/token
 
   - id: 'Build, tag, push, and sign image if test branch'
     name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
@@ -34,16 +33,13 @@ steps:
       - '-c'
       - |
         if [[ "${BRANCH_NAME}" == "test-cloudbuild-changes" ]]; then
-          image=$(cat /workspace/imagename)
-          echo "Generated image name: $image"
+          TIMESTAMP=$(date +%s)
+          IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
+          echo "Generated image name: $IMAGE_NAME"
 
-          # Build and push the image
-          docker build -t $image -f ./Dockerfile.prod .
-          docker push $image
-          docker inspect $image --format "$image@{{.Id}}" > /workspace/image_with_digest
-
-          # Generate token
-          gcloud auth print-identity-token --audiences=sigstore > /workspace/token
+          # Build the image
+          docker build -t $IMAGE_NAME -f ./Dockerfile.prod .
+          docker inspect $IMAGE_NAME --format "$IMAGE_NAME@{{.Id}}" > /workspace/image_with_digest
 
           # Sign the image
           docker run \
@@ -54,6 +50,9 @@ steps:
             -e HOME=/builder/home \
             gcr.io/projectsigstore/cosign \
             sign --identity-token=$(cat /workspace/token) $(cat /workspace/image_with_digest) -y
+
+          # Push the image
+          docker push $IMAGE_NAME
         fi
 
 artifacts:
