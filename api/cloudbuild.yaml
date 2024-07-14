@@ -23,7 +23,9 @@ steps:
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-1234567890" > /workspace/imagename
+        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)"
+        echo $IMAGE_NAME > /workspace/imagename
+        echo "Generated image name: $IMAGE_NAME"
 
   - id: 'Build, tag, and push image if test branch'
     name: 'gcr.io/cloud-builders/docker@sha256:b98c8f37c8801d00db61f4388e1e7c801efe6eb76bebe5f0023312924f933379'
@@ -62,7 +64,7 @@ steps:
 
 artifacts:
   images:
-    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-1234567890'
+    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
 
 options:
   logging: CLOUD_LOGGING_ONLY
