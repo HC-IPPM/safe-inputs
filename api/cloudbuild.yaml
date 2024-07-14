@@ -32,7 +32,7 @@ steps:
 
           # Build and tag the image
           docker build -t $image -f ./Dockerfile.prod .
-          docker push $image  # Ensure this uses the exact image name without a wildcard
+          docker push $image  # Ensure this uses the exact image name
 
           # Generate token and sign the image
           token=$(gcloud auth print-identity-token --audiences=sigstore)
