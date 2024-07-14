@@ -23,7 +23,8 @@ steps:
     args:
       - '-c'
       - |
-        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)"
+        TIMESTAMP=$(date +%s)
+        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
         echo $IMAGE_NAME > /workspace/imagename
         echo "Generated image name: $IMAGE_NAME"
 
@@ -65,11 +66,12 @@ steps:
 
 artifacts:
   images:
-    - '${_IMAGE_NAME}'
+    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}'
 
 options:
   logging: CLOUD_LOGGING_ONLY
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
 substitutions:
-  _IMAGE_NAME: 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)'
+  _BRANCH_NAME: '${BRANCH_NAME}'
+  _SHORT_SHA: '${SHORT_SHA}'
