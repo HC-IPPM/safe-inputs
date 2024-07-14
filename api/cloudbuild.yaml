@@ -24,7 +24,7 @@ steps:
       - '-c'
       - |
         TIMESTAMP=$(date +%s)
-        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-${TIMESTAMP}"
+        IMAGE_NAME="northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${_BRANCH_NAME}-${_SHORT_SHA}-${TIMESTAMP}"
         echo $IMAGE_NAME > /workspace/imagename
         echo "Generated image name: $IMAGE_NAME"
 
@@ -35,7 +35,7 @@ steps:
     args:
       - '-c'
       - |
-        if [[ "${BRANCH_NAME}" == "test-cloudbuild-changes" ]]; then
+        if [[ "${_BRANCH_NAME}" == "test-cloudbuild-changes" ]]; then
           image=$(cat /workspace/imagename)
           echo "Using image name: $image"
           docker build -t $image -f ./Dockerfile.prod .
@@ -66,7 +66,7 @@ steps:
 
 artifacts:
   images:
-    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${BRANCH_NAME}-${SHORT_SHA}-latest'
+    - 'northamerica-northeast1-docker.pkg.dev/pdcp-cloud-005-safeinputs/safeinputs/api:${_BRANCH_NAME}-${_SHORT_SHA}-latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
