@@ -22,18 +22,20 @@ export const string_pkey_type_sparse = {
   index: true,
 };
 
-export const string_fkey_type = {
+export const make_string_fkey_type = (ref: string) => ({
   ...str_type,
   required: true,
   index: true,
-};
-export const string_fkey_type_sparse = {
+  ref,
+});
+export const make_string_fkey_type_sparse = (ref: string) => ({
   ...str_type,
   sparse: true,
   index: true,
-};
+  ref,
+});
 
-export const MakeLangSuffixedType = <Key extends string, MongooseType>(
+export const make_lang_suffixed_type = <Key extends string, MongooseType>(
   key: Key,
   type: MongooseType,
 ) =>
