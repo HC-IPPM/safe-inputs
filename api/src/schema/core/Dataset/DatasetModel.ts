@@ -8,7 +8,7 @@ import {
 } from 'src/schema/loader_utils.ts';
 import {
   make_lang_suffixed_type,
-  make_fkey_type,
+  make_foreign_key_type,
 } from 'src/schema/mongoose_utils.ts';
 
 interface DatasetInterface
@@ -30,8 +30,10 @@ const DatasetMongooseSchema = new Schema<DatasetInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
   stable_id: { type: String, index: true },
-  owners: [make_fkey_type('User', { is_object_id: true, required: true })],
-  uploaders: [make_fkey_type('User', { is_object_id: true })],
+  owners: [
+    make_foreign_key_type('User', { is_object_id: true, required: true }),
+  ],
+  uploaders: [make_foreign_key_type('User', { is_object_id: true })],
   rules: { type: Schema.ObjectId, ref: 'DatasetRules' },
   records: { type: Schema.ObjectId, ref: 'DatasetRecords' },
   is_active: { type: Boolean, required: true },

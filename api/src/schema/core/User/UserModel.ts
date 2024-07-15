@@ -3,7 +3,7 @@ import type { Document } from 'mongoose';
 
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
-import { string_pkey_type } from 'src/schema/mongoose_utils.ts';
+import { primary_key_type } from 'src/schema/mongoose_utils.ts';
 
 interface UserInterface extends Document<Types.ObjectId> {
   email: string;
@@ -12,7 +12,7 @@ interface UserInterface extends Document<Types.ObjectId> {
   last_login_at?: number;
 }
 const UserMongooseSchema = new Schema<UserInterface>({
-  email: string_pkey_type,
+  email: primary_key_type,
   created_at: { type: Number, required: true },
   second_last_login_at: { type: Number, required: false },
   last_login_at: { type: Number, required: false },
