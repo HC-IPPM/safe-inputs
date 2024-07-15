@@ -4,11 +4,22 @@ import type { Model, Document, FilterQuery } from 'mongoose';
 
 export function create_dataloader_for_resources_by_foreign_key_attr<
   ModelDoc extends Document,
->(model: Model<ModelDoc>, fk_attr: string, cache = false) {
+>(
+  model: Model<ModelDoc>,
+  fk_attr: string,
+  options: {
+    constraints?: FilterQuery<ModelDoc>;
+    cache?: boolean;
+  } = {
+    constraints: {},
+    cache: false,
+  },
+) {
   return new DataLoader<string, { [foreign_key: string]: ModelDoc[] }>(
     async function (fk_ids) {
       const rows = await model.find({
         [fk_attr]: { $in: _.uniq(fk_ids) },
+        ...options.constraints,
       } as FilterQuery<ModelDoc>);
 
       const keys_in_fk_attr = fk_attr.split('.');
@@ -52,17 +63,28 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
 
       return groups_in_order_of_requested_keys;
     },
-    { cache },
+    { cache: options.cache },
   );
 }
 
 export function create_dataloader_for_resource_by_primary_key_attr<
   ModelDoc extends Document,
->(model: Model<ModelDoc>, primary_key_attr: string, cache = false) {
+>(
+  model: Model<ModelDoc>,
+  primary_key_attr: string,
+  options: {
+    constraints?: FilterQuery<ModelDoc>;
+    cache?: boolean;
+  } = {
+    constraints: {},
+    cache: false,
+  },
+) {
   return new DataLoader<string, ModelDoc>(
     async function (keys) {
       const docs = await model.find({
         [primary_key_attr]: { $in: _.uniq(keys) },
+        ...options.constraints,
       } as FilterQuery<ModelDoc>);
 
       const docs_by_primary_key = _.keyBy(docs, primary_key_attr);
@@ -74,6 +96,6 @@ export function create_dataloader_for_resource_by_primary_key_attr<
 
       return docs_in_order_of_requested_keys;
     },
-    { cache },
+    { cache: options.cache },
   );
 }

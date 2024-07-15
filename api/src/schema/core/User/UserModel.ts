@@ -21,7 +21,7 @@ const UserMongooseSchema = new Schema<UserInterface>({
 export const UserModel = model<UserInterface>('User', UserMongooseSchema);
 
 export const UserByEmailLoader =
-  create_dataloader_for_resource_by_primary_key_attr(UserModel, 'email', true);
+  create_dataloader_for_resource_by_primary_key_attr(UserModel, 'email');
 
 export const get_or_create_user = async (email: string) => {
   const existingUser = await UserModel.findOne({ email });
