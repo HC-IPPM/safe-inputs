@@ -1,10 +1,12 @@
+import { Schema } from 'mongoose';
+
 import { get_lang_suffixed_keys } from './lang_utils.ts';
 import type { LangSuffixedKeyUnion } from './lang_utils.ts';
 
 export const string_pkey_type = {
   type: String,
-  required: true,
   unique: true,
+  required: true,
   index: true,
 };
 // This probably shouldn't be used outside of the case of optional subdocuments, but it IS required for subdocuments whenever
@@ -13,22 +15,19 @@ export const string_pkey_type = {
 // The only solution is to not put unique indexes on the subdocuments or to make sure they're sparse.
 export const string_pkey_type_sparse = {
   type: String,
-  sparse: true,
   unique: true,
-  index: true,
+  sparse: true,
 };
 
-export const make_string_fkey_type = (ref: string) => ({
-  type: String,
-  required: true,
-  index: true,
+export const make_fkey_type = (
+  ref: string,
+  options: { is_object_id?: boolean; required?: boolean; index?: boolean },
+) => ({
   ref,
-});
-export const make_string_fkey_type_sparse = (ref: string) => ({
-  type: String,
-  sparse: true,
-  index: true,
-  ref,
+  type: options.is_object_id ? Schema.ObjectId : String,
+  ...(options.required
+    ? { required: true, index: options.index }
+    : { sparse: options.index }),
 });
 
 export const make_lang_suffixed_type = <Key extends string, MongooseType>(
