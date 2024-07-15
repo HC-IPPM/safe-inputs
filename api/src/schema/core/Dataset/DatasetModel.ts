@@ -9,10 +9,9 @@ import {
 import { make_lang_suffixed_type } from 'src/schema/mongoose_utils.ts';
 
 interface DatasetInterface
-  extends Document,
+  extends Document<Types.ObjectId>,
     Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
-  _id: Types.ObjectId;
   owners: Types.ObjectId[];
   uploaders?: Types.ObjectId[];
   is_active: boolean;

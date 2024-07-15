@@ -5,8 +5,7 @@ import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
 import { string_pkey_type } from 'src/schema/mongoose_utils.ts';
 
-interface UserInterface extends Document {
-  _id: Types.ObjectId;
+interface UserInterface extends Document<Types.ObjectId> {
   email: string;
   created_at: number;
   second_last_login_at?: number;
