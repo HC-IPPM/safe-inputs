@@ -17,6 +17,7 @@ const UserMongooseSchema = new Schema<UserInterface>({
   second_last_login_at: { type: Number, required: false },
   last_login_at: { type: Number, required: false },
 });
+
 export const UserModel = model<UserInterface>('User', UserMongooseSchema);
 
 export const UserByEmailLoader =

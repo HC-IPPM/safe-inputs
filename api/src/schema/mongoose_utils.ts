@@ -19,15 +19,29 @@ export const primary_key_type_sparse = {
   sparse: true,
 };
 
+type ForeignTypeOptions = { required?: boolean; index?: boolean };
+const use_foreign_type_options = (
+  options?: ForeignTypeOptions,
+): { required: true; index: boolean } | { sparse: boolean } =>
+  options?.required
+    ? { required: true, index: !!options?.index }
+    : { sparse: !!options?.index };
+
 export const make_foreign_key_type = (
-  ref: string,
-  options: { is_object_id?: boolean; required?: boolean; index?: boolean },
+  _ref: string, // unused, require it to be declared for self-documentation
+  options?: ForeignTypeOptions,
 ) => ({
+  type: String,
+  ...use_foreign_type_options(options),
+});
+
+export const make_foreign_id_type = (
+  ref: string,
+  options?: ForeignTypeOptions,
+) => ({
+  type: Schema.ObjectId,
   ref,
-  type: options.is_object_id ? Schema.ObjectId : String,
-  ...(options.required
-    ? { required: true, index: options.index }
-    : { sparse: options.index }),
+  ...use_foreign_type_options(options),
 });
 
 export const make_lang_suffixed_type = <Key extends string, MongooseType>(

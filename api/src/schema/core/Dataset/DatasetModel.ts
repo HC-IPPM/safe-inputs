@@ -8,14 +8,14 @@ import {
 } from 'src/schema/loader_utils.ts';
 import {
   make_lang_suffixed_type,
-  make_foreign_key_type,
+  make_foreign_id_type,
 } from 'src/schema/mongoose_utils.ts';
 
 interface DatasetInterface
   extends Document<Types.ObjectId>,
     Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
-  stable_id: string;
+  stable_key: string;
   owners: Types.ObjectId[];
   uploaders?: Types.ObjectId[];
   rules: Types.ObjectId;
@@ -29,11 +29,9 @@ interface DatasetInterface
 const DatasetMongooseSchema = new Schema<DatasetInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
-  stable_id: { type: String, index: true },
-  owners: [
-    make_foreign_key_type('User', { is_object_id: true, required: true }),
-  ],
-  uploaders: [make_foreign_key_type('User', { is_object_id: true })],
+  stable_key: { type: String, index: true },
+  owners: [make_foreign_id_type('User', { required: true })],
+  uploaders: [make_foreign_id_type('User')],
   rules: { type: Schema.ObjectId, ref: 'DatasetRules' },
   records: { type: Schema.ObjectId, ref: 'DatasetRecords' },
   is_active: { type: Boolean, required: true },
@@ -43,6 +41,7 @@ const DatasetMongooseSchema = new Schema<DatasetInterface>({
 });
 DatasetMongooseSchema.index({ is_current: 1, owners: 1 });
 DatasetMongooseSchema.index({ is_current: 1, uploaders: 1 });
+
 export const DatasetModel = model<DatasetInterface>(
   'Dataset',
   DatasetMongooseSchema,
@@ -62,3 +61,11 @@ export const CurrentDatasetsByUploadersLoader =
     'uploaders',
     { constraints: { is_current: true } },
   );
+
+// TODO: make sure required and derived fields have values, corresponding init rules and records documents
+export const create_new_dataset = () => {};
+
+// TODO: create a new entry, populate it's previous_version referece, and set is_current: false on the old instance. If rules have changed,
+// create new init records document? Assuming that, initially, we won't be able to write too many smarts around breaking change detection/
+// data migration, will have to ask users to modify the old data offline to work with the new rules and then seed it in to the new instance
+export const update_dataset = () => {};
