@@ -2,7 +2,6 @@ import DataLoader from 'dataloader';
 import _ from 'lodash';
 import type { Model, Document, FilterQuery } from 'mongoose';
 
-// dataloaders for fetching children based on parent key
 export function create_dataloader_for_resources_by_foreign_key_attr<
   ModelDoc extends Document,
 >(model: Model<ModelDoc>, fk_attr: string, cache = false) {
@@ -57,8 +56,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
   );
 }
 
-// dataloaders for fetching multiple documents by a primary key attribute
-export function create_dataloader_for_resource_by_primary_key<
+export function create_dataloader_for_resource_by_primary_key_attr<
   ModelDoc extends Document,
 >(model: Model<ModelDoc>, primary_key_attr: string, cache = false) {
   return new DataLoader<string, ModelDoc>(
