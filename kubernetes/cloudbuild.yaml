@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:488063d5732b62ae2105dff1152b173d85743adbe905f0e8980b9d55f63e198c'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:8e479b6b0b1944dfec529c7c0ff166ec36da72191f9cb356c5c526b2b9a40d67'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -31,5 +31,18 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - /workspace/resources.yaml
+
+  - id: Validate compliance
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:e81c8eaab9c7bb9cc166e347ea3d46d3186c959a83fcae41da365efb6dc1faf8'
+    args:
+      - apply
+      - ./policies/
+      - -r=/workspace/resources.yaml
+      - --table
+      - --detailed-results
+    env:
+      # avoid disk writes from cosign
+      - SIGSTORE_NO_CACHE=true
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
