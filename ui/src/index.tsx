@@ -20,6 +20,8 @@ import { I18nProvider } from '@lingui/react';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { ErrorBoundary } from 'react-error-boundary';
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
@@ -32,6 +34,7 @@ import ExcelParser from './pages/ExcelParser.tsx';
 import NavWrapper from './pages/NavWrapper.tsx';
 import SignIn from './pages/SignIn.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
+import ErrorFallback from './pages/ErrorFallback.tsx';
 
 //  _   _
 // | |_| |__   ___ _ __ ___   ___
@@ -114,22 +117,27 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <SessionProvider authBaseURL={auth_base_url}>
-        <ApolloProvider client={client}>
-          <ChakraProvider theme={theme}>
-            <I18nProvider i18n={i18n}>
-              <Routes>
-                <Route path="/" element={<NavWrapper />}>
-                  <Route path="" element={<ExcelParser />} />
-                  <Route path="signin" element={<SignIn />} />
-                  <Route
-                    path="termsAndConditions"
-                    element={<TermsAndConditions />}
-                  />
-                </Route>
-              </Routes>
-            </I18nProvider>
-          </ChakraProvider>
-        </ApolloProvider>
+        <I18nProvider i18n={i18n}>
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => window.location.reload()}
+          >
+            <ApolloProvider client={client}>
+              <ChakraProvider theme={theme}>
+                <Routes>
+                  <Route path="/" element={<NavWrapper />}>
+                    <Route path="" element={<ExcelParser />} />
+                    <Route path="signin" element={<SignIn />} />
+                    <Route
+                      path="termsAndConditions"
+                      element={<TermsAndConditions />}
+                    />
+                  </Route>
+                </Routes>
+              </ChakraProvider>
+            </ApolloProvider>
+          </ErrorBoundary>
+        </I18nProvider>
       </SessionProvider>
     </BrowserRouter>
   </React.StrictMode>,
