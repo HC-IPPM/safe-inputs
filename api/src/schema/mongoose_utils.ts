@@ -1,5 +1,5 @@
-import { get_bilingual_keys } from './lang_utils.ts';
-import type { BilingualKeyUnion } from './lang_utils.ts';
+import { get_lang_suffixed_keys } from './lang_utils.ts';
+import type { LangSuffixedKeyUnion } from './lang_utils.ts';
 
 export const str_type = { type: String };
 
@@ -35,10 +35,10 @@ export const sparse_parent_fkey_type = {
   index: true,
 };
 
-export const MakeBilingualType = <Key extends string, MongooseType>(
+export const MakeLangSuffixedType = <Key extends string, MongooseType>(
   key: Key,
   type: MongooseType,
 ) =>
-  Object.fromEntries(get_bilingual_keys(key).map((key) => [key, type])) as {
-    [k in BilingualKeyUnion<Key>]: MongooseType;
+  Object.fromEntries(get_lang_suffixed_keys(key).map((key) => [key, type])) as {
+    [k in LangSuffixedKeyUnion<Key>]: MongooseType;
   };

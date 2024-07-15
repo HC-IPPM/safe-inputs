@@ -14,41 +14,13 @@ spec:
   prune: true
   wait: true
   patches:
-    # patch istio-ingress namespace with injection label
-    - patch: |-
-        - op: add
-          path: /metadata/labels
-          value:
-            istio.io/rev: asm-managed
-      target:
-        kind: Namespace
-        name: istio-ingress
-    # patch cert-manager release with gke service account
-    - patch: |-
-        - op: add
-          path: /spec/values/serviceAccount
-          value:
-            annotations:
-              iam.gke.io/gcp-service-account: dns01-solver@pdcp-cloud-005-safeinputs.iam.gserviceaccount.com
-      target:
-        kind: HelmRelease
-        name: cert-manager
-    # patch mongodb namespace with injection label
-    - patch: |-
-        - op: add
-          path: /metadata/labels
-          value:
-            istio.io/rev: asm-managed
-      target:
-        kind: Namespace
-        name: mongodb
     # patch ingress with annotations
     - patch: |-
         - op: add
           path: /metadata/annotations
           value:
             cloud.google.com/l4-rbs: enabled
-            networking.gke.io/load-balancer-ip-addresses: safeinputs-v2
+            networking.gke.io/load-balancer-ip-addresses: phx-01j1tbke0ax-safeinputs-ip
       target:
         kind: Service
         name: istio-ingressgateway
@@ -85,7 +57,7 @@ spec:
                 - dns01:
                     cloudDNS:
                       # The ID of the GCP project
-                      project: pdcp-cloud-005-safeinputs
+                      project: phx-01j1tbke0ax
                   selector: {}
       target:
         kind: ClusterIssuer
@@ -96,7 +68,6 @@ spec:
           path: /spec/dnsNames
           value:
             - "safeinputs.alpha.phac-aspc.gc.ca"
-            - "entreessecurisees.alpha.phac-aspc.gc.ca"
       target:
         kind: Certificate
         name: mesh-gateway-cert

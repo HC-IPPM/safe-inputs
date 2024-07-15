@@ -9,7 +9,7 @@ steps:
         npm ci && npm run typecheck
 
   - id: 'Run tests'
-    name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
+    name: 'gcr.io/cloud-builders/docker@sha256:6982f007d1130a9db2044ba5d09b0005a3f3e9848b983590aa99d8072a5a2bfc'
     script: |
       #!/usr/bin/env bash
       set -o errexit
@@ -20,16 +20,16 @@ steps:
       # are just junk characters to the GCP cloudbuild logs
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6982f007d1130a9db2044ba5d09b0005a3f3e9848b983590aa99d8072a5a2bfc'
     id: generate-image-name
     entrypoint: 'bash'
     dir: api
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6982f007d1130a9db2044ba5d09b0005a3f3e9848b983590aa99d8072a5a2bfc'
     id: build-if-main
     entrypoint: 'bash'
     dir: api
@@ -44,7 +44,7 @@ steps:
           exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:e800c3b27fb5b84d04ffe66999aa74acdecaa777abc7408d2b2e5f119e2c1611'
+  - name: 'gcr.io/cloud-builders/docker@sha256:6982f007d1130a9db2044ba5d09b0005a3f3e9848b983590aa99d8072a5a2bfc'
     id: push-if-main
     entrypoint: 'bash'
     args:

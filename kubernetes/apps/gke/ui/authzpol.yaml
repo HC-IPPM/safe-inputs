@@ -13,4 +13,4 @@ spec:
         - source:
             # <trust-domain>/ns/<namespace>/sa/<service-account-name>
             principals:
-              - 'pdcp-cloud-005-safeinputs.svc.id.goog/ns/istio-ingress/sa/istio-ingressgateway'
+              - 'cluster.local/ns/istio-ingress/sa/istio-ingressgateway'
