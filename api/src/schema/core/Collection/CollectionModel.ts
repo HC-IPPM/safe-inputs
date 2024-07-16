@@ -11,7 +11,7 @@ import {
   make_foreign_id_type,
 } from 'src/schema/mongoose_utils.ts';
 
-interface DatasetInterface
+interface CollectionInterface
   extends Document<Types.ObjectId>,
     Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
@@ -25,7 +25,7 @@ interface DatasetInterface
   is_current: boolean;
   previous_version?: Types.ObjectId;
 }
-const DatasetMongooseSchema = new Schema<DatasetInterface>({
+const CollectionMongooseSchema = new Schema<CollectionInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
   stable_key: { type: String, index: true },
@@ -35,35 +35,39 @@ const DatasetMongooseSchema = new Schema<DatasetInterface>({
   is_active: { type: Boolean, required: true },
   created_at: { type: Number, required: true },
   is_current: { type: Boolean, required: true },
-  previous_version: { type: Schema.ObjectId, ref: 'Dataset' },
+  previous_version: { type: Schema.ObjectId, ref: 'Collection' },
 });
-DatasetMongooseSchema.index({ is_current: 1, owners: 1 });
-DatasetMongooseSchema.index({ is_current: 1, uploaders: 1 });
+CollectionMongooseSchema.index({ is_current: 1, owners: 1 });
+CollectionMongooseSchema.index({ is_current: 1, uploaders: 1 });
 
-export const DatasetModel = model<DatasetInterface>(
-  'Dataset',
-  DatasetMongooseSchema,
+export const CollectionModel = model<CollectionInterface>(
+  'Collection',
+  CollectionMongooseSchema,
 );
 
-export const DatasetByIdLoader =
-  create_dataloader_for_resource_by_primary_key_attr(DatasetModel, '_id');
+export const CollectionByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(CollectionModel, '_id');
 
-export const CurrentDatasetsByOwnersLoader =
-  create_dataloader_for_resources_by_foreign_key_attr(DatasetModel, 'owners', {
-    constraints: { is_current: true },
-  });
-
-export const CurrentDatasetsByUploadersLoader =
+export const CurrentCollectionsByOwnersLoader =
   create_dataloader_for_resources_by_foreign_key_attr(
-    DatasetModel,
+    CollectionModel,
+    'owners',
+    {
+      constraints: { is_current: true },
+    },
+  );
+
+export const CurrentCollectionsByUploadersLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    CollectionModel,
     'uploaders',
     { constraints: { is_current: true } },
   );
 
 // TODO: make sure required and derived fields have values, corresponding init rules and records documents
-export const create_new_dataset = () => {};
+export const create_new_collection = () => {};
 
 // TODO: create a new entry, populate it's previous_version referece, and set is_current: false on the old instance. If rules have changed,
 // create new init records document? Assuming that, initially, we won't be able to write too many smarts around breaking change detection/
 // data migration, will have to ask users to modify the old data offline to work with the new rules and then seed it in to the new instance
-export const update_dataset = () => {};
+export const update_collection = () => {};
