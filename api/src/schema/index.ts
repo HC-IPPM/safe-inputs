@@ -4,6 +4,7 @@ import { GraphQLSchema, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 
 import { GraphQLJSON } from 'graphql-type-json'; // JSON is outside of the standard GraphQL scalar types
 
+import { CollectionSchema } from './core/Collection/CollectionSchema.ts';
 import { RootSchema } from './core/RootSchema.ts';
 import { UserSchema } from './core/User/UserSchema.ts';
 
@@ -30,5 +31,5 @@ export const TemporaryExampleMutation = new GraphQLSchema({
 });
 
 export const schema = mergeSchemas({
-  schemas: [RootSchema, UserSchema, TemporaryExampleMutation],
+  schemas: [RootSchema, UserSchema, CollectionSchema, TemporaryExampleMutation],
 });

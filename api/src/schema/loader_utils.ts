@@ -76,7 +76,7 @@ export function create_dataloader_for_resource_by_primary_key_attr<ModelDoc>(
     cache: false,
   },
 ) {
-  return new DataLoader<string, HydratedDocument<ModelDoc>>(
+  return new DataLoader<string, HydratedDocument<ModelDoc> | undefined>(
     async function (keys) {
       const docs = await model.find({
         [primary_key_attr]: { $in: _.uniq(keys) },

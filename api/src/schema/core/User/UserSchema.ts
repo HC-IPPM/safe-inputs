@@ -8,7 +8,7 @@ import { UserModel, UserByEmailLoader } from './UserModel.ts';
 export const UserSchema = makeExecutableSchema({
   typeDefs: `
   type Root {
-    user(email: String): User
+    user(email: String!): User
     users: [User]
   }
   
