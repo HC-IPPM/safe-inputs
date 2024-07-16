@@ -16,26 +16,29 @@ interface CollectionInterface
     Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   stable_key: string;
+  sem_ver: string;
+  is_current: boolean;
+  previous_version?: Types.ObjectId;
+  created_by: Types.ObjectId;
+  created_at: number;
+  is_locked: boolean;
   owners: Types.ObjectId[];
   uploaders?: Types.ObjectId[];
   recordset: Types.ObjectId;
-  is_active: boolean;
-  created_by: Types.ObjectId;
-  created_at: number;
-  is_current: boolean;
-  previous_version?: Types.ObjectId;
 }
 const CollectionMongooseSchema = new Schema<CollectionInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
   stable_key: { type: String, index: true },
+  sem_ver: { type: String, required: true },
+  is_current: { type: Boolean, required: true },
+  previous_version: { type: Schema.ObjectId, ref: 'Collection' },
+  created_by: make_foreign_id_type('User', { required: true }),
+  created_at: { type: Number, required: true },
+  is_locked: { type: Boolean, required: true },
   owners: [make_foreign_id_type('User', { required: true })],
   uploaders: [make_foreign_id_type('User')],
   recordset: { type: Schema.ObjectId, ref: 'Recordset' },
-  is_active: { type: Boolean, required: true },
-  created_at: { type: Number, required: true },
-  is_current: { type: Boolean, required: true },
-  previous_version: { type: Schema.ObjectId, ref: 'Collection' },
 });
 CollectionMongooseSchema.index({ is_current: 1, owners: 1 });
 CollectionMongooseSchema.index({ is_current: 1, uploaders: 1 });
@@ -71,3 +74,7 @@ export const create_new_collection = () => {};
 // create new init records document? Assuming that, initially, we won't be able to write too many smarts around breaking change detection/
 // data migration, will have to ask users to modify the old data offline to work with the new rules and then seed it in to the new instance
 export const update_collection = () => {};
+
+export const user_is_owner_of_collection = () => {}; // TODO
+
+export const user_is_uploader_for_collection = () => {}; // TODO
