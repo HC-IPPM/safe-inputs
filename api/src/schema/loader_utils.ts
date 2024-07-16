@@ -15,7 +15,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
     cache: false,
   },
 ) {
-  return new DataLoader<string, { [foreign_key: string]: ModelDoc[] }>(
+  return new DataLoader<string, ModelDoc[]>(
     async function (fk_ids) {
       const rows = await model.find({
         [fk_attr]: { $in: _.uniq(fk_ids) },
