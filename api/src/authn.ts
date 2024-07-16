@@ -6,7 +6,7 @@ import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 import {
   get_or_create_user,
   update_user_last_login_times,
-} from 'src/schema/core/user/UserModel.ts';
+} from 'src/schema/core/User/UserModel.ts';
 
 import { validate_user_email_allowed } from './authz.ts';
 
