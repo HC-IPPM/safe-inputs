@@ -1,11 +1,10 @@
-import { Schema, model, Types } from 'mongoose';
-import type { Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
 import { primary_key_type } from 'src/schema/mongoose_utils.ts';
 
-interface UserInterface extends Document<Types.ObjectId> {
+interface UserInterface {
   email: string;
   created_at: number;
   second_last_login_at?: number;

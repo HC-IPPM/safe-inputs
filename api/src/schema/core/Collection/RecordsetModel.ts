@@ -1,5 +1,4 @@
 import { Schema, model, Types } from 'mongoose';
-import type { Document } from 'mongoose';
 
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
@@ -8,7 +7,7 @@ import {
   make_lang_suffixed_type,
 } from 'src/schema/mongoose_utils.ts';
 
-interface ConditionInterface extends Document<Types.ObjectId> {
+interface ConditionInterface {
   condition_type: string; // TODO this will be an enum once condition types are formalized
   parameters?: (string | number | boolean)[];
 }
@@ -18,8 +17,7 @@ const ConditionSchema = new Schema<ConditionInterface>({
 });
 
 interface ColumnDefInterface
-  extends Document<Types.ObjectId>,
-    Record<LangSuffixedKeyUnion<`name`>, string>,
+  extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   header: string;
   data_type: string; // TODO this will be an enum once column types are formalized
@@ -33,7 +31,7 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
   conditions: [ConditionSchema],
 });
 
-interface RecordInterface extends Document<Types.ObjectId> {
+interface RecordInterface {
   data: Record<string, any>;
   created_by: Types.ObjectId;
   created_at: number;
@@ -44,7 +42,7 @@ const RecordSchema = new Schema<RecordInterface>({
   created_at: { type: Number, required: true },
 });
 
-interface RecordsetInterface extends Document<Types.ObjectId> {
+interface RecordsetInterface {
   column_defs: ColumnDefInterface[];
   records: RecordInterface[];
 }

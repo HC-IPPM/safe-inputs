@@ -1,5 +1,4 @@
 import { Schema, model, Types } from 'mongoose';
-import type { Document } from 'mongoose';
 
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import {
@@ -12,8 +11,7 @@ import {
 } from 'src/schema/mongoose_utils.ts';
 
 interface CollectionInterface
-  extends Document<Types.ObjectId>,
-    Record<LangSuffixedKeyUnion<`name`>, string>,
+  extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   stable_key: string;
   sem_ver: string;

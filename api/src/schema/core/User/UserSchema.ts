@@ -22,8 +22,12 @@ export const UserSchema = makeExecutableSchema({
   resolvers: {
     Root: {
       user: with_authz(
-        (_parent: unknown, { email }: { email: string }, _context: unknown) =>
-          UserByEmailLoader.load(email),
+        (
+          _parent: unknown,
+          { email }: { email: string },
+          _context: unknown,
+          _info: unknown,
+        ) => UserByEmailLoader.load(email),
         validate_user_is_super_user,
       ),
       users: with_authz(() => UserModel.find({}), validate_user_is_super_user),

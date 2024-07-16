@@ -1,10 +1,8 @@
 import DataLoader from 'dataloader';
 import _ from 'lodash';
-import type { Model, Document, FilterQuery } from 'mongoose';
+import type { Model, HydratedDocument, FilterQuery } from 'mongoose';
 
-export function create_dataloader_for_resources_by_foreign_key_attr<
-  ModelDoc extends Document,
->(
+export function create_dataloader_for_resources_by_foreign_key_attr<ModelDoc>(
   model: Model<ModelDoc>,
   fk_attr: string,
   options: {
@@ -15,7 +13,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
     cache: false,
   },
 ) {
-  return new DataLoader<string, ModelDoc[]>(
+  return new DataLoader<string, HydratedDocument<ModelDoc>[]>(
     async function (fk_ids) {
       const rows = await model.find({
         [fk_attr]: { $in: _.uniq(fk_ids) },
@@ -67,9 +65,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<
   );
 }
 
-export function create_dataloader_for_resource_by_primary_key_attr<
-  ModelDoc extends Document,
->(
+export function create_dataloader_for_resource_by_primary_key_attr<ModelDoc>(
   model: Model<ModelDoc>,
   primary_key_attr: string,
   options: {
@@ -80,7 +76,7 @@ export function create_dataloader_for_resource_by_primary_key_attr<
     cache: false,
   },
 ) {
-  return new DataLoader<string, ModelDoc>(
+  return new DataLoader<string, HydratedDocument<ModelDoc>>(
     async function (keys) {
       const docs = await model.find({
         [primary_key_attr]: { $in: _.uniq(keys) },
