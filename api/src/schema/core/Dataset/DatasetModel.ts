@@ -18,8 +18,7 @@ interface DatasetInterface
   stable_key: string;
   owners: Types.ObjectId[];
   uploaders?: Types.ObjectId[];
-  rules: Types.ObjectId;
-  records: Types.ObjectId;
+  recordset: Types.ObjectId;
   is_active: boolean;
   created_by: Types.ObjectId;
   created_at: number;
@@ -32,8 +31,7 @@ const DatasetMongooseSchema = new Schema<DatasetInterface>({
   stable_key: { type: String, index: true },
   owners: [make_foreign_id_type('User', { required: true })],
   uploaders: [make_foreign_id_type('User')],
-  rules: { type: Schema.ObjectId, ref: 'DatasetRules' },
-  records: { type: Schema.ObjectId, ref: 'DatasetRecords' },
+  recordset: { type: Schema.ObjectId, ref: 'Recordset' },
   is_active: { type: Boolean, required: true },
   created_at: { type: Number, required: true },
   is_current: { type: Boolean, required: true },
