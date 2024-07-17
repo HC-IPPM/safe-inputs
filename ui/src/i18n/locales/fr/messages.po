@@ -158,6 +158,10 @@ msgstr "Propriétés du fichier"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, veuillez vous référer à <0>nos conditions générales sur le site Web du SCT. <1/></0>"
 
+#: src/pages/error/NavWrapperErrorFallback.tsx:22
+msgid "Go to Home"
+msgstr "Aller à l'accueil"
+
 #: src/components/layout/Header.tsx:53
 msgid "Home"
 msgstr "Accueil"
@@ -169,6 +173,10 @@ msgstr "Avis d'accord"
 #: src/pages/TermsAndConditions.tsx:59
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 msgstr "Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du "
+
+#: src/pages/error/NavWrapperErrorFallback.tsx:17
+msgid "Please contact the developers or go to the home page."
+msgstr "Veuillez contacter les développeurs ou aller à la page d'accueil."
 
 #: src/pages/TermsAndConditions.tsx:42
 msgid "Privacy"
@@ -206,6 +214,10 @@ msgstr ""
 #: src/components/auth/SignInForm.tsx:75
 msgid "Signing in"
 msgstr ""
+
+#: src/pages/error/NavWrapperErrorFallback.tsx:14
+msgid "Something went wrong"
+msgstr "Quelque chose a mal tourné."
 
 #: src/components/auth/AuthNavButton.tsx:31
 #: src/components/auth/AuthNavButton.tsx:51

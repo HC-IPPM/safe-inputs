@@ -34,7 +34,7 @@ import ExcelParser from './pages/ExcelParser.tsx';
 import NavWrapper from './pages/NavWrapper.tsx';
 import SignIn from './pages/SignIn.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
-import ErrorFallback from './pages/ErrorFallback.tsx';
+import AppErrorFallback from './pages/error/AppErrorFallback.tsx';
 
 //  _   _
 // | |_| |__   ___ _ __ ___   ___
@@ -115,13 +115,10 @@ const client = new ApolloClient({
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <SessionProvider authBaseURL={auth_base_url}>
-        <I18nProvider i18n={i18n}>
-          <ErrorBoundary
-            FallbackComponent={ErrorFallback}
-            onReset={() => window.location.reload()}
-          >
+    <ErrorBoundary FallbackComponent={AppErrorFallback}>
+      <BrowserRouter>
+        <SessionProvider authBaseURL={auth_base_url}>
+          <I18nProvider i18n={i18n}>
             <ApolloProvider client={client}>
               <ChakraProvider theme={theme}>
                 <Routes>
@@ -136,9 +133,9 @@ root.render(
                 </Routes>
               </ChakraProvider>
             </ApolloProvider>
-          </ErrorBoundary>
-        </I18nProvider>
-      </SessionProvider>
-    </BrowserRouter>
+          </I18nProvider>
+        </SessionProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

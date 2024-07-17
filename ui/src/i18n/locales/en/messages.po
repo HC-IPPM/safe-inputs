@@ -158,6 +158,10 @@ msgstr "File Properties"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 
+#: src/pages/error/NavWrapperErrorFallback.tsx:22
+msgid "Go to Home"
+msgstr "Go to Home"
+
 #: src/components/layout/Header.tsx:53
 msgid "Home"
 msgstr "Home"
@@ -169,6 +173,10 @@ msgstr "Notice of Agreement"
 #: src/pages/TermsAndConditions.tsx:59
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 msgstr "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
+
+#: src/pages/error/NavWrapperErrorFallback.tsx:17
+msgid "Please contact the developers or go to the home page."
+msgstr "Please contact the developers or go to the home page."
 
 #: src/pages/TermsAndConditions.tsx:42
 msgid "Privacy"
@@ -206,6 +214,10 @@ msgstr "Sign Out"
 #: src/components/auth/SignInForm.tsx:75
 msgid "Signing in"
 msgstr "Signing in"
+
+#: src/pages/error/NavWrapperErrorFallback.tsx:14
+msgid "Something went wrong"
+msgstr "Something went wrong"
 
 #: src/components/auth/AuthNavButton.tsx:31
 #: src/components/auth/AuthNavButton.tsx:51
