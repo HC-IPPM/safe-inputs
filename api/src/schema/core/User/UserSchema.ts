@@ -10,6 +10,11 @@ export const UserSchema = makeExecutableSchema({
   type Root {
     user(email: String!): User
     users: [User]
+    session: Session
+  }
+  
+  type Session {
+    user: User
   }
   
   type User {
@@ -31,6 +36,16 @@ export const UserSchema = makeExecutableSchema({
         validate_user_is_super_user,
       ),
       users: with_authz(() => UserModel.find({}), validate_user_is_super_user),
+      session: with_authz(
+        (
+          _parent: unknown,
+          _args: unknown,
+          { req }: { req?: { user?: Express.User } },
+          _info: unknown,
+        ) => ({
+          user: req?.user?.email && UserByEmailLoader.load(req.user.email),
+        }),
+      ),
     },
   },
 });
