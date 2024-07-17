@@ -7,10 +7,10 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@microsoft/sdl/common"
   ],
-  "plugins": ["jest", "@typescript-eslint"],
-  "parser": "@typescript-eslint/parser",
+  "plugins": ["no-secrets"],
   "rules": {
     "camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
@@ -56,11 +56,36 @@
           }
         }
       }
-    ]
+    ],
+    "no-secrets/no-secrets": "error"
   },
   "overrides": [
     {
+      "files": ["api/**/*.ts", "api/**/*.tsx"],
+      "extends": ["plugin:@microsoft/sdl/typescript"], // includes rules that need the parser to be configured with the project-specific tsconfig file
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": ["./api/tsconfig.json"]
+      }
+    },
+    {
+      "files": ["ui/**/*.ts", "ui/**/*.tsx"],
+      "extends": ["plugin:@microsoft/sdl/typescript"], // includes rules that need the parser to be configured with the project-specific tsconfig file
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": ["./ui/tsconfig.json"]
+      }
+    },
+    {
       "files": ["**/*test.js", "**/*test.ts", "**/*test.tsx"],
+      "plugins": ["jest"],
+      "rules": {
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error"
+      },
       "env": {
         "jest/globals": true
       }

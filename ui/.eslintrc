@@ -4,7 +4,8 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",
-    "plugin:jsx-a11y/recommended"
+    "plugin:jsx-a11y/recommended",
+    "plugin:@microsoft/sdl/react"
   ],
   "plugins": ["react", "jsx-a11y"],
   "env": {
