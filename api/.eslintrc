@@ -1,25 +1,30 @@
 {
-  "extends": ["../.eslintrc", "plugin:n/recommended"],
+  "extends": [
+    "../.eslintrc",
+    "plugin:n/recommended",
+    "plugin:security/recommended-legacy"
+  ],
   "env": {
-    "node": true,
+    "node": true
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["./", "./node_modules/"],
-      },
-    },
+        "moduleDirectory": ["./", "./node_modules/"]
+      }
+    }
   },
   "rules": {
     "n/no-unsupported-features/es-syntax": [
       "error",
-      { "ignores": ["modules"] },
+      { "ignores": ["modules"] }
     ],
     "n/no-unsupported-features/node-builtins": [
       "error",
-      { "ignores": ["fetch"] },
+      { "ignores": ["fetch"] }
     ],
     "n/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
     "no-console": 0,
-  },
+    "security/detect-object-injection": 0
+  }
 }
