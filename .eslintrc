@@ -7,9 +7,9 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
   ],
-  "plugins": ["jest", "@typescript-eslint"],
+  "plugins": ["jest", "@typescript-eslint", "no-secrets"],
   "parser": "@typescript-eslint/parser",
   "rules": {
     "camelcase": "off",
@@ -24,24 +24,24 @@
         "newlines-between": "always-and-inside-groups",
         "alphabetize": {
           "order": "asc",
-          "caseInsensitive": true
+          "caseInsensitive": true,
         },
         "groups": [
           "builtin",
           "external",
           "internal",
           "parent",
-          ["sibling", "index"]
+          ["sibling", "index"],
         ],
         // We can group imports further by adding rules here, the order they're defined in breaks ties when group and position are equal
-        "pathGroups": []
-      }
+        "pathGroups": [],
+      },
     ],
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/no-explicit-any": "warn", // TODO: tighten up typing, upgrade this to error
     "@typescript-eslint/no-unused-vars": [
       "warn",
-      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_.+" }
+      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_.+" },
     ],
     "@typescript-eslint/no-redeclare": "error",
     "@typescript-eslint/ban-types": [
@@ -49,31 +49,32 @@
       {
         "types": {
           "React.FunctionalComponent": {
-            "message": "FunctionalComponent is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
+            "message": "FunctionalComponent is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177",
           },
           "React.FC": {
-            "message": "FC is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177"
-          }
-        }
-      }
-    ]
+            "message": "FC is discouraged, prefer a plain function. See https://github.com/facebook/create-react-app/pull/8177",
+          },
+        },
+      },
+    ],
+    "no-secrets/no-secrets": "error",
   },
   "overrides": [
     {
       "files": ["**/*test.js", "**/*test.ts", "**/*test.tsx"],
       "env": {
-        "jest/globals": true
-      }
+        "jest/globals": true,
+      },
     },
     {
       "files": ["**/*.cjs"],
       "rules": {
-        "@typescript-eslint/no-var-requires": 0
-      }
-    }
+        "@typescript-eslint/no-var-requires": 0,
+      },
+    },
   ],
   "ignorePatterns": [
     "k8s/mongodb-operator/operator", // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
-    "**/dist" // generated (build outputs)
-  ]
+    "**/dist", // generated (build outputs)
+  ],
 }
