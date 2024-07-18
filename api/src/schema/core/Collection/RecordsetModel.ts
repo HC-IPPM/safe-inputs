@@ -10,11 +10,11 @@ import {
 
 interface ConditionInterface {
   condition_type: string; // TODO this will be an enum once condition types are formalized
-  parameters?: (string | number | boolean)[];
+  parameters?: string[];
 }
 const ConditionSchema = new Schema<ConditionInterface>({
   condition_type: { type: String, required: true },
-  parameters: [{ type: Schema.Types.Mixed }],
+  parameters: [{ type: String }],
 });
 
 interface ColumnDefInterface

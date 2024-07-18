@@ -1,10 +1,14 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
+import { JSONResolver } from 'graphql-scalars';
+
 import { validate_user_is_super_user } from 'src/authz.ts';
-import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
 
 import { UserByEmailLoader } from 'src/schema/core/User/UserModel.ts';
-import { with_authz } from 'src/schema/resolver_utils.ts';
+import {
+  with_authz,
+  resolve_lang_suffixed_scalar,
+} from 'src/schema/resolver_utils.ts';
 
 import {
   CollectionModel,
@@ -41,20 +45,82 @@ export const CollectionSchema = makeExecutableSchema({
   }
   
   type Collection {
-    TODO: String
-  }
+    ### Scalar fields
+    stable_key: String!
+    name_en: String!
+    name_fr: String!
+    description_en: String!
+    description_fr: String!
+    sem_ver: String!
+    is_current: Boolean!
+    created_by: User!
+    created_at: Float!
+    is_locked: Boolean!
+    
+    ### Lang aware resolver scalar fields
+    name: String!
+    description: String!
+    
+    ### Non-scalar fields
+    previous_version: Collection
+    
+    """
+      \`owners\` array will be non-empty
+    """
+    owners: [User!]! # note: these !'s mean neither the field itself nor elements of the array may be null, but it doesn't enforce that the array is non-empty
 
-  type Recordset {
-    TODO: String
+    """
+      \`uploaders\` array may be empty
+    """
+    uploaders: [User!]! # note: these !'s mean neither the field itself nor elements of the array may be null, but it doesn't enforce that the array is non-empty
+
+    # the mongoose models have a \`Recordset\` layer between \`Collection\`s and \`ColumnDef\`s/\`Record\`s,
+    # but this is just to enable smarter versioning. Can directly expose the \`Recordset\` fields for the GQL API
+    column_defs: [ColumnDef]
+    records: [Record]
+    records_uploaded_by(uploader_email: String!): [Record]
   }
 
   type ColumnDef {
-    TODO: String
+    ### Scalar fields
+    name_en: String!
+    name_fr: String!
+    description_en: String!
+    description_fr: String!
+    data_type: String! # TODO will be an enum eventually
+    
+    ### Lang aware resolver scalar fields
+    name: String!
+    description: String!
+
+    ### Non-scalar fields
+
+    """
+      \`Conditions\` array may be empty
+    """
+    conditions: [Condition!]!
+  }
+
+  type Condition {
+    ### Scalar fields
+    condition_type: String! # TODO will be an enum eventually
+
+    """
+      \`parameters\` array may be empty
+    """
+    parameters: [String!]!
   }
 
   type Record {
-    TODO: String
+    ### Scalar fields
+    data: JSON # https://the-guild.dev/graphql/scalars/docs/scalars/json
+    created_at: Float
+
+    ### Non-scalar fields
+    created_by: User
   }
+
+  scalar JSON
 `,
   resolvers: {
     Root: {
@@ -91,10 +157,29 @@ export const CollectionSchema = makeExecutableSchema({
         validate_user_is_super_user,
       ),
     },
-    User: {},
-    Collection: {},
-    Recordset: {},
-    ColumnDef: {},
-    Record: {},
+    User: {
+      owned_collections: () => ['TODO'],
+      uploadable_collections: () => ['TODO'],
+    },
+    Collection: {
+      name: resolve_lang_suffixed_scalar('name'),
+      description: resolve_lang_suffixed_scalar('description'),
+      previous_version: () => 'TODO',
+      created_by: () => 'TODO',
+      owners: () => ['TODO'],
+      uploaders: () => ['TODO'],
+      column_defs: () => ['TODO'],
+      records: () => ['TODO'],
+      records_uploaded_by: () => ['TODO'],
+    },
+    ColumnDef: {
+      name: resolve_lang_suffixed_scalar('name'),
+      description: resolve_lang_suffixed_scalar('description'),
+      conditions: () => ['TODO'],
+    },
+    Record: {
+      created_by: () => 'TODO',
+    },
+    JSON: JSONResolver,
   },
 });

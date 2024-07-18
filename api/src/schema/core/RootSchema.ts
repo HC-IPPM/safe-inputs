@@ -10,6 +10,7 @@ export const RootSchema = makeExecutableSchema({
 
   type Root {
     # graphQL cant have empty blocks of fields, this is a placeholder. Other schema definitions extend Root with their own search fields etc
+    # TODO any better way to do this? Or maybe there's some meaningful values to stick on the query root (release version?)
     non_field: String,
   }
 `,
