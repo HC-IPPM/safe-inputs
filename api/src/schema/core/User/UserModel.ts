@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { HydratedDocument, Schema, model } from 'mongoose';
 
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
@@ -18,6 +18,10 @@ const UserMongooseSchema = new Schema<UserInterface>({
 });
 
 export const UserModel = model<UserInterface>('User', UserMongooseSchema);
+export type UserDocument = HydratedDocument<UserInterface>;
+
+export const UserByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(UserModel, '_id');
 
 export const UserByEmailLoader =
   create_dataloader_for_resource_by_primary_key_attr(UserModel, 'email');

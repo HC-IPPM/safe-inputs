@@ -90,7 +90,9 @@ export const configure_passport_js = (passport: PassportStatic) => {
       async function verifyUser(_req: Express.Request, user: Express.User) {
         validate_user_email_allowed(user);
 
-        return await get_or_create_user(user.email!); // user.email verified as non-null by validate_user_email_allowed
+        const mongoose_doc = await get_or_create_user(user.email!);
+
+        return { ...user, mongoose_doc };
       },
     ),
   );

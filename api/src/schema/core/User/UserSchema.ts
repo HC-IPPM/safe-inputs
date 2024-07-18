@@ -43,7 +43,7 @@ export const UserSchema = makeExecutableSchema({
           { req }: { req?: { user?: Express.User } },
           _info: unknown,
         ) => ({
-          user: req?.user?.email && UserByEmailLoader.load(req.user.email),
+          user: req?.user?.mongoose_doc,
         }),
       ),
     },

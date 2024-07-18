@@ -1,4 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
+import type { HydratedDocument } from 'mongoose';
 
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
@@ -55,6 +56,7 @@ export const RecordsetModel = model<RecordsetInterface>(
   'Recordset',
   RecordsetMongooseSchema,
 );
+export type RecordsetDocument = HydratedDocument<RecordsetInterface>;
 
 export const RecordsetByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(RecordsetModel, '_id');

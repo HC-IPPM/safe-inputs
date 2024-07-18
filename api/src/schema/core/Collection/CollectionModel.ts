@@ -1,4 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
+import type { HydratedDocument } from 'mongoose';
 
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import {
@@ -45,6 +46,7 @@ export const CollectionModel = model<CollectionInterface>(
   'Collection',
   CollectionMongooseSchema,
 );
+export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
 export const CollectionByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(CollectionModel, '_id');
