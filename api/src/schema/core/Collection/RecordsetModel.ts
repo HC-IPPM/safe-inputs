@@ -32,7 +32,7 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
   conditions: [ConditionSchema],
 });
 
-interface RecordInterface {
+export interface RecordInterface {
   data: Record<string, any>;
   created_by: Types.ObjectId;
   created_at: number;

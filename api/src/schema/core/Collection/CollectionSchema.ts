@@ -4,7 +4,11 @@ import { JSONResolver } from 'graphql-scalars';
 
 import { validate_user_is_super_user } from 'src/authz.ts';
 
-import { UserByEmailLoader } from 'src/schema/core/User/UserModel.ts';
+import {
+  UserByEmailLoader,
+  UserByIdLoader,
+} from 'src/schema/core/User/UserModel.ts';
+import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import {
   with_authz,
   resolve_lang_suffixed_scalar,
@@ -20,9 +24,9 @@ import {
   user_is_owner_of_collection,
   user_is_uploader_for_collection,
 } from './CollectionModel.ts';
+import type { CollectionDocument } from './CollectionModel.ts';
 
 import {
-  RecordsetModel,
   RecordsetByIdLoader,
   are_new_column_defs_compatible_with_current_recordset,
   update_column_defs_on_recordset,
@@ -30,6 +34,7 @@ import {
   insert_record_in_recordset,
   delete_record_in_recordset,
 } from './RecordsetModel.ts';
+import type { RecordInterface } from './RecordsetModel.ts';
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
@@ -158,27 +163,111 @@ export const CollectionSchema = makeExecutableSchema({
       ),
     },
     User: {
-      owned_collections: () => ['TODO'],
-      uploadable_collections: () => ['TODO'],
+      owned_collections: (
+        parent: UserDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => CurrentCollectionsByOwnersLoader.load(parent._id.toString()),
+      uploadable_collections: (
+        parent: UserDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => CurrentCollectionsByUploadersLoader.load(parent._id.toString()),
     },
     Collection: {
       name: resolve_lang_suffixed_scalar('name'),
       description: resolve_lang_suffixed_scalar('description'),
-      previous_version: () => 'TODO',
-      created_by: () => 'TODO',
-      owners: () => ['TODO'],
-      uploaders: () => ['TODO'],
-      column_defs: () => ['TODO'],
-      records: () => ['TODO'],
-      records_uploaded_by: () => ['TODO'],
+      previous_version: (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) =>
+        parent.previous_version &&
+        CollectionByIdLoader.load(parent.previous_version.toString()),
+      created_by: (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => UserByIdLoader.load(parent.created_by.toString()),
+      owners: (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) =>
+        UserByIdLoader.loadMany(
+          parent.owners.map((object_id) => object_id.toString()),
+        ),
+      uploaders: (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) =>
+        typeof parent.uploaders === 'undefined'
+          ? []
+          : UserByIdLoader.loadMany(
+              parent.uploaders.map((object_id) => object_id.toString()),
+            ),
+      column_defs: async (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => {
+        const recordset = await RecordsetByIdLoader.load(
+          parent.recordset.toString(),
+        );
+        return typeof recordset === 'undefined' ? [] : recordset.column_defs;
+      },
+      records: async (
+        parent: CollectionDocument,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => {
+        const recordset = await RecordsetByIdLoader.load(
+          parent.recordset.toString(),
+        );
+        return typeof recordset === 'undefined' ? [] : recordset.records;
+      },
+      records_uploaded_by: async (
+        parent: CollectionDocument,
+        { uploader_email }: { uploader_email: string },
+        _context: unknown,
+        _info: unknown,
+      ) => {
+        const user = await UserByEmailLoader.load(uploader_email);
+
+        if (typeof user === 'undefined') {
+          return [];
+        }
+
+        const recordset = await RecordsetByIdLoader.load(
+          parent.recordset.toString(),
+        );
+        return typeof recordset === 'undefined'
+          ? []
+          : recordset.records.filter(
+              ({ created_by }) => created_by === user._id,
+            );
+      },
     },
     ColumnDef: {
       name: resolve_lang_suffixed_scalar('name'),
       description: resolve_lang_suffixed_scalar('description'),
-      conditions: () => ['TODO'],
     },
     Record: {
-      created_by: () => 'TODO',
+      created_by: (
+        parent: RecordInterface,
+        _args: unknown,
+        _context: unknown,
+        _info: unknown,
+      ) => UserByIdLoader.load(parent.created_by.toString()),
     },
     JSON: JSONResolver,
   },
