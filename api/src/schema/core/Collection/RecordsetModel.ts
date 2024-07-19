@@ -1,6 +1,9 @@
 import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
+import type { SetOptional } from 'type-fest';
+
+import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
 import {
@@ -23,6 +26,8 @@ interface ColumnDefInterface
   header: string;
   data_type: string; // TODO this will be an enum once column types are formalized
   conditions: ConditionInterface[];
+  created_by: Types.ObjectId;
+  created_at: number;
 }
 const ColumnDefSchema = new Schema<ColumnDefInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
@@ -61,14 +66,39 @@ export type RecordsetDocument = HydratedDocument<RecordsetInterface>;
 export const RecordsetByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(RecordsetModel, '_id');
 
-export const create_new_recordset = () => {}; // TODO
+type ColumnDefWithoutMeta = SetOptional<
+  ColumnDefInterface,
+  'created_by' | 'created_at'
+>;
 
-export const are_new_column_defs_compatible_with_current_recordset = () => {}; // TODO
+export const create_new_recordset = (
+  column_defs: ColumnDefWithoutMeta,
+  user: UserDocument,
+) => {}; // TODO
 
-export const update_column_defs_on_recordset = () => {}; // TODO
+export const are_new_column_defs_compatible_with_current_recordset = (
+  recordset: RecordsetDocument,
+  new_column_defs: ColumnDefWithoutMeta,
+) => {}; // TODO
 
-export const validate_new_records_against_recordset_column_defs = () => {}; // TODO
+export const update_column_defs_on_recordset = (
+  recordset: RecordsetDocument,
+  new_column_defs: ColumnDefWithoutMeta,
+  user: UserDocument,
+) => {}; // TODO
 
-export const insert_record_in_recordset = () => {}; // TODO
+export const delete_records_in_recordset = (
+  recordset: RecordsetDocument,
+  record_ids: Types.ObjectId[],
+) => {}; // TODO
 
-export const delete_record_in_recordset = () => {}; // TODO
+export const validate_new_records_against_recordset_column_defs = (
+  recordset: RecordsetDocument,
+  data: Record<string, any>[],
+) => {}; // TODO
+
+export const insert_records_in_recordset = (
+  recordset: RecordsetDocument,
+  data: Record<string, any>[],
+  user: UserDocument,
+) => {};

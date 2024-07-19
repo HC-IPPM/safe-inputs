@@ -29,9 +29,9 @@ import {
   RecordsetByIdLoader,
   are_new_column_defs_compatible_with_current_recordset,
   update_column_defs_on_recordset,
+  delete_records_in_recordset,
   validate_new_records_against_recordset_column_defs,
-  insert_record_in_recordset,
-  delete_record_in_recordset,
+  insert_records_in_recordset,
 } from './RecordsetModel.ts';
 import type { RecordInterface } from './RecordsetModel.ts';
 
