@@ -67,7 +67,7 @@ export const are_new_column_defs_compatible_with_current_recordset = () => {}; /
 
 export const update_column_defs_on_recordset = () => {}; // TODO
 
-export const validate_new_records_against_recordset = () => {}; // TODO
+export const validate_new_records_against_recordset_column_defs = () => {}; // TODO
 
 export const insert_record_in_recordset = () => {}; // TODO
 

@@ -2,8 +2,9 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import { JSONResolver } from 'graphql-scalars';
 
-import { validate_user_is_super_user } from 'src/authz.ts';
+import _ from 'lodash';
 
+import { user_is_super_user_rule, check_authz_rules } from 'src/authz.ts';
 import {
   UserByEmailLoader,
   UserByIdLoader,
@@ -21,8 +22,6 @@ import {
   CurrentCollectionsByUploadersLoader,
   create_new_collection,
   update_collection,
-  user_is_owner_of_collection,
-  user_is_uploader_for_collection,
 } from './CollectionModel.ts';
 import type { CollectionDocument } from './CollectionModel.ts';
 
@@ -30,11 +29,60 @@ import {
   RecordsetByIdLoader,
   are_new_column_defs_compatible_with_current_recordset,
   update_column_defs_on_recordset,
-  validate_new_records_against_recordset,
+  validate_new_records_against_recordset_column_defs,
   insert_record_in_recordset,
   delete_record_in_recordset,
 } from './RecordsetModel.ts';
 import type { RecordInterface } from './RecordsetModel.ts';
+
+const user_is_owner_of_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  check_authz_rules(user, user_is_super_user_rule) ||
+  _.includes(collection.owners, user._id);
+const user_is_uploader_for_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) => _.includes(collection.uploaders, user._id);
+
+const user_can_view_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  user_is_owner_of_collection(user, collection) ||
+  user_is_uploader_for_collection(user, collection);
+const user_can_edit_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) => collection.is_current && user_is_owner_of_collection(user, collection);
+const user_can_upload_to_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  (collection.is_current && user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current &&
+    !collection.is_locked &&
+    user_is_uploader_for_collection(user, collection));
+
+const user_can_view_record = (
+  user: UserDocument,
+  collection: CollectionDocument,
+  record: RecordInterface,
+) =>
+  user_is_owner_of_collection(user, collection) ||
+  (record.created_by === user._id &&
+    user_is_uploader_for_collection(user, collection));
+const user_can_delete_record = (
+  user: UserDocument,
+  collection: CollectionDocument,
+  record: RecordInterface,
+) =>
+  (collection.is_current && user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current &&
+    !collection.is_locked &&
+    record.created_by === user._id &&
+    user_is_uploader_for_collection(user, collection));
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
@@ -58,9 +106,9 @@ export const CollectionSchema = makeExecutableSchema({
     description_fr: String!
     sem_ver: String!
     is_current: Boolean!
+    is_locked: Boolean!
     created_by: User!
     created_at: Float!
-    is_locked: Boolean!
     
     ### Lang aware resolver scalar fields
     name: String!
@@ -141,7 +189,7 @@ export const CollectionSchema = makeExecutableSchema({
             ? []
             : CurrentCollectionsByOwnersLoader.load(user._id.toString());
         },
-        validate_user_is_super_user,
+        user_is_super_user_rule,
       ),
       user_uploadable_collections: with_authz(
         async (
@@ -155,11 +203,11 @@ export const CollectionSchema = makeExecutableSchema({
             ? []
             : CurrentCollectionsByUploadersLoader.load(user._id.toString());
         },
-        validate_user_is_super_user,
+        user_is_super_user_rule,
       ),
       collections: with_authz(
         () => CollectionModel.find({ is_current: true }),
-        validate_user_is_super_user,
+        user_is_super_user_rule,
       ),
     },
     User: {

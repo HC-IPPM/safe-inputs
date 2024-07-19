@@ -1,8 +1,9 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import {
-  validate_user_is_super_user,
-  validate_user_can_have_privileges,
+  user_is_super_user_rule,
+  user_can_have_privileges_rule,
+  check_authz_rules,
 } from 'src/authz.ts';
 import { with_authz } from 'src/schema/resolver_utils.ts';
 
@@ -39,9 +40,9 @@ export const UserSchema = makeExecutableSchema({
           _context: unknown,
           _info: unknown,
         ) => UserByEmailLoader.load(email),
-        validate_user_is_super_user,
+        user_is_super_user_rule,
       ),
-      users: with_authz(() => UserModel.find({}), validate_user_is_super_user),
+      users: with_authz(() => UserModel.find({}), user_is_super_user_rule),
       session: with_authz(
         (
           _parent: unknown,
@@ -59,27 +60,13 @@ export const UserSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => {
-        try {
-          validate_user_is_super_user(parent);
-          return true;
-        } catch {
-          return false;
-        }
-      },
+      ) => check_authz_rules(parent, user_is_super_user_rule),
       can_own_collections: (
         parent: UserDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => {
-        try {
-          validate_user_can_have_privileges(parent);
-          return true;
-        } catch {
-          return false;
-        }
-      },
+      ) => check_authz_rules(parent, user_can_have_privileges_rule),
     },
   },
 });

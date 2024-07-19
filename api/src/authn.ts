@@ -8,7 +8,7 @@ import {
   update_user_last_login_times,
 } from 'src/schema/core/User/UserModel.ts';
 
-import { validate_user_email_allowed } from './authz.ts';
+import { user_email_allowed_rule } from './authz.ts';
 
 import { get_env } from './env.ts';
 
@@ -88,7 +88,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
         }
       },
       async function verifyUser(_req: Express.Request, user: Express.User) {
-        validate_user_email_allowed(user);
+        user_email_allowed_rule(user);
 
         const mongoose_doc = await get_or_create_user(user.email!);
 

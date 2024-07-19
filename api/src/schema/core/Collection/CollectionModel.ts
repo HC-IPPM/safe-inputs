@@ -74,7 +74,3 @@ export const create_new_collection = () => {};
 // create new init records document? Assuming that, initially, we won't be able to write too many smarts around breaking change detection/
 // data migration, will have to ask users to modify the old data offline to work with the new rules and then seed it in to the new instance
 export const update_collection = () => {};
-
-export const user_is_owner_of_collection = () => {}; // TODO
-
-export const user_is_uploader_for_collection = () => {}; // TODO

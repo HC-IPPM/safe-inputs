@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { apply_rules_to_user, validate_user_email_allowed } from 'src/authz.ts';
+import { apply_rules_to_user, user_email_allowed_rule } from 'src/authz.ts';
 import type { AuthzRule } from 'src/authz.ts';
 
 import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
@@ -43,7 +43,7 @@ export const with_authz =
       // https://the-guild.dev/graphql/yoga-server/tutorial/basic/09-error-handling#exposing-safe-error-messages
       apply_rules_to_user(
         context.req.user,
-        validate_user_email_allowed,
+        user_email_allowed_rule,
         ...authz_rules,
       );
 
