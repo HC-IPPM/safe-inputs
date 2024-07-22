@@ -1,3 +1,5 @@
+import { GraphQLError } from 'graphql';
+import { GraphQLAccountNumber } from 'graphql-scalars';
 import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
@@ -12,6 +14,7 @@ import {
 import {
   make_lang_suffixed_type,
   make_foreign_id_type,
+  make_foreign_key_type,
 } from 'src/schema/mongoose_utils.ts';
 
 interface ConditionInterface {
@@ -104,6 +107,29 @@ export const CollectionModel = model<CollectionInterface>(
 );
 export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
+export interface RecordInterface {
+  recordset_key: string;
+  data: Record<string, any>;
+  created_by: Types.ObjectId;
+  created_at: number;
+}
+const RecordMongooseSchema = new Schema<RecordInterface>({
+  recordset_key: make_foreign_key_type(String, 'Collection', {
+    required: true,
+    index: true,
+  }),
+  data: Schema.Types.Mixed,
+  created_by: make_foreign_id_type('User', { required: true }),
+  created_at: { type: Number, required: true },
+});
+RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
+
+export const RecordModel = model<RecordInterface>(
+  'Record',
+  RecordMongooseSchema,
+);
+export type RecordDocument = HydratedDocument<RecordInterface>;
+
 export const CollectionByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(CollectionModel, '_id');
 
@@ -127,6 +153,28 @@ export const AllCollectionVersionsByStableKeyLoader =
   create_dataloader_for_resource_by_primary_key_attr(
     CollectionModel,
     'stable_key',
+  );
+
+export const RecordByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(RecordModel, '_id');
+
+export const RecordsByRecordsetKeyLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    RecordModel,
+    'recordset_key',
+  );
+
+export const make_records_created_by_user_loader_with_recordset_constraint = (
+  recordset_key: string,
+) =>
+  create_dataloader_for_resources_by_foreign_key_attr(
+    RecordModel,
+    'created_by',
+    {
+      constraints: {
+        recordset_key,
+      },
+    },
   );
 
 export const create_collection_init = () => {}; // TODO
@@ -155,12 +203,31 @@ export const update_column_defs_on_collection = () => {}; // TODO
 export const validate_new_records_against_column_defs = (
   collection: CollectionDocument,
   data: Record<string, any>[],
-) => {}; // TODO
+  options = { throw_on_invalid: false },
+) => true; // TODO
 
-export const insert_records = (
+export const insert_records = async (
   collection: CollectionDocument,
   data: Record<string, any>[],
   user: UserDocument,
-) => {}; // TODO
+) => {
+  validate_new_records_against_column_defs(collection, data, {
+    throw_on_invalid: true,
+  });
 
-export const delete_records = (record_ids: Types.ObjectId[]) => {}; // TODO
+  const created_at = Date.now();
+
+  const record_documents = data.map((data) => ({
+    data,
+    recordset_key: collection.recordset_key,
+    created_by: user._id,
+    created_at,
+  }));
+
+  return await RecordModel.insertMany(record_documents);
+};
+
+export const delete_records = async (record_ids: Types.ObjectId[]) =>
+  await RecordModel.deleteMany({
+    _id: { $in: record_ids },
+  });

@@ -27,14 +27,10 @@ import {
   validate_new_records_against_column_defs,
   insert_records,
   delete_records,
-} from './CollectionModel.ts';
-import type { CollectionDocument } from './CollectionModel.ts';
-
-import {
   RecordsByRecordsetKeyLoader,
   make_records_created_by_user_loader_with_recordset_constraint,
-} from './RecordModel.ts';
-import type { RecordInterface } from './RecordModel.ts';
+} from './CollectionModel.ts';
+import type { CollectionDocument, RecordInterface } from './CollectionModel.ts';
 
 const user_is_owner_of_collection = (
   user: UserDocument,
