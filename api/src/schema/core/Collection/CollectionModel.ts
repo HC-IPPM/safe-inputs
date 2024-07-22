@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql';
-import { GraphQLAccountNumber } from 'graphql-scalars';
-import { Schema, model, Types } from 'mongoose';
+import _ from 'lodash';
+
+import { Schema, model, Types, connection } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
 import type { SetOptional } from 'type-fest';
@@ -53,8 +54,11 @@ interface CollectionDefInterface
 const CollectionDefSchema = new Schema<CollectionDefInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
-  owners: [make_foreign_id_type('User', { required: true })],
-  uploaders: [make_foreign_id_type('User')],
+  owners: {
+    type: [make_foreign_id_type('User', { required: true })],
+    required: true,
+  },
+  uploaders: { type: [make_foreign_id_type('User')], required: true },
   is_locked: { type: Boolean, required: true },
 });
 
@@ -70,16 +74,16 @@ interface CollectionInterface {
   recordset_key: string;
 }
 const CollectionMongooseSchema = new Schema<CollectionInterface>({
-  stable_key: { type: String, index: true },
+  stable_key: { type: String, required: true, index: true },
   major_ver: { type: Number, required: true },
   minor_ver: { type: Number, required: true },
   is_current_version: { type: Boolean, required: true },
   created_by: make_foreign_id_type('User', { required: true }),
   created_at: { type: Number, required: true },
 
-  collection_def: CollectionDefSchema,
+  collection_def: { type: CollectionDefSchema, required: true },
 
-  column_defs: [ColumnDefSchema],
+  column_defs: { type: [ColumnDefSchema], requied: true },
 
   recordset_key: {
     type: String,
@@ -177,43 +181,183 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
-export const create_collection_init = () => {}; // TODO
-
-const create_collection_new_minor_version = () => {}; // TODO
-
-const create_collection_new_major_version = () => {}; // TODO
-
-// updating collection definition fields always bumps minor versions
-export const update_collection_def_fields = () => {}; // TODO
-
-type ColumnDefWithoutMeta = SetOptional<
+type ColumnDefWithMetaOptional = SetOptional<
   ColumnDefInterface,
   'created_by' | 'created_at'
 >;
-export const are_new_column_defs_compatible_with_current_records = (
+
+export const create_collection_init = (
+  user: UserDocument,
+  collection_def: CollectionDefInterface,
+  column_defs: ColumnDefWithMetaOptional[],
+) => {
+  const created_by = user._id;
+  const created_at = Date.now();
+
+  return CollectionModel.create({
+    stable_key: 'TODO',
+    major_ver: 1,
+    minor_ver: 0,
+    is_current_version: true,
+    created_by,
+    created_at,
+
+    collection_def: {
+      ...collection_def,
+      owners: _.uniq([...collection_def.owners, user._id]),
+    },
+    column_defs: column_defs.map((column_def) => ({
+      ...column_def,
+      created_by,
+      created_at,
+    })),
+  });
+};
+
+const create_collection_version = async (
+  new_major_ver: number,
+  new_minor_ver: number,
+  current_collection: CollectionDocument,
+  user: UserDocument,
+  collection_def?: CollectionDefInterface,
+  column_defs?: ColumnDefInterface[],
+) => {
+  const created_by = user._id;
+  const created_at = Date.now();
+
+  return connection.transaction(async () => {
+    await CollectionModel.create({
+      stable_key: current_collection.stable_key,
+      major_ver: new_major_ver,
+      minor_ver: new_minor_ver,
+      is_current_version: true,
+      created_by,
+      created_at,
+
+      collection_def: collection_def || current_collection.collection_def,
+      column_defs: column_defs || current_collection.column_defs,
+    });
+
+    current_collection.is_current_version = false;
+    await current_collection.save();
+  });
+};
+
+const create_collection_new_minor_version = async (
+  current_collection: CollectionDocument,
+  user: UserDocument,
+  collection_def?: CollectionDefInterface,
+  column_defs?: ColumnDefInterface[],
+) =>
+  create_collection_version(
+    current_collection.major_ver,
+    current_collection.minor_ver + 1,
+    current_collection,
+    user,
+    collection_def,
+    column_defs,
+  );
+
+const create_collection_new_major_version = async (
+  current_collection: CollectionDocument,
+  user: UserDocument,
+  collection_def?: CollectionDefInterface,
+  column_defs?: ColumnDefInterface[],
+) =>
+  create_collection_version(
+    current_collection.major_ver + 1,
+    0,
+    current_collection,
+    user,
+    collection_def,
+    column_defs,
+  );
+
+// updating collection definition fields always bumps minor versions
+export const update_collection_def_fields = (
+  current_collection: CollectionDocument,
+  user: UserDocument,
+  new_collection_def: CollectionDefInterface,
+) =>
+  create_collection_new_minor_version(
+    current_collection,
+    user,
+    new_collection_def,
+  );
+
+// implementation TODO, data types and constraint validation will be a follow up PR
+// Note: intending to implement this with the `verbose` flag, or some equivalent,
+// controlling whether the function exits with a boolean on the first error, or wherther
+// it runs all the way through and returns per "cell" validation failure messages
+export const validate_record_data_against_column_defs = (
+  column_defs: ColumnDefWithMetaOptional[],
+  data: Record<string, any>[],
+  options = { verbose: false },
+) => true;
+
+export const are_new_column_defs_compatible_with_current_records = async (
   collection: CollectionDocument,
-  new_column_defs: ColumnDefWithoutMeta,
-) => {}; // TODO
+  new_column_defs: ColumnDefWithMetaOptional[],
+) => {
+  const records = await RecordsByRecordsetKeyLoader.load(
+    collection.recordset_key,
+  );
+  return validate_record_data_against_column_defs(
+    new_column_defs,
+    _.map(records, 'data'),
+  );
+};
 
 // Column definition updates _may_ result in a major version bump if compatibility breaks, minor version otherwise
-export const update_column_defs_on_collection = () => {}; // TODO
+export const update_collection_column_defs = async (
+  current_collection: CollectionDocument,
+  user: UserDocument,
+  new_column_defs: ColumnDefWithMetaOptional[],
+) => {
+  const created_by = user._id;
+  const created_at = Date.now();
 
-// record management logic belongs to the collection, where the column defs live.
-// Record updates don't change the collection sem ver
-export const validate_new_records_against_column_defs = (
-  collection: CollectionDocument,
-  data: Record<string, any>[],
-  options = { throw_on_invalid: false },
-) => true; // TODO
+  const new_column_defs_with_meta = new_column_defs.map((column_def) => ({
+    ...column_def,
+    created_by,
+    created_at,
+  }));
+
+  const is_update_a_breaking_change =
+    await are_new_column_defs_compatible_with_current_records(
+      current_collection,
+      new_column_defs,
+    );
+
+  if (!is_update_a_breaking_change) {
+    return create_collection_new_minor_version(
+      current_collection,
+      user,
+      current_collection.collection_def,
+      new_column_defs_with_meta,
+    );
+  } else {
+    return create_collection_new_major_version(
+      current_collection,
+      user,
+      current_collection.collection_def,
+      new_column_defs_with_meta,
+    );
+  }
+};
 
 export const insert_records = async (
   collection: CollectionDocument,
   data: Record<string, any>[],
   user: UserDocument,
 ) => {
-  validate_new_records_against_column_defs(collection, data, {
-    throw_on_invalid: true,
-  });
+  if (!validate_record_data_against_column_defs(collection.column_defs, data)) {
+    throw new GraphQLError('Validation failed', {
+      extensions: {
+        code: 400,
+      },
+    });
+  }
 
   const created_at = Date.now();
 

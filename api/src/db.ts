@@ -7,6 +7,9 @@ export const connect_db = async () => {
 
   queueMicrotask(() => console.log('Attempting MongoDB connection...'));
 
+  // necessary for `connection.transaction(...)` https://mongoosejs.com/docs/transactions.html#asynclocalstorage
+  mongoose.set('transactionAsyncLocalStorage', true);
+
   return await mongoose
     .connect(MDB_CONNECT_STRING, {
       serverSelectionTimeoutMS: 7500,
