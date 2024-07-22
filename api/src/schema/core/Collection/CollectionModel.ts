@@ -1,6 +1,9 @@
 import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
+import type { SetOptional } from 'type-fest';
+
+import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import {
   create_dataloader_for_resource_by_primary_key_attr,
@@ -11,36 +14,89 @@ import {
   make_foreign_id_type,
 } from 'src/schema/mongoose_utils.ts';
 
-interface CollectionInterface
+interface ConditionInterface {
+  condition_type: string; // TODO this will be an enum once condition types are formalized
+  parameters?: string[];
+}
+const ConditionSchema = new Schema<ConditionInterface>({
+  condition_type: { type: String, required: true },
+  parameters: [{ type: String }],
+});
+
+interface ColumnDefInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
-  stable_key: string;
-  sem_ver: string;
-  is_current: boolean;
-  previous_version?: Types.ObjectId;
+  header: string;
+  data_type: string; // TODO this will be an enum once column types are formalized
+  conditions: ConditionInterface[];
   created_by: Types.ObjectId;
   created_at: number;
-  is_locked: boolean;
-  owners: Types.ObjectId[];
-  uploaders?: Types.ObjectId[];
-  recordset: Types.ObjectId;
 }
-const CollectionMongooseSchema = new Schema<CollectionInterface>({
+const ColumnDefSchema = new Schema<ColumnDefInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
-  stable_key: { type: String, index: true },
-  sem_ver: { type: String, required: true },
-  is_current: { type: Boolean, required: true },
-  previous_version: { type: Schema.ObjectId, ref: 'Collection' },
-  created_by: make_foreign_id_type('User', { required: true }),
-  created_at: { type: Number, required: true },
-  is_locked: { type: Boolean, required: true },
+  header: { type: String, required: true },
+  data_type: { type: String, required: true },
+  conditions: [ConditionSchema],
+});
+
+interface CollectionDefInterface
+  extends Record<LangSuffixedKeyUnion<`name`>, string>,
+    Record<LangSuffixedKeyUnion<`description`>, string> {
+  owners: Types.ObjectId[];
+  uploaders?: Types.ObjectId[];
+  is_locked: boolean;
+}
+const CollectionDefSchema = new Schema<CollectionDefInterface>({
+  ...make_lang_suffixed_type('name', { type: String, required: true }),
+  ...make_lang_suffixed_type('description', { type: String, required: true }),
   owners: [make_foreign_id_type('User', { required: true })],
   uploaders: [make_foreign_id_type('User')],
-  recordset: { type: Schema.ObjectId, ref: 'Recordset' },
+  is_locked: { type: Boolean, required: true },
 });
-CollectionMongooseSchema.index({ is_current: 1, owners: 1 });
-CollectionMongooseSchema.index({ is_current: 1, uploaders: 1 });
+
+interface CollectionInterface {
+  stable_key: string;
+  major_ver: number;
+  minor_ver: number;
+  is_current_version: boolean;
+  created_by: Types.ObjectId;
+  created_at: number;
+  collection_def: CollectionDefInterface;
+  column_defs: ColumnDefInterface[];
+  recordset_key: string;
+}
+const CollectionMongooseSchema = new Schema<CollectionInterface>({
+  stable_key: { type: String, index: true },
+  major_ver: { type: Number, required: true },
+  minor_ver: { type: Number, required: true },
+  is_current_version: { type: Boolean, required: true },
+  created_by: make_foreign_id_type('User', { required: true }),
+  created_at: { type: Number, required: true },
+
+  collection_def: CollectionDefSchema,
+
+  column_defs: [ColumnDefSchema],
+
+  recordset_key: {
+    type: String,
+    default: function () {
+      return `${this.stable_key}_${this.major_ver}`;
+    },
+  },
+});
+CollectionMongooseSchema.index(
+  { stable_key: 1, major_ver: 1, minor_ver: 1 },
+  { unique: true },
+);
+CollectionMongooseSchema.index({
+  is_current_version: 1,
+  'collection_def.owners': 1,
+});
+CollectionMongooseSchema.index({
+  is_current_version: 1,
+  'collection_def.uploaders': 1,
+});
 
 export const CollectionModel = model<CollectionInterface>(
   'Collection',
@@ -54,23 +110,57 @@ export const CollectionByIdLoader =
 export const CurrentCollectionsByOwnersLoader =
   create_dataloader_for_resources_by_foreign_key_attr(
     CollectionModel,
-    'owners',
+    'collection_def.owners',
     {
-      constraints: { is_current: true },
+      constraints: { is_current_version: true },
     },
   );
 
 export const CurrentCollectionsByUploadersLoader =
   create_dataloader_for_resources_by_foreign_key_attr(
     CollectionModel,
-    'uploaders',
-    { constraints: { is_current: true } },
+    'collection_def.uploaders',
+    { constraints: { is_current_version: true } },
   );
 
-// TODO: make sure required and derived fields have values, corresponding init rules and records documents
-export const create_new_collection = () => {};
+export const AllCollectionVersionsByStableKeyLoader =
+  create_dataloader_for_resource_by_primary_key_attr(
+    CollectionModel,
+    'stable_key',
+  );
 
-// TODO: create a new entry, populate it's previous_version referece, and set is_current: false on the old instance. If rules have changed,
-// create new init records document? Assuming that, initially, we won't be able to write too many smarts around breaking change detection/
-// data migration, will have to ask users to modify the old data offline to work with the new rules and then seed it in to the new instance
-export const update_collection = () => {};
+export const create_collection_init = () => {}; // TODO
+
+const create_collection_new_minor_version = () => {}; // TODO
+
+const create_collection_new_major_version = () => {}; // TODO
+
+// updating collection definition fields always bumps minor versions
+export const update_collection_def_fields = () => {}; // TODO
+
+type ColumnDefWithoutMeta = SetOptional<
+  ColumnDefInterface,
+  'created_by' | 'created_at'
+>;
+export const are_new_column_defs_compatible_with_current_records = (
+  collection: CollectionDocument,
+  new_column_defs: ColumnDefWithoutMeta,
+) => {}; // TODO
+
+// Column definition updates _may_ result in a major version bump if compatibility breaks, minor version otherwise
+export const update_column_defs_on_collection = () => {}; // TODO
+
+// record management logic belongs to the collection, where the column defs live.
+// Record updates don't change the collection sem ver
+export const validate_new_records_against_column_defs = (
+  collection: CollectionDocument,
+  data: Record<string, any>[],
+) => {}; // TODO
+
+export const insert_records = (
+  collection: CollectionDocument,
+  data: Record<string, any>[],
+  user: UserDocument,
+) => {}; // TODO
+
+export const delete_records = (record_ids: Types.ObjectId[]) => {}; // TODO

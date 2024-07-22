@@ -17,34 +17,35 @@ import {
 
 import {
   CollectionModel,
-  CollectionByIdLoader,
   CurrentCollectionsByOwnersLoader,
   CurrentCollectionsByUploadersLoader,
-  create_new_collection,
-  update_collection,
+  AllCollectionVersionsByStableKeyLoader,
+  create_collection_init,
+  update_collection_def_fields,
+  are_new_column_defs_compatible_with_current_records,
+  update_column_defs_on_collection,
+  validate_new_records_against_column_defs,
+  insert_records,
+  delete_records,
 } from './CollectionModel.ts';
 import type { CollectionDocument } from './CollectionModel.ts';
 
 import {
-  RecordsetByIdLoader,
-  are_new_column_defs_compatible_with_current_recordset,
-  update_column_defs_on_recordset,
-  delete_records_in_recordset,
-  validate_new_records_against_recordset_column_defs,
-  insert_records_in_recordset,
-} from './RecordsetModel.ts';
-import type { RecordInterface } from './RecordsetModel.ts';
+  RecordsByRecordsetKeyLoader,
+  make_records_created_by_user_loader_with_recordset_constraint,
+} from './RecordModel.ts';
+import type { RecordInterface } from './RecordModel.ts';
 
 const user_is_owner_of_collection = (
   user: UserDocument,
   collection: CollectionDocument,
 ) =>
   check_authz_rules(user, user_is_super_user_rule) ||
-  _.includes(collection.owners, user._id);
+  _.includes(collection.collection_def.owners, user._id);
 const user_is_uploader_for_collection = (
   user: UserDocument,
   collection: CollectionDocument,
-) => _.includes(collection.uploaders, user._id);
+) => _.includes(collection.collection_def.uploaders, user._id);
 
 const user_can_view_collection = (
   user: UserDocument,
@@ -55,14 +56,17 @@ const user_can_view_collection = (
 const user_can_edit_collection = (
   user: UserDocument,
   collection: CollectionDocument,
-) => collection.is_current && user_is_owner_of_collection(user, collection);
+) =>
+  collection.is_current_version &&
+  user_is_owner_of_collection(user, collection);
 const user_can_upload_to_collection = (
   user: UserDocument,
   collection: CollectionDocument,
 ) =>
-  (collection.is_current && user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current &&
-    !collection.is_locked &&
+  (collection.is_current_version &&
+    user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current_version &&
+    !collection.collection_def.is_locked &&
     user_is_uploader_for_collection(user, collection));
 
 const user_can_view_record = (
@@ -78,11 +82,22 @@ const user_can_delete_record = (
   collection: CollectionDocument,
   record: RecordInterface,
 ) =>
-  (collection.is_current && user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current &&
-    !collection.is_locked &&
+  (collection.is_current_version &&
+    user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current_version &&
+    !collection.collection_def.is_locked &&
     record.created_by === user._id &&
     user_is_uploader_for_collection(user, collection));
+
+const make_collection_def_scalar_resolver =
+  <Key extends keyof CollectionDocument['collection_def']>(key: Key) =>
+  (
+    parent: CollectionDocument,
+    _args: unknown,
+    _context: unknown,
+    _info: unknown,
+  ) =>
+    parent.collection_def[key];
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
@@ -100,22 +115,24 @@ export const CollectionSchema = makeExecutableSchema({
   type Collection {
     ### Scalar fields
     stable_key: String!
+    sem_ver: String!
+    is_current_version: Boolean!
+    created_by: User!
+    created_at: Float!
+    
+    ### Subdocument scalar fields
     name_en: String!
     name_fr: String!
     description_en: String!
     description_fr: String!
-    sem_ver: String!
-    is_current: Boolean!
     is_locked: Boolean!
-    created_by: User!
-    created_at: Float!
-    
-    ### Lang aware resolver scalar fields
+
+    ### Lang aware resolver subdocument scalar fields
     name: String!
     description: String!
     
     ### Non-scalar fields
-    previous_version: Collection
+    previous_versions: [Collection]
     
     """
       \`owners\` array will be non-empty
@@ -206,7 +223,7 @@ export const CollectionSchema = makeExecutableSchema({
         user_is_super_user_rule,
       ),
       collections: with_authz(
-        () => CollectionModel.find({ is_current: true }),
+        () => CollectionModel.find({ is_current_version: true }),
         user_is_super_user_rule,
       ),
     },
@@ -225,16 +242,26 @@ export const CollectionSchema = makeExecutableSchema({
       ) => CurrentCollectionsByUploadersLoader.load(parent._id.toString()),
     },
     Collection: {
+      ...Object.fromEntries(
+        // key array declared `as const` to preserve key string literals for the map function's type checking
+        (
+          [
+            'name_en',
+            'name_fr',
+            'description_en',
+            'description_fr',
+            'is_locked',
+          ] as const
+        ).map((key) => [key, make_collection_def_scalar_resolver(key)]),
+      ),
       name: resolve_lang_suffixed_scalar('name'),
       description: resolve_lang_suffixed_scalar('description'),
-      previous_version: (
+      previous_versions: (
         parent: CollectionDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) =>
-        parent.previous_version &&
-        CollectionByIdLoader.load(parent.previous_version.toString()),
+      ) => AllCollectionVersionsByStableKeyLoader.load(parent.stable_key),
       created_by: (
         parent: CollectionDocument,
         _args: unknown,
@@ -248,7 +275,7 @@ export const CollectionSchema = makeExecutableSchema({
         _info: unknown,
       ) =>
         UserByIdLoader.loadMany(
-          parent.owners.map((object_id) => object_id.toString()),
+          parent.collection_def.owners.map((object_id) => object_id.toString()),
         ),
       uploaders: (
         parent: CollectionDocument,
@@ -256,32 +283,23 @@ export const CollectionSchema = makeExecutableSchema({
         _context: unknown,
         _info: unknown,
       ) =>
-        typeof parent.uploaders === 'undefined'
+        typeof parent.collection_def.uploaders === 'undefined'
           ? []
           : UserByIdLoader.loadMany(
-              parent.uploaders.map((object_id) => object_id.toString()),
+              parent.collection_def.uploaders.map((object_id) =>
+                object_id.toString(),
+              ),
             ),
-      column_defs: async (
-        parent: CollectionDocument,
-        _args: unknown,
-        _context: unknown,
-        _info: unknown,
-      ) => {
-        const recordset = await RecordsetByIdLoader.load(
-          parent.recordset.toString(),
-        );
-        return typeof recordset === 'undefined' ? [] : recordset.column_defs;
-      },
       records: async (
         parent: CollectionDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
       ) => {
-        const recordset = await RecordsetByIdLoader.load(
-          parent.recordset.toString(),
+        const records = await RecordsByRecordsetKeyLoader.load(
+          parent.recordset_key,
         );
-        return typeof recordset === 'undefined' ? [] : recordset.records;
+        return typeof records === 'undefined' ? [] : records;
       },
       records_uploaded_by: async (
         parent: CollectionDocument,
@@ -295,14 +313,15 @@ export const CollectionSchema = makeExecutableSchema({
           return [];
         }
 
-        const recordset = await RecordsetByIdLoader.load(
-          parent.recordset.toString(),
+        const RecordsetRecordsByUserLoader =
+          make_records_created_by_user_loader_with_recordset_constraint(
+            parent.recordset_key,
+          );
+
+        const records = await RecordsetRecordsByUserLoader.load(
+          user._id.toString(),
         );
-        return typeof recordset === 'undefined'
-          ? []
-          : recordset.records.filter(
-              ({ created_by }) => created_by === user._id,
-            );
+        return typeof records === 'undefined' ? [] : records;
       },
     },
     ColumnDef: {

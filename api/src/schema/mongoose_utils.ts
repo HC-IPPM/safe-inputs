@@ -27,11 +27,14 @@ const use_foreign_type_options = (
     ? { required: true, index: !!options?.index }
     : { sparse: !!options?.index };
 
-export const make_foreign_key_type = (
+export const make_foreign_key_type = <
+  KeyType extends typeof String | typeof Number,
+>(
+  key_type: KeyType,
   _ref: string, // unused, require it to be declared for self-documentation
   options?: ForeignTypeOptions,
 ) => ({
-  type: String,
+  type: key_type,
   ...use_foreign_type_options(options),
 });
 

@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
 import _ from 'lodash';
-import type { Model, HydratedDocument, FilterQuery } from 'mongoose';
+import type { Model, HydratedDocument, FilterQuery, Types } from 'mongoose';
 
 export function create_dataloader_for_resources_by_foreign_key_attr<ModelDoc>(
   model: Model<ModelDoc>,
