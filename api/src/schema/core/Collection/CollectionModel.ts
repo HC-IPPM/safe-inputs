@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import { GraphQLError } from 'graphql';
 import _ from 'lodash';
 
@@ -195,7 +197,8 @@ export const create_collection_init = (
   const created_at = Date.now();
 
   return CollectionModel.create({
-    stable_key: 'TODO',
+    // randomUUID uses an entropy cache by default, improves performance but loses entropy after 128 UUIDs
+    stable_key: randomUUID({ disableEntropyCache: true }),
     major_ver: 1,
     minor_ver: 0,
     is_current_version: true,
