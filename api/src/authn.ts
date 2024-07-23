@@ -88,7 +88,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
         }
       },
       async function verifyUser(_req: Express.Request, user: Express.User) {
-        user_email_allowed_rule(user);
+        user_email_allowed_rule({ user, additional_context: {} });
 
         const mongoose_doc = await get_or_create_user(user.email!);
 

@@ -19,3 +19,5 @@ export const connect_db = async () => {
 };
 
 export const get_db_client = () => mongoose.connection.getClient();
+
+export const db_transaction = mongoose.connection.transaction;

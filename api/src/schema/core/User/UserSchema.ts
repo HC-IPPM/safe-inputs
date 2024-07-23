@@ -60,13 +60,21 @@ export const UserSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => check_authz_rules(parent, user_is_super_user_rule),
+      ) =>
+        check_authz_rules(
+          { user: parent, additional_context: {} },
+          user_is_super_user_rule,
+        ),
       can_own_collections: (
         parent: UserDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => check_authz_rules(parent, user_can_have_privileges_rule),
+      ) =>
+        check_authz_rules(
+          { user: parent, additional_context: {} },
+          user_can_have_privileges_rule,
+        ),
     },
   },
 });

@@ -3,10 +3,12 @@ import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import _ from 'lodash';
 
-import { Schema, model, Types, connection } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
 import type { SetOptional } from 'type-fest';
+
+import { db_transaction } from 'src/db.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
@@ -240,7 +242,7 @@ const create_collection_version = async (
   const created_by = user._id;
   const created_at = Date.now();
 
-  return connection.transaction(async () => {
+  return db_transaction(async () => {
     await CollectionModel.create({
       stable_key: current_collection.stable_key,
       major_ver: new_major_ver,

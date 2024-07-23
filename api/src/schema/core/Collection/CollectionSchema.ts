@@ -36,8 +36,10 @@ const user_is_owner_of_collection = (
   user: UserDocument,
   collection: CollectionDocument,
 ) =>
-  check_authz_rules(user, user_is_super_user_rule) ||
-  _.includes(collection.collection_def.owners, user._id);
+  check_authz_rules(
+    { user, additional_context: {} },
+    user_is_super_user_rule,
+  ) || _.includes(collection.collection_def.owners, user._id);
 const user_is_uploader_for_collection = (
   user: UserDocument,
   collection: CollectionDocument,

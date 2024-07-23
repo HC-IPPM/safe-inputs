@@ -31,7 +31,12 @@ export const with_authz =
       context: Context,
       info: Info,
     ) => Result,
-    ...authz_rules: AuthzRule[]
+    ...authz_rules: AuthzRule<{
+      parent: Parent;
+      args: Args;
+      context: Context;
+      info: Info;
+    }>[]
   ): ((parent: Parent, args: Args, context: Context, info: Info) => Result) =>
   (parent: Parent, args: Args, context: Context, info: Info) => {
     try {
@@ -42,7 +47,10 @@ export const with_authz =
       // may throw an AppError, which will need to be converted to a GraphQLError per
       // https://the-guild.dev/graphql/yoga-server/tutorial/basic/09-error-handling#exposing-safe-error-messages
       apply_rules_to_user(
-        context.req.user,
+        {
+          user: context.req.user,
+          additional_context: { parent, args, context, info },
+        },
         user_email_allowed_rule,
         ...authz_rules,
       );

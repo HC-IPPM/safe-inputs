@@ -46,7 +46,11 @@ describe('User authorization rules', () => {
         ].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => user_email_allowed_rule({ email }),
+              () =>
+                user_email_allowed_rule({
+                  user: { email },
+                  additional_context: {},
+                }),
               400,
             ),
           ).toBe(true),
@@ -55,7 +59,12 @@ describe('User authorization rules', () => {
 
       it('Passes any valid email without throwing', async () => {
         ['valid@valid.com', 'who.ever@whatever.com'].forEach((email) =>
-          expect(() => user_email_allowed_rule({ email })).not.toThrow(),
+          expect(() =>
+            user_email_allowed_rule({
+              user: { email },
+              additional_context: {},
+            }),
+          ).not.toThrow(),
         );
       });
     });
@@ -80,7 +89,11 @@ describe('User authorization rules', () => {
         ].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => user_email_allowed_rule({ email }),
+              () =>
+                user_email_allowed_rule({
+                  user: { email },
+                  additional_context: {},
+                }),
               400,
             ),
           ).toBe(true),
@@ -91,7 +104,11 @@ describe('User authorization rules', () => {
         ['host3@host3.com', 'host1org@host1.org'].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => user_email_allowed_rule({ email }),
+              () =>
+                user_email_allowed_rule({
+                  user: { email },
+                  additional_context: {},
+                }),
               403,
             ),
           ).toBe(true),
@@ -100,7 +117,12 @@ describe('User authorization rules', () => {
 
       it('Passes emails from approved hosts without throwing', async () => {
         ['host1@host1.com', 'host2@host2.net'].forEach((email) =>
-          expect(() => user_email_allowed_rule({ email })).not.toThrow(),
+          expect(() =>
+            user_email_allowed_rule({
+              user: { email },
+              additional_context: {},
+            }),
+          ).not.toThrow(),
         );
       });
     });
@@ -121,7 +143,8 @@ describe('User authorization rules', () => {
         throws_error_with_status_code(
           () =>
             user_can_have_privileges_rule({
-              email: 'admin@unprivileged.net',
+              user: { email: 'admin@unprivileged.net' },
+              additional_context: {},
             }),
           403,
         ),
@@ -130,7 +153,12 @@ describe('User authorization rules', () => {
 
     it('Passes privileged users without throwing', async () => {
       ['johndoe@privileged.com', 'admin@privileged.com'].forEach((email) =>
-        expect(() => user_can_have_privileges_rule({ email })).not.toThrow(),
+        expect(() =>
+          user_can_have_privileges_rule({
+            user: { email },
+            additional_context: {},
+          }),
+        ).not.toThrow(),
       );
     });
   });
@@ -149,7 +177,11 @@ describe('User authorization rules', () => {
       ['not-admin@privileged.com', 'admin@unprivileged.net'].forEach((email) =>
         expect(
           throws_error_with_status_code(
-            () => user_is_super_user_rule({ email }),
+            () =>
+              user_is_super_user_rule({
+                user: { email },
+                additional_context: {},
+              }),
             403,
           ),
         ).toBe(true),
@@ -158,7 +190,12 @@ describe('User authorization rules', () => {
 
     it('Passes super-admins without throwing', async () => {
       ['admin@privileged.com', 'admin2@privileged.com'].forEach((email) =>
-        expect(() => user_is_super_user_rule({ email })).not.toThrow(),
+        expect(() =>
+          user_is_super_user_rule({
+            user: { email },
+            additional_context: {},
+          }),
+        ).not.toThrow(),
       );
     });
   });
