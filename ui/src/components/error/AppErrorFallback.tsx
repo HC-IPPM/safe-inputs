@@ -41,7 +41,7 @@ function AppErrorFallback({ error }: ErrorFallbackProps) {
         {buttonText}
       </button>
       <div className="error-title">{translate('errorTitle', language)}</div>
-      <div>{translate('errorAdvice', language)}</div>
+      <div className="error-advice">{translate('errorAdvice', language)}</div>
       <div className="error-message">{error.message}</div>
       <a href="/">
         <button className="home-button">

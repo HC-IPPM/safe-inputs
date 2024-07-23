@@ -10,8 +10,12 @@ module.exports = {
   preset: 'ts-jest',
   roots: ['<rootDir>'],
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>',
-  }),
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': '<rootDir>/test/__mocks__/styleMock.js',
+    '\\.svg$': '<rootDir>/test/__mocks__/svgMock.js',
+    ...pathsToModuleNameMapper(compilerOptions.paths, {
+      prefix: '<rootDir>',
+    }),
+  },
   verbose: true,
 };

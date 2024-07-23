@@ -12,7 +12,7 @@ function NavWrapperErrorFallBack({ error }: ErrorFallbackProps) {
       <div className="error-title">
         <Trans>Something went wrong</Trans>
       </div>
-      <div>
+      <div className="error-advice">
         <Trans>Please contact the developers or go to the home page.</Trans>
       </div>
       <div className="error-message">{error.message}</div>
