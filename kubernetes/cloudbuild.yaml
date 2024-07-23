@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:a73d5994eeba9476afd83e8b97b1c8438c3c91925fa27f1b5f26ddf5eab9fc1b'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:7f4e51baeffcb26e45a83b446c515ee2b3ebf0c2577e5b6e63f9803eb4a7c64b'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -33,7 +33,7 @@ steps:
       - /workspace/resources.yaml
 
   - id: Validate compliance
-    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:e81c8eaab9c7bb9cc166e347ea3d46d3186c959a83fcae41da365efb6dc1faf8'
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:346ddc2cf4bee59e107ca4eba06b859f49216b4611d6113c33e68b2eb7145fda'
     args:
       - apply
       - ./policies/
