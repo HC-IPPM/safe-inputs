@@ -188,11 +188,19 @@ type ColumnDefWithMetaOptional = SetOptional<
   'created_by' | 'created_at'
 >;
 
+export const validate_column_defs = (
+  column_defs: ColumnDefWithMetaOptional[],
+) => true; // implementation TODO, data types and constraint validation will be a follow up PR
+
 export const create_collection_init = (
   user: UserDocument,
   collection_def: CollectionDefInterface,
   column_defs: ColumnDefWithMetaOptional[],
 ) => {
+  if (!validate_column_defs(column_defs)) {
+    throw new Error('TODO');
+  }
+
   const created_by = user._id;
   const created_at = Date.now();
 
@@ -225,6 +233,10 @@ const create_collection_version = async (
   collection_def?: CollectionDefInterface,
   column_defs?: ColumnDefInterface[],
 ) => {
+  if (column_defs && !validate_column_defs(column_defs)) {
+    throw new Error('TODO');
+  }
+
   const created_by = user._id;
   const created_at = Date.now();
 
@@ -302,6 +314,10 @@ export const are_new_column_defs_compatible_with_current_records = async (
   collection: CollectionDocument,
   new_column_defs: ColumnDefWithMetaOptional[],
 ) => {
+  if (!validate_column_defs(new_column_defs)) {
+    throw new Error('TODO');
+  }
+
   const records = await RecordsByRecordsetKeyLoader.load(
     collection.recordset_key,
   );
@@ -317,6 +333,10 @@ export const update_collection_column_defs = async (
   user: UserDocument,
   new_column_defs: ColumnDefWithMetaOptional[],
 ) => {
+  if (!validate_column_defs(new_column_defs)) {
+    throw new Error('TODO');
+  }
+
   const created_by = user._id;
   const created_at = Date.now();
 
