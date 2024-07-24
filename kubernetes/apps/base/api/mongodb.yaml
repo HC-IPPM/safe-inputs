@@ -41,6 +41,8 @@ kind: MongoDBCommunity
 metadata:
   name: mongodb
 spec:
+  agent:
+    logFile: /dev/stdout
   type: ReplicaSet
   security:
     authentication:
