@@ -40,6 +40,10 @@ interface ColumnDefInterface
   created_by: Types.ObjectId;
   created_at: number;
 }
+export type ColumnDefInterfaceWithMetaOptional = SetOptional<
+  ColumnDefInterface,
+  'created_by' | 'created_at'
+>;
 const ColumnDefSchema = new Schema<ColumnDefInterface>({
   ...make_lang_suffixed_type('name', { type: String, required: true }),
   ...make_lang_suffixed_type('description', { type: String, required: true }),
@@ -48,7 +52,7 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
   conditions: [ConditionSchema],
 });
 
-interface CollectionDefInterface
+export interface CollectionDefInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   owners: Types.ObjectId[];
@@ -185,19 +189,14 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
-type ColumnDefWithMetaOptional = SetOptional<
-  ColumnDefInterface,
-  'created_by' | 'created_at'
->;
-
 export const validate_column_defs = (
-  column_defs: ColumnDefWithMetaOptional[],
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => true; // implementation TODO, data types and constraint validation will be a follow up PR
 
 export const create_collection_init = (
   user: UserDocument,
   collection_def: CollectionDefInterface,
-  column_defs: ColumnDefWithMetaOptional[],
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(column_defs)) {
     throw new Error('TODO');
@@ -307,14 +306,14 @@ export const update_collection_def_fields = (
 // controlling whether the function exits with a boolean on the first error, or wherther
 // it runs all the way through and returns per "cell" validation failure messages
 export const validate_record_data_against_column_defs = (
-  column_defs: ColumnDefWithMetaOptional[],
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
   data: Record<string, any>[],
   options = { verbose: false },
 ) => true;
 
 export const are_new_column_defs_compatible_with_current_records = async (
   collection: CollectionDocument,
-  new_column_defs: ColumnDefWithMetaOptional[],
+  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(new_column_defs)) {
     throw new Error('TODO');
@@ -333,7 +332,7 @@ export const are_new_column_defs_compatible_with_current_records = async (
 export const update_collection_column_defs = async (
   current_collection: CollectionDocument,
   user: UserDocument,
-  new_column_defs: ColumnDefWithMetaOptional[],
+  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(new_column_defs)) {
     throw new Error('TODO');

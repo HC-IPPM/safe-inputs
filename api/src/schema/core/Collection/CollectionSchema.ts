@@ -1,17 +1,25 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
-
 import { JSONResolver } from 'graphql-scalars';
 
 import _ from 'lodash';
 
-import { user_is_super_user_rule, check_authz_rules } from 'src/authz.ts';
+import { Types } from 'mongoose';
+
+import {
+  user_is_super_user_rule,
+  user_can_have_privileges_rule,
+  check_authz_rules,
+} from 'src/authz.ts';
+import type { AuthzRule } from 'src/authz.ts';
 import {
   UserByEmailLoader,
   UserByIdLoader,
 } from 'src/schema/core/User/UserModel.ts';
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
+import type { LangsUnion } from 'src/schema/lang_utils.ts';
 import {
   with_authz,
+  resolve_document_id,
   resolve_lang_suffixed_scalar,
 } from 'src/schema/resolver_utils.ts';
 
@@ -30,62 +38,68 @@ import {
   RecordsByRecordsetKeyLoader,
   make_records_created_by_user_loader_with_recordset_constraint,
 } from './CollectionModel.ts';
-import type { CollectionDocument, RecordInterface } from './CollectionModel.ts';
+import type {
+  CollectionDocument,
+  CollectionDefInterface,
+  ColumnDefInterfaceWithMetaOptional,
+  RecordInterface,
+} from './CollectionModel.ts';
 
-const user_is_owner_of_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
+const get_user_id_for_authz_rule = (user: UserDocument | Express.User) =>
+  '_id' in user ? user._id : user.mongoose_doc?._id;
+
+const user_is_owner_of_collection: AuthzRule<{
+  parent: CollectionDocument;
+}> = ({ user, additional_context: { parent: collection } }) =>
   check_authz_rules(
     { user, additional_context: {} },
     user_is_super_user_rule,
-  ) || _.includes(collection.collection_def.owners, user._id);
-const user_is_uploader_for_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) => _.includes(collection.collection_def.uploaders, user._id);
+  ) ||
+  (_.includes(
+    collection.collection_def.owners,
+    get_user_id_for_authz_rule(user),
+  ) &&
+    check_authz_rules(
+      { user, additional_context: {} },
+      user_can_have_privileges_rule,
+    ));
 
-const user_can_view_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  user_is_owner_of_collection(user, collection) ||
-  user_is_uploader_for_collection(user, collection);
-const user_can_edit_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  collection.is_current_version &&
-  user_is_owner_of_collection(user, collection);
-const user_can_upload_to_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  (collection.is_current_version &&
-    user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current_version &&
-    !collection.collection_def.is_locked &&
-    user_is_uploader_for_collection(user, collection));
+const user_is_uploader_for_collection: AuthzRule<{
+  parent: CollectionDocument;
+}> = ({ user, additional_context: { parent } }) =>
+  _.includes(parent.collection_def.uploaders, get_user_id_for_authz_rule(user));
 
-const user_can_view_record = (
-  user: UserDocument,
-  collection: CollectionDocument,
-  record: RecordInterface,
-) =>
-  user_is_owner_of_collection(user, collection) ||
-  (record.created_by === user._id &&
-    user_is_uploader_for_collection(user, collection));
-const user_can_delete_record = (
-  user: UserDocument,
-  collection: CollectionDocument,
-  record: RecordInterface,
-) =>
-  (collection.is_current_version &&
-    user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current_version &&
-    !collection.collection_def.is_locked &&
-    record.created_by === user._id &&
-    user_is_uploader_for_collection(user, collection));
+const user_can_edit_collection: AuthzRule<{
+  parent: CollectionDocument;
+}> = ({ user, additional_context: { parent } }) =>
+  parent.is_current_version &&
+  check_authz_rules(
+    { user, additional_context: { parent } },
+    user_is_owner_of_collection,
+  );
+
+const user_can_upload_to_collection: AuthzRule<{
+  parent: CollectionDocument;
+}> = ({ user, additional_context: { parent } }) =>
+  (parent.is_current_version &&
+    check_authz_rules(
+      { user, additional_context: { parent } },
+      user_is_owner_of_collection,
+    )) ||
+  (parent.is_current_version &&
+    !parent.collection_def.is_locked &&
+    user_is_uploader_for_collection({ user, additional_context: { parent } }));
+
+const user_can_edit_record: AuthzRule<{
+  parent: CollectionDocument;
+  args: { record_id: Types.ObjectId };
+}> = ({ user, additional_context: { parent } }) =>
+  (parent.is_current_version &&
+    user_is_owner_of_collection({ user, additional_context: { parent } })) ||
+  (parent.is_current_version &&
+    !parent.collection_def.is_locked &&
+    parent.created_by === get_user_id_for_authz_rule(user) &&
+    user_is_uploader_for_collection({ user, additional_context: { parent } }));
 
 const make_collection_def_scalar_resolver =
   <Key extends keyof CollectionDocument['collection_def']>(key: Key) =>
@@ -99,7 +113,7 @@ const make_collection_def_scalar_resolver =
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
-  type Root {
+  type QueryRoot {
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
     collections: [Collection]
@@ -112,6 +126,7 @@ export const CollectionSchema = makeExecutableSchema({
   
   type Collection {
     ### Scalar fields
+    id: String!
     stable_key: String!
     sem_ver: String!
     is_current_version: Boolean!
@@ -151,6 +166,7 @@ export const CollectionSchema = makeExecutableSchema({
 
   type ColumnDef {
     ### Scalar fields
+    id: String!
     name_en: String!
     name_fr: String!
     description_en: String!
@@ -181,6 +197,7 @@ export const CollectionSchema = makeExecutableSchema({
 
   type Record {
     ### Scalar fields
+    id: String!
     data: JSON # https://the-guild.dev/graphql/scalars/docs/scalars/json
     created_at: Float
 
@@ -189,9 +206,56 @@ export const CollectionSchema = makeExecutableSchema({
   }
 
   scalar JSON
+
+  type Mutation {
+    create_collection_init(collection: CollectionInput): Collection
+    create_collection_from_base(collection_id: String!): Collection
+
+    # TODO need GQL schema types for collection update validation responses
+    validate_collection_updates(collection_id: String!, collection_updates: CollectionInput): Boolean 
+    update_collection(collection_id: String!, collection_updates: CollectionInput): Collection
+
+    # TODO need GQL schema types for collection update validation responses
+    validate_new_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Boolean 
+    update_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Collection
+
+    validate_new_records(collection_id: String!, records: [JSON]): Boolean # TODO need GQL schema types for record validation responses
+    insert_records(collection_id: String!, records: [JSON]): [Record]
+    delete_records(record_ids: [String!]!): [Record]
+  }
+  input CollectionInput {
+    name_en: String!
+    name_fr: String!
+    description_en: String!
+    description_fr: String!
+    is_locked: Boolean!
+    """
+      \`owner_emails\` array parameter may be empty. The email of the user creating the collection is implicitly included
+    """
+    owner_emails: [String!]!
+    """
+      \`uploader_emails\` array parameter may be empty
+    """
+    uploader_emails: [String!]!
+  }
+  input ColumnDefInput {
+    name_en: String!
+    name_fr: String!
+    description_en: String!
+    description_fr: String!
+    data_type: String!
+    """
+      \`conditions\` array parameter may be empty
+    """
+    conditions: [ConditionInput!]!
+  }
+  input ConditionInput {
+    condition_type: String!
+    parameters: [String!]!
+  }
 `,
   resolvers: {
-    Root: {
+    QueryRoot: {
       user_owned_collections: with_authz(
         async (
           _parent: unknown,
@@ -240,6 +304,7 @@ export const CollectionSchema = makeExecutableSchema({
       ) => CurrentCollectionsByUploadersLoader.load(parent._id.toString()),
     },
     Collection: {
+      id: resolve_document_id,
       ...Object.fromEntries(
         // key array declared `as const` to preserve key string literals for the map function's type checking
         (
@@ -252,8 +317,30 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [key, make_collection_def_scalar_resolver(key)]),
       ),
-      name: resolve_lang_suffixed_scalar('name'),
-      description: resolve_lang_suffixed_scalar('description'),
+      name: (
+        parent: CollectionDocument,
+        _args: unknown,
+        context: { lang: LangsUnion; req?: { user?: Express.User } },
+        _info: unknown,
+      ) =>
+        resolve_lang_suffixed_scalar('name')(
+          parent.collection_def,
+          _args,
+          context,
+          _info,
+        ),
+      description: (
+        parent: CollectionDocument,
+        _args: unknown,
+        context: { lang: LangsUnion; req?: { user?: Express.User } },
+        _info: unknown,
+      ) =>
+        resolve_lang_suffixed_scalar('description')(
+          parent.collection_def,
+          _args,
+          context,
+          _info,
+        ),
       previous_versions: (
         parent: CollectionDocument,
         _args: unknown,
@@ -323,10 +410,12 @@ export const CollectionSchema = makeExecutableSchema({
       },
     },
     ColumnDef: {
+      id: resolve_document_id,
       name: resolve_lang_suffixed_scalar('name'),
       description: resolve_lang_suffixed_scalar('description'),
     },
     Record: {
+      id: resolve_document_id,
       created_by: (
         parent: RecordInterface,
         _args: unknown,
@@ -335,5 +424,76 @@ export const CollectionSchema = makeExecutableSchema({
       ) => UserByIdLoader.load(parent.created_by.toString()),
     },
     JSON: JSONResolver,
+    Mutation: _.mapValues({
+      create_collection_init: (
+        _parent: unknown,
+        args: { collection_def: CollectionDefInterface },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+      create_collection_from_base: (
+        _parent: unknown,
+        args: { collection_id: string },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+
+      validate_collection_updates: (
+        _parent: unknown,
+        args: {
+          collection_id: string;
+          collection_updates: CollectionDefInterface;
+        },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+      update_collection: (
+        _parent: unknown,
+        args: {
+          collection_id: string;
+          collection_updates: CollectionDefInterface;
+        },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+
+      validate_new_column_defs: (
+        _parent: unknown,
+        args: {
+          collection_id: string;
+          column_defs: ColumnDefInterfaceWithMetaOptional[];
+        },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+      update_column_defs: (
+        _parent: unknown,
+        args: {
+          collection_id: string;
+          column_defs: ColumnDefInterfaceWithMetaOptional[];
+        },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+
+      validate_new_records: (
+        _parent: unknown,
+        args: { collection_id: string; records: JSON[] },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+      insert_records: (
+        _parent: unknown,
+        args: { collection_id: string; records: JSON[] },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+      delete_records: (
+        _parent: unknown,
+        args: { record_ids: string[] },
+        context: { req?: { user?: Express.User } },
+        _info: unknown,
+      ) => 'TODO',
+    }),
   },
 });

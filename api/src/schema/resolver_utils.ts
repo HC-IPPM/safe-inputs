@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import type { Document } from 'mongoose';
+
 import { apply_rules_to_user, user_email_allowed_rule } from 'src/authz.ts';
 import type { AuthzRule } from 'src/authz.ts';
 
@@ -7,12 +9,22 @@ import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
 
 import type { LangsUnion, LangSuffixedKeyUnion } from './lang_utils.ts';
 
+export const resolve_document_id = <ParentType extends Document>(
+  parent: ParentType,
+  _args: unknown,
+  _context: unknown,
+  _info: unknown,
+) => parent._id;
+
 export const resolve_lang_suffixed_scalar =
   <Key extends string>(base_field_name: Key) =>
-  <ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any }>(
+  <
+    ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any },
+    ContextType extends { lang: LangsUnion },
+  >(
     parent: ParentType,
     _args: unknown,
-    context: { lang: LangsUnion },
+    context: ContextType,
     _info: unknown,
   ) =>
     parent[`${base_field_name}_${context.lang}`];

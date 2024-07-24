@@ -5,14 +5,14 @@ import {
   user_can_have_privileges_rule,
   check_authz_rules,
 } from 'src/authz.ts';
-import { with_authz } from 'src/schema/resolver_utils.ts';
+import { with_authz, resolve_document_id } from 'src/schema/resolver_utils.ts';
 
 import { UserModel, UserByEmailLoader } from './UserModel.ts';
 import type { UserDocument } from './UserModel.ts';
 
 export const UserSchema = makeExecutableSchema({
   typeDefs: `
-  type Root {
+  type QueryRoot {
     user(email: String!): User
     users: [User]
     session: Session
@@ -23,6 +23,7 @@ export const UserSchema = makeExecutableSchema({
   }
   
   type User {
+    id: String!
     email: String!
     created_at: Float!
     second_last_login_at: Float
@@ -32,7 +33,7 @@ export const UserSchema = makeExecutableSchema({
   }
 `,
   resolvers: {
-    Root: {
+    QueryRoot: {
       user: with_authz(
         (
           _parent: unknown,
@@ -55,6 +56,7 @@ export const UserSchema = makeExecutableSchema({
       ),
     },
     User: {
+      id: resolve_document_id,
       is_admin: (
         parent: UserDocument,
         _args: unknown,
