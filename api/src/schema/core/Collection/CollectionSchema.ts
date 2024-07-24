@@ -3,14 +3,11 @@ import { JSONResolver } from 'graphql-scalars';
 
 import _ from 'lodash';
 
-import { Types } from 'mongoose';
-
 import {
   user_is_super_user_rule,
   user_can_have_privileges_rule,
   check_authz_rules,
 } from 'src/authz.ts';
-import type { AuthzRule } from 'src/authz.ts';
 import {
   UserByEmailLoader,
   UserByIdLoader,
@@ -45,61 +42,46 @@ import type {
   RecordInterface,
 } from './CollectionModel.ts';
 
-const get_user_id_for_authz_rule = (user: UserDocument | Express.User) =>
-  '_id' in user ? user._id : user.mongoose_doc?._id;
+const user_is_owner_of_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  check_authz_rules(user, user_is_super_user_rule) ||
+  (_.includes(collection.collection_def.owners, user._id) &&
+    check_authz_rules(user, user_can_have_privileges_rule));
 
-const user_is_owner_of_collection: AuthzRule<{
-  parent: CollectionDocument;
-}> = ({ user, additional_context: { parent: collection } }) =>
-  check_authz_rules(
-    { user, additional_context: {} },
-    user_is_super_user_rule,
-  ) ||
-  (_.includes(
-    collection.collection_def.owners,
-    get_user_id_for_authz_rule(user),
-  ) &&
-    check_authz_rules(
-      { user, additional_context: {} },
-      user_can_have_privileges_rule,
-    ));
+const user_is_uploader_for_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) => _.includes(collection.collection_def.uploaders, user._id);
 
-const user_is_uploader_for_collection: AuthzRule<{
-  parent: CollectionDocument;
-}> = ({ user, additional_context: { parent } }) =>
-  _.includes(parent.collection_def.uploaders, get_user_id_for_authz_rule(user));
+const user_can_edit_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  collection.is_current_version &&
+  user_is_owner_of_collection(user, collection);
+const user_can_upload_to_collection = (
+  user: UserDocument,
+  collection: CollectionDocument,
+) =>
+  (collection.is_current_version &&
+    user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current_version &&
+    !collection.collection_def.is_locked &&
+    user_is_uploader_for_collection(user, collection));
 
-const user_can_edit_collection: AuthzRule<{
-  parent: CollectionDocument;
-}> = ({ user, additional_context: { parent } }) =>
-  parent.is_current_version &&
-  check_authz_rules(
-    { user, additional_context: { parent } },
-    user_is_owner_of_collection,
-  );
-
-const user_can_upload_to_collection: AuthzRule<{
-  parent: CollectionDocument;
-}> = ({ user, additional_context: { parent } }) =>
-  (parent.is_current_version &&
-    check_authz_rules(
-      { user, additional_context: { parent } },
-      user_is_owner_of_collection,
-    )) ||
-  (parent.is_current_version &&
-    !parent.collection_def.is_locked &&
-    user_is_uploader_for_collection({ user, additional_context: { parent } }));
-
-const user_can_edit_record: AuthzRule<{
-  parent: CollectionDocument;
-  args: { record_id: Types.ObjectId };
-}> = ({ user, additional_context: { parent } }) =>
-  (parent.is_current_version &&
-    user_is_owner_of_collection({ user, additional_context: { parent } })) ||
-  (parent.is_current_version &&
-    !parent.collection_def.is_locked &&
-    parent.created_by === get_user_id_for_authz_rule(user) &&
-    user_is_uploader_for_collection({ user, additional_context: { parent } }));
+const user_can_edit_record = (
+  user: UserDocument,
+  collection: CollectionDocument,
+  record: RecordInterface,
+) =>
+  (collection.is_current_version &&
+    user_is_owner_of_collection(user, collection)) ||
+  (collection.is_current_version &&
+    !collection.collection_def.is_locked &&
+    user_is_uploader_for_collection(user, collection) &&
+    record.created_by === user._id);
 
 const make_collection_def_scalar_resolver =
   <Key extends keyof CollectionDocument['collection_def']>(key: Key) =>
