@@ -11,7 +11,7 @@ COPY . /app
 RUN npm run build
 
 # 2. Serve static app via nginx
-FROM docker.io/library/nginx:alpine@sha256:fbb400a7f82655026d277472e27b1668fcdec84eaf4d0045f3bf86e0092826b3
+FROM docker.io/library/nginx:alpine@sha256:208b70eefac13ee9be00e486f79c695b15cef861c680527171a27d253d834be9
 
 RUN chown -R 1000:1000 /var/cache/nginx /var/run/ 
 
