@@ -14,6 +14,7 @@ declare global {
       query?: any;
     }
     interface User {
+      id?: string;
       email?: string;
       mongoose_doc?: UserDocument;
     }
