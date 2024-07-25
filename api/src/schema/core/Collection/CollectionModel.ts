@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto';
 
-import { GraphQLError } from 'graphql';
 import _ from 'lodash';
 
 import { Schema, model, Types } from 'mongoose';
@@ -9,6 +8,7 @@ import type { HydratedDocument } from 'mongoose';
 import type { SetOptional } from 'type-fest';
 
 import { db_transaction } from 'src/db.ts';
+import { AppError } from 'src/error_utils.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
@@ -190,16 +190,16 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
   );
 
 export const validate_column_defs = (
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  _column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => true; // implementation TODO, data types and constraint validation will be a follow up PR
 
-export const create_collection_init = (
+export const create_collection = (
   user: UserDocument,
   collection_def: CollectionDefInterface,
   column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(column_defs)) {
-    throw new Error('TODO');
+    throw new AppError(400, 'Column def validation failed');
   }
 
   const created_by = user._id;
@@ -306,9 +306,9 @@ export const update_collection_def_fields = (
 // controlling whether the function exits with a boolean on the first error, or wherther
 // it runs all the way through and returns per "cell" validation failure messages
 export const validate_record_data_against_column_defs = (
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
-  data: Record<string, any>[],
-  options = { verbose: false },
+  _column_defs: ColumnDefInterfaceWithMetaOptional[],
+  _data: Record<string, any>[],
+  _verbose: boolean,
 ) => true;
 
 export const are_new_column_defs_compatible_with_current_records = async (
@@ -325,6 +325,7 @@ export const are_new_column_defs_compatible_with_current_records = async (
   return validate_record_data_against_column_defs(
     new_column_defs,
     _.map(records, 'data'),
+    true,
   );
 };
 
@@ -335,7 +336,7 @@ export const update_collection_column_defs = async (
   new_column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(new_column_defs)) {
-    throw new Error('TODO');
+    throw new AppError(400, 'Column defs validation failed');
   }
 
   const created_by = user._id;
@@ -375,12 +376,14 @@ export const insert_records = async (
   data: Record<string, any>[],
   user: UserDocument,
 ) => {
-  if (!validate_record_data_against_column_defs(collection.column_defs, data)) {
-    throw new GraphQLError('Validation failed', {
-      extensions: {
-        code: 400,
-      },
-    });
+  if (
+    !validate_record_data_against_column_defs(
+      collection.column_defs,
+      data,
+      false,
+    )
+  ) {
+    throw new AppError(400, 'Record validation failed');
   }
 
   const created_at = Date.now();

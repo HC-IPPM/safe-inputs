@@ -1,4 +1,5 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { GraphQLError } from 'graphql';
 import { JSONResolver } from 'graphql-scalars';
 
 import _ from 'lodash';
@@ -6,8 +7,12 @@ import _ from 'lodash';
 import {
   user_is_super_user_rule,
   user_can_have_privileges_rule,
+  user_email_allowed_rule,
   check_authz_rules,
 } from 'src/authz.ts';
+
+import { AppError } from 'src/error_utils.ts';
+
 import {
   UserByEmailLoader,
   UserByIdLoader,
@@ -15,7 +20,7 @@ import {
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangsUnion } from 'src/schema/lang_utils.ts';
 import {
-  with_authz,
+  resolver_with_authz,
   resolve_document_id,
   resolve_lang_suffixed_scalar,
 } from 'src/schema/resolver_utils.ts';
@@ -25,7 +30,7 @@ import {
   CurrentCollectionsByOwnersLoader,
   CurrentCollectionsByUploadersLoader,
   AllCollectionVersionsByStableKeyLoader,
-  create_collection_init,
+  create_collection,
   update_collection_def_fields,
   are_new_column_defs_compatible_with_current_records,
   update_collection_column_defs,
@@ -34,54 +39,16 @@ import {
   delete_records,
   RecordsByRecordsetKeyLoader,
   make_records_created_by_user_loader_with_recordset_constraint,
+  CollectionByIdLoader,
+  RecordByIdLoader,
 } from './CollectionModel.ts';
 import type {
   CollectionDocument,
   CollectionDefInterface,
   ColumnDefInterfaceWithMetaOptional,
   RecordInterface,
+  RecordDocument,
 } from './CollectionModel.ts';
-
-const user_is_owner_of_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  check_authz_rules(user, user_is_super_user_rule) ||
-  (_.includes(collection.collection_def.owners, user._id) &&
-    check_authz_rules(user, user_can_have_privileges_rule));
-
-const user_is_uploader_for_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) => _.includes(collection.collection_def.uploaders, user._id);
-
-const user_can_edit_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  collection.is_current_version &&
-  user_is_owner_of_collection(user, collection);
-const user_can_upload_to_collection = (
-  user: UserDocument,
-  collection: CollectionDocument,
-) =>
-  (collection.is_current_version &&
-    user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current_version &&
-    !collection.collection_def.is_locked &&
-    user_is_uploader_for_collection(user, collection));
-
-const user_can_edit_record = (
-  user: UserDocument,
-  collection: CollectionDocument,
-  record: RecordInterface,
-) =>
-  (collection.is_current_version &&
-    user_is_owner_of_collection(user, collection)) ||
-  (collection.is_current_version &&
-    !collection.collection_def.is_locked &&
-    user_is_uploader_for_collection(user, collection) &&
-    record.created_by === user._id);
 
 const make_collection_def_scalar_resolver =
   <Key extends keyof CollectionDocument['collection_def']>(key: Key) =>
@@ -92,6 +59,104 @@ const make_collection_def_scalar_resolver =
     _info: unknown,
   ) =>
     parent.collection_def[key];
+
+type MutationAuthorizationRule = (
+  user: Express.User,
+  collection?: CollectionDocument,
+  records?: RecordInterface[],
+) => boolean;
+
+const user_can_create_collection: MutationAuthorizationRule = (user) =>
+  check_authz_rules(user, user_is_super_user_rule) ||
+  check_authz_rules(user, user_can_have_privileges_rule);
+
+const user_is_owner_of_collection: MutationAuthorizationRule = (
+  user,
+  collection,
+) =>
+  typeof collection !== 'undefined' &&
+  _.includes(collection.collection_def.owners, user.mongoose_doc!._id) &&
+  check_authz_rules(user, user_can_have_privileges_rule);
+
+const user_is_uploader_for_collection: MutationAuthorizationRule = (
+  user,
+  collection,
+) =>
+  typeof collection !== 'undefined' &&
+  _.includes(collection.collection_def.uploaders, user.mongoose_doc!._id) &&
+  check_authz_rules(user, user_email_allowed_rule);
+
+const user_can_edit_collection: MutationAuthorizationRule = (
+  user,
+  collection,
+) =>
+  typeof collection !== 'undefined' &&
+  collection.is_current_version &&
+  (check_authz_rules(user, user_is_super_user_rule) ||
+    user_is_owner_of_collection(user, collection));
+
+const user_can_upload_to_collection: MutationAuthorizationRule = (
+  user,
+  collection,
+) =>
+  typeof collection !== 'undefined' &&
+  collection.is_current_version &&
+  (check_authz_rules(user, user_is_super_user_rule) ||
+    user_is_owner_of_collection(user, collection) ||
+    (!collection.collection_def.is_locked &&
+      user_is_uploader_for_collection(user, collection)));
+
+const user_can_edit_records: MutationAuthorizationRule = (
+  user,
+  collection,
+  records,
+) =>
+  typeof collection !== 'undefined' &&
+  collection.is_current_version &&
+  (check_authz_rules(user, user_is_super_user_rule) ||
+    user_is_owner_of_collection(user, collection) ||
+    (!collection.collection_def.is_locked &&
+      user_is_uploader_for_collection(user, collection) &&
+      _.every(
+        records,
+        (record) =>
+          typeof record !== 'undefined' &&
+          record.created_by === user.mongoose_doc!._id,
+      )));
+
+const validate_mutation_authorization = (
+  mutation_name: string,
+  user: Express.User | undefined,
+  context: { collection?: CollectionDocument; records?: RecordInterface[] },
+  ...mutation_rules: MutationAuthorizationRule[]
+) => {
+  if (typeof user === 'undefined') {
+    throw new GraphQLError(
+      `Action \`${mutation_name}\` requires authentication.`,
+      {
+        extensions: {
+          code: 401,
+        },
+      },
+    );
+  } else if (typeof user.mongoose_doc === 'undefined') {
+    // Should never happen, more than just a GraphQLError if it does occur
+    throw new AppError(500, `User context is incomplete.`);
+  } else if (
+    _.every(mutation_rules, (rule) =>
+      rule(user, context.collection, context.records),
+    )
+  ) {
+    throw new GraphQLError(
+      `Action \`${mutation_name}\` has unmet authorization requirements.`,
+      {
+        extensions: {
+          code: 403,
+        },
+      },
+    );
+  }
+};
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
@@ -194,7 +259,6 @@ export const CollectionSchema = makeExecutableSchema({
     create_collection_from_base(collection_id: String!): Collection
 
     # TODO need GQL schema types for collection update validation responses
-    validate_collection_updates(collection_id: String!, collection_updates: CollectionInput): Boolean 
     update_collection(collection_id: String!, collection_updates: CollectionInput): Collection
 
     # TODO need GQL schema types for collection update validation responses
@@ -203,7 +267,7 @@ export const CollectionSchema = makeExecutableSchema({
 
     validate_new_records(collection_id: String!, records: [JSON]): Boolean # TODO need GQL schema types for record validation responses
     insert_records(collection_id: String!, records: [JSON]): [Record]
-    delete_records(record_ids: [String!]!): [Record]
+    delete_records(collection_id: String!, record_ids: [String!]!): [Record]
   }
   input CollectionInput {
     name_en: String!
@@ -238,7 +302,7 @@ export const CollectionSchema = makeExecutableSchema({
 `,
   resolvers: {
     QueryRoot: {
-      user_owned_collections: with_authz(
+      user_owned_collections: resolver_with_authz(
         async (
           _parent: unknown,
           { email }: { email: string },
@@ -252,7 +316,7 @@ export const CollectionSchema = makeExecutableSchema({
         },
         user_is_super_user_rule,
       ),
-      user_uploadable_collections: with_authz(
+      user_uploadable_collections: resolver_with_authz(
         async (
           _parent: unknown,
           { email }: { email: string },
@@ -266,7 +330,7 @@ export const CollectionSchema = makeExecutableSchema({
         },
         user_is_super_user_rule,
       ),
-      collections: with_authz(
+      collections: resolver_with_authz(
         () => CollectionModel.find({ is_current_version: true }),
         user_is_super_user_rule,
       ),
@@ -406,76 +470,195 @@ export const CollectionSchema = makeExecutableSchema({
       ) => UserByIdLoader.load(parent.created_by.toString()),
     },
     JSON: JSONResolver,
-    Mutation: _.mapValues({
-      create_collection_init: (
+    Mutation: {
+      create_collection_init: async (
         _parent: unknown,
-        args: { collection_def: CollectionDefInterface },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-      create_collection_from_base: (
-        _parent: unknown,
-        args: { collection_id: string },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
+        { collection_def }: { collection_def: CollectionDefInterface },
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          {},
+          user_can_create_collection,
+        );
 
-      validate_collection_updates: (
+        return create_collection(user!.mongoose_doc!, collection_def, []);
+      },
+      create_collection_from_base: async (
         _parent: unknown,
-        args: {
+        { collection_id }: { collection_id: string },
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const base_collection = await CollectionByIdLoader.load(collection_id);
+
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection: base_collection },
+          user_can_create_collection,
+          user_can_edit_collection,
+        );
+
+        return create_collection(
+          user!.mongoose_doc!,
+          base_collection!.collection_def,
+          base_collection!.column_defs,
+        );
+      },
+
+      update_collection: async (
+        _parent: unknown,
+        {
+          collection_id,
+          collection_updates,
+        }: {
           collection_id: string;
           collection_updates: CollectionDefInterface;
         },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-      update_collection: (
-        _parent: unknown,
-        args: {
-          collection_id: string;
-          collection_updates: CollectionDefInterface;
-        },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
 
-      validate_new_column_defs: (
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection },
+          user_can_edit_collection,
+        );
+
+        return update_collection_def_fields(
+          collection!,
+          user!.mongoose_doc!,
+          collection_updates,
+        );
+      },
+
+      validate_new_column_defs: async (
         _parent: unknown,
-        args: {
+        {
+          collection_id,
+          column_defs,
+        }: {
           collection_id: string;
           column_defs: ColumnDefInterfaceWithMetaOptional[];
         },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-      update_column_defs: (
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
+
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection },
+          user_can_edit_collection,
+        );
+
+        return are_new_column_defs_compatible_with_current_records(
+          collection!,
+          column_defs,
+        );
+      },
+      update_column_defs: async (
         _parent: unknown,
-        args: {
+        {
+          collection_id,
+          column_defs,
+        }: {
           collection_id: string;
           column_defs: ColumnDefInterfaceWithMetaOptional[];
         },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
 
-      validate_new_records: (
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection },
+          user_can_edit_collection,
+        );
+
+        return update_collection_column_defs(
+          collection!,
+          user!.mongoose_doc!,
+          column_defs,
+        );
+      },
+
+      validate_new_records: async (
         _parent: unknown,
-        args: { collection_id: string; records: JSON[] },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-      insert_records: (
+        { collection_id, records }: { collection_id: string; records: JSON[] },
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
+
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection },
+          user_can_upload_to_collection,
+        );
+
+        return validate_record_data_against_column_defs(
+          collection!.column_defs,
+          records,
+          true,
+        );
+      },
+      insert_records: async (
         _parent: unknown,
-        args: { collection_id: string; records: JSON[] },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-      delete_records: (
+        { collection_id, records }: { collection_id: string; records: JSON[] },
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
+
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection },
+          user_can_upload_to_collection,
+        );
+
+        return insert_records(collection!, records, user!.mongoose_doc!);
+      },
+      delete_records: async (
         _parent: unknown,
-        args: { record_ids: string[] },
-        context: { req?: { user?: Express.User } },
-        _info: unknown,
-      ) => 'TODO',
-    }),
+        {
+          collection_id,
+          record_ids,
+        }: { collection_id: string; record_ids: string[] },
+        { req: { user } }: { req: { user?: Express.User } },
+        { fieldName }: { fieldName: string },
+      ) => {
+        const collection = await CollectionByIdLoader.load(collection_id);
+        const requested_records = await RecordByIdLoader.loadMany(record_ids);
+
+        const valid_requested_records = requested_records.filter(
+          (record, index): record is RecordDocument =>
+            typeof record !== 'undefined' &&
+            '_id' in record &&
+            record._id.toString() === record_ids[index],
+        );
+
+        validate_mutation_authorization(
+          fieldName,
+          user,
+          { collection, records: valid_requested_records },
+          user_can_edit_records,
+        );
+
+        return delete_records(
+          valid_requested_records.map((record) => record._id),
+        );
+      },
+    },
   },
 });

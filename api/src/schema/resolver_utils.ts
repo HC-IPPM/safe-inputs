@@ -29,7 +29,7 @@ export const resolve_lang_suffixed_scalar =
   ) =>
     parent[`${base_field_name}_${context.lang}`];
 
-export const with_authz =
+export const resolver_with_authz =
   <
     Parent,
     Args,

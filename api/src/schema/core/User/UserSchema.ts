@@ -5,7 +5,10 @@ import {
   user_can_have_privileges_rule,
   check_authz_rules,
 } from 'src/authz.ts';
-import { with_authz, resolve_document_id } from 'src/schema/resolver_utils.ts';
+import {
+  resolver_with_authz,
+  resolve_document_id,
+} from 'src/schema/resolver_utils.ts';
 
 import { UserModel, UserByEmailLoader } from './UserModel.ts';
 import type { UserDocument } from './UserModel.ts';
@@ -34,7 +37,7 @@ export const UserSchema = makeExecutableSchema({
 `,
   resolvers: {
     QueryRoot: {
-      user: with_authz(
+      user: resolver_with_authz(
         (
           _parent: unknown,
           { email }: { email: string },
@@ -43,8 +46,11 @@ export const UserSchema = makeExecutableSchema({
         ) => UserByEmailLoader.load(email),
         user_is_super_user_rule,
       ),
-      users: with_authz(() => UserModel.find({}), user_is_super_user_rule),
-      session: with_authz(
+      users: resolver_with_authz(
+        () => UserModel.find({}),
+        user_is_super_user_rule,
+      ),
+      session: resolver_with_authz(
         (
           _parent: unknown,
           _args: unknown,
