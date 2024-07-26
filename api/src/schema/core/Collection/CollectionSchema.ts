@@ -158,6 +158,42 @@ const validate_mutation_authorization = (
   }
 };
 
+type CollectionDefInput = {
+  name_en: string;
+  name_fr: string;
+  description_en: string;
+  description_fr: string;
+  is_locked: boolean;
+  owner_emails: string[];
+  uploader_emails: string[];
+};
+type ColumnDefInput = {
+  header: string;
+  name_en: string;
+  name_fr: string;
+  description_en: string;
+  description_fr: string;
+  data_type: string;
+  conditions: ConditionInput[];
+};
+type ConditionInput = {
+  condition_type: string;
+  parameters: string[];
+};
+
+const collection_def_input_to_mongo_values = (
+  collection_input: CollectionDefInput,
+): CollectionDefInterface => {
+  const { owner_emails, uploader_emails, ...passthrough_fields } =
+    collection_input;
+
+  return {
+    ...passthrough_fields,
+    owners: [],
+    uploaders: [],
+  };
+};
+
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
   type QueryRoot {
@@ -175,7 +211,8 @@ export const CollectionSchema = makeExecutableSchema({
     ### Scalar fields
     id: String!
     stable_key: String!
-    sem_ver: String!
+    major_ver: String!
+    minor_ver: String!
     is_current_version: Boolean!
     created_by: User!
     created_at: Float!
@@ -214,6 +251,7 @@ export const CollectionSchema = makeExecutableSchema({
   type ColumnDef {
     ### Scalar fields
     id: String!
+    header: String!
     name_en: String!
     name_fr: String!
     description_en: String!
@@ -255,11 +293,11 @@ export const CollectionSchema = makeExecutableSchema({
   scalar JSON
 
   type Mutation {
-    create_collection_init(collection: CollectionInput): Collection
+    create_collection_init(collection_def: CollectionDefInput): Collection
     create_collection_from_base(collection_id: String!): Collection
 
     # TODO need GQL schema types for collection update validation responses
-    update_collection(collection_id: String!, collection_updates: CollectionInput): Collection
+    update_collection(collection_id: String!, collection_updates: CollectionDefInput): Collection
 
     # TODO need GQL schema types for collection update validation responses
     validate_new_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Boolean 
@@ -269,7 +307,7 @@ export const CollectionSchema = makeExecutableSchema({
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): [Record]
   }
-  input CollectionInput {
+  input CollectionDefInput {
     name_en: String!
     name_fr: String!
     description_en: String!
@@ -473,7 +511,7 @@ export const CollectionSchema = makeExecutableSchema({
     Mutation: {
       create_collection_init: async (
         _parent: unknown,
-        { collection_def }: { collection_def: CollectionDefInterface },
+        { collection_def }: { collection_def: CollectionDefInput },
         { req: { user } }: { req: { user?: Express.User } },
         { fieldName }: { fieldName: string },
       ) => {
@@ -484,7 +522,11 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_create_collection,
         );
 
-        return create_collection(user!.mongoose_doc!, collection_def, []);
+        return create_collection(
+          user!.mongoose_doc!,
+          collection_def_input_to_mongo_values(collection_def),
+          [],
+        );
       },
       create_collection_from_base: async (
         _parent: unknown,
@@ -516,7 +558,7 @@ export const CollectionSchema = makeExecutableSchema({
           collection_updates,
         }: {
           collection_id: string;
-          collection_updates: CollectionDefInterface;
+          collection_updates: CollectionDefInput;
         },
         { req: { user } }: { req: { user?: Express.User } },
         { fieldName }: { fieldName: string },
@@ -533,7 +575,7 @@ export const CollectionSchema = makeExecutableSchema({
         return update_collection_def_fields(
           collection!,
           user!.mongoose_doc!,
-          collection_updates,
+          collection_def_input_to_mongo_values(collection_updates),
         );
       },
 
@@ -544,7 +586,7 @@ export const CollectionSchema = makeExecutableSchema({
           column_defs,
         }: {
           collection_id: string;
-          column_defs: ColumnDefInterfaceWithMetaOptional[];
+          column_defs: ColumnDefInput[];
         },
         { req: { user } }: { req: { user?: Express.User } },
         { fieldName }: { fieldName: string },
@@ -570,7 +612,7 @@ export const CollectionSchema = makeExecutableSchema({
           column_defs,
         }: {
           collection_id: string;
-          column_defs: ColumnDefInterfaceWithMetaOptional[];
+          column_defs: ColumnDefInput[];
         },
         { req: { user } }: { req: { user?: Express.User } },
         { fieldName }: { fieldName: string },
