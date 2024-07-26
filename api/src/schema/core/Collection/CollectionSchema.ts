@@ -143,7 +143,7 @@ const validate_mutation_authorization = (
     // Should never happen, more than just a GraphQLError if it does occur
     throw new AppError(500, `User context is incomplete.`);
   } else if (
-    _.every(mutation_rules, (rule) =>
+    !_.every(mutation_rules, (rule) =>
       rule(user, context.collection, context.records),
     )
   ) {
