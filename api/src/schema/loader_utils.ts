@@ -15,48 +15,32 @@ export function create_dataloader_for_resources_by_foreign_key_attr<ModelDoc>(
 ) {
   return new DataLoader<string, HydratedDocument<ModelDoc>[]>(
     async function (fk_ids) {
-      const rows = await model.find({
+      const documents = await model.find({
         [fk_attr]: { $in: _.uniq(fk_ids) },
         ...options.constraints,
       } as FilterQuery<ModelDoc>);
 
       const keys_in_fk_attr = fk_attr.split('.');
 
-      // we need to return matched rows from this loader grouped and ordered by the ids that were matched on
+      // we need to return matched rows from this loader ordered and grouped by the ids that were matched on
       // BUT the target foreign key attr may be a path to a subdocument's foreign key (so we need depth in our group by), and
       // any of those subdocuments may have been arrays of subdocuments which may have been matched on by more
       // than one of the ids we were looking for (so we need completeness in our final grouping)...
       // hence the following
-      const get_rows_that_matched_on_id = (id: string) =>
-        _.filter(rows, (row) =>
-          _.chain(keys_in_fk_attr)
-            .reduce((documents, attr) => {
-              if (typeof documents.toObject === 'function') {
-                return _.flatMap(
-                  documents.toObject(),
-                  (document: any) => document[attr],
-                );
-              } else if (_.isArray(documents)) {
-                return _.flatMap(documents, (document) => document[attr]);
-              } else {
-                return _.get(documents, attr);
-              }
-            }, row)
-            .includes(id)
-            .value(),
-        );
-
-      const groups_of_all_matches_by_id = _.chain(fk_ids)
-        .map((id) => [id, get_rows_that_matched_on_id(id)])
-        .fromPairs()
-        .mapValues((matched_rows) =>
-          _.isEmpty(matched_rows) ? null : matched_rows,
-        )
-        .value();
+      const get_docs_that_matched_on_id = (id: string) =>
+        _.filter(documents, (root_document) => {
+          const leaf_ids = _.reduce<string, any>(
+            keys_in_fk_attr,
+            (documents, key) =>
+              _.chain(documents).flatMap(key).filter().value(),
+            [root_document],
+          );
+          return _.some(leaf_ids, (leaf_id) => leaf_id.toString() === id);
+        });
 
       const groups_in_order_of_requested_keys = _.map(
         fk_ids,
-        (id) => groups_of_all_matches_by_id[id],
+        get_docs_that_matched_on_id,
       );
 
       return groups_in_order_of_requested_keys;
