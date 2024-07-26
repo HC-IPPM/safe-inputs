@@ -11,7 +11,7 @@ import {
   check_authz_rules,
 } from 'src/authz.ts';
 
-import { AppError } from 'src/error_utils.ts';
+import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
 
 import {
   UserByEmailLoader,
@@ -535,14 +535,20 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_be_collection_owner,
         );
 
-        const model_ready_collection_def =
-          await collection_def_input_to_model_fields(collection_def);
+        try {
+          const model_ready_collection_def =
+            await collection_def_input_to_model_fields(collection_def);
 
-        return create_collection(
-          user!.mongoose_doc!,
-          model_ready_collection_def,
-          [],
-        );
+          return create_collection(
+            user!.mongoose_doc!,
+            model_ready_collection_def,
+            [],
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
       create_collection_from_base: async (
         _parent: unknown,
@@ -560,11 +566,17 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_edit_collection,
         );
 
-        return create_collection(
-          user!.mongoose_doc!,
-          base_collection!.collection_def,
-          base_collection!.column_defs,
-        );
+        try {
+          return create_collection(
+            user!.mongoose_doc!,
+            base_collection!.collection_def,
+            base_collection!.column_defs,
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
 
       update_collection: async (
@@ -588,14 +600,20 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_edit_collection,
         );
 
-        const model_ready_collection_def =
-          await collection_def_input_to_model_fields(collection_updates);
+        try {
+          const model_ready_collection_def =
+            await collection_def_input_to_model_fields(collection_updates);
 
-        return update_collection_def_fields(
-          collection!,
-          user!.mongoose_doc!,
-          model_ready_collection_def,
-        );
+          return update_collection_def_fields(
+            collection!,
+            user!.mongoose_doc!,
+            model_ready_collection_def,
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
 
       validate_new_column_defs: async (
@@ -619,10 +637,16 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_edit_collection,
         );
 
-        return are_new_column_defs_compatible_with_current_records(
-          collection!,
-          column_defs,
-        );
+        try {
+          return are_new_column_defs_compatible_with_current_records(
+            collection!,
+            column_defs,
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
       update_column_defs: async (
         _parent: unknown,
@@ -644,12 +668,17 @@ export const CollectionSchema = makeExecutableSchema({
           { collection },
           user_can_edit_collection,
         );
+        try {
+          return update_collection_column_defs(
+            collection!,
+            user!.mongoose_doc!,
+            column_defs,
+          );
 
-        return update_collection_column_defs(
-          collection!,
-          user!.mongoose_doc!,
-          column_defs,
-        );
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
 
       validate_new_records: async (
@@ -667,11 +696,17 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_upload_to_collection,
         );
 
-        return validate_record_data_against_column_defs(
-          collection!.column_defs,
-          records,
-          true,
-        );
+        try {
+          return validate_record_data_against_column_defs(
+            collection!.column_defs,
+            records,
+            true,
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
       insert_records: async (
         _parent: unknown,
@@ -688,7 +723,13 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_upload_to_collection,
         );
 
-        return insert_records(collection!, records, user!.mongoose_doc!);
+        try {
+          return insert_records(collection!, records, user!.mongoose_doc!);
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
       delete_records: async (
         _parent: unknown,
@@ -716,9 +757,15 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_edit_records,
         );
 
-        return delete_records(
-          valid_requested_records.map((record) => record._id),
-        );
+        try {
+          return delete_records(
+            valid_requested_records.map((record) => record._id),
+          );
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          throw app_error_to_gql_error(error);
+        }
       },
     },
   },

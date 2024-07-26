@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { HydratedDocument, Schema, model } from 'mongoose';
 
+import { user_email_allowed_rule, check_authz_rules } from 'src/authz.ts';
+
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
 import { primary_key_type } from 'src/schema/mongoose_utils.ts';
@@ -41,6 +43,17 @@ export const get_or_create_users = async (
     .omitBy((user) => _.isString(user?.email))
     .keys()
     .value();
+
+  const disallowed_emails = _.filter(
+    emails_without_users,
+    (email) => !check_authz_rules({ email }, user_email_allowed_rule),
+  );
+  if (!_.isEmpty(disallowed_emails)) {
+    throw new AppError(
+      400,
+      `Provided emails not allowed: [${disallowed_emails.join(', ')}]`,
+    );
+  }
 
   const created_at = Date.now();
   const new_users = await UserModel.create(

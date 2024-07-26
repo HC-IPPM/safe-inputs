@@ -189,6 +189,9 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
+export const validate_collection_def = (_collect_def: CollectionDefInterface) =>
+  true; // TODO, check things like validity of owner/uploader emails
+
 export const validate_column_defs = (
   _column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => true; // implementation TODO, data types and constraint validation will be a follow up PR
@@ -198,6 +201,10 @@ export const create_collection = (
   collection_def: CollectionDefInterface,
   column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
+  if (!validate_collection_def(collection_def)) {
+    throw new AppError(400, 'Column def validation failed');
+  }
+
   if (!validate_column_defs(column_defs)) {
     throw new AppError(400, 'Column def validation failed');
   }
