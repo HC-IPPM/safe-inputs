@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { HydratedDocument, Schema, model } from 'mongoose';
 
 import { AppError } from 'src/error_utils.ts';
@@ -26,17 +27,42 @@ export const UserByIdLoader =
 export const UserByEmailLoader =
   create_dataloader_for_resource_by_primary_key_attr(UserModel, 'email');
 
-export const get_or_create_user = async (email: string) => {
-  const existingUser = await UserModel.findOne({ email });
+export const get_or_create_users = async (
+  emails: string[],
+): Promise<UserDocument[]> => {
+  const possible_users = await UserByEmailLoader.loadMany(emails);
 
-  if (existingUser) {
-    return existingUser;
-  } else {
-    return UserModel.create({
+  const possible_users_by_email = _.chain(emails)
+    .zip(possible_users)
+    .fromPairs()
+    .value();
+
+  const emails_without_users = _.chain(possible_users_by_email)
+    .omitBy((user) => _.isString(user?.email))
+    .keys()
+    .value();
+
+  const created_at = Date.now();
+  const new_users = await UserModel.create(
+    emails_without_users.map((email) => ({
       email,
-      created_at: Date.now(),
-    });
-  }
+      created_at,
+    })),
+  );
+
+  const new_users_by_email = _.chain(new_users)
+    .map((user) => [user.email, user])
+    .fromPairs()
+    .value();
+
+  const users_by_email = { ...possible_users_by_email, ...new_users_by_email };
+
+  return _.map(emails, (email) => users_by_email[email]);
+};
+
+export const get_or_create_user = async (email: string) => {
+  const users = await get_or_create_users([email]);
+  return users[0];
 };
 
 export const update_user_last_login_times = async (email: string) => {

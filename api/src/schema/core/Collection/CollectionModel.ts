@@ -216,7 +216,9 @@ export const create_collection = (
 
     collection_def: {
       ...collection_def,
-      owners: _.uniq([...collection_def.owners, user._id]),
+      owners: _.uniqBy([...collection_def.owners, user._id], (object_id) =>
+        object_id.toString(),
+      ),
     },
     column_defs: column_defs.map((column_def) => ({
       ...column_def,

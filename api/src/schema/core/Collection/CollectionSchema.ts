@@ -16,6 +16,7 @@ import { AppError } from 'src/error_utils.ts';
 import {
   UserByEmailLoader,
   UserByIdLoader,
+  get_or_create_users,
 } from 'src/schema/core/User/UserModel.ts';
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangsUnion } from 'src/schema/lang_utils.ts';
@@ -45,7 +46,6 @@ import {
 import type {
   CollectionDocument,
   CollectionDefInterface,
-  ColumnDefInterfaceWithMetaOptional,
   RecordInterface,
   RecordDocument,
 } from './CollectionModel.ts';
@@ -66,9 +66,12 @@ type MutationAuthorizationRule = (
   records?: RecordInterface[],
 ) => boolean;
 
-const user_can_create_collection: MutationAuthorizationRule = (user) =>
+const user_can_be_collection_owner: MutationAuthorizationRule = (user) =>
   check_authz_rules(user, user_is_super_user_rule) ||
   check_authz_rules(user, user_can_have_privileges_rule);
+
+const user_can_be_collection_uploader: MutationAuthorizationRule = (user) =>
+  check_authz_rules(user, user_email_allowed_rule);
 
 const user_is_owner_of_collection: MutationAuthorizationRule = (
   user,
@@ -76,7 +79,7 @@ const user_is_owner_of_collection: MutationAuthorizationRule = (
 ) =>
   typeof collection !== 'undefined' &&
   _.includes(collection.collection_def.owners, user.mongoose_doc!._id) &&
-  check_authz_rules(user, user_can_have_privileges_rule);
+  user_can_be_collection_owner(user);
 
 const user_is_uploader_for_collection: MutationAuthorizationRule = (
   user,
@@ -84,7 +87,7 @@ const user_is_uploader_for_collection: MutationAuthorizationRule = (
 ) =>
   typeof collection !== 'undefined' &&
   _.includes(collection.collection_def.uploaders, user.mongoose_doc!._id) &&
-  check_authz_rules(user, user_email_allowed_rule);
+  user_can_be_collection_uploader(user);
 
 const user_can_edit_collection: MutationAuthorizationRule = (
   user,
@@ -181,16 +184,26 @@ type ConditionInput = {
   parameters: string[];
 };
 
-const collection_def_input_to_mongo_values = (
+const collection_def_input_to_model_fields = async (
   collection_input: CollectionDefInput,
-): CollectionDefInterface => {
+): Promise<CollectionDefInterface> => {
   const { owner_emails, uploader_emails, ...passthrough_fields } =
     collection_input;
 
+  const users = await get_or_create_users([
+    ...owner_emails,
+    ...uploader_emails,
+  ]);
+
+  const user_ids_by_email = _.chain(users)
+    .map(({ _id, email }) => [email, _id])
+    .fromPairs()
+    .value();
+
   return {
     ...passthrough_fields,
-    owners: [],
-    uploaders: [],
+    owners: _.map(owner_emails, (email) => user_ids_by_email[email]),
+    uploaders: _.map(uploader_emails, (email) => user_ids_by_email[email]),
   };
 };
 
@@ -519,12 +532,15 @@ export const CollectionSchema = makeExecutableSchema({
           fieldName,
           user,
           {},
-          user_can_create_collection,
+          user_can_be_collection_owner,
         );
+
+        const model_ready_collection_def =
+          await collection_def_input_to_model_fields(collection_def);
 
         return create_collection(
           user!.mongoose_doc!,
-          collection_def_input_to_mongo_values(collection_def),
+          model_ready_collection_def,
           [],
         );
       },
@@ -540,7 +556,7 @@ export const CollectionSchema = makeExecutableSchema({
           fieldName,
           user,
           { collection: base_collection },
-          user_can_create_collection,
+          user_can_be_collection_owner,
           user_can_edit_collection,
         );
 
@@ -572,10 +588,13 @@ export const CollectionSchema = makeExecutableSchema({
           user_can_edit_collection,
         );
 
+        const model_ready_collection_def =
+          await collection_def_input_to_model_fields(collection_updates);
+
         return update_collection_def_fields(
           collection!,
           user!.mongoose_doc!,
-          collection_def_input_to_mongo_values(collection_updates),
+          model_ready_collection_def,
         );
       },
 
