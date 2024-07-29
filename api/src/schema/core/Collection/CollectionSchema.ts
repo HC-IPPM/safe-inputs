@@ -316,7 +316,8 @@ export const CollectionSchema = makeExecutableSchema({
     validate_new_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Boolean 
     update_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Collection
 
-    validate_new_records(collection_id: String!, records: [JSON]): Boolean # TODO need GQL schema types for record validation responses
+    # TODO need GQL schema types for record validation responses
+    validate_new_records(collection_id: String!, records: [JSON]): Boolean
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): [Record]
   }

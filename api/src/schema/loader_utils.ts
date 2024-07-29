@@ -45,7 +45,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<ModelDoc>(
 
       return groups_in_order_of_requested_keys;
     },
-    { cache: options.cache },
+    { cache: options.cache || false },
   );
 }
 
@@ -76,6 +76,6 @@ export function create_dataloader_for_resource_by_primary_key_attr<ModelDoc>(
 
       return docs_in_order_of_requested_keys;
     },
-    { cache: options.cache },
+    { cache: options.cache || false },
   );
 }

@@ -244,7 +244,7 @@ const create_collection_version = async (
   column_defs?: ColumnDefInterface[],
 ) => {
   if (column_defs && !validate_column_defs(column_defs)) {
-    throw new Error('TODO');
+    throw new AppError(400, 'Column def validation failed');
   }
 
   const created_by = user._id;
@@ -325,7 +325,7 @@ export const are_new_column_defs_compatible_with_current_records = async (
   new_column_defs: ColumnDefInterfaceWithMetaOptional[],
 ) => {
   if (!validate_column_defs(new_column_defs)) {
-    throw new Error('TODO');
+    throw new AppError(400, 'Column def validation failed');
   }
 
   const records = await RecordsByRecordsetKeyLoader.load(
