@@ -78,7 +78,10 @@ const user_is_owner_of_collection: MutationAuthorizationRule = (
   collection,
 ) =>
   typeof collection !== 'undefined' &&
-  _.includes(collection.collection_def.owners, user.mongoose_doc!._id) &&
+  _.chain(collection.collection_def.owners)
+    .map(_.toString)
+    .includes(user.mongoose_doc!._id.toString())
+    .value() &&
   user_can_be_collection_owner(user);
 
 const user_is_uploader_for_collection: MutationAuthorizationRule = (
@@ -86,7 +89,10 @@ const user_is_uploader_for_collection: MutationAuthorizationRule = (
   collection,
 ) =>
   typeof collection !== 'undefined' &&
-  _.includes(collection.collection_def.uploaders, user.mongoose_doc!._id) &&
+  _.chain(collection.collection_def.uploaders)
+    .map(_.toString)
+    .includes(user.mongoose_doc!._id.toString())
+    .value() &&
   user_can_be_collection_uploader(user);
 
 const user_can_edit_collection: MutationAuthorizationRule = (
@@ -319,7 +325,7 @@ export const CollectionSchema = makeExecutableSchema({
     # TODO need GQL schema types for record validation responses
     validate_new_records(collection_id: String!, records: [JSON]): Boolean
     insert_records(collection_id: String!, records: [JSON]): [Record]
-    delete_records(collection_id: String!, record_ids: [String!]!): [Record]
+    delete_records(collection_id: String!, record_ids: [String!]!): Int
   }
   input CollectionDefInput {
     name_en: String!
@@ -759,9 +765,10 @@ export const CollectionSchema = makeExecutableSchema({
         );
 
         try {
-          return delete_records(
+          const delete_result = await delete_records(
             valid_requested_records.map((record) => record._id),
           );
+          return delete_result.deletedCount;
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
