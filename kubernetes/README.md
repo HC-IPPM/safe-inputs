@@ -23,3 +23,5 @@ flux bootstrap git \
     --path=kubernetes/clusters/gke \
     --components-extra="image-reflector-controller,image-automation-controller"
 ```
+
+> The above command might generate and ask you to add deploy keys to the project. See [this](https://fluxcd.io/flux/cmd/flux_bootstrap/) for more information about `flux bootstrap`.
