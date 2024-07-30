@@ -485,12 +485,19 @@ export const CollectionSchema = makeExecutableSchema({
           context,
           _info,
         ),
-      previous_versions: (
+      previous_versions: async (
         parent: CollectionDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => AllCollectionVersionsByStableKeyLoader.load(parent.stable_key),
+      ) => {
+        const all_collections_by_stable_key =
+          await AllCollectionVersionsByStableKeyLoader.load(parent.stable_key);
+        return _.filter(
+          all_collections_by_stable_key,
+          ({ _id }) => _id.toString() !== parent._id.toString(),
+        );
+      },
       created_by: (
         parent: CollectionDocument,
         _args: unknown,

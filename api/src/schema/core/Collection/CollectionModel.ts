@@ -163,7 +163,7 @@ export const CurrentCollectionsByUploadersLoader =
   );
 
 export const AllCollectionVersionsByStableKeyLoader =
-  create_dataloader_for_resource_by_primary_key_attr(
+  create_dataloader_for_resources_by_foreign_key_attr(
     CollectionModel,
     'stable_key',
   );

@@ -54,7 +54,7 @@ export function create_dataloader_for_resources_by_foreign_key_attr<ModelDoc>(
 
 export function create_dataloader_for_resource_by_primary_key_attr<ModelDoc>(
   model: Model<ModelDoc>,
-  primary_key_attr: string,
+  primary_key_attr: keyof ModelDoc | '_id',
   options: {
     constraints?: FilterQuery<ModelDoc>;
     cache?: boolean;
@@ -70,7 +70,9 @@ export function create_dataloader_for_resource_by_primary_key_attr<ModelDoc>(
         ...options.constraints,
       } as FilterQuery<ModelDoc>);
 
-      const docs_by_primary_key = _.keyBy(docs, primary_key_attr);
+      const docs_by_primary_key = _.keyBy(docs, (doc) =>
+        _.toString(doc[primary_key_attr]),
+      );
 
       const docs_in_order_of_requested_pkey_values = _.map(
         pkey_values,
