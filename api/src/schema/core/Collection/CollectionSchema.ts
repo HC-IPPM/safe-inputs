@@ -235,8 +235,8 @@ export const CollectionSchema = makeExecutableSchema({
   type QueryRoot {
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
-    collections: [Collection]
     collection(collection_id: String!): Collection
+    all_collections: [Collection]
   }
 
   type User {
@@ -411,7 +411,7 @@ export const CollectionSchema = makeExecutableSchema({
         },
         user_is_super_user_rule,
       ),
-      collections: resolver_with_authz(
+      all_collections: resolver_with_authz(
         () => CollectionModel.find({ is_current_version: true }),
         user_is_super_user_rule,
       ),
@@ -439,7 +439,13 @@ export const CollectionSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => CurrentCollectionsByOwnersLoader.load(parent._id.toString()),
+      ) => {
+        if (check_authz_rules(parent, user_is_super_user_rule)) {
+          return CollectionModel.find({ is_current_version: true });
+        } else {
+          return CurrentCollectionsByOwnersLoader.load(parent._id.toString());
+        }
+      },
       uploadable_collections: (
         parent: UserDocument,
         _args: unknown,

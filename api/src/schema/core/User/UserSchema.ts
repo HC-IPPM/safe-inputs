@@ -18,11 +18,7 @@ export const UserSchema = makeExecutableSchema({
   type QueryRoot {
     user(email: String!): User
     users: [User]
-    session: Session
-  }
-  
-  type Session {
-    user: User
+    session: User
   }
   
   type User {
@@ -56,9 +52,7 @@ export const UserSchema = makeExecutableSchema({
           _args: unknown,
           { req }: { req?: { user?: Express.User } },
           _info: unknown,
-        ) => ({
-          user: req?.user?.mongoose_doc,
-        }),
+        ) => req?.user?.mongoose_doc,
       ),
     },
     User: {
