@@ -11,6 +11,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "start": "tsx ./src/index.ts",
+    "seed-dev-data": "tsx src/seed_dev_data.ts",
     "dev": "nodemon --exec tsx ./src/index.ts",
     "dev:debug": "nodemon --exec tsx --inspect-brk ./src/index.ts",
     "dev:docker": "npm run dev",

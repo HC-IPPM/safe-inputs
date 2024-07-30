@@ -88,6 +88,25 @@ services:
       - 27017:27017
     command: mongod --quiet
 
+  seed-dev-data:
+    image: safe-inputs-api:1.2
+    tty: ${DOCKER_TTY:-true}
+    restart: always
+    build:
+      dockerfile: ./Dockerfile.node-dev
+      context: ./
+    volumes:
+      - ./api:/home/node-dev/project
+      - ./api/.env.dev-public:/home/node-dev/project/.env
+    entrypoint:
+      - ../node-dev-entrypoint.once.sh
+    command: npm run seed-dev-data
+    networks:
+      - db-internal
+      - host-loopback
+    depends_on:
+      - db
+
   api:
     image: safe-inputs-api:1.2
     tty: ${DOCKER_TTY:-true}
@@ -106,7 +125,7 @@ services:
       - 3000:3000
       - 9229:9229 # for the node debug server, when active
     depends_on:
-      - db
+      - seed-dev-data
 
   ui:
     image: safe-inputs-ui:1.2
@@ -123,3 +142,5 @@ services:
       - host-loopback
     ports:
       - 8000:8080
+    depends_on:
+      - api
