@@ -8,6 +8,7 @@ import type { HydratedDocument } from 'mongoose';
 import type { SetOptional } from 'type-fest';
 
 import { db_transaction } from 'src/db.ts';
+
 import { AppError } from 'src/error_utils.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
@@ -250,21 +251,28 @@ const create_collection_version = async (
   const created_by = user._id;
   const created_at = Date.now();
 
-  return db_transaction(async () => {
-    await CollectionModel.create({
-      stable_key: current_collection.stable_key,
-      major_ver: new_major_ver,
-      minor_ver: new_minor_ver,
-      is_current_version: true,
-      created_by,
-      created_at,
+  return db_transaction(async (session) => {
+    const new_collection_version = new CollectionModel(
+      {
+        stable_key: current_collection.stable_key,
+        major_ver: new_major_ver,
+        minor_ver: new_minor_ver,
+        is_current_version: true,
+        created_by,
+        created_at,
 
-      collection_def: collection_def || current_collection.collection_def,
-      column_defs: column_defs || current_collection.column_defs,
-    });
+        collection_def: collection_def || current_collection.collection_def,
+        column_defs: column_defs || current_collection.column_defs,
+      },
+      { session },
+    );
 
     current_collection.is_current_version = false;
-    await current_collection.save();
+
+    await current_collection.save({ session });
+    await new_collection_version.save({ session });
+
+    return new_collection_version;
   });
 };
 

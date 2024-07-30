@@ -31,7 +31,7 @@ console.log('   Done');
 console.log('Creating users...');
 await get_or_create_users(AUTHZ_SUPER_ADMINS);
 
-const test_cases = ['set1', 'set2', 'both', 'empty'];
+const test_cases = ['group1', 'group2', 'both', 'empty'];
 
 const [owner_1, owner_2, owner_both] = await get_or_create_users(
   test_cases.map(
@@ -51,10 +51,10 @@ console.log('Creating collections...');
 const collection_1 = await create_collection(
   owner_1,
   {
-    name_en: 'Set 1',
-    name_fr: 'Set 1 FR',
-    description_en: 'Set 1 desc',
-    description_fr: 'Set 1 desc FR',
+    name_en: 'Group 1 Collection 1',
+    name_fr: 'Group 1 Collection 1 FR',
+    description_en: 'desc',
+    description_fr: 'desc FR',
     owners: [owner_1._id, owner_both._id],
     uploaders: [user_1._id, user_both._id],
     is_locked: false,
@@ -104,10 +104,10 @@ await insert_records(
 await create_collection(
   owner_1,
   {
-    name_en: 'Set 1 locked',
-    name_fr: 'Set 1 FR locked',
-    description_en: 'Set 1 desc locked',
-    description_fr: 'Set 1 desc FR locked',
+    name_en: 'Group 1 Collection 2 (locked)',
+    name_fr: 'Group 1 Collection 2 (locked) FR',
+    description_en: 'desc (locked)',
+    description_fr: 'desc FR (locked)',
     owners: [owner_1._id, owner_both._id],
     uploaders: [user_1._id, user_both._id],
     is_locked: true,
@@ -118,10 +118,10 @@ await create_collection(
 const collection_2 = await create_collection(
   owner_2,
   {
-    name_en: 'Set 2',
-    name_fr: 'Set 2 FR',
-    description_en: 'Set 2 desc',
-    description_fr: 'Set 2 desc FR',
+    name_en: 'Group 2 Collection 1',
+    name_fr: 'Group 2 Collection 1 FR',
+    description_en: 'desc',
+    description_fr: 'desc FR',
     owners: [owner_2._id, owner_both._id],
     uploaders: [user_2._id, user_both._id],
     is_locked: false,
@@ -147,33 +147,37 @@ const collection_2 = await create_collection(
     },
   ],
 );
-// await update_collection_def_fields(collection_2, owner_2, {
-//  name_en: 'Set 2 v2',
-//  name_fr: 'Set 2 FR v2',
-//  description_en: 'Set 2 desc v2',
-//  description_fr: 'Set 2 desc FR v2',
-//  owners: [owner_2._id, owner_both._id],
-//  uploaders: [user_2._id, user_both._id],
-//  is_locked: false,
-// });
-// await update_collection_column_defs(collection_2, owner_2, [
-//  {
-//    header: 'column_1',
-//    name_en: 'Column 1 v2',
-//    name_fr: 'Column 1 FR v2',
-//    description_en: 'Column 1 desc v2',
-//    description_fr: 'Column 1 desc FR v2',
-//    data_type: 'boolean',
-//    conditions: [],
-//  },
-//  {
-//    header: 'column_2',
-//    name_en: 'Column 2 v2',
-//    name_fr: 'Column 2 FR v2',
-//    description_en: 'Column 2 desc v2',
-//    description_fr: 'Column 2 desc FR v2',
-//    data_type: 'boolean',
-//    conditions: [],
-//  },
-// ]);
+const collection_2_new_minor_ver = await update_collection_def_fields(
+  collection_2,
+  owner_2,
+  {
+    name_en: 'Group 2 Collection 1',
+    name_fr: 'Group 2 Collection 1 FR',
+    description_en: 'desc v1,1',
+    description_fr: 'desc FR v1.1',
+    owners: [owner_2._id, owner_both._id],
+    uploaders: [user_2._id, user_both._id],
+    is_locked: false,
+  },
+);
+await update_collection_column_defs(collection_2_new_minor_ver, owner_2, [
+  {
+    header: 'column_1',
+    name_en: 'Column 1 v2',
+    name_fr: 'Column 1 FR v2',
+    description_en: 'Column 1 desc v2',
+    description_fr: 'Column 1 desc FR v2',
+    data_type: 'boolean',
+    conditions: [],
+  },
+  {
+    header: 'column_2',
+    name_en: 'Column 2 v2',
+    name_fr: 'Column 2 FR v2',
+    description_en: 'Column 2 desc v2',
+    description_fr: 'Column 2 desc FR v2',
+    data_type: 'boolean',
+    conditions: [],
+  },
+]);
 console.log('   Done');
