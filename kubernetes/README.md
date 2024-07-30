@@ -2,7 +2,7 @@
 
 ## Infrastructure
 
-All Google Cloud resources (except [these](https://github.com/PHACDataHub/safe-inputs/issues/142#issuecomment-2217704143)) for this application are stored in the [acm-core](https://github.com/PHACDataHub/acm-core/tree/main/DMIA-PHAC/Experimentation/ph-safeinputs) repository as [config-connector](https://cloud.google.com/config-connector/docs/overview) manifests. A PR must be submitted against `acm-core` to add / update GCP resources.
+All Google Cloud resources (except [these](https://github.com/PHACDataHub/safe-inputs/issues/142#issuecomment-2217704143)) for this application are stored in the [acm-core](https://github.com/PHACDataHub/acm-core/tree/main/DMIA-PHAC/Experimentation/ph-safeinputs) repository as [config-connector](https://cloud.google.com/config-connector/docs/overview) manifests. A PR must be submitted against `acm-core` to add / update GCP resources. It is also advised to link any new PRs to the [original safe-inputs infrastructure PR](https://github.com/PHACDataHub/acm-core/pull/311) in order to have a single pane of glass for all infrastructure modifications pertaining to safe-inputs.
 
 Developers / Maintainers of this application only have `Viewer` + `Cluster Admin` access on the project.
 
