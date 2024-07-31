@@ -19,7 +19,7 @@ steps:
       done
 
   - id: Validate schema
-    name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:47141997365b1f6aa914b2e801cb9772b94c2696c279e2046a4517d5bfd8a09a'
+    name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:824e0c248809e4b2da2a768b16b107cf17ada88a89ec6aa6050e566ba93ebbc6'
     dir: kubernetes
     args:
       - -skip=Secret
