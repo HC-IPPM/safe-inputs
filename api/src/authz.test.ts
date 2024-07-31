@@ -1,7 +1,7 @@
 import {
-  validate_user_email_allowed,
-  validate_user_can_have_privileges,
-  validate_user_is_super_user,
+  user_email_allowed_rule,
+  user_can_have_privileges_rule,
+  user_is_super_user_rule,
 } from './authz.ts';
 
 const throws_error_with_status_code = (
@@ -29,7 +29,7 @@ describe('User authorization rules', () => {
     process.env = ORIGINAL_ENV;
   });
 
-  describe('validate_user_email_allowed rule...', () => {
+  describe('user_email_allowed_rule rule...', () => {
     describe('with AUTHZ_EMAIL_HOSTS_ALLOWED as wildcard', () => {
       beforeEach(() => {
         process.env = {
@@ -46,7 +46,7 @@ describe('User authorization rules', () => {
         ].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => validate_user_email_allowed({ email }),
+              () => user_email_allowed_rule({ email }),
               400,
             ),
           ).toBe(true),
@@ -55,7 +55,7 @@ describe('User authorization rules', () => {
 
       it('Passes any valid email without throwing', async () => {
         ['valid@valid.com', 'who.ever@whatever.com'].forEach((email) =>
-          expect(() => validate_user_email_allowed({ email })).not.toThrow(),
+          expect(() => user_email_allowed_rule({ email })).not.toThrow(),
         );
       });
     });
@@ -80,7 +80,7 @@ describe('User authorization rules', () => {
         ].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => validate_user_email_allowed({ email }),
+              () => user_email_allowed_rule({ email }),
               400,
             ),
           ).toBe(true),
@@ -91,7 +91,7 @@ describe('User authorization rules', () => {
         ['host3@host3.com', 'host1org@host1.org'].forEach((email) =>
           expect(
             throws_error_with_status_code(
-              () => validate_user_email_allowed({ email }),
+              () => user_email_allowed_rule({ email }),
               403,
             ),
           ).toBe(true),
@@ -100,13 +100,13 @@ describe('User authorization rules', () => {
 
       it('Passes emails from approved hosts without throwing', async () => {
         ['host1@host1.com', 'host2@host2.net'].forEach((email) =>
-          expect(() => validate_user_email_allowed({ email })).not.toThrow(),
+          expect(() => user_email_allowed_rule({ email })).not.toThrow(),
         );
       });
     });
   });
 
-  describe('validate_user_can_have_privileges rule...', () => {
+  describe('user_can_have_privileges_rule rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -120,7 +120,7 @@ describe('User authorization rules', () => {
       expect(
         throws_error_with_status_code(
           () =>
-            validate_user_can_have_privileges({
+            user_can_have_privileges_rule({
               email: 'admin@unprivileged.net',
             }),
           403,
@@ -130,14 +130,12 @@ describe('User authorization rules', () => {
 
     it('Passes privileged users without throwing', async () => {
       ['johndoe@privileged.com', 'admin@privileged.com'].forEach((email) =>
-        expect(() =>
-          validate_user_can_have_privileges({ email }),
-        ).not.toThrow(),
+        expect(() => user_can_have_privileges_rule({ email })).not.toThrow(),
       );
     });
   });
 
-  describe('validate_user_is_super_user rule...', () => {
+  describe('user_is_super_user_rule rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -151,7 +149,7 @@ describe('User authorization rules', () => {
       ['not-admin@privileged.com', 'admin@unprivileged.net'].forEach((email) =>
         expect(
           throws_error_with_status_code(
-            () => validate_user_is_super_user({ email }),
+            () => user_is_super_user_rule({ email }),
             403,
           ),
         ).toBe(true),
@@ -160,7 +158,7 @@ describe('User authorization rules', () => {
 
     it('Passes super-admins without throwing', async () => {
       ['admin@privileged.com', 'admin2@privileged.com'].forEach((email) =>
-        expect(() => validate_user_is_super_user({ email })).not.toThrow(),
+        expect(() => user_is_super_user_rule({ email })).not.toThrow(),
       );
     });
   });

@@ -11,6 +11,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "start": "tsx ./src/index.ts",
+    "seed-dev-data": "tsx src/seed_dev_data.ts",
     "dev": "nodemon --exec tsx ./src/index.ts",
     "dev:debug": "nodemon --exec tsx --inspect-brk ./src/index.ts",
     "dev:docker": "npm run dev",
@@ -40,6 +41,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "graphql": "^16.6.0",
+    "graphql-scalars": "^1.23.0",
     "graphql-type-json": "^0.3.2",
     "graphql-yoga": "^5.6.0",
     "lodash": "^4.17.21",

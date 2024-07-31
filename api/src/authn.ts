@@ -6,11 +6,13 @@ import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
 import {
   get_or_create_user,
   update_user_last_login_times,
-} from 'src/schema/core/user/UserModel.ts';
+  UserByIdLoader,
+} from 'src/schema/core/User/UserModel.ts';
 
-import { validate_user_email_allowed } from './authz.ts';
+import { user_email_allowed_rule } from './authz.ts';
 
 import { get_env } from './env.ts';
+import { AppError } from './error_utils.ts';
 
 const should_send_token_via_email = () => {
   const { DEV_IS_LOCAL_ENV, DEV_FORCE_ENABLE_GCNOTIFY } = get_env();
@@ -88,20 +90,41 @@ export const configure_passport_js = (passport: PassportStatic) => {
         }
       },
       async function verifyUser(_req: Express.Request, user: Express.User) {
-        validate_user_email_allowed(user);
+        user_email_allowed_rule(user);
 
-        return await get_or_create_user(user.email!); // user.email verified as non-null by validate_user_email_allowed
+        const mongoose_doc = await get_or_create_user(user.email!);
+
+        // this result is passed to passport.serializeUser, see not below
+        return {
+          ...user,
+          id: mongoose_doc.id,
+        };
       },
     ),
   );
 
-  // Note: the user arg here is the return value of verifyUser above, and the user passed to the callback is
-  // what's stored in the session store and available via the user property on authenticated express requests
+  // Note: the user arg to serializeUser is the return value of verifyUser above, and the value passed to the callback is
+  // what's stored in the session store database. To keep session information from going stale against the User records in mongo,
+  // only the serialized user id matters, and deseralizeUser will re-fetch the user's info from the DB for each subsequent request
   passport.serializeUser((user: Express.User, callback) =>
-    process.nextTick(() => callback(null, user)),
+    process.nextTick(() =>
+      typeof user?.id === 'undefined'
+        ? callback(new AppError(500, 'Missing user id'), null)
+        : callback(null, user),
+    ),
   );
   passport.deserializeUser((user: Express.User, callback) =>
-    process.nextTick(() => callback(null, user)),
+    UserByIdLoader.load(user.id!)
+      .then((mongoose_doc) =>
+        typeof mongoose_doc === 'undefined'
+          ? callback(new AppError(500, 'User not found'), null)
+          : callback(null, {
+              ...user,
+              email: mongoose_doc.email,
+              mongoose_doc,
+            }),
+      )
+      .catch((error) => callback(error, null)),
   );
 };
 

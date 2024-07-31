@@ -20,16 +20,16 @@ describe('schema', () => {
       const schemaWithRoot = makeExecutableSchema({
         typeDefs: `
         type Query {
-          root: Root!
+          query_root: QueryRoot!
         }
 
-        type Root {
+        type QueryRoot {
           a: String
         }
       `,
         resolvers: {
           Query: {
-            root: () => ({
+            query_root: () => ({
               a: 'A',
             }),
           },
@@ -38,12 +38,12 @@ describe('schema', () => {
 
       const schemaB = makeExecutableSchema({
         typeDefs: `
-        type Root {
+        type QueryRoot {
           b: String
         }
       `,
         resolvers: {
-          Root: {
+          QueryRoot: {
             b: () => 'B',
           },
         },
@@ -56,14 +56,14 @@ describe('schema', () => {
       const response = await graphql({
         schema: mergedSchema,
         source: `query {
-          root {
+          query_root {
             a
             b
           }
         }`,
       });
 
-      expect(response).toEqual({ data: { root: { a: 'A', b: 'B' } } });
+      expect(response).toEqual({ data: { query_root: { a: 'A', b: 'B' } } });
     });
   });
 

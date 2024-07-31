@@ -108,10 +108,11 @@ export const create_app = async ({
     graphqlEndpoint: '/api/graphql',
     graphiql: {
       // GraphiQL must use GET requests or else it will be blocked by doubleCsrfProtection
+      // Use POST requests if CSRF disabled (dev only) so mutations can be tested in GraphiQL
       // Note: yoga does not accept mutations in GET requests (good, we want CSRF protection on mutations,
       // and will require auth too), so GraphiQL can't be used for testing mutations
-      method: 'GET',
-      useGETForQueries: true,
+      method: !DEV_FORCE_DISABLE_CSRF_PROTECTION ? 'GET' : 'POST',
+      useGETForQueries: !DEV_FORCE_DISABLE_CSRF_PROTECTION,
     },
   });
 

@@ -12,5 +12,3 @@ api_db.createUser({
     },
   ],
 });
-
-// TODO populate some dev/test data

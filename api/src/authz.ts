@@ -64,22 +64,30 @@ export const apply_rules_to_user = (
   ...rules: AuthzRule[]
 ) => rules.forEach((rule) => rule(user));
 
-export const validate_user_email_allowed: AuthzRule = (user: Express.User) =>
+export const user_email_allowed_rule: AuthzRule = (user: Express.User) =>
   apply_rules_to_user(user, email_has_allowed_basic_host); // TODO: potentially also require that non-PHAC/HC emails have been invited to at least one dataset?
 
-export const validate_user_can_have_privileges: AuthzRule = (
-  user: Express.User,
-) =>
+export const user_can_have_privileges_rule: AuthzRule = (user: Express.User) =>
   apply_rules_to_user(
     user,
     email_has_allowed_basic_host,
     email_has_allowed_privileged_host,
   );
 
-export const validate_user_is_super_user: AuthzRule = (user: Express.User) =>
+export const user_is_super_user_rule: AuthzRule = (user: Express.User) =>
   apply_rules_to_user(
     user,
     email_has_allowed_basic_host,
     email_has_allowed_privileged_host,
     email_is_super_user,
   );
+
+export const check_authz_rules = (user: Express.User, ...rules: AuthzRule[]) =>
+  _.every(rules, (rule) => {
+    try {
+      rule(user);
+      return true;
+    } catch {
+      return false;
+    }
+  });
