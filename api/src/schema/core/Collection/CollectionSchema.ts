@@ -11,7 +11,7 @@ import {
   check_authz_rules,
 } from 'src/authz.ts';
 
-import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
+import { app_error_to_gql_error } from 'src/error_utils.ts';
 
 import {
   UserByEmailLoader,
