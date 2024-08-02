@@ -9,7 +9,12 @@ import {
   UserByIdLoader,
 } from 'src/schema/core/User/UserModel.ts';
 
-import { user_email_allowed_rule } from './authz.ts';
+import {
+  user_email_allowed_rule,
+  user_email_is_super_user_rule,
+  user_email_can_have_privileges_rule,
+  check_authz_rules,
+} from './authz.ts';
 
 import { get_env } from './env.ts';
 import { AppError } from './error_utils.ts';
@@ -173,7 +178,14 @@ export const get_auth_router = (passport: PassportStatic) => {
   );
 
   auth_router.get('/session', (req, res) =>
-    res.send({ email: req.user?.email }),
+    res.send({
+      email: req.user?.email,
+      is_super_user:
+        req.user && check_authz_rules(req.user, user_email_is_super_user_rule),
+      can_own_collections:
+        req.user &&
+        check_authz_rules(req.user, user_email_can_have_privileges_rule),
+    }),
   );
 
   return auth_router;
