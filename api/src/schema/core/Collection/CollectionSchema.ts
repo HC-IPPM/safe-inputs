@@ -644,7 +644,7 @@ export const CollectionSchema = makeExecutableSchema({
           try {
             const model_ready_collection_def =
               await collection_def_input_to_model_fields(collection_def);
-            debugger;
+
             return create_collection(
               context.req.user.mongoose_doc,
               model_ready_collection_def,
