@@ -69,11 +69,11 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: authz_email_hosts_allowed
-            - name: AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES
+            - name: AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: authz_email_hosts_allowed_privileges
+                  key: authz_email_hosts_allowed_to_own_collections
             - name: AUTHZ_SUPER_ADMINS
               valueFrom:
                 secretKeyRef:

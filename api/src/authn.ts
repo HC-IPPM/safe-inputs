@@ -12,7 +12,7 @@ import {
 import {
   user_email_allowed_rule,
   user_email_is_super_user_rule,
-  user_email_can_have_privileges_rule,
+  user_email_can_own_collections_rule,
   check_authz_rules,
 } from './authz.ts';
 
@@ -184,7 +184,7 @@ export const get_auth_router = (passport: PassportStatic) => {
         req.user && check_authz_rules(req.user, user_email_is_super_user_rule),
       can_own_collections:
         req.user &&
-        check_authz_rules(req.user, user_email_can_have_privileges_rule),
+        check_authz_rules(req.user, user_email_can_own_collections_rule),
     }),
   );
 

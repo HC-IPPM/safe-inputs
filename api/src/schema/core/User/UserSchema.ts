@@ -2,7 +2,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import {
   user_email_is_super_user_rule,
-  user_email_can_have_privileges_rule,
+  user_email_can_own_collections_rule,
   check_authz_rules,
 } from 'src/authz.ts';
 import {
@@ -64,7 +64,7 @@ export const UserSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => check_authz_rules(parent, user_email_can_have_privileges_rule),
+      ) => check_authz_rules(parent, user_email_can_own_collections_rule),
     },
   },
 });

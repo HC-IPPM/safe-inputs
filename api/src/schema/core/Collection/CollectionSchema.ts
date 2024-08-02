@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import {
   user_email_is_super_user_rule,
-  user_email_can_have_privileges_rule,
+  user_email_can_own_collections_rule,
   user_email_allowed_rule,
   check_authz_rules,
 } from 'src/authz.ts';
@@ -68,7 +68,7 @@ type CollectionLevelAuthzRule = (
 
 const user_can_be_collection_owner: CollectionLevelAuthzRule = (user) =>
   check_authz_rules(user, user_email_is_super_user_rule) ||
-  check_authz_rules(user, user_email_can_have_privileges_rule);
+  check_authz_rules(user, user_email_can_own_collections_rule);
 
 const user_can_be_collection_uploader: CollectionLevelAuthzRule = (user) =>
   check_authz_rules(user, user_email_allowed_rule);
