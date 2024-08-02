@@ -1,8 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 import {
-  user_is_super_user_rule,
-  user_can_have_privileges_rule,
+  user_email_is_super_user_rule,
+  user_email_can_have_privileges_rule,
   check_authz_rules,
 } from 'src/authz.ts';
 import {
@@ -40,19 +40,15 @@ export const UserSchema = makeExecutableSchema({
           _context: unknown,
           _info: unknown,
         ) => UserByEmailLoader.load(email),
-        user_is_super_user_rule,
+        user_email_is_super_user_rule,
       ),
       users: resolver_with_authz(
         () => UserModel.find({}),
-        user_is_super_user_rule,
+        user_email_is_super_user_rule,
       ),
       session: resolver_with_authz(
-        (
-          _parent: unknown,
-          _args: unknown,
-          { req }: { req?: { user?: Express.User } },
-          _info: unknown,
-        ) => req?.user?.mongoose_doc,
+        (_parent: unknown, _args: unknown, context, _info: unknown) =>
+          context.req.user.mongoose_doc,
       ),
     },
     User: {
@@ -62,13 +58,13 @@ export const UserSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => check_authz_rules(parent, user_is_super_user_rule),
+      ) => check_authz_rules(parent, user_email_is_super_user_rule),
       can_own_collections: (
         parent: UserDocument,
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => check_authz_rules(parent, user_can_have_privileges_rule),
+      ) => check_authz_rules(parent, user_email_can_have_privileges_rule),
     },
   },
 });

@@ -18,6 +18,12 @@ declare global {
       email?: string;
       mongoose_doc?: UserDocument;
     }
+    interface AuthenticatedUser extends User {
+      // User instance post-passport deserialization
+      id: string;
+      email: string;
+      mongoose_doc: UserDocument;
+    }
   }
 }
 

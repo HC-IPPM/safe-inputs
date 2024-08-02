@@ -128,6 +128,11 @@ export const configure_passport_js = (passport: PassportStatic) => {
   );
 };
 
+export const user_is_authenticated = (
+  user?: Express.User | Express.AuthenticatedUser,
+): user is Express.AuthenticatedUser =>
+  typeof user?.mongoose_doc?._id !== 'undefined';
+
 export const get_auth_router = (passport: PassportStatic) => {
   const auth_router = express.Router();
 
@@ -143,7 +148,7 @@ export const get_auth_router = (passport: PassportStatic) => {
         .send(
           should_send_token_via_email()
             ? {}
-            : { verification_url: req?.locals?.verification_url },
+            : { verification_url: req.locals?.verification_url },
         ),
   );
 
@@ -168,7 +173,7 @@ export const get_auth_router = (passport: PassportStatic) => {
   );
 
   auth_router.get('/session', (req, res) =>
-    res.send({ email: req?.user?.email }),
+    res.send({ email: req.user?.email }),
   );
 
   return auth_router;

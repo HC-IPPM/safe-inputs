@@ -1,7 +1,7 @@
 import {
   user_email_allowed_rule,
-  user_can_have_privileges_rule,
-  user_is_super_user_rule,
+  user_email_can_have_privileges_rule,
+  user_email_is_super_user_rule,
 } from './authz.ts';
 
 const throws_error_with_status_code = (
@@ -106,7 +106,7 @@ describe('User authorization rules', () => {
     });
   });
 
-  describe('user_can_have_privileges_rule rule...', () => {
+  describe('user_email_can_have_privileges_rule rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -120,7 +120,7 @@ describe('User authorization rules', () => {
       expect(
         throws_error_with_status_code(
           () =>
-            user_can_have_privileges_rule({
+            user_email_can_have_privileges_rule({
               email: 'admin@unprivileged.net',
             }),
           403,
@@ -130,12 +130,14 @@ describe('User authorization rules', () => {
 
     it('Passes privileged users without throwing', async () => {
       ['johndoe@privileged.com', 'admin@privileged.com'].forEach((email) =>
-        expect(() => user_can_have_privileges_rule({ email })).not.toThrow(),
+        expect(() =>
+          user_email_can_have_privileges_rule({ email }),
+        ).not.toThrow(),
       );
     });
   });
 
-  describe('user_is_super_user_rule rule...', () => {
+  describe('user_email_is_super_user_rule rule...', () => {
     beforeEach(() => {
       process.env = {
         ...ORIGINAL_ENV,
@@ -149,7 +151,7 @@ describe('User authorization rules', () => {
       ['not-admin@privileged.com', 'admin@unprivileged.net'].forEach((email) =>
         expect(
           throws_error_with_status_code(
-            () => user_is_super_user_rule({ email }),
+            () => user_email_is_super_user_rule({ email }),
             403,
           ),
         ).toBe(true),
@@ -158,7 +160,7 @@ describe('User authorization rules', () => {
 
     it('Passes super-admins without throwing', async () => {
       ['admin@privileged.com', 'admin2@privileged.com'].forEach((email) =>
-        expect(() => user_is_super_user_rule({ email })).not.toThrow(),
+        expect(() => user_email_is_super_user_rule({ email })).not.toThrow(),
       );
     });
   });
