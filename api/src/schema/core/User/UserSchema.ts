@@ -27,7 +27,7 @@ export const UserSchema = makeExecutableSchema({
     created_at: Float!
     second_last_login_at: Float
     last_login_at: Float
-    is_admin: Boolean
+    is_super_user: Boolean
     can_own_collections: Boolean
   }
 `,
@@ -53,7 +53,7 @@ export const UserSchema = makeExecutableSchema({
     },
     User: {
       id: resolve_document_id,
-      is_admin: (
+      is_super_user: (
         parent: UserDocument,
         _args: unknown,
         _context: unknown,
