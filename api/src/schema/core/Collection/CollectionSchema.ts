@@ -5,13 +5,13 @@ import { JSONResolver } from 'graphql-scalars';
 import _ from 'lodash';
 
 import {
-  user_is_super_user_rule,
-  user_can_have_privileges_rule,
+  user_email_is_super_user_rule,
+  user_email_can_own_collections_rule,
   user_email_allowed_rule,
   check_authz_rules,
 } from 'src/authz.ts';
 
-import { AppError, app_error_to_gql_error } from 'src/error_utils.ts';
+import { app_error_to_gql_error } from 'src/error_utils.ts';
 
 import {
   UserByEmailLoader,
@@ -67,8 +67,8 @@ type CollectionLevelAuthzRule = (
 ) => boolean;
 
 const user_can_be_collection_owner: CollectionLevelAuthzRule = (user) =>
-  check_authz_rules(user, user_is_super_user_rule) ||
-  check_authz_rules(user, user_can_have_privileges_rule);
+  check_authz_rules(user, user_email_is_super_user_rule) ||
+  check_authz_rules(user, user_email_can_own_collections_rule);
 
 const user_can_be_collection_uploader: CollectionLevelAuthzRule = (user) =>
   check_authz_rules(user, user_email_allowed_rule);
@@ -79,7 +79,7 @@ const user_is_owner_of_collection: CollectionLevelAuthzRule = (
 ) =>
   typeof collection !== 'undefined' &&
   user_can_be_collection_owner(user) &&
-  (check_authz_rules(user, user_is_super_user_rule) ||
+  (check_authz_rules(user, user_email_is_super_user_rule) ||
     _.chain(collection.collection_def.owners)
       .map(_.toString)
       .includes(user.mongoose_doc!._id.toString())
@@ -145,44 +145,27 @@ const user_can_edit_records: CollectionLevelAuthzRule = (
   collection.is_current_version &&
   user_can_view_records(user, collection, records);
 
-type ValidateCollectionLevelAuthorizationAsserts = (
+const validate_collection_level_authorization = (
   operation_name: string,
-  user: Express.User | undefined,
+  user: Express.AuthenticatedUser,
   context: { collection?: CollectionDocument; records?: RecordInterface[] },
   ...mutation_rules: CollectionLevelAuthzRule[]
-) => asserts user is Express.User & {
-  mongoose_doc: UserDocument;
-  email: string;
-};
-const validate_collection_level_authorization: ValidateCollectionLevelAuthorizationAsserts =
-  (operation_name, user, context, ...mutation_rules) => {
-    if (typeof user === 'undefined') {
-      throw new GraphQLError(`${operation_name} requires authentication.`, {
+) => {
+  if (
+    !_.every(mutation_rules, (rule) =>
+      rule(user, context.collection, context.records),
+    )
+  ) {
+    throw new GraphQLError(
+      `${operation_name} has unmet authorization requirements.`,
+      {
         extensions: {
-          code: 401,
+          code: 403,
         },
-      });
-    } else if (
-      typeof user.mongoose_doc === 'undefined' ||
-      typeof user.email === 'undefined'
-    ) {
-      // Should never happen, more than just a GraphQLError if it does occur
-      throw new AppError(500, `User context is incomplete.`);
-    } else if (
-      !_.every(mutation_rules, (rule) =>
-        rule(user, context.collection, context.records),
-      )
-    ) {
-      throw new GraphQLError(
-        `${operation_name} has unmet authorization requirements.`,
-        {
-          extensions: {
-            code: 403,
-          },
-        },
-      );
-    }
-  };
+      },
+    );
+  }
+};
 
 type CollectionDefInput = {
   name_en: string;
@@ -395,7 +378,7 @@ export const CollectionSchema = makeExecutableSchema({
             ? []
             : CurrentCollectionsByOwnersLoader.load(user._id.toString());
         },
-        user_is_super_user_rule,
+        user_email_is_super_user_rule,
       ),
       user_uploadable_collections: resolver_with_authz(
         async (
@@ -409,29 +392,31 @@ export const CollectionSchema = makeExecutableSchema({
             ? []
             : CurrentCollectionsByUploadersLoader.load(user._id.toString());
         },
-        user_is_super_user_rule,
+        user_email_is_super_user_rule,
       ),
       all_collections: resolver_with_authz(
         () => CollectionModel.find({ is_current_version: true }),
-        user_is_super_user_rule,
+        user_email_is_super_user_rule,
       ),
-      collection: async (
-        _parent: unknown,
-        { collection_id }: { collection_id: string },
-        { req }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
+      collection: resolver_with_authz(
+        async (
+          _parent: unknown,
+          { collection_id }: { collection_id: string },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
 
-        validate_collection_level_authorization(
-          `Query \`${fieldName}\``,
-          req.user,
-          { collection },
-          user_can_view_collection,
-        );
+          validate_collection_level_authorization(
+            `Query \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_view_collection,
+          );
 
-        return collection;
-      },
+          return collection;
+        },
+      ),
     },
     User: {
       owned_collections: (
@@ -440,7 +425,7 @@ export const CollectionSchema = makeExecutableSchema({
         _context: unknown,
         _info: unknown,
       ) => {
-        if (check_authz_rules(parent, user_is_super_user_rule)) {
+        if (check_authz_rules(parent, user_email_is_super_user_rule)) {
           return CollectionModel.find({ is_current_version: true });
         } else {
           return CurrentCollectionsByOwnersLoader.load(parent._id.toString());
@@ -470,7 +455,7 @@ export const CollectionSchema = makeExecutableSchema({
       name: (
         parent: CollectionDocument,
         _args: unknown,
-        context: { lang: LangsUnion; req?: { user?: Express.User } },
+        context: { lang: LangsUnion },
         _info: unknown,
       ) =>
         resolve_lang_suffixed_scalar('name')(
@@ -482,7 +467,7 @@ export const CollectionSchema = makeExecutableSchema({
       description: (
         parent: CollectionDocument,
         _args: unknown,
-        context: { lang: LangsUnion; req?: { user?: Express.User } },
+        context: { lang: LangsUnion },
         _info: unknown,
       ) =>
         resolve_lang_suffixed_scalar('description')(
@@ -532,93 +517,99 @@ export const CollectionSchema = makeExecutableSchema({
                 object_id.toString(),
               ),
             ),
-      record: async (
-        parent: CollectionDocument,
-        { record_id }: { record_id: string },
-        { req }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const record = await RecordByIdLoader.load(record_id);
+      record: resolver_with_authz(
+        async (
+          parent: CollectionDocument,
+          { record_id }: { record_id: string },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const record = await RecordByIdLoader.load(record_id);
 
-        validate_collection_level_authorization(
-          `Query \`${fieldName}\``,
-          req.user,
-          {
-            collection: parent,
-            records: typeof record !== 'undefined' ? [record] : [],
-          },
-          user_can_view_records,
-        );
-
-        return record;
-      },
-      records_uploaded_by: async (
-        parent: CollectionDocument,
-        { uploader_email }: { uploader_email?: string },
-        { req }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        validate_collection_level_authorization(
-          `Query \`${fieldName}\``,
-          req.user,
-          {
-            collection: parent,
-          },
-          user_can_view_collection,
-        );
-
-        const email_to_query =
-          typeof uploader_email === 'undefined'
-            ? req.user?.email
-            : uploader_email;
-
-        const user = await UserByEmailLoader.load(email_to_query);
-
-        if (typeof user === 'undefined') {
-          return [];
-        }
-
-        const RecordsetRecordsByUserLoader =
-          make_records_created_by_user_loader_with_recordset_constraint(
-            parent.recordset_key,
+          validate_collection_level_authorization(
+            `Query \`${fieldName}\``,
+            context.req.user,
+            {
+              collection: parent,
+              records: typeof record !== 'undefined' ? [record] : [],
+            },
+            user_can_view_records,
           );
 
-        const records = await RecordsetRecordsByUserLoader.load(
-          user._id.toString(),
-        );
+          return record;
+        },
+      ),
+      records_uploaded_by: resolver_with_authz(
+        async (
+          parent: CollectionDocument,
+          { uploader_email }: { uploader_email?: string },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          validate_collection_level_authorization(
+            `Query \`${fieldName}\``,
+            context.req.user,
+            {
+              collection: parent,
+            },
+            user_can_view_collection,
+          );
 
-        validate_collection_level_authorization(
-          `Query \`${fieldName}\``,
-          req.user,
-          {
-            collection: parent,
-            records,
-          },
-          user_can_view_records,
-        );
+          const email_to_query =
+            typeof uploader_email === 'undefined'
+              ? context.req.user.email
+              : uploader_email;
 
-        return typeof records === 'undefined' ? [] : records;
-      },
-      all_records: async (
-        parent: CollectionDocument,
-        _args: unknown,
-        { req }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        validate_collection_level_authorization(
-          `Query \`${fieldName}\``,
-          req.user,
-          {
-            collection: parent,
-          },
-          user_is_owner_of_collection,
-        );
+          const user = await UserByEmailLoader.load(email_to_query);
 
-        const records = await RecordsByRecordsetKeyLoader.load(
-          parent.recordset_key,
-        );
-        return typeof records === 'undefined' ? [] : records;
-      },
+          if (typeof user === 'undefined') {
+            return [];
+          }
+
+          const RecordsetRecordsByUserLoader =
+            make_records_created_by_user_loader_with_recordset_constraint(
+              parent.recordset_key,
+            );
+
+          const records = await RecordsetRecordsByUserLoader.load(
+            user._id.toString(),
+          );
+
+          validate_collection_level_authorization(
+            `Query \`${fieldName}\``,
+            context.req.user,
+            {
+              collection: parent,
+              records,
+            },
+            user_can_view_records,
+          );
+
+          return typeof records === 'undefined' ? [] : records;
+        },
+      ),
+      all_records: resolver_with_authz(
+        async (
+          parent: CollectionDocument,
+          _args: unknown,
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          validate_collection_level_authorization(
+            `Query \`${fieldName}\``,
+            context.req.user,
+            {
+              collection: parent,
+            },
+            user_is_owner_of_collection,
+          );
+
+          const records = await RecordsByRecordsetKeyLoader.load(
+            parent.recordset_key,
+          );
+          return typeof records === 'undefined' ? [] : records;
+        },
+      ),
     },
     ColumnDef: {
       id: resolve_document_id,
@@ -636,252 +627,279 @@ export const CollectionSchema = makeExecutableSchema({
     },
     JSON: JSONResolver,
     Mutation: {
-      create_collection_init: async (
-        _parent: unknown,
-        { collection_def }: { collection_def: CollectionDefInput },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          {},
-          user_can_be_collection_owner,
-        );
-
-        try {
-          const model_ready_collection_def =
-            await collection_def_input_to_model_fields(collection_def);
-
-          return create_collection(
-            user.mongoose_doc!,
-            model_ready_collection_def,
-            [],
+      create_collection_init: resolver_with_authz(
+        async (
+          _parent: unknown,
+          { collection_def }: { collection_def: CollectionDefInput },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            {},
+            user_can_be_collection_owner,
           );
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
-      create_collection_from_base: async (
-        _parent: unknown,
-        { collection_id }: { collection_id: string },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const base_collection = await CollectionByIdLoader.load(collection_id);
+          try {
+            const model_ready_collection_def =
+              await collection_def_input_to_model_fields(collection_def);
 
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection: base_collection },
-          user_can_be_collection_owner,
-          user_can_edit_collection,
-        );
+            return create_collection(
+              context.req.user.mongoose_doc,
+              model_ready_collection_def,
+              [],
+            );
 
-        try {
-          return create_collection(
-            user.mongoose_doc,
-            base_collection!.collection_def,
-            base_collection!.column_defs,
-          );
-
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
-
-      update_collection: async (
-        _parent: unknown,
-        {
-          collection_id,
-          collection_updates,
-        }: {
-          collection_id: string;
-          collection_updates: CollectionDefInput;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
         },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
+      ),
+      create_collection_from_base: resolver_with_authz(
+        async (
+          _parent: unknown,
+          { collection_id }: { collection_id: string },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const base_collection =
+            await CollectionByIdLoader.load(collection_id);
 
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection },
-          user_can_edit_collection,
-        );
-
-        try {
-          const model_ready_collection_def =
-            await collection_def_input_to_model_fields(collection_updates);
-
-          return update_collection_def_fields(
-            collection!,
-            user.mongoose_doc,
-            model_ready_collection_def,
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection: base_collection },
+            user_can_be_collection_owner,
+            user_can_edit_collection,
           );
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
+          try {
+            return create_collection(
+              context.req.user.mongoose_doc,
+              base_collection!.collection_def,
+              base_collection!.column_defs,
+            );
 
-      validate_new_column_defs: async (
-        _parent: unknown,
-        {
-          collection_id,
-          column_defs,
-        }: {
-          collection_id: string;
-          column_defs: ColumnDefInput[];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
         },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
+      ),
 
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection },
-          user_can_edit_collection,
-        );
+      update_collection: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
+            collection_updates,
+          }: {
+            collection_id: string;
+            collection_updates: CollectionDefInput;
+          },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
 
-        try {
-          return are_new_column_defs_compatible_with_current_records(
-            collection!,
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_edit_collection,
+          );
+
+          try {
+            const model_ready_collection_def =
+              await collection_def_input_to_model_fields(collection_updates);
+
+            return update_collection_def_fields(
+              collection!,
+              context.req.user.mongoose_doc,
+              model_ready_collection_def,
+            );
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
+        },
+      ),
+
+      validate_new_column_defs: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
             column_defs,
+          }: {
+            collection_id: string;
+            column_defs: ColumnDefInput[];
+          },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
+
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_edit_collection,
           );
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
-      update_column_defs: async (
-        _parent: unknown,
-        {
-          collection_id,
-          column_defs,
-        }: {
-          collection_id: string;
-          column_defs: ColumnDefInput[];
+          try {
+            return are_new_column_defs_compatible_with_current_records(
+              collection!,
+              column_defs,
+            );
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
         },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
-
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection },
-          user_can_edit_collection,
-        );
-        try {
-          return update_collection_column_defs(
-            collection!,
-            user.mongoose_doc,
+      ),
+      update_column_defs: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
             column_defs,
+          }: {
+            collection_id: string;
+            column_defs: ColumnDefInput[];
+          },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
+
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_edit_collection,
           );
+          try {
+            return update_collection_column_defs(
+              collection!,
+              context.req.user.mongoose_doc,
+              column_defs,
+            );
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
+        },
+      ),
 
-      validate_new_records: async (
-        _parent: unknown,
-        { collection_id, records }: { collection_id: string; records: JSON[] },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
-
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection },
-          user_can_upload_to_collection,
-        );
-
-        try {
-          return validate_record_data_against_column_defs(
-            collection!.column_defs,
+      validate_new_records: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
             records,
-            true,
+          }: { collection_id: string; records: JSON[] },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
+
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_upload_to_collection,
           );
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
-      insert_records: async (
-        _parent: unknown,
-        { collection_id, records }: { collection_id: string; records: JSON[] },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
+          try {
+            return validate_record_data_against_column_defs(
+              collection!.column_defs,
+              records,
+              true,
+            );
 
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection },
-          user_can_upload_to_collection,
-        );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
+        },
+      ),
+      insert_records: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
+            records,
+          }: { collection_id: string; records: JSON[] },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
 
-        try {
-          return insert_records(collection!, records, user.mongoose_doc);
-
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
-      delete_records: async (
-        _parent: unknown,
-        {
-          collection_id,
-          record_ids,
-        }: { collection_id: string; record_ids: string[] },
-        { req: { user } }: { req: { user?: Express.User } },
-        { fieldName }: { fieldName: string },
-      ) => {
-        const collection = await CollectionByIdLoader.load(collection_id);
-        const requested_records = await RecordByIdLoader.loadMany(record_ids);
-
-        const valid_requested_records = requested_records.filter(
-          (record, index): record is RecordDocument =>
-            typeof record !== 'undefined' &&
-            '_id' in record &&
-            record._id.toString() === record_ids[index],
-        );
-
-        validate_collection_level_authorization(
-          `Action \`${fieldName}\``,
-          user,
-          { collection, records: valid_requested_records },
-          user_can_edit_records,
-        );
-
-        try {
-          const delete_result = await delete_records(
-            valid_requested_records.map((record) => record._id),
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection },
+            user_can_upload_to_collection,
           );
-          return delete_result.deletedCount;
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          throw app_error_to_gql_error(error);
-        }
-      },
+          try {
+            return insert_records(
+              collection!,
+              records,
+              context.req.user.mongoose_doc,
+            );
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
+        },
+      ),
+      delete_records: resolver_with_authz(
+        async (
+          _parent: unknown,
+          {
+            collection_id,
+            record_ids,
+          }: { collection_id: string; record_ids: string[] },
+          context,
+          { fieldName }: { fieldName: string },
+        ) => {
+          const collection = await CollectionByIdLoader.load(collection_id);
+          const requested_records = await RecordByIdLoader.loadMany(record_ids);
+
+          const valid_requested_records = requested_records.filter(
+            (record, index): record is RecordDocument =>
+              typeof record !== 'undefined' &&
+              '_id' in record &&
+              record._id.toString() === record_ids[index],
+          );
+
+          validate_collection_level_authorization(
+            `Action \`${fieldName}\``,
+            context.req.user,
+            { collection, records: valid_requested_records },
+            user_can_edit_records,
+          );
+
+          try {
+            const delete_result = await delete_records(
+              valid_requested_records.map((record) => record._id),
+            );
+            return delete_result.deletedCount;
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (error: any) {
+            throw app_error_to_gql_error(error);
+          }
+        },
+      ),
     },
   },
 });

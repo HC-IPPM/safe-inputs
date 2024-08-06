@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
-export type Session = { email?: string };
+export type Session = {
+  email: string;
+  is_super_user: boolean;
+  can_own_collections: boolean;
+};
 
 const { IS_LOCAL_DEV } = ENV;
 

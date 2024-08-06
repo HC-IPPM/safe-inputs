@@ -34,33 +34,33 @@ const emailHostListOrWildcard = makeValidator((val) =>
 
 const additional_authz_validation = ({
   AUTHZ_EMAIL_HOSTS_ALLOWED,
-  AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES,
+  AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS,
   AUTHZ_SUPER_ADMINS,
 }: {
   AUTHZ_EMAIL_HOSTS_ALLOWED: string[] | '*';
-  AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES: string[];
+  AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS: string[];
   AUTHZ_SUPER_ADMINS: string[];
 }) => {
   if (
     AUTHZ_EMAIL_HOSTS_ALLOWED !== '*' &&
-    !AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.every((privileged_host) =>
+    !AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS.every((privileged_host) =>
       AUTHZ_EMAIL_HOSTS_ALLOWED.includes(privileged_host),
     )
   ) {
     throw new Error(
-      'AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES must be a subset of AUTHZ_EMAIL_HOSTS_ALLOWED',
+      'AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS must be a subset of AUTHZ_EMAIL_HOSTS_ALLOWED',
     );
   }
 
   if (
     !AUTHZ_SUPER_ADMINS.every((super_admins) =>
-      AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES.some((privileged_host) =>
+      AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS.some((privileged_host) =>
         super_admins.endsWith(privileged_host),
       ),
     )
   ) {
     throw new Error(
-      'All members of AUTHZ_SUPER_ADMINS must belong to hosts found in AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES',
+      'All members of AUTHZ_SUPER_ADMINS must belong to hosts found in AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS',
     );
   }
 };
@@ -94,7 +94,7 @@ export const get_env = () => {
     AUTHN_GC_NOTIFY_TEMPLATE_ID: str(),
 
     AUTHZ_EMAIL_HOSTS_ALLOWED: emailHostListOrWildcard(),
-    AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES: emailHostList(),
+    AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS: emailHostList(),
     AUTHZ_SUPER_ADMINS: emailList(),
 
     DEV_IS_LOCAL_ENV: boolFalseIfProd({ default: false }),

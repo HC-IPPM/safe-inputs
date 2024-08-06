@@ -9,7 +9,12 @@ import {
   UserByIdLoader,
 } from 'src/schema/core/User/UserModel.ts';
 
-import { user_email_allowed_rule } from './authz.ts';
+import {
+  user_email_allowed_rule,
+  user_email_is_super_user_rule,
+  user_email_can_own_collections_rule,
+  check_authz_rules,
+} from './authz.ts';
 
 import { get_env } from './env.ts';
 import { AppError } from './error_utils.ts';
@@ -128,6 +133,11 @@ export const configure_passport_js = (passport: PassportStatic) => {
   );
 };
 
+export const user_is_authenticated = (
+  user?: Express.User | Express.AuthenticatedUser,
+): user is Express.AuthenticatedUser =>
+  typeof user?.mongoose_doc?._id !== 'undefined';
+
 export const get_auth_router = (passport: PassportStatic) => {
   const auth_router = express.Router();
 
@@ -143,7 +153,7 @@ export const get_auth_router = (passport: PassportStatic) => {
         .send(
           should_send_token_via_email()
             ? {}
-            : { verification_url: req?.locals?.verification_url },
+            : { verification_url: req.locals?.verification_url },
         ),
   );
 
@@ -168,7 +178,14 @@ export const get_auth_router = (passport: PassportStatic) => {
   );
 
   auth_router.get('/session', (req, res) =>
-    res.send({ email: req?.user?.email }),
+    res.send({
+      email: req.user?.email,
+      is_super_user:
+        req.user && check_authz_rules(req.user, user_email_is_super_user_rule),
+      can_own_collections:
+        req.user &&
+        check_authz_rules(req.user, user_email_can_own_collections_rule),
+    }),
   );
 
   return auth_router;

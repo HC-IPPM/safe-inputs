@@ -16,7 +16,7 @@ dotenv.config({ path: '.env' }); // relative to the call point, e.g. the service
 const {
   DEV_IS_LOCAL_ENV,
   AUTHZ_EMAIL_HOSTS_ALLOWED,
-  AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES,
+  AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS,
   AUTHZ_SUPER_ADMINS,
 } = get_env();
 
@@ -35,7 +35,8 @@ const test_cases = ['group1', 'group2', 'both', 'empty'];
 
 const [owner_1, owner_2, owner_both] = await get_or_create_users(
   test_cases.map(
-    (code) => `owner-${code}@${AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES[0]}`,
+    (code) =>
+      `owner-${code}@${AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS[0]}`,
   ),
 );
 
