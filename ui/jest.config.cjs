@@ -5,13 +5,27 @@ const { compilerOptions } = require('./tsconfig.json');
 module.exports = {
   // ui specific
   testEnvironment: 'jsdom',
+  transform: {
+    '\\.(ts|tsx)$': 'babel-jest',
+  },
+  collectCoverageFrom: ['src/**/*.ts', 'src/**/*.tsx'],
+  coveragePathIgnorePatterns: [
+    '.test.ts',
+    '.test.tsx',
+    'i18n/locales',
+    'test_utils',
+  ],
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': '<rootDir>/src/test_utils/mocks/styleMock.js',
+    '\\.svg$': '<rootDir>/src/test_utils/mocks/svgMock.js',
+    // next line is also common between /ui and /api
+    ...pathsToModuleNameMapper(compilerOptions.paths, {
+      prefix: '<rootDir>',
+    }),
+  },
 
-  // common
-  preset: 'ts-jest',
+  // common with /api jest config
   roots: ['<rootDir>'],
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>',
-  }),
   verbose: true,
 };

@@ -43,14 +43,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              '@babel/preset-typescript',
-              // To avoid importing React
-              ['@babel/preset-react', { runtime: 'automatic' }],
-            ],
-            plugins: ['macros'],
-          },
         },
       },
     ],
