@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: capacitor
+  namespace: capacitor
+spec:
+  hosts:
+    - 'capacitor.safeinputs.alpha.phac-aspc.gc.ca'
+  gateways:
+    - istio-ingress/mesh-gateway
+  http:
+    - name: gateway-to-capacitor
+      match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: capacitor.capacitor.svc.cluster.local
+---
+# allow ingress to capacitor
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-to-capacitor
+  namespace: capacitor
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: capacitor
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+            principals:
+              - 'cluster.local/ns/istio-ingress/sa/istio-ingressgateway'
+---
+# https://github.com/gimlet-io/capacitor/issues/38
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: capacitor-ingress
+  namespace: flux-system
+spec:
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      - namespaceSelector: {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: capacitor
