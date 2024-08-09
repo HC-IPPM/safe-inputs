@@ -31,7 +31,7 @@ function AppErrorFallback({ error }: ErrorFallbackProps) {
         <div>{translations.fr.errorAdvice}</div>
       </div>
       <div className="error-message">{error.message}</div>
-      <a href="/" className="home-button">
+      <a href="/" className="error-home-button">
         {`${translations.en.goToHome} / ${translations.fr.goToHome}`}
       </a>
     </div>
