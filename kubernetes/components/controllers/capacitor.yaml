@@ -41,6 +41,7 @@ spec:
     - target:
         kind: ClusterRole
         name: capacitor
+      # might cause problems if the upstream project reorders the elements.
       patch: |-
         - op: remove
           path: /rules/1/verbs/3
