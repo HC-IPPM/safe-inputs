@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './index.css';
 
 interface ErrorFallbackProps {
@@ -23,30 +22,17 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
   },
 };
 
-const translate = (key: TranslationKey, language: Language): string => {
-  return translations[language][key] || key;
-};
-
 function AppErrorFallback({ error }: ErrorFallbackProps) {
-  const [language, setLanguage] = useState<Language>('en');
-
-  const buttonText = language === 'en' ? 'Fr' : 'En';
-
   return (
     <div className="error-container">
-      <button
-        className="language-button"
-        onClick={() => setLanguage(buttonText.toLowerCase() as Language)}
-      >
-        {buttonText}
-      </button>
-      <div className="error-title">{translate('errorTitle', language)}</div>
-      <div className="error-advice">{translate('errorAdvice', language)}</div>
+      <h2>{`${translations.en.errorTitle} / ${translations.fr.errorTitle}`}</h2>
+      <div className="error-advice">
+        <div>{translations.en.errorAdvice}</div>
+        <div>{translations.fr.errorAdvice}</div>
+      </div>
       <div className="error-message">{error.message}</div>
-      <a href="/">
-        <button className="home-button">
-          {translate('goToHome', language)}
-        </button>
+      <a href="/" className="home-button">
+        {`${translations.en.goToHome} / ${translations.fr.goToHome}`}
       </a>
     </div>
   );
