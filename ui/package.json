@@ -37,7 +37,7 @@
     "@babel/core": "7.25.2",
     "@babel/preset-react": "7.24.7",
     "@babel/preset-typescript": "7.24.7",
-    "@lingui/cli": "4.11.2",
+    "@lingui/cli": "4.11.3",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
     "@rspack/cli": "0.7.5",
     "@rspack/core": "0.7.5",
