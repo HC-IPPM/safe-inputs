@@ -6,12 +6,12 @@ import AppErrorFallback from './AppErrorFallback.tsx';
 describe('AppErrorFallback component', () => {
   const mockError = new Error('Test error message');
 
-  it('renders an h2 with non-empty text content', () => {
+  it('renders AppErrorFallback component', () => {
     const { container } = render(
       <AppErrorFallback error={mockError} resetErrorBoundary={() => {}} />,
     );
 
-    const heading = screen.getByRole('heading', { level: 2 });
+    const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveTextContent(/.+/);
 

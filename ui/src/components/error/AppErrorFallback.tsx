@@ -25,7 +25,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
 function AppErrorFallback({ error }: ErrorFallbackProps) {
   return (
     <div className="error-container">
-      <h2>{`${translations.en.errorTitle} / ${translations.fr.errorTitle}`}</h2>
+      <h1>{`${translations.en.errorTitle} / ${translations.fr.errorTitle}`}</h1>
       <div className="error-advice">
         <div>{translations.en.errorAdvice}</div>
         <div>{translations.fr.errorAdvice}</div>

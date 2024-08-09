@@ -69,7 +69,7 @@ describe('NavWrapper', () => {
 
     console_error_spy.mockRestore();
 
-    const heading = screen.getByRole('heading', { level: 2 });
+    const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toBeInTheDocument();
     expect(heading).toHaveTextContent(/.+/);
 
