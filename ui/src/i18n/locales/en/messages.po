@@ -137,9 +137,9 @@ msgstr "<0>You agree to use our website, products and services only for lawful p
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 
-#: src/components/ExcelUploadForm.tsx:59
-msgid "Choose a spreadsheet to upload. Sample file can be found <0><1>here</1></0>"
-msgstr "Choose a spreadsheet to upload. Sample file can be found <0><1>here</1></0>"
+#: src/components/ExcelUploadForm.tsx:61
+msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
+msgstr "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 
 #: src/components/TableOutput.tsx:160
 msgid "Data Preview"
@@ -158,11 +158,7 @@ msgstr "File Properties"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 
-#: src/pages/error/NavWrapperErrorFallback.tsx:22
-msgid "Go to Home"
-msgstr "Go to Home"
-
-#: src/components/layout/Header.tsx:53
+#: src/components/layout/Header.tsx:54
 msgid "Home"
 msgstr "Home"
 
@@ -173,10 +169,6 @@ msgstr "Notice of Agreement"
 #: src/pages/TermsAndConditions.tsx:59
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 msgstr "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
-
-#: src/pages/error/NavWrapperErrorFallback.tsx:17
-msgid "Please contact the developers or go to the home page."
-msgstr "Please contact the developers or go to the home page."
 
 #: src/pages/TermsAndConditions.tsx:42
 msgid "Privacy"
@@ -215,10 +207,6 @@ msgstr "Sign Out"
 msgid "Signing in"
 msgstr "Signing in"
 
-#: src/pages/error/NavWrapperErrorFallback.tsx:14
-msgid "Something went wrong"
-msgstr "Something went wrong"
-
 #: src/components/auth/AuthNavButton.tsx:31
 #: src/components/auth/AuthNavButton.tsx:51
 msgid "Syncing session"
@@ -228,6 +216,6 @@ msgstr "Syncing session"
 msgid "Terms and Conditions"
 msgstr "Terms and Conditions"
 
-#: src/components/ExcelUploadForm.tsx:90
+#: src/components/ExcelUploadForm.tsx:95
 msgid "Upload"
 msgstr "Upload"

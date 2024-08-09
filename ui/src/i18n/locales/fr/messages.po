@@ -137,9 +137,9 @@ msgstr "<0>Vous acceptez d'utiliser notre site Web, nos produits et nos services
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos services, vous reconnaissez avoir lu, compris et accepté d'être lié par les présentes conditions générales, et de vous conformer à toutes les lois et réglementations applicables. Nous vous recommandons de consulter périodiquement les Conditions générales afin de comprendre les mises à jour ou les modifications qui pourraient vous concerner. Si vous n'acceptez pas les présentes conditions générales, veuillez vous abstenir d'utiliser notre site Web, nos produits et nos services."
 
-#: src/components/ExcelUploadForm.tsx:59
-msgid "Choose a spreadsheet to upload. Sample file can be found <0><1>here</1></0>"
-msgstr "Choisissez une feuille de calcul à télécharger. Un fichier d'exemple peut être trouvé <0><1>ici</1></0>."
+#: src/components/ExcelUploadForm.tsx:61
+msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
+msgstr "Choisissez une feuille de calcul à télécharger. Un fichier d'exemple peut être trouvé <0>ici</0>."
 
 #: src/components/TableOutput.tsx:160
 msgid "Data Preview"
@@ -158,11 +158,7 @@ msgstr "Propriétés du fichier"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, veuillez vous référer à <0>nos conditions générales sur le site Web du SCT. <1/></0>"
 
-#: src/pages/error/NavWrapperErrorFallback.tsx:22
-msgid "Go to Home"
-msgstr "Aller à l'accueil"
-
-#: src/components/layout/Header.tsx:53
+#: src/components/layout/Header.tsx:54
 msgid "Home"
 msgstr "Accueil"
 
@@ -173,10 +169,6 @@ msgstr "Avis d'accord"
 #: src/pages/TermsAndConditions.tsx:59
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 msgstr "Les renseignements personnels ne seront pas divulgués par le Secrétariat du Conseil du Trésor du Canada (SCT), sauf en conformité avec les dispositions du "
-
-#: src/pages/error/NavWrapperErrorFallback.tsx:17
-msgid "Please contact the developers or go to the home page."
-msgstr "Veuillez contacter les développeurs ou aller à la page d'accueil."
 
 #: src/pages/TermsAndConditions.tsx:42
 msgid "Privacy"
@@ -215,10 +207,6 @@ msgstr ""
 msgid "Signing in"
 msgstr ""
 
-#: src/pages/error/NavWrapperErrorFallback.tsx:14
-msgid "Something went wrong"
-msgstr "Quelque chose a mal tourné."
-
 #: src/components/auth/AuthNavButton.tsx:31
 #: src/components/auth/AuthNavButton.tsx:51
 msgid "Syncing session"
@@ -228,6 +216,6 @@ msgstr ""
 msgid "Terms and Conditions"
 msgstr "Avis"
 
-#: src/components/ExcelUploadForm.tsx:90
+#: src/components/ExcelUploadForm.tsx:95
 msgid "Upload"
 msgstr "Télécharger"
