@@ -14,12 +14,12 @@ spec:
   interval: 12h
   url: oci://ghcr.io/gimlet-io/capacitor-manifests
   ref:
-    tag: "v0.4.2"
+    tag: 'v0.4.2'
   verify:
     provider: cosign
     matchOIDCIdentity:
-      - issuer: "https://token.actions.githubusercontent.com"
-        subject: "^https://github.com/gimlet-io/capacitor.*$"
+      - issuer: 'https://token.actions.githubusercontent.com'
+        subject: '^https://github.com/gimlet-io/capacitor.*$'
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -33,7 +33,7 @@ spec:
   timeout: 5m
   wait: true
   prune: true
-  path: "./"
+  path: './'
   sourceRef:
     kind: OCIRepository
     name: capacitor
