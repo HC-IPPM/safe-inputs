@@ -23,7 +23,7 @@ spec:
       serviceAccountName: api
       containers:
         - name: api
-          image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api:main-83e0817-1721749605 # {"$imagepolicy": "flux-system:api"}
+          image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api:main-2e16de3-1723153685 # {"$imagepolicy": "flux-system:api"}
           securityContext:
             # No new privs for process or it's children
             # https://github.com/kubernetes/design-proposals-archive/blob/main/auth/no-new-privs.md
@@ -69,11 +69,11 @@ spec:
                 secretKeyRef:
                   name: api-secrets
                   key: authz_email_hosts_allowed
-            - name: AUTHZ_EMAIL_HOSTS_ALLOWED_PRIVILEGES
+            - name: AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS
               valueFrom:
                 secretKeyRef:
                   name: api-secrets
-                  key: authz_email_hosts_allowed_privileges
+                  key: authz_email_hosts_allowed_to_own_collections
             - name: AUTHZ_SUPER_ADMINS
               valueFrom:
                 secretKeyRef:

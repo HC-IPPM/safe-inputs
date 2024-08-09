@@ -1,5 +1,7 @@
 import type { IncomingHttpHeaders } from 'http';
 
+import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
+
 // definition merging, this is the expected way to extend the Express types
 declare global {
   namespace Express {
@@ -12,7 +14,15 @@ declare global {
       query?: any;
     }
     interface User {
+      id?: string;
       email?: string;
+      mongoose_doc?: UserDocument;
+    }
+    interface AuthenticatedUser extends User {
+      // User instance post passport session deserialization
+      id: string;
+      email: string;
+      mongoose_doc: UserDocument;
     }
   }
 }

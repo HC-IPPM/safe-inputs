@@ -4,8 +4,9 @@ import { GraphQLSchema, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 
 import { GraphQLJSON } from 'graphql-type-json'; // JSON is outside of the standard GraphQL scalar types
 
+import { CollectionSchema } from './core/Collection/CollectionSchema.ts';
 import { RootSchema } from './core/RootSchema.ts';
-import { UserSchema } from './core/user/UserSchema.ts';
+import { UserSchema } from './core/User/UserSchema.ts';
 
 // TODO: this is part of an older mockup of Safe Inputs, can be deleted eventually. Currently still used by the ui,
 // as a placeholder for sheet upload functionality. Leaving in place for now
@@ -30,5 +31,5 @@ export const TemporaryExampleMutation = new GraphQLSchema({
 });
 
 export const schema = mergeSchemas({
-  schemas: [RootSchema, UserSchema, TemporaryExampleMutation],
+  schemas: [RootSchema, UserSchema, CollectionSchema, TemporaryExampleMutation],
 });
