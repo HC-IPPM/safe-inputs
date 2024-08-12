@@ -2,9 +2,11 @@
   "[javascript]": {
     "editor.tabSize": 2
   },
+  "javascript.preferences.importModuleSpecifierEnding": "js",
   "[typescript]": {
     "editor.tabSize": 2
   },
+  "typescript.preferences.importModuleSpecifierEnding": "js",
   "[typescriptreact]": {
     "editor.tabSize": 2
   },
