@@ -1,15 +1,26 @@
 import { gql, useQuery } from '@apollo/client';
 
-import { RepeatIcon } from '@chakra-ui/icons';
-import { Box, Container, IconButton } from '@chakra-ui/react';
+import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
+import {
+  Box,
+  Container,
+  IconButton,
+  HStack,
+  Button,
+  Heading,
+} from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import { memo } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import type { Session } from 'src/components/auth/auth_utils.ts';
+import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
+import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 
 const GET_HOME_INFO = gql`
@@ -51,6 +62,8 @@ const HomeDynamic = memo(function HomeDynamic({
 }: {
   session: Session;
 }) {
+  const navigate = useNavigate();
+
   const {
     i18n: { locale },
   } = useLingui();
@@ -60,24 +73,60 @@ const HomeDynamic = memo(function HomeDynamic({
     variables: { lang: locale, user: session.email },
   });
 
-  if (error) {
+  if (!loading && data.query_root.session === null) {
+    navigate(
+      get_sign_in_path({
+        post_auth_redirect: '',
+        message: 'SessionRequired',
+      }),
+    );
+  } else if (error) {
     throw error;
+  } else {
+    return (
+      <LoadingBlock isLoading={loading} flexDir={'column'}>
+        <nav>
+          <HStack justify={'right'}>
+            {session.is_super_user && (
+              <Button as={Link} to="TODO">
+                <Trans>Admin Dashboard</Trans>
+              </Button>
+            )}
+            {session.can_own_collections && (
+              <IconButton
+                aria-label={t`Create new collection`}
+                title={t`Create new collection`}
+                icon={<AddIcon />}
+                as={Link}
+                to="TODO"
+              />
+            )}
+            <IconButton
+              aria-label={t`Refresh collection lists`}
+              title={t`Refresh collection lists`}
+              icon={<RepeatIcon />}
+              onClick={() => refetch()}
+            />
+          </HStack>
+        </nav>
+        {session.can_own_collections && (
+          <Box as="section" mb={4}>
+            <Heading as="h2">
+              <Trans>Collections You Manage</Trans>
+            </Heading>
+            {data && JSON.stringify(data.query_root.session.owned_collections)}
+          </Box>
+        )}
+        <Box as="section" mb={4}>
+          <Heading as="h2">
+            <Trans>Collections You Upload To</Trans>
+          </Heading>
+          {data &&
+            JSON.stringify(data.query_root.session.uploadable_collections)}
+        </Box>
+      </LoadingBlock>
+    );
   }
-
-  return (
-    <LoadingBlock isLoading={loading} flexDir={'column'}>
-      {data && JSON.stringify(data)}
-      {session.is_super_user && <div>TODO link to admin page</div>}
-      {session.can_own_collections && (
-        <div>TODO link to collection creation page</div>
-      )}
-      <IconButton
-        aria-label={t`Refresh collection lists`}
-        icon={<RepeatIcon />}
-        onClick={() => refetch()}
-      />
-    </LoadingBlock>
-  );
 });
 
 export default function Home() {

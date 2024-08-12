@@ -11,7 +11,12 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import type { Session } from './auth_utils.ts';
-import { get_session, email_sign_in, sign_out } from './auth_utils.ts';
+import {
+  get_session,
+  email_sign_in,
+  sign_out,
+  get_sign_in_path,
+} from './auth_utils.ts';
 
 export type SessionStatus = 'authenticated' | 'unauthenticated' | 'syncing';
 export type SessionContextValue = {
@@ -140,10 +145,10 @@ export const useSession = (options?: {
     if (needs_authentication) {
       // redirect to client side sign in page, if needed
       navigate(
-        `/signin?${new URLSearchParams({
-          error: 'SessionRequired',
+        get_sign_in_path({
           post_auth_redirect: pathname,
-        })}`,
+          message: 'SessionRequired',
+        }),
       );
     }
   }, [needs_authentication, pathname, navigate]);
