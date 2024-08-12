@@ -32,6 +32,7 @@ import { messages as enMessages } from './i18n/locales/en/messages.ts';
 import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
 import ExcelParser from './pages/ExcelParser.tsx';
+import Home from './pages/Home.tsx';
 import NavWrapper from './pages/NavWrapper.tsx';
 import SignIn from './pages/SignIn.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
@@ -123,7 +124,8 @@ root.render(
               <ChakraProvider theme={theme}>
                 <Routes>
                   <Route path="/" element={<NavWrapper />}>
-                    <Route path="" element={<ExcelParser />} />
+                    <Route path="" element={<Home />} />
+                    <Route path="excel-parser" element={<ExcelParser />} />
                     <Route path="signin" element={<SignIn />} />
                     <Route
                       path="termsAndConditions"
