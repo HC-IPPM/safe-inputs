@@ -15,7 +15,7 @@ import type { UserDocument } from './UserModel.ts';
 
 export const UserSchema = makeExecutableSchema({
   typeDefs: `
-  type QueryRoot {
+  type Query {
     user(email: String!): User
     users: [User]
     session: User
@@ -32,7 +32,7 @@ export const UserSchema = makeExecutableSchema({
   }
 `,
   resolvers: {
-    QueryRoot: {
+    Query: {
       user: resolver_with_authz(
         (
           _parent: unknown,

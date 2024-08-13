@@ -215,7 +215,7 @@ const collection_def_input_to_model_fields = async (
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
-  type QueryRoot {
+  type Query {
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
     collection(collection_id: String!): Collection
@@ -245,8 +245,8 @@ export const CollectionSchema = makeExecutableSchema({
     is_locked: Boolean!
 
     ### Lang aware resolver subdocument scalar fields
-    name: String!
-    description: String!
+    name(lang: String!): String!
+    description(lang: String!): String!
     
     ### Non-scalar fields
     previous_versions: [Collection]
@@ -283,8 +283,8 @@ export const CollectionSchema = makeExecutableSchema({
     data_type: String! # TODO will be an enum eventually
     
     ### Lang aware resolver scalar fields
-    name: String!
-    description: String!
+    name(lang: String!): String!
+    description(lang: String!): String!
 
     ### Non-scalar fields
 
@@ -365,7 +365,7 @@ export const CollectionSchema = makeExecutableSchema({
   }
 `,
   resolvers: {
-    QueryRoot: {
+    Query: {
       user_owned_collections: resolver_with_authz(
         async (
           _parent: unknown,
@@ -454,27 +454,27 @@ export const CollectionSchema = makeExecutableSchema({
       ),
       name: (
         parent: CollectionDocument,
-        _args: unknown,
-        context: { lang: LangsUnion },
-        _info: unknown,
+        args: { lang: LangsUnion },
+        context: unknown,
+        info: unknown,
       ) =>
         resolve_lang_suffixed_scalar('name')(
           parent.collection_def,
-          _args,
+          args,
           context,
-          _info,
+          info,
         ),
       description: (
         parent: CollectionDocument,
-        _args: unknown,
-        context: { lang: LangsUnion },
-        _info: unknown,
+        args: { lang: LangsUnion },
+        context: unknown,
+        info: unknown,
       ) =>
         resolve_lang_suffixed_scalar('description')(
           parent.collection_def,
-          _args,
+          args,
           context,
-          _info,
+          info,
         ),
       previous_versions: async (
         parent: CollectionDocument,

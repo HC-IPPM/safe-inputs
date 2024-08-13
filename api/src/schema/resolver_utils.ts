@@ -21,14 +21,14 @@ export const resolve_lang_suffixed_scalar =
   <Key extends string>(base_field_name: Key) =>
   <
     ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any },
-    ContextType extends { lang: LangsUnion },
+    ArgsType extends { lang: LangsUnion },
   >(
     parent: ParentType,
-    _args: unknown,
-    context: ContextType,
+    args: ArgsType,
+    _context: unknown,
     _info: unknown,
   ) =>
-    parent[`${base_field_name}_${context.lang}`];
+    parent[`${base_field_name}_${args.lang}`];
 
 export const context_has_authenticated_user = <
   Context extends {
