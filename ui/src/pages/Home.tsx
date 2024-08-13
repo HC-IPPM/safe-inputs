@@ -8,10 +8,22 @@ import {
   HStack,
   Button,
   Heading,
+  TableContainer,
+  Table,
+  TableCaption,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Text,
+  Tag,
 } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+
+import _ from 'lodash';
 
 import { memo } from 'react';
 
@@ -54,6 +66,111 @@ const GET_HOME_INFO = gql`
   }
 `;
 
+// TODO at some point, I'll integrate a tool to generate types from queries
+type CollectionInfo = {
+  id: string;
+  name: string;
+  major_ver: number;
+  minor_ver: number;
+  is_locked: boolean;
+  created_by: {
+    email: string;
+  };
+  created_at: number;
+};
+
+const CollectionTable = ({
+  tableCaption,
+  collections,
+  getLinks,
+}: {
+  tableCaption: string;
+  collections: CollectionInfo[];
+  getLinks: (collection: CollectionInfo) => { href: string; text: string }[];
+}) => {
+  const {
+    i18n: { locale },
+  } = useLingui();
+
+  return (
+    <TableContainer mb={4}>
+      <Table variant="simple">
+        <TableCaption placement="top">
+          <Heading>{tableCaption}</Heading>
+        </TableCaption>
+        <Thead>
+          <Tr>
+            <Th>
+              <Trans>Name</Trans>
+            </Th>
+            <Th>
+              <Trans>Version</Trans>
+            </Th>
+            <Th>
+              <Trans>Created by</Trans>
+            </Th>
+            <Th>
+              <Trans>Created at</Trans>
+            </Th>
+            <Th>
+              <Trans>Status</Trans>
+            </Th>
+            <Th
+              colSpan={
+                _.chain(collections)
+                  .map((collection) => getLinks(collection).length)
+                  .max()
+                  .value() || 1
+              }
+            >
+              <Trans>Actions</Trans>
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {_.map(collections, (collection) => (
+            <Tr key={collection.id}>
+              <Td>{collection.name}</Td>
+              <Td>{`${collection.major_ver}.${collection.minor_ver}`}</Td>
+              <Td>{collection.created_by.email}</Td>
+              <Td>
+                {new Intl.DateTimeFormat(`${locale}-CA`, {
+                  dateStyle: 'short',
+                  timeStyle: 'short',
+                }).format(new Date(collection.created_at))}
+              </Td>
+              <Td>
+                <Tag
+                  size={'md'}
+                  borderRadius="full"
+                  variant="solid"
+                  colorScheme={collection.is_locked ? 'red' : 'green'}
+                  width={'100%'}
+                  justifyContent={'center'}
+                >
+                  {collection.is_locked ? t`Closed` : t`Open`}
+                </Tag>
+              </Td>
+              {_.map(getLinks(collection), ({ href, text }) => (
+                <Td key={href}>
+                  <Button as={Link} to={href}>
+                    {text}
+                  </Button>
+                </Td>
+              ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      {_.isEmpty(collections) && (
+        <Text textAlign="center">
+          <Trans>You have no collections at this time</Trans>
+        </Text>
+      )}
+    </TableContainer>
+  );
+};
+
 // memoizing on session so that the session sync on browser focus won't trigger rerenders
 // TODO: most routes will deal with this, bake it in to some sort of route level component
 // (along with other things to standardize like headers and container layouts)
@@ -69,8 +186,7 @@ const HomeDynamic = memo(function HomeDynamic({
   } = useLingui();
 
   const { loading, error, data, refetch } = useQuery(GET_HOME_INFO, {
-    // user is not a variable used in this query, but it is passed for cache keying purposes
-    variables: { lang: locale, user: session.email },
+    variables: { lang: locale },
   });
 
   if (!loading && data.query_root.session === null) {
@@ -105,25 +221,25 @@ const HomeDynamic = memo(function HomeDynamic({
               aria-label={t`Refresh collection lists`}
               title={t`Refresh collection lists`}
               icon={<RepeatIcon />}
-              onClick={() => refetch()}
+              onClick={() => refetch({ lang: locale })}
             />
           </HStack>
         </nav>
         {session.can_own_collections && (
-          <Box as="section" mb={4}>
-            <Heading as="h2">
-              <Trans>Collections You Manage</Trans>
-            </Heading>
-            {data && JSON.stringify(data.query_root.session.owned_collections)}
-          </Box>
+          <CollectionTable
+            tableCaption={t`Collections You Manage`}
+            collections={data?.query_root?.session?.owned_collections}
+            getLinks={({ id }) => [
+              { href: 'TODO', text: t`Manage` },
+              { href: 'TODO', text: t`Upload` },
+            ]}
+          />
         )}
-        <Box as="section" mb={4}>
-          <Heading as="h2">
-            <Trans>Collections You Upload To</Trans>
-          </Heading>
-          {data &&
-            JSON.stringify(data.query_root.session.uploadable_collections)}
-        </Box>
+        <CollectionTable
+          tableCaption={t`Collections You Upload To`}
+          collections={data?.query_root?.session?.uploadable_collections}
+          getLinks={({ id }) => [{ href: 'TODO', text: t`Upload` }]}
+        />
       </LoadingBlock>
     );
   }
