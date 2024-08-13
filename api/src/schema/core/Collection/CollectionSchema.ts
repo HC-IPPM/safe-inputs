@@ -231,8 +231,8 @@ export const CollectionSchema = makeExecutableSchema({
     ### Scalar fields
     id: String!
     stable_key: String!
-    major_ver: String!
-    minor_ver: String!
+    major_ver: Int!
+    minor_ver: Int!
     is_current_version: Boolean!
     created_by: User!
     created_at: Float!
