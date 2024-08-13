@@ -9,6 +9,7 @@ import { useSpinDelay } from 'spin-delay';
 
 import { Link } from 'src/components/Link.tsx';
 
+import { get_sign_in_path } from './auth_utils.ts';
 import { useSession } from './session.tsx';
 
 export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
@@ -42,9 +43,9 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
         to={
           pathname.startsWith('/signin')
             ? window.location
-            : `/signin?${new URLSearchParams({
+            : get_sign_in_path({
                 post_auth_redirect: pathname + (search || ''),
-              })}`
+              })
         }
         {...StyleProps}
         isLoading={showLoading}

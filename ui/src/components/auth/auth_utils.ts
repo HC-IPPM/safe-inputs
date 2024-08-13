@@ -108,3 +108,9 @@ export const email_sign_in = async (
 export const sign_out = async (auth_base_url: string) => {
   return await auth_post(auth_base_url, 'signout');
 };
+
+export const get_sign_in_path = ({ post_auth_redirect = '', message = '' }) =>
+  `/signin?${new URLSearchParams({
+    post_auth_redirect,
+    message,
+  })}`;
