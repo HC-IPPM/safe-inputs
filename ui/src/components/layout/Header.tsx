@@ -1,4 +1,4 @@
-import { HStack, Box, Container } from '@chakra-ui/react';
+import { HStack, Box, Container, Text } from '@chakra-ui/react';
 
 import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -31,7 +31,7 @@ export default function Header() {
 
   return (
     <>
-      <Box bg="#EEEEEE">
+      <Box as="header" bg="#EEEEEE">
         <Container maxW="7xl" px={{ base: 5, md: 10 }} py={4}>
           <HStack justify="space-between">
             <Link
@@ -50,7 +50,9 @@ export default function Header() {
               <AuthNavButton {...NavButtonStyle} />
               <LanguageButton {...NavButtonStyle} />
               <Link to="/">
-                <Trans>Home</Trans>
+                <Text>
+                  <Trans>Home</Trans>
+                </Text>
               </Link>
             </HStack>
           </HStack>

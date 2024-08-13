@@ -1,5 +1,5 @@
 import type { ButtonProps } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
+import { Text, Button } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
 
@@ -23,7 +23,7 @@ export default function AuthNavButton(StyleProps: ButtonProps): JSX.Element {
   if (session?.email) {
     return (
       <>
-        {session?.email}
+        <Text>{session?.email}</Text>
         <Button
           as="button"
           {...StyleProps}
