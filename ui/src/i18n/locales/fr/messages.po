@@ -133,6 +133,14 @@ msgstr "<0>Vous acceptez de protéger toute information qui vous est divulguée 
 msgid "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 msgstr "<0>Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité.</0>"
 
+#: src/pages/Home.tsx:124
+msgid "Actions"
+msgstr ""
+
+#: src/pages/Home.tsx:206
+msgid "Admin Dashboard"
+msgstr ""
+
 #: src/pages/TermsAndConditions.tsx:24
 msgid "By accessing, browsing, or using our website or our services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions, and to comply with all applicable laws and regulations. We recommend that you review all Terms and Conditions periodically to understand any updates or changes that may affect you. If you do not agree to these Terms and Conditions, please refrain from using our website, products and services."
 msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos services, vous reconnaissez avoir lu, compris et accepté d'être lié par les présentes conditions générales, et de vous conformer à toutes les lois et réglementations applicables. Nous vous recommandons de consulter périodiquement les Conditions générales afin de comprendre les mises à jour ou les modifications qui pourraient vous concerner. Si vous n'acceptez pas les présentes conditions générales, veuillez vous abstenir d'utiliser notre site Web, nos produits et nos services."
@@ -140,6 +148,31 @@ msgstr "En accédant, en naviguant ou en utilisant notre site web ou nos service
 #: src/components/ExcelUploadForm.tsx:61
 msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 msgstr "Choisissez une feuille de calcul à télécharger. Un fichier d'exemple peut être trouvé <0>ici</0>."
+
+#: src/pages/Home.tsx:149
+msgid "Closed"
+msgstr ""
+
+#: src/pages/Home.tsx:228
+msgid "Collections You Manage"
+msgstr ""
+
+#: src/pages/Home.tsx:237
+msgid "Collections You Upload To"
+msgstr ""
+
+#: src/pages/Home.tsx:211
+#: src/pages/Home.tsx:212
+msgid "Create new collection"
+msgstr ""
+
+#: src/pages/Home.tsx:111
+msgid "Created at"
+msgstr ""
+
+#: src/pages/Home.tsx:108
+msgid "Created by"
+msgstr ""
 
 #: src/components/TableOutput.tsx:160
 msgid "Data Preview"
@@ -162,9 +195,26 @@ msgstr "Pour plus de détails concernant les termes relatifs à la vie privée, 
 msgid "Home"
 msgstr "Accueil"
 
+#: src/components/Loading.tsx:7
+#: src/components/Loading.tsx:21
+msgid "Loading..."
+msgstr ""
+
+#: src/pages/Home.tsx:231
+msgid "Manage"
+msgstr ""
+
+#: src/pages/Home.tsx:102
+msgid "Name"
+msgstr ""
+
 #: src/pages/TermsAndConditions.tsx:20
 msgid "Notice of Agreement"
 msgstr "Avis d'accord"
+
+#: src/pages/Home.tsx:149
+msgid "Open"
+msgstr ""
 
 #: src/pages/TermsAndConditions.tsx:59
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
@@ -174,8 +224,17 @@ msgstr "Les renseignements personnels ne seront pas divulgués par le Secrétari
 msgid "Privacy"
 msgstr "Confidentialité"
 
+#: src/pages/Home.tsx:219
+#: src/pages/Home.tsx:220
+msgid "Refresh collection lists"
+msgstr ""
+
 #: src/components/auth/SignInForm.tsx:64
 msgid "Required"
+msgstr ""
+
+#: src/pages/Home.tsx:256
+msgid "Safe Inputs Home"
 msgstr ""
 
 #: src/pages/ExcelParser.tsx:48
@@ -194,12 +253,12 @@ msgstr "Afficher Plus"
 msgid "Sign in"
 msgstr ""
 
-#: src/components/auth/AuthNavButton.tsx:53
+#: src/components/auth/AuthNavButton.tsx:54
 #: src/pages/SignIn.tsx:32
 msgid "Sign In"
 msgstr ""
 
-#: src/components/auth/AuthNavButton.tsx:34
+#: src/components/auth/AuthNavButton.tsx:35
 msgid "Sign Out"
 msgstr ""
 
@@ -207,8 +266,12 @@ msgstr ""
 msgid "Signing in"
 msgstr ""
 
-#: src/components/auth/AuthNavButton.tsx:31
-#: src/components/auth/AuthNavButton.tsx:51
+#: src/pages/Home.tsx:114
+msgid "Status"
+msgstr ""
+
+#: src/components/auth/AuthNavButton.tsx:32
+#: src/components/auth/AuthNavButton.tsx:52
 msgid "Syncing session"
 msgstr ""
 
@@ -217,5 +280,15 @@ msgid "Terms and Conditions"
 msgstr "Avis"
 
 #: src/components/ExcelUploadForm.tsx:95
+#: src/pages/Home.tsx:232
+#: src/pages/Home.tsx:240
 msgid "Upload"
 msgstr "Télécharger"
+
+#: src/pages/Home.tsx:105
+msgid "Version"
+msgstr ""
+
+#: src/pages/Home.tsx:165
+msgid "You have no collections at this time"
+msgstr ""
