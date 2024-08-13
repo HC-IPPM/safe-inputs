@@ -37,30 +37,28 @@ import { LoadingBlock } from 'src/components/Loading.tsx';
 
 const GET_HOME_INFO = gql`
   query HomePageInfo($lang: String!) {
-    query_root(lang: $lang) {
-      session {
-        owned_collections {
-          id
-          name
-          major_ver
-          minor_ver
-          is_locked
-          created_by {
-            email
-          }
-          created_at
+    session {
+      owned_collections {
+        id
+        name(lang: $lang)
+        major_ver
+        minor_ver
+        is_locked
+        created_by {
+          email
         }
-        uploadable_collections {
-          id
-          name
-          major_ver
-          minor_ver
-          is_locked
-          created_by {
-            email
-          }
-          created_at
+        created_at
+      }
+      uploadable_collections {
+        id
+        name(lang: $lang)
+        major_ver
+        minor_ver
+        is_locked
+        created_by {
+          email
         }
+        created_at
       }
     }
   }
@@ -189,7 +187,7 @@ const HomeDynamic = memo(function HomeDynamic({
     variables: { lang: locale },
   });
 
-  if (!loading && data.query_root.session === null) {
+  if (!loading && data.session === null) {
     navigate(
       get_sign_in_path({
         post_auth_redirect: '',
@@ -228,7 +226,7 @@ const HomeDynamic = memo(function HomeDynamic({
         {session.can_own_collections && (
           <CollectionTable
             tableCaption={t`Collections You Manage`}
-            collections={data?.query_root?.session?.owned_collections}
+            collections={data?.session?.owned_collections}
             getLinks={({ id }) => [
               { href: `/manage-collection/${id}`, text: t`Manage` },
               { href: `/upload-records/${id}`, text: t`Upload` },
@@ -237,7 +235,7 @@ const HomeDynamic = memo(function HomeDynamic({
         )}
         <CollectionTable
           tableCaption={t`Collections You Upload To`}
-          collections={data?.query_root?.session?.uploadable_collections}
+          collections={data?.session?.uploadable_collections}
           getLinks={({ id }) => [
             { href: `/upload-records/${id}`, text: t`Upload` },
           ]}
