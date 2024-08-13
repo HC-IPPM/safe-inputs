@@ -22,7 +22,7 @@ import { createRoot } from 'react-dom/client';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
 import { SessionProvider } from './components/auth/session.tsx';
@@ -131,6 +131,7 @@ root.render(
                       path="termsAndConditions"
                       element={<TermsAndConditions />}
                     />
+                    <Route path="*" element={<Navigate to="/" />} />
                   </Route>
                 </Routes>
               </ChakraProvider>
