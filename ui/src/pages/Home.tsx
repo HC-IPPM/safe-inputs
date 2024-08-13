@@ -204,7 +204,7 @@ const HomeDynamic = memo(function HomeDynamic({
         <nav>
           <HStack justify={'right'}>
             {session.is_super_user && (
-              <Button as={Link} to="TODO">
+              <Button as={Link} to="/admin">
                 <Trans>Admin Dashboard</Trans>
               </Button>
             )}
@@ -214,7 +214,7 @@ const HomeDynamic = memo(function HomeDynamic({
                 title={t`Create new collection`}
                 icon={<AddIcon />}
                 as={Link}
-                to="TODO"
+                to="/create-collection"
               />
             )}
             <IconButton
@@ -230,15 +230,17 @@ const HomeDynamic = memo(function HomeDynamic({
             tableCaption={t`Collections You Manage`}
             collections={data?.query_root?.session?.owned_collections}
             getLinks={({ id }) => [
-              { href: 'TODO', text: t`Manage` },
-              { href: 'TODO', text: t`Upload` },
+              { href: `/manage-collection/${id}`, text: t`Manage` },
+              { href: `/upload-records/${id}`, text: t`Upload` },
             ]}
           />
         )}
         <CollectionTable
           tableCaption={t`Collections You Upload To`}
           collections={data?.query_root?.session?.uploadable_collections}
-          getLinks={({ id }) => [{ href: 'TODO', text: t`Upload` }]}
+          getLinks={({ id }) => [
+            { href: `/upload-records/${id}`, text: t`Upload` },
+          ]}
         />
       </LoadingBlock>
     );

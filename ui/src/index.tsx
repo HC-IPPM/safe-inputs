@@ -125,8 +125,33 @@ root.render(
                 <Routes>
                   <Route path="/" element={<NavWrapper />}>
                     <Route path="" element={<Home />} />
-                    <Route path="excel-parser" element={<ExcelParser />} />
                     <Route path="signin" element={<SignIn />} />
+                    <Route
+                      path="create-collection/:baseCollectionID?"
+                      element={<div>Create collection route TODO</div>}
+                    />
+                    <Route
+                      path="manage-collection/:collectionID"
+                      element={<div>Manage collection route TODO</div>}
+                    />
+                    <Route
+                      path="manage-collection/:collectionID/edit-column/:columnHeader"
+                      element={
+                        <div>Manage collection - edit column route TODO</div>
+                      }
+                    />
+                    <Route
+                      path="manage-collection/:collectionID/create-column"
+                      element={
+                        <div>Manage collection - create column route TODO</div>
+                      }
+                    />
+                    <Route
+                      path="upload-records/:collectionID"
+                      element={<div>Upload records route TODO</div>}
+                    />
+                    <Route path="admin" element={<div>Admin route TODO</div>} />
+                    <Route path="excel-parser" element={<ExcelParser />} />
                     <Route
                       path="termsAndConditions"
                       element={<TermsAndConditions />}
