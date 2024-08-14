@@ -44,7 +44,7 @@ const CollectionTable = ({
 }: {
   tableCaption: string;
   collections: CollectionInfo[];
-  getLinks: (collection: CollectionInfo) => { href: string; text: string }[];
+  getLinks: (collection: CollectionInfo) => { route: string; text: string }[];
 }) => {
   const {
     i18n: { locale },
@@ -109,9 +109,9 @@ const CollectionTable = ({
                   {collection.is_locked ? t`Closed` : t`Open`}
                 </Tag>
               </Td>
-              {_.map(getLinks(collection), ({ href, text }) => (
-                <Td key={href}>
-                  <Button as={Link} to={href}>
+              {_.map(getLinks(collection), ({ route, text }) => (
+                <Td key={route}>
+                  <Button as={Link} to={route}>
                     {text}
                   </Button>
                 </Td>
@@ -188,8 +188,8 @@ const HomeDynamic = memo(function HomeDynamic({
             tableCaption={t`Collections You Manage`}
             collections={data?.session?.owned_collections}
             getLinks={({ id }) => [
-              { href: `/manage-collection/${id}`, text: t`Manage` },
-              { href: `/upload-records/${id}`, text: t`Upload` },
+              { route: `/manage-collection/${id}`, text: t`Manage` },
+              { route: `/upload-records/${id}`, text: t`Upload` },
             ]}
           />
         )}
@@ -197,7 +197,7 @@ const HomeDynamic = memo(function HomeDynamic({
           tableCaption={t`Collections You Upload To`}
           collections={data?.session?.uploadable_collections}
           getLinks={({ id }) => [
-            { href: `/upload-records/${id}`, text: t`Upload` },
+            { route: `/upload-records/${id}`, text: t`Upload` },
           ]}
         />
       </LoadingBlock>
@@ -210,10 +210,13 @@ export default function Home() {
 
   const has_session = session !== null;
 
+  // TODO: bad page boilerplate, staying consistent with other pages for now but I've opened issues to clean them all up
   return (
     <>
       <Box className="App-header" mb={2}>
-        <Trans>Safe Inputs Home</Trans>
+        <h1>
+          <Trans>Safe Inputs Home</Trans>
+        </h1>
       </Box>
       <Container
         maxW="7xl"

@@ -324,11 +324,11 @@ export const CollectionSchema = makeExecutableSchema({
     update_collection(collection_id: String!, collection_updates: CollectionDefInput): Collection
 
     # TODO need GQL schema types for collection update validation responses
-    validate_new_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Boolean 
+    validate_new_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Boolean # TODO potentially should be query on a collection, not a mutation
     update_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Collection
 
     # TODO need GQL schema types for record validation responses
-    validate_new_records(collection_id: String!, records: [JSON]): Boolean
+    validate_new_records(collection_id: String!, records: [JSON]): Boolean # TODO potentially should be query on a collection, not a mutation
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): Int
   }

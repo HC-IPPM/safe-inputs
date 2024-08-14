@@ -47,7 +47,6 @@ export default function TermsAndConditions() {
               For details related to terms pertaining to privacy, please refer
               to{' '}
               <Link
-                isExternal
                 textDecor={'underline'}
                 href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
               >
@@ -60,7 +59,6 @@ export default function TermsAndConditions() {
               Personal information will not be disclosed by Treasury Board
               Secretariat of Canada (TBS) except in accordance with the{' '}
               <Link
-                isExternal
                 textDecor={'underline'}
                 href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
               >
@@ -90,7 +88,6 @@ export default function TermsAndConditions() {
                 Information shared with TBS, or acquired via systems hosted by
                 TBS, may be subject to public disclosure under the{' '}
                 <Link
-                  isExternal
                   textDecor={'underline'}
                   href="https://www.canada.ca/en/treasury-board-secretariat/services/access-information-privacy/access-information-act.html"
                 >
@@ -165,7 +162,6 @@ export default function TermsAndConditions() {
               <Text>
                 The material available on this web site is subject to the{' '}
                 <Link
-                  isExternal
                   textDecor={'underline'}
                   href="https://cb-cda.gc.ca/en/copyright-information/acts-and-regulations"
                 >
@@ -173,7 +169,6 @@ export default function TermsAndConditions() {
                 </Link>
                 and{' '}
                 <Link
-                  isExternal
                   textDecor={'underline'}
                   href="https://laws-lois.justice.gc.ca/eng/acts/t-13/FullText.html"
                 >
@@ -236,7 +231,6 @@ export default function TermsAndConditions() {
                 manner consistent with our{' '}
                 <Link
                   textDecor={'underline'}
-                  isExternal
                   href="https://publiservice.tbs-sct.gc.ca/tbs-sct/cmn/notices-avis-eng.asp"
                 >
                   Privacy Notice Statement
@@ -400,7 +394,6 @@ export default function TermsAndConditions() {
                 If at any time you or your representatives wish to adjust or
                 cancel these services, please contact us at: <br />
                 <Link
-                  isExternal
                   textDecor={'underline'}
                   href="https://https-everywhere.canada.ca/en/help/"
                 >
@@ -439,6 +432,7 @@ export default function TermsAndConditions() {
     );
   }
 
+  // TODO: bad page boilerplate, staying consistent with other pages for now but I've opened issues to clean them all up
   return (
     <>
       <Box className="App-header" mb={2}>
