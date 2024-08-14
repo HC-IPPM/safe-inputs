@@ -5,10 +5,10 @@
 */dist
 
 # generated (by the sops cli)
-k8s/**/*.enc.yaml
+kubernetes/**/*.enc.yaml
 
 # generated (by lingui)
 ui/src/i18n/locales
 
 # not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
-k8s/mongodb-operator/operator
+kubernetes/mongodb-operator/operator

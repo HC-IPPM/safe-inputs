@@ -99,7 +99,7 @@
     }
   ],
   "ignorePatterns": [
-    "k8s/mongodb-operator/operator", // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
+    "kubernetes/mongodb-operator/operator", // not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
     "**/dist" // generated (build outputs)
   ]
 }
