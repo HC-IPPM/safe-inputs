@@ -34,6 +34,7 @@ import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 import CollectionManagementPage from './pages/CollectionsManagement.tsx';
 import ColumnManagement from './pages/ColumnManagement.tsx';
+import CreateCollection from './pages/CreateCollection.tsx';
 import ExcelParser from './pages/ExcelParser.tsx';
 import Home from './pages/Home.tsx';
 import NavWrapper from './pages/NavWrapper.tsx';
@@ -131,7 +132,7 @@ root.render(
                     <Route path="signin" element={<SignIn />} />
                     <Route
                       path="create-collection/:baseCollectionID?"
-                      element={<div>Create collection route TODO</div>}
+                      element={<CreateCollection />}
                     />
                     <Route
                       path="manage-collection/:collectionID"
