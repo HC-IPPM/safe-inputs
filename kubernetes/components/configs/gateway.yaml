@@ -20,7 +20,7 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - "safeinputs.alpha.phac-aspc.gc.ca"
+        - 'safeinputs.alpha.phac-aspc.gc.ca'
       tls:
         mode: SIMPLE
         credentialName: tlskeys
@@ -32,7 +32,7 @@ spec:
         name: https-dev
         protocol: HTTPS
       hosts:
-        - "*.dev.safeinputs.alpha.phac-aspc.gc.ca"
+        - '*.dev.safeinputs.alpha.phac-aspc.gc.ca'
       tls:
         mode: SIMPLE
         credentialName: dev-tlskeys
