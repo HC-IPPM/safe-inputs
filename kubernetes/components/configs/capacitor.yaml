@@ -5,7 +5,7 @@ metadata:
   namespace: capacitor
 spec:
   hosts:
-    - 'capacitor.safeinputs.alpha.phac-aspc.gc.ca'
+    - 'capacitor.dev.safeinputs.alpha.phac-aspc.gc.ca'
   gateways:
     - istio-ingress/mesh-gateway
   http:
