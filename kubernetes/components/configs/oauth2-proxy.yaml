@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: oauth2-proxy
+  namespace: istio-ingress
+spec:
+  gateways:
+    - istio-ingress/mesh-gateway
+  hosts:
+    - 'oauth.dev.safeinputs.alpha.phac-aspc.gc.ca'
+  http:
+    - name: gateway-to-oauth2
+      route:
+        - destination:
+            host: oauth2-proxy.istio-ingress.svc.cluster.local
+            port:
+              number: 4180
+---
+# allow ingress to oauth2-proxy
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingress-to-oauth
+  namespace: istio-ingress
+spec:
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            # <trust-domain>/ns/<namespace>/sa/<service-account-name>
+            principals:
+              - 'cluster.local/ns/istio-ingress/sa/istio-ingressgateway'
+---
+
