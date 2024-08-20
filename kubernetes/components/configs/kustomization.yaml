@@ -8,3 +8,7 @@ resources:
   - issuer.yaml
   - strict-mtls.yaml
   - waf.yaml
+  - capacitor.yaml
+  - oauth2-proxy.yaml
+  - ext-authz.yaml
+  - mesh-configmap.yaml

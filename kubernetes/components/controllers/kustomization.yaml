@@ -4,3 +4,6 @@ resources:
   - cert-manager.yaml
   - ingress.yaml
   - mongodb.yaml
+  - capacitor.yaml
+  - oauth2-proxy.secret.enc.yaml
+  - oauth2-proxy.yaml
