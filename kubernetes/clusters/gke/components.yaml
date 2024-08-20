@@ -24,6 +24,8 @@ spec:
       target:
         kind: Service
         name: istio-ingressgateway
+  decryption:
+    provider: sops
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
