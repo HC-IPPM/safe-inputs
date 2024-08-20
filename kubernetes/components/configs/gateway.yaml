@@ -20,10 +20,22 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - '*'
+        - "safeinputs.alpha.phac-aspc.gc.ca"
       tls:
         mode: SIMPLE
         credentialName: tlskeys
+        privateKey: sds
+        serverCertificate: sds
+        minProtocolVersion: TLSV1_3
+    - port:
+        number: 443
+        name: https-dev
+        protocol: HTTPS
+      hosts:
+        - "*.dev.safeinputs.alpha.phac-aspc.gc.ca"
+      tls:
+        mode: SIMPLE
+        credentialName: dev-tlskeys
         privateKey: sds
         serverCertificate: sds
         minProtocolVersion: TLSV1_3
