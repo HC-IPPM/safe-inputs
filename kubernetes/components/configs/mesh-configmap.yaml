@@ -15,7 +15,7 @@ data:
 kind: ConfigMap
 metadata:
   # TODO: patch name in ../../clusters/gke/components.yaml
-  # note that the name here will change depending on which service mesh 
+  # note that the name here will change depending on which service mesh
   # revision is in use the value below assumes it's on asm-managed.
   name: istio-asm-managed
   namespace: istio-system

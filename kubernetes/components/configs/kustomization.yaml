@@ -12,4 +12,3 @@ resources:
   - oauth2-proxy.yaml
   - ext-authz.yaml
   - mesh-configmap.yaml
-
