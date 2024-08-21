@@ -18,7 +18,7 @@
   },
   packageRules: [
     {
-      description: 'Ignore pinning for images managed by Flux',
+      description: 'Ignore pinning for images managed by Flux. See https://github.com/PHACDataHub/safe-inputs/pull/187#discussion_r1658905664',
       matchPackageNames: [
         'northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api',
         'northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui',
@@ -29,7 +29,7 @@
       },
     },
     {
-      description: 'Ignore pinning for capacitor OCI repository tag',
+      description: 'Ignore pinning for capacitor OCI repository tag. See https://github.com/PHACDataHub/safe-inputs/pull/505#issue-2478144189',
       matchPackageNames: ['ghcr.io/gimlet-io/capacitor-manifests'],
       pinDigests: false,
     },
