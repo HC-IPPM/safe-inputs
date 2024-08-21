@@ -28,5 +28,12 @@
         enabled: false,
       },
     },
+    {
+      "description": 'Ignore pinning for capacitor OCI repository',
+      "matchPackageNames": [
+        'ghcr.io/gimlet-io/capacitor-manifests',
+      ],
+      "pinDigests": false
+    },
   ],
 }
