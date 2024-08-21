@@ -14,7 +14,7 @@ spec:
   interval: 12h
   url: oci://ghcr.io/gimlet-io/capacitor-manifests
   ref:
-    tag: 'v0.4.2@sha256:1e72940be8383cd5054e3efcff8ec36f27e33959a4b940fc4b956c932083578b'
+    tag: 'v0.4.2'
   verify:
     provider: cosign
     matchOIDCIdentity:
