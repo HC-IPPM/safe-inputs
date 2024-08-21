@@ -29,7 +29,7 @@
       },
     },
     {
-      description: 'Ignore pinning for capacitor OCI repository',
+      description: 'Ignore pinning for capacitor OCI repository tag',
       matchPackageNames: ['ghcr.io/gimlet-io/capacitor-manifests'],
       pinDigests: false,
     },
