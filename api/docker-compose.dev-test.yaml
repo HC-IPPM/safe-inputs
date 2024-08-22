@@ -24,7 +24,7 @@ networks:
 
 services:
   db-test:
-    image: mongo:6.0@sha256:0aaa5ef71d4576ed2f7f8aef8065760d06b405f398a13dd48e74299df46fde52 # keep on same major version as k8s mongo, seems to be 6 currently
+    image: mongo:6.0@sha256:52347770bd1318b87e832f47a97545ce7b521172fd4fc93c8480e0cbf6fbeb8a # keep on same major version as k8s mongo, seems to be 6 currently
     tty: ${DOCKER_TTY:-true} # allocating a tty lets control character print (so, retains useful colour coding etc), but displays poorly in some cases (GCP cloudbuild logs)
     restart: always # always reinitialize, with a clean data volume
     volumes:
