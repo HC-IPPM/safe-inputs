@@ -206,7 +206,7 @@ const HomeDynamic = memo(function HomeDynamic({
 });
 
 export default function Home() {
-  const { status, session } = useSession();
+  const { status, session } = useSession({ allow_unauthenticated: false });
 
   const has_session = session !== null;
 

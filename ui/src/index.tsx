@@ -131,7 +131,7 @@ root.render(
                     <Route path="" element={<Home />} />
                     <Route path="signin" element={<SignIn />} />
                     <Route
-                      path="create-collection/:baseCollectionID?"
+                      path="create-collection"
                       element={<CreateCollection />}
                     />
                     <Route
