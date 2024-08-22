@@ -11,7 +11,7 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:3f0e2458416355e2c03dd0c6b67051c8077cc108c881e3dbc9f2d7b5fdbacff1'
+  - name: 'gcr.io/cloud-builders/docker@sha256:e2f9238f778b0d27aacc5866c52b632ac654fe5bd9f27e844fcfabac44f1ab37'
     id: generate-image-name
     entrypoint: 'bash'
     dir: ui
@@ -20,7 +20,7 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:3f0e2458416355e2c03dd0c6b67051c8077cc108c881e3dbc9f2d7b5fdbacff1'
+  - name: 'gcr.io/cloud-builders/docker@sha256:e2f9238f778b0d27aacc5866c52b632ac654fe5bd9f27e844fcfabac44f1ab37'
     id: build-if-main
     entrypoint: 'bash'
     dir: ui
@@ -35,7 +35,7 @@ steps:
           exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:3f0e2458416355e2c03dd0c6b67051c8077cc108c881e3dbc9f2d7b5fdbacff1'
+  - name: 'gcr.io/cloud-builders/docker@sha256:e2f9238f778b0d27aacc5866c52b632ac654fe5bd9f27e844fcfabac44f1ab37'
     id: push-if-main
     entrypoint: 'bash'
     args:
