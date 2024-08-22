@@ -8,12 +8,14 @@ import Header from 'src/components/layout/Header.tsx';
 // This is the component that renders the header and footer for all pages
 export default function NavWrapper() {
   return (
-    <>
+    <div className="layout-container">
       <Header />
-      <ErrorBoundary FallbackComponent={AppErrorFallback}>
-        <Outlet />
-      </ErrorBoundary>
+      <div style={{ flexGrow: 1 }}>
+        <ErrorBoundary FallbackComponent={AppErrorFallback}>
+          <Outlet />
+        </ErrorBoundary>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 }
