@@ -24,10 +24,6 @@ main {
   flex-direction: column;
 }
 
-.content-container {
-  flex-grow: 1;
-}
-
 .App-header {
   background-color: #26374a;
   display: flex;

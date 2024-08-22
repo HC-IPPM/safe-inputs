@@ -10,9 +10,11 @@ export default function NavWrapper() {
   return (
     <div className="layout-container">
       <Header />
-      <ErrorBoundary FallbackComponent={AppErrorFallback}>
-        <Outlet />
-      </ErrorBoundary>
+      <div style={{ flexGrow: 1 }}>
+        <ErrorBoundary FallbackComponent={AppErrorFallback}>
+          <Outlet />
+        </ErrorBoundary>
+      </div>
       <Footer />
     </div>
   );
