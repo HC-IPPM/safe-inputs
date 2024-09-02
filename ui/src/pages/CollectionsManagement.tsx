@@ -84,9 +84,11 @@ const CollectionMainPage = memo(function CollectionMainPage({
     i18n: { locale },
   } = useLingui();
   const navigate = useNavigate();
+
+  // Fetch the latest version of the collection. Current version is updated to false backend, when changed
   const { loading, error, data } = useQuery(GET_COLLECTION_DETAILS, {
     variables: { collection_id: collectionID, lang: locale },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
   });
 
   if (!loading && !data.collection.is_current_version) {
