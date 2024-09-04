@@ -40,7 +40,7 @@
     "@babel/preset-typescript": "7.24.7",
     "@lingui/cli": "4.11.3",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
-    "@rspack/cli": "0.7.5",
+    "@rspack/cli": "1.0.3",
     "@rspack/core": "0.7.5",
     "@svgr/webpack": "8.1.0",
     "@swc/core": "1.7.23",
