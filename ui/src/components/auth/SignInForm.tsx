@@ -44,7 +44,7 @@ export default function SignInForm({
       const { response, data } = await signIn(values.email, post_auth_redirect);
       setResponseStatus(response.status);
 
-      if (IS_LOCAL_DEV === 'true') {
+      if (IS_LOCAL_DEV) {
         if (data?.verification_url) {
           setDevTokenResponse(data?.verification_url);
         }
