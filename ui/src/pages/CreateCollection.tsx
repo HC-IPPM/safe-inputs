@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation, useApolloClient } from '@apollo/client';
 
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -37,6 +37,7 @@ const CREATE_COLLECTION_INIT = gql`
     $description_fr: String!
     $owner_emails: [String!]!
     $uploader_emails: [String!]!
+    $is_locked: Boolean!
   ) {
     create_collection_init(
       collection_def: {
@@ -46,11 +47,35 @@ const CREATE_COLLECTION_INIT = gql`
         description_fr: $description_fr
         owner_emails: $owner_emails
         uploader_emails: $uploader_emails
-        is_locked: true
+        is_locked: $is_locked
       }
     ) {
       id
     }
+  }
+`;
+
+const VALIDATE_COLLECTION_DEF = gql`
+  query ValidateCollectionDef(
+    $name_en: String!
+    $name_fr: String!
+    $description_en: String!
+    $description_fr: String!
+    $owner_emails: [String!]!
+    $uploader_emails: [String!]!
+    $is_locked: Boolean!
+  ) {
+    validate_collection_def(
+      collection_def: {
+        name_en: $name_en
+        name_fr: $name_fr
+        description_en: $description_en
+        description_fr: $description_fr
+        owner_emails: $owner_emails
+        uploader_emails: $uploader_emails
+        is_locked: $is_locked
+      }
+    )
   }
 `;
 
@@ -62,6 +87,7 @@ type CollectionDefInput = {
   description_fr: string;
   owner_emails: string[];
   uploader_emails: string[];
+  is_locked: boolean;
 };
 
 // memoizing on session so that the session sync on browser focus won't trigger rerenders
@@ -74,6 +100,8 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
 }) {
   const navigate = useNavigate();
 
+  const client = useApolloClient();
+
   const [
     createCollectionInit,
     { data, loading: creationLoading, error: creationError },
@@ -82,13 +110,15 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
     CollectionDefInput
   >(CREATE_COLLECTION_INIT);
 
+  const id_of_created_collection = data?.create_collection_init.id;
+
   if (session !== null && !session.can_own_collections) {
     navigate('/');
-  } else if (data?.create_collection_init.id) {
-    navigate(`/manage-collection/${data?.create_collection_init.id}`);
+  } else if (id_of_created_collection) {
+    navigate(`/manage-collection/${id_of_created_collection}`);
   } else if (creationError) {
-    // Form validation to be handled within Formik, so an error at this point is something unexpected
-    // TODO: likely still want to catch and display this at the top of the route so that the user's progress isn't lost
+    // Form validation to be handled within Formik, so an error at this point is something unexpected, like a network issue
+    // TODO: likely still want to catch and display these at the top of the route without throwing out the user's form progress
     throw creationError;
   } else {
     return (
@@ -101,19 +131,27 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
             description_fr: '',
             owner_emails: [],
             uploader_emails: [],
+            is_locked: true,
           } as CollectionDefInput
         }
-        validate={async (collection_def) => {
-          // TODO get validation via API call
-          return {};
-        }}
+        validate={(collection_def) =>
+          client.query<
+            { validate_collection_def: boolean },
+            CollectionDefInput
+          >({
+            query: VALIDATE_COLLECTION_DEF,
+            variables: collection_def,
+          })
+        }
+        validateOnChange={false}
+        validateOnBlur={true}
         onSubmit={(collection_def) =>
           createCollectionInit({
             variables: collection_def,
           })
         }
       >
-        {({ isSubmitting, values, touched, errors }) => (
+        {({ values, touched, errors, isValid, isSubmitting }) => (
           <Form>
             <VStack spacing={4} align="flex-start">
               <Field name="name_en">
@@ -153,7 +191,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       meta.touched && typeof meta.error !== 'undefined'
                     }
                   >
-                    <FormLabel>Description (Enligh)</FormLabel>
+                    <FormLabel>Description (English)</FormLabel>
                     <Textarea {...field} />
                     {meta.touched && meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -258,7 +296,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                   </FormControl>
                 )}
               />
-              <Button type="submit" isLoading={isSubmitting}>
+              <Button type="submit" isLoading={isSubmitting} disabled={isValid}>
                 <Trans>Submit</Trans>
               </Button>
             </VStack>

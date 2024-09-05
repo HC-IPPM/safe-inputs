@@ -12,6 +12,7 @@ import { db_transaction } from 'src/db.ts';
 import { AppError } from 'src/error_utils.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
+import { validate_string_input } from 'src/schema/input_validation_utils.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import {
   create_dataloader_for_resource_by_primary_key_attr,
@@ -57,7 +58,7 @@ export interface CollectionDefInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   owners: Types.ObjectId[];
-  uploaders?: Types.ObjectId[];
+  uploaders: Types.ObjectId[];
   is_locked: boolean;
 }
 const CollectionDefSchema = new Schema<CollectionDefInterface>({
@@ -190,12 +191,132 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
-export const validate_collection_def = (_collect_def: CollectionDefInterface) =>
-  true; // TODO, check things like validity of owner/uploader emails
+type CollectionDefValidation = Partial<
+  Record<keyof CollectionDefInterface, string>
+>;
+export function validate_collection_def<Options extends { verbose: boolean }>(
+  collection_def: CollectionDefInterface,
+  options?: Options,
+): Options extends { verbose: true }
+  ? Promise<CollectionDefValidation>
+  : Promise<boolean>;
+export function validate_collection_def(
+  collection_def: CollectionDefInterface,
+  options = { verbose: false },
+): Promise<boolean | CollectionDefValidation> {
+  const validation_rules: [
+    keyof CollectionDefInterface,
+    (collection_def: CollectionDefInterface) => Promise<void>,
+  ][] = [
+    ['name_en', async ({ name_en }) => validate_string_input(name_en)],
+    ['name_fr', async ({ name_fr }) => validate_string_input(name_fr)],
+    [
+      'description_en',
+      async ({ description_en }) =>
+        validate_string_input(description_en, {
+          min_length: 0,
+          max_length: 10000,
+        }),
+    ],
+    [
+      'description_fr',
+      async ({ description_fr }) =>
+        validate_string_input(description_fr, {
+          min_length: 0,
+          max_length: 10000,
+        }),
+    ],
+    ['owners', async ({ owners }) => {}],
+    ['uploaders', async ({ uploaders }) => {}],
+  ];
 
-export const validate_column_defs = (
+  if (options.verbose) {
+    return Promise.allSettled(
+      _.map(validation_rules, ([_key, rule]) => rule(collection_def)),
+    ).then((results) =>
+      _.chain(results)
+        .reduce(
+          (validation_messages, result, index) => {
+            if (result.status === 'rejected') {
+              const key = validation_rules[index][0];
+              validation_messages[key] = result.reason;
+            }
+            return validation_messages;
+          },
+          _.mapValues<CollectionDefInterface, string[]>(
+            collection_def,
+            () => [],
+          ),
+        )
+        .mapValues((messages) =>
+          messages.length === 0 ? undefined : messages.join('\n'),
+        )
+        .value(),
+    );
+  } else {
+    return Promise.all(
+      _.map(validation_rules, ([_key, rule]) => rule(collection_def)),
+    )
+      .then(() => true) // all promises resolved
+      .catch(() => false); // on first rejected promise, fails fast
+  }
+}
+
+type ColumnDefValidation = Partial<
+  Record<keyof ColumnDefInterfaceWithMetaOptional, string>
+>[];
+export function validate_column_defs<Options extends { verbose: boolean }>(
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  options?: Options,
+): Options extends { verbose: true } ? ColumnDefValidation : boolean;
+export function validate_column_defs(
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  options = { verbose: false },
+): ColumnDefValidation | boolean {
+  // TODO, column def details (data types and constraints) and their validation will be a follow up PR
+
+  if (options.verbose) {
+    return _.map(column_defs, undefined);
+  } else {
+    return true;
+  }
+}
+
+type RecordDataValidation = Record<string, string>[];
+export function validate_record_data_against_column_defs<
+  Options extends { verbose: boolean },
+>(
+  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  data: Record<string, any>[], // TODO, could better type data records
+  options?: Options,
+): Options extends { verbose: true } ? RecordDataValidation : boolean;
+export function validate_record_data_against_column_defs(
   _column_defs: ColumnDefInterfaceWithMetaOptional[],
-) => true; // implementation TODO, data types and constraint validation will be a follow up PR
+  data: Record<string, any>[],
+  options = { verbose: false },
+): RecordDataValidation | boolean {
+  // TODO, column def details (data types and constraints) and their validation will be a follow up PR
+
+  if (options.verbose) {
+    return _.map(data, undefined);
+  } else {
+    return true;
+  }
+}
+
+export const are_new_column_defs_compatible_with_current_records = async (
+  collection: CollectionDocument,
+  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
+) => {
+  const records = await RecordsByRecordsetKeyLoader.load(
+    collection.recordset_key,
+  );
+
+  return validate_record_data_against_column_defs(
+    new_column_defs,
+    _.map(records, 'data'),
+  );
+};
 
 export const create_collection = (
   user: UserDocument,
@@ -222,12 +343,8 @@ export const create_collection = (
     created_by,
     created_at,
 
-    collection_def: {
-      ...collection_def,
-      owners: _.uniqBy([...collection_def.owners, user._id], (object_id) =>
-        object_id.toString(),
-      ),
-    },
+    collection_def,
+
     column_defs: column_defs.map((column_def) => ({
       ...column_def,
       created_by,
@@ -318,34 +435,6 @@ export const update_collection_def_fields = (
     new_collection_def,
   );
 
-// implementation TODO, data types and constraint validation will be a follow up PR
-// Note: intending to implement this with the `verbose` flag, or some equivalent,
-// controlling whether the function exits with a boolean on the first error, or wherther
-// it runs all the way through and returns per "cell" validation failure messages
-export const validate_record_data_against_column_defs = (
-  _column_defs: ColumnDefInterfaceWithMetaOptional[],
-  _data: Record<string, any>[],
-  _verbose: boolean,
-) => true;
-
-export const are_new_column_defs_compatible_with_current_records = async (
-  collection: CollectionDocument,
-  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
-) => {
-  if (!validate_column_defs(new_column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
-  const records = await RecordsByRecordsetKeyLoader.load(
-    collection.recordset_key,
-  );
-  return validate_record_data_against_column_defs(
-    new_column_defs,
-    _.map(records, 'data'),
-    true,
-  );
-};
-
 // Column definition updates _may_ result in a major version bump if compatibility breaks, minor version otherwise
 export const update_collection_column_defs = async (
   current_collection: CollectionDocument,
@@ -393,13 +482,7 @@ export const insert_records = async (
   data: Record<string, any>[],
   user: UserDocument,
 ) => {
-  if (
-    !validate_record_data_against_column_defs(
-      collection.column_defs,
-      data,
-      false,
-    )
-  ) {
+  if (!validate_record_data_against_column_defs(collection.column_defs, data)) {
     throw new AppError(400, 'Record validation failed');
   }
 
