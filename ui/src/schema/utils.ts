@@ -76,13 +76,17 @@ export interface User {
 export interface ColumnDef {
   header: string;
   name: string;
-  datatype: string;
+  name_en: string;
+  name_fr: string;
+  description_en: string;
+  description_fr: string;
+  data_type: string;
   conditions: {
-    condition_type: string
-    parameters: string[]
-  }[]
+    condition_type: string;
+    parameters: string[];
+  }[];
 }
-export interface Collection  {
+export interface Collection {
   id: string;
   stable_key?: string;
   major_ver: number;
@@ -98,4 +102,4 @@ export interface Collection  {
   owners: User[];
   uploaders: User[];
   column_defs: ColumnDef[];
-};
+}

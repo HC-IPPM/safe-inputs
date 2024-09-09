@@ -1,11 +1,24 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 
-import { Box, Container } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Container,
+  Heading,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import _ from 'lodash';
 import React, { memo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
@@ -14,6 +27,7 @@ import CollectionForm from 'src/components/CollectionForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 
 import { LoadingBlock } from 'src/components/Loading.tsx';
+import { ColumnDef } from 'src/schema/utils.ts';
 
 const GET_COLLECTION_DETAILS = gql`
   query CollectionDetails($collection_id: String!, $lang: String!) {
@@ -71,19 +85,19 @@ const ErrorDisplay = function ({
     </div>
   );
 };
+
 const CollectionMainPage = memo(function CollectionMainPage({
   session,
 }: {
   session: Session;
 }) {
   const { collectionID } = useParams();
-  const location = useLocation();
-  const redirect = location.state?.redirect || false;
 
   const {
     i18n: { locale },
   } = useLingui();
   const navigate = useNavigate();
+  const toast = useToast();
 
   // Fetch the latest version of the collection. Current version is updated to false backend, when changed
   const { loading, error, data } = useQuery(GET_COLLECTION_DETAILS, {
@@ -129,7 +143,75 @@ const CollectionMainPage = memo(function CollectionMainPage({
   } else {
     return (
       <LoadingBlock isLoading={loading} flexDir={'column'}>
-        {data && <CollectionForm data={data?.collection} redirect={redirect} />}
+        {data && (
+          <>
+            <CollectionForm data={data?.collection} />
+            <Box mt={8}>
+              <Heading as="h2" size="lg" mb={6}>
+                Columns Overview
+              </Heading>
+
+              <Stack spacing={4} mb={6}>
+                {data?.collection?.column_defs.length > 0 ? (
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>Header</Th>
+                        <Th>Name</Th>
+                        <Th>Data Type</Th>
+                        <Th>Conditions</Th>
+                        <Th>Actions</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {data?.collection?.column_defs.map(
+                        (column: ColumnDef) => (
+                          <Tr key={column.header}>
+                            <Td>{column.header}</Td>
+                            <Td>{column.name}</Td>
+                            <Td>{column.data_type}</Td>
+                            <Td>
+                              {column.conditions.map((condition, index) => (
+                                <Box key={index}>
+                                  <Text>{condition.condition_type}</Text>
+                                  <Text fontSize="sm" color="gray.500">
+                                    {JSON.stringify(condition.parameters)}
+                                  </Text>
+                                </Box>
+                              ))}
+                            </Td>
+                            <Td>
+                              <Button
+                                as={Link}
+                                to={`/manage-collection/${collectionID}/edit-column/${column.header}`}
+                                colorScheme="blue"
+                                size="sm"
+                                mr={2}
+                              >
+                                Edit
+                              </Button>
+                            </Td>
+                          </Tr>
+                        ),
+                      )}
+                    </Tbody>
+                  </Table>
+                ) : (
+                  <Text>No columns available.</Text>
+                )}
+              </Stack>
+
+              <Button
+                as={Link}
+                to={`/manage-collection/${collectionID}/create-column`}
+                colorScheme="green"
+                size="md"
+              >
+                Add New Column
+              </Button>
+            </Box>
+          </>
+        )}
       </LoadingBlock>
     );
   }
