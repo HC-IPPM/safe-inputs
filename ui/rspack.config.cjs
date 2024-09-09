@@ -21,7 +21,7 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    tsConfigPath: path.resolve(__dirname, './tsconfig.json'),
+    tsConfig: path.resolve(__dirname, './tsconfig.json'),
   },
   plugins: [
     new rspack.HtmlRspackPlugin({
@@ -46,5 +46,8 @@ module.exports = {
         },
       },
     ],
+  },
+  experiments: {
+    css: true,
   },
 };

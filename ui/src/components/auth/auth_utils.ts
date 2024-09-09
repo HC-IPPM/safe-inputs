@@ -96,7 +96,7 @@ export const email_sign_in = async (
     throw data;
   }
 
-  if (IS_LOCAL_DEV !== 'true' && data?.verification_url) {
+  if (!IS_LOCAL_DEV && data?.verification_url) {
     throw new Error(
       'The server should NEVER include the verification_url in a sign in response when not in local dev!',
     );
