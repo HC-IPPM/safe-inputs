@@ -30,7 +30,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: ui
-          image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui:main-a701cfe-1725912847 # {"$imagepolicy": "flux-system:ui"}
+          image: northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui:main-35ec0e0-1725912891 # {"$imagepolicy": "flux-system:ui"}
           # Container specific security settings:
           securityContext:
             # No new privs for process or it's children
