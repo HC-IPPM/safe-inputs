@@ -43,7 +43,7 @@
     "@rspack/cli": "1.0.4",
     "@rspack/core": "1.0.4",
     "@svgr/webpack": "8.1.0",
-    "@swc/core": "1.7.24",
+    "@swc/core": "1.7.26",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.5.0",
     "@testing-library/react": "16.0.1",
