@@ -10,7 +10,7 @@
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
     "test": "jest --coverage --coverageReporters text",
-    "test:debug": "node --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
+    "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
