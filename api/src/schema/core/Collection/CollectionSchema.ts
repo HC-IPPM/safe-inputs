@@ -3,6 +3,7 @@ import { GraphQLError } from 'graphql';
 import { JSONResolver } from 'graphql-scalars';
 
 import _ from 'lodash';
+import mongoose from 'mongoose';
 
 import {
   user_email_is_super_user_rule,
@@ -20,6 +21,7 @@ import {
 } from 'src/schema/core/User/UserModel.ts';
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangsUnion } from 'src/schema/lang_utils.ts';
+import { get_validation_errors } from 'src/schema/mongoose_utils.ts';
 import {
   resolver_with_authz,
   resolve_document_id,
@@ -35,8 +37,6 @@ import {
   update_collection_def_fields,
   are_new_column_defs_compatible_with_current_records,
   update_collection_column_defs,
-  validate_collection_def,
-  validate_column_defs,
   validate_record_data_against_column_defs,
   insert_records,
   delete_records,
@@ -261,13 +261,13 @@ export const CollectionSchema = makeExecutableSchema({
     uploader_emails: [String]!
   }
   type CollectionDefValidation {
-    name_en: String
-    name_fr: String
-    description_en: String
-    description_fr: String
-    is_locked: String
-    owner_emails: String
-    uploader_emails: String
+    name_en: ValidationMessages
+    name_fr: ValidationMessages
+    description_en: ValidationMessages
+    description_fr: ValidationMessages
+    is_locked: ValidationMessages
+    owner_emails: ValidationMessages
+    uploader_emails: ValidationMessages
   } 
 
   input ColumnDefInput {
@@ -287,14 +287,19 @@ export const CollectionSchema = makeExecutableSchema({
     parameters: [String]!
   }
   type ColumnDefValidation {
-    header: String
-    name_en: String
-    name_fr: String
-    description_en: String
-    description_fr: String
-    data_type: String
-    conditions: String
-  } 
+    header: ValidationMessages
+    name_en: ValidationMessages
+    name_fr: ValidationMessages
+    description_en: ValidationMessages
+    description_fr: ValidationMessages
+    data_type: ValidationMessages
+    conditions: ValidationMessages
+  }
+
+  type ValidationMessages {
+    en: String
+    fr: String
+  }
 
   type User {
     owned_collections: [Collection]
@@ -451,15 +456,22 @@ export const CollectionSchema = makeExecutableSchema({
           context,
           _info: unknown,
         ) => {
+          // Pre-check user emails, filter out invalid ones, merge error messages about them with
+          // CollectionModel.validate output
+
           const model_ready_collection_def =
             await collection_def_input_to_model_fields(
               collection_def,
               context.req.user,
             );
 
-          return validate_collection_def(model_ready_collection_def, {
-            verbose: true,
-          });
+          const model_validation_errors = await get_validation_errors(
+            CollectionModel,
+            { collection_def: model_ready_collection_def },
+            ['collection_def'],
+          );
+
+          return model_validation_errors.collection_def;
         },
         user_can_be_collection_owner,
       ),
@@ -485,34 +497,9 @@ export const CollectionSchema = makeExecutableSchema({
             user_can_edit_collection,
           );
 
-          try {
-            const field_validations = validate_column_defs(column_defs, {
-              verbose: true,
-            });
-
-            if (
-              _.some(
-                field_validations,
-                (field_validation) => !_.isEmpty(field_validation),
-              )
-            ) {
-              return field_validations;
-            } else {
-              // TODO do I want to cram compatability checks in here or make it a separate endpoint? Pending development of validation rules
-              // eslint-disable-next-line no-secrets/no-secrets
-              // const new_column_defs_are_backwards_compatible =
-              //   await are_new_column_defs_compatible_with_current_records(
-              //     collection!,
-              //     column_defs,
-              //   );
-
-              return field_validations;
-            }
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            throw app_error_to_gql_error(error);
-          }
+          return await get_validation_errors(CollectionModel, { column_defs }, [
+            'column_defs',
+          ]);
         },
       ),
       validate_records: resolver_with_authz(

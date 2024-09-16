@@ -12,13 +12,15 @@ import { db_transaction } from 'src/db.ts';
 import { AppError } from 'src/error_utils.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
-import { validate_string_input } from 'src/schema/input_validation_utils.ts';
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 import {
   create_dataloader_for_resource_by_primary_key_attr,
   create_dataloader_for_resources_by_foreign_key_attr,
 } from 'src/schema/loader_utils.ts';
 import {
+  string_type_mixin,
+  number_type_mixin,
+  is_required_mixin,
   make_lang_suffixed_type,
   make_foreign_id_type,
   make_foreign_key_type,
@@ -29,8 +31,12 @@ interface ConditionInterface {
   parameters?: string[];
 }
 const ConditionSchema = new Schema<ConditionInterface>({
-  condition_type: { type: String, required: true },
-  parameters: [{ type: String }],
+  condition_type: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
+  parameters: [{ ...string_type_mixin, immutable: true }],
 });
 
 interface ColumnDefInterface
@@ -39,18 +45,29 @@ interface ColumnDefInterface
   header: string;
   data_type: string; // TODO this will be an enum once column types are formalized
   conditions: ConditionInterface[];
-  created_by: Types.ObjectId;
-  created_at: number;
 }
-export type ColumnDefInterfaceWithMetaOptional = SetOptional<
-  ColumnDefInterface,
-  'created_by' | 'created_at'
->;
 const ColumnDefSchema = new Schema<ColumnDefInterface>({
-  ...make_lang_suffixed_type('name', { type: String, required: true }),
-  ...make_lang_suffixed_type('description', { type: String, required: true }),
-  header: { type: String, required: true },
-  data_type: { type: String, required: true },
+  ...make_lang_suffixed_type('name', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  }),
+  ...make_lang_suffixed_type('description', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    default: '',
+  }),
+  header: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
+  data_type: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
   conditions: [ConditionSchema],
 });
 
@@ -62,14 +79,24 @@ export interface CollectionDefInterface
   is_locked: boolean;
 }
 const CollectionDefSchema = new Schema<CollectionDefInterface>({
-  ...make_lang_suffixed_type('name', { type: String, required: true }),
-  ...make_lang_suffixed_type('description', { type: String, required: true }),
-  owners: {
-    type: [make_foreign_id_type('User', { required: true })],
-    required: true,
-  },
-  uploaders: { type: [make_foreign_id_type('User')], required: true },
-  is_locked: { type: Boolean, required: true },
+  ...make_lang_suffixed_type('name', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  }),
+  ...make_lang_suffixed_type('description', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  }),
+  owners: [
+    make_foreign_id_type('User', {
+      required: true,
+      immutable: true,
+    }),
+  ],
+  uploaders: [make_foreign_id_type('User', { immutable: true })],
+  is_locked: { type: Boolean, ...is_required_mixin, immutable: true },
 });
 
 interface CollectionInterface {
@@ -84,19 +111,46 @@ interface CollectionInterface {
   recordset_key: string;
 }
 const CollectionMongooseSchema = new Schema<CollectionInterface>({
-  stable_key: { type: String, required: true, index: true },
-  major_ver: { type: Number, required: true },
-  minor_ver: { type: Number, required: true },
+  stable_key: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    index: true,
+  },
+  major_ver: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    min: 1,
+  },
+  minor_ver: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    min: 0,
+  },
   is_current_version: { type: Boolean, required: true },
-  created_by: make_foreign_id_type('User', { required: true }),
-  created_at: { type: Number, required: true },
+  created_by: make_foreign_id_type('User', {
+    required: true,
+    immutable: true,
+  }),
+  created_at: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
 
-  collection_def: { type: CollectionDefSchema, required: true },
+  collection_def: {
+    type: CollectionDefSchema,
+    ...is_required_mixin,
+    immutable: true,
+  },
 
-  column_defs: { type: [ColumnDefSchema], requied: true },
+  column_defs: { type: [ColumnDefSchema], requied: true, immutable: true },
 
   recordset_key: {
-    type: String,
+    ...string_type_mixin,
+    immutable: true,
     default: function () {
       return `${this.stable_key}_${this.major_ver}`;
     },
@@ -130,11 +184,19 @@ export interface RecordInterface {
 const RecordMongooseSchema = new Schema<RecordInterface>({
   recordset_key: make_foreign_key_type(String, 'Collection', {
     required: true,
+    immutable: true,
     index: true,
   }),
   data: Schema.Types.Mixed,
-  created_by: make_foreign_id_type('User', { required: true }),
-  created_at: { type: Number, required: true },
+  created_by: make_foreign_id_type('User', {
+    required: true,
+    immutable: true,
+  }),
+  created_at: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
 });
 RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
 
@@ -191,107 +253,16 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
-type CollectionDefValidation = Partial<
-  Record<keyof CollectionDefInterface, string>
->;
-export function validate_collection_def<Options extends { verbose: boolean }>(
-  collection_def: CollectionDefInterface,
-  options?: Options,
-): Options extends { verbose: true }
-  ? Promise<CollectionDefValidation>
-  : Promise<boolean>;
-export function validate_collection_def(
-  collection_def: CollectionDefInterface,
-  options = { verbose: false },
-): Promise<boolean | CollectionDefValidation> {
-  const validation_rules: [
-    keyof CollectionDefInterface,
-    (collection_def: CollectionDefInterface) => Promise<void>,
-  ][] = [
-    ['name_en', async ({ name_en }) => validate_string_input(name_en)],
-    ['name_fr', async ({ name_fr }) => validate_string_input(name_fr)],
-    [
-      'description_en',
-      async ({ description_en }) =>
-        validate_string_input(description_en, {
-          min_length: 0,
-          max_length: 10000,
-        }),
-    ],
-    [
-      'description_fr',
-      async ({ description_fr }) =>
-        validate_string_input(description_fr, {
-          min_length: 0,
-          max_length: 10000,
-        }),
-    ],
-    ['owners', async ({ owners }) => {}],
-    ['uploaders', async ({ uploaders }) => {}],
-  ];
-
-  if (options.verbose) {
-    return Promise.allSettled(
-      _.map(validation_rules, ([_key, rule]) => rule(collection_def)),
-    ).then((results) =>
-      _.chain(results)
-        .reduce(
-          (validation_messages, result, index) => {
-            if (result.status === 'rejected') {
-              const key = validation_rules[index][0];
-              validation_messages[key] = result.reason;
-            }
-            return validation_messages;
-          },
-          _.mapValues<CollectionDefInterface, string[]>(
-            collection_def,
-            () => [],
-          ),
-        )
-        .mapValues((messages) =>
-          messages.length === 0 ? undefined : messages.join('\n'),
-        )
-        .value(),
-    );
-  } else {
-    return Promise.all(
-      _.map(validation_rules, ([_key, rule]) => rule(collection_def)),
-    )
-      .then(() => true) // all promises resolved
-      .catch(() => false); // on first rejected promise, fails fast
-  }
-}
-
-type ColumnDefValidation = Partial<
-  Record<keyof ColumnDefInterfaceWithMetaOptional, string>
->[];
-export function validate_column_defs<Options extends { verbose: boolean }>(
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
-  options?: Options,
-): Options extends { verbose: true } ? ColumnDefValidation : boolean;
-export function validate_column_defs(
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
-  options = { verbose: false },
-): ColumnDefValidation | boolean {
-  // TODO, column def details (data types and constraints) and their validation will be a follow up PR
-
-  if (options.verbose) {
-    return _.map(column_defs, undefined);
-  } else {
-    return true;
-  }
-}
-
 type RecordDataValidation = Record<string, string>[];
 export function validate_record_data_against_column_defs<
   Options extends { verbose: boolean },
 >(
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  column_defs: ColumnDefInterface[],
   data: Record<string, any>[], // TODO, could better type data records
   options?: Options,
 ): Options extends { verbose: true } ? RecordDataValidation : boolean;
 export function validate_record_data_against_column_defs(
-  _column_defs: ColumnDefInterfaceWithMetaOptional[],
+  _column_defs: ColumnDefInterface[],
   data: Record<string, any>[],
   options = { verbose: false },
 ): RecordDataValidation | boolean {
@@ -306,7 +277,7 @@ export function validate_record_data_against_column_defs(
 
 export const are_new_column_defs_compatible_with_current_records = async (
   collection: CollectionDocument,
-  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
+  new_column_defs: ColumnDefInterface[],
 ) => {
   const records = await RecordsByRecordsetKeyLoader.load(
     collection.recordset_key,
@@ -321,16 +292,8 @@ export const are_new_column_defs_compatible_with_current_records = async (
 export const create_collection = (
   user: UserDocument,
   collection_def: CollectionDefInterface,
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  column_defs: ColumnDefInterface[],
 ) => {
-  if (!validate_collection_def(collection_def)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
-  if (!validate_column_defs(column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
   const created_by = user._id;
   const created_at = Date.now();
 
@@ -361,10 +324,6 @@ const create_collection_version = async (
   collection_def?: CollectionDefInterface,
   column_defs?: ColumnDefInterface[],
 ) => {
-  if (column_defs && !validate_column_defs(column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
   const created_by = user._id;
   const created_at = Date.now();
 
@@ -439,12 +398,8 @@ export const update_collection_def_fields = (
 export const update_collection_column_defs = async (
   current_collection: CollectionDocument,
   user: UserDocument,
-  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
+  new_column_defs: ColumnDefInterface[],
 ) => {
-  if (!validate_column_defs(new_column_defs)) {
-    throw new AppError(400, 'Column defs validation failed');
-  }
-
   const created_by = user._id;
   const created_at = Date.now();
 

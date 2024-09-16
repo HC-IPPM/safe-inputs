@@ -17,9 +17,11 @@ import {
 } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 
 import type { FieldProps } from 'formik';
 import { Formik, Form, Field, FieldArray } from 'formik';
+import _ from 'lodash';
 
 import { memo } from 'react';
 
@@ -54,6 +56,7 @@ const CREATE_COLLECTION_INIT = gql`
     }
   }
 `;
+type CreateCollectionInitResult = { create_collection_init: { id: string } };
 
 const VALIDATE_COLLECTION_DEF = gql`
   query ValidateCollectionDef(
@@ -75,9 +78,53 @@ const VALIDATE_COLLECTION_DEF = gql`
         uploader_emails: $uploader_emails
         is_locked: $is_locked
       }
-    )
+    ) {
+      name_en {
+        en
+        fr
+      }
+      name_fr {
+        en
+        fr
+      }
+      description_en {
+        en
+        fr
+      }
+      description_fr {
+        en
+        fr
+      }
+      is_locked {
+        en
+        fr
+      }
+      owner_emails {
+        en
+        fr
+      }
+      uploader_emails {
+        en
+        fr
+      }
+    }
   }
 `;
+type ValidateCollectionDefResult = {
+  validate_collection_def: {
+    name_en: ValidationResult;
+    name_fr: ValidationResult;
+    description_en: ValidationResult;
+    description_fr: ValidationResult;
+    is_locked: ValidationResult;
+    owner_emails: ValidationResult;
+    uploader_emails: ValidationResult;
+  };
+};
+type ValidationResult = {
+  en: string;
+  fr: string;
+};
 
 // TODO at some point, I'll integrate a tool to generate types from queries
 type CollectionDefInput = {
@@ -99,16 +146,18 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
   session: Session;
 }) {
   const navigate = useNavigate();
+  const {
+    i18n: { locale },
+  } = useLingui();
 
   const client = useApolloClient();
 
   const [
     createCollectionInit,
     { data, loading: creationLoading, error: creationError },
-  ] = useMutation<
-    { create_collection_init: { id: string } },
-    CollectionDefInput
-  >(CREATE_COLLECTION_INIT);
+  ] = useMutation<CreateCollectionInitResult, CollectionDefInput>(
+    CREATE_COLLECTION_INIT,
+  );
 
   const id_of_created_collection = data?.create_collection_init.id;
 
@@ -134,15 +183,21 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
             is_locked: true,
           } as CollectionDefInput
         }
-        validate={(collection_def) =>
-          client.query<
-            { validate_collection_def: boolean },
+        validate={async (collection_def) => {
+          const {
+            data: { validate_collection_def },
+          } = await client.query<
+            ValidateCollectionDefResult,
             CollectionDefInput
           >({
             query: VALIDATE_COLLECTION_DEF,
             variables: collection_def,
-          })
-        }
+          });
+
+          return _.mapValues(validate_collection_def, (validation_result) =>
+            _.get(validation_result, locale, null),
+          );
+        }}
         validateOnChange={false}
         validateOnBlur={true}
         onSubmit={(collection_def) =>
