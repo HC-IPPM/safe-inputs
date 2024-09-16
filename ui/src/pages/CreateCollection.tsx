@@ -216,7 +216,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       meta.touched && typeof meta.error !== 'undefined'
                     }
                   >
-                    <FormLabel>Name (English)</FormLabel>
+                    <FormLabel>
+                      <Trans>Name (English)</Trans>
+                    </FormLabel>
                     <Input {...field} />
                     {meta.touched && meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -231,7 +233,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       meta.touched && typeof meta.error !== 'undefined'
                     }
                   >
-                    <FormLabel>Name (French)</FormLabel>
+                    <FormLabel>
+                      <Trans>Name (French)</Trans>
+                    </FormLabel>
                     <Input {...field} />
                     {meta.touched && meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -246,7 +250,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       meta.touched && typeof meta.error !== 'undefined'
                     }
                   >
-                    <FormLabel>Description (English)</FormLabel>
+                    <FormLabel>
+                      <Trans>Description (English)</Trans>
+                    </FormLabel>
                     <Textarea {...field} />
                     {meta.touched && meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -261,7 +267,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       meta.touched && typeof meta.error !== 'undefined'
                     }
                   >
-                    <FormLabel>Description (French)</FormLabel>
+                    <FormLabel>
+                      <Trans>Description (French)</Trans>
+                    </FormLabel>
                     <Textarea {...field} />
                     {meta.touched && meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -281,7 +289,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                         {({ field }: FieldProps<string>) => (
                           <FormControl marginLeft={4}>
                             <HStack marginBottom={2}>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel>
+                                <Trans>Email</Trans>
+                              </FormLabel>
                               <Input {...field} />
                               <IconButton
                                 aria-label={t`Remove ${email}`}
@@ -321,7 +331,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                         {({ field }: FieldProps<string>) => (
                           <FormControl marginLeft={4}>
                             <HStack marginBottom={2}>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel>
+                                <Trans>Email</Trans>
+                              </FormLabel>
                               <Input {...field} />
                               <IconButton
                                 aria-label={t`Remove ${email}`}
