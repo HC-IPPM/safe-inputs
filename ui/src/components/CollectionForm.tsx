@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import {
-  Box,
   Button,
   Checkbox,
   FormControl,
@@ -8,70 +7,20 @@ import {
   Input,
   Textarea,
   VStack,
-  HStack,
   Text,
   useToast,
 } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 import _ from 'lodash';
 
-import {
-  useForm,
-  useFieldArray,
-  Controller,
-  FieldArrayWithId,
-  Control,
-} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { UPDATE_COLLECTION } from 'src/graphql/queries.ts';
 import type { Collection, User } from 'src/graphql/schema.ts';
 
+import EmailFields from './EmailField.tsx';
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
-
-function renderEmailFields({
-  title,
-  emailFields,
-  control,
-  fieldName,
-  appendEmail,
-  removeEmail,
-}: {
-  title: React.ReactNode;
-  emailFields: FieldArrayWithId[];
-  control: Control<Collection>;
-  fieldName: string;
-  appendEmail: (email: { email: string }) => void;
-  removeEmail: (index: number) => void;
-}) {
-  return (
-    <Box>
-      <FormLabel fontWeight="bold">{title}</FormLabel>
-      {emailFields.map((item, index) => (
-        <HStack key={item.id} spacing={4} mb={2}>
-          <Controller
-            control={control}
-            name={`${fieldName}.${index}.email`}
-            render={({ field }) => (
-              <Input
-                type="email"
-                placeholder="Enter email"
-                {...field}
-                isRequired
-              />
-            )}
-          />
-          <Button colorScheme="red" onClick={() => removeEmail(index)}>
-            <Trans>Remove</Trans>
-          </Button>
-        </HStack>
-      ))}
-      <Button colorScheme="blue" onClick={() => appendEmail({ email: '' })}>
-        <Trans>Add Email</Trans>
-      </Button>
-    </Box>
-  );
-}
 
 interface CollectionFormProps {
   data: Collection;
@@ -80,24 +29,6 @@ interface CollectionFormProps {
 function CollectionForm({ data }: CollectionFormProps) {
   const { register, handleSubmit, control } = useForm<Collection>({
     defaultValues: data,
-  });
-
-  const {
-    fields: ownerEmailFields,
-    append: appendOwnerEmail,
-    remove: removeOwnerEmail,
-  } = useFieldArray({
-    control,
-    name: 'owners',
-  });
-
-  const {
-    fields: uploaderEmailFields,
-    append: appendUploaderEmail,
-    remove: removeUploaderEmail,
-  } = useFieldArray({
-    control,
-    name: 'uploaders',
   });
 
   const [updateCollection, { loading, error }] = useMutation(UPDATE_COLLECTION);
@@ -177,23 +108,17 @@ function CollectionForm({ data }: CollectionFormProps) {
           <Textarea {...register('description_fr')} />
         </FormControl>
 
-        {renderEmailFields({
-          title: <Trans>Owner Emails</Trans>,
-          emailFields: ownerEmailFields,
-          control,
-          fieldName: 'owners',
-          appendEmail: appendOwnerEmail,
-          removeEmail: removeOwnerEmail,
-        })}
+        <EmailFields
+          title=<Trans>Owner Emails</Trans>
+          control={control}
+          fieldName="owners"
+        />
 
-        {renderEmailFields({
-          title: <Trans>Uploader Emails</Trans>,
-          emailFields: uploaderEmailFields,
-          control,
-          fieldName: 'uploaders',
-          appendEmail: appendUploaderEmail,
-          removeEmail: removeUploaderEmail,
-        })}
+        <EmailFields
+          title=<Trans>Uploaders Emails</Trans>
+          control={control}
+          fieldName="uploaders"
+        />
 
         <Button type="submit" colorScheme="teal" isLoading={loading}>
           <Trans>Update Collection Details</Trans>
