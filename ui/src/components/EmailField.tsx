@@ -1,5 +1,5 @@
 import { Box, Button, FormLabel, HStack, Input } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import { Control, Controller, useFieldArray } from 'react-hook-form';
 
 import { Collection } from 'src/graphql/schema.ts';
@@ -37,7 +37,7 @@ function EmailFields({ title, control, fieldName }: EmailFieldsProps) {
             )}
           />
           <Button
-            aria-label={`Remove ${field.email} from ${fieldName}`}
+            aria-label={t`Remove ${field.email} from ${fieldName}`}
             colorScheme="red"
             onClick={() => remove(index)}
           >
@@ -46,7 +46,7 @@ function EmailFields({ title, control, fieldName }: EmailFieldsProps) {
         </HStack>
       ))}
       <Button
-        aria-label={`Add new email to ${fieldName}`}
+        aria-label={t`Add new email to ${fieldName}`}
         colorScheme="blue"
         onClick={() => append({ email: '' })}
       >

@@ -15,7 +15,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -45,9 +45,8 @@ const ColumnManagementForm = function ({
 }: ColumnManagementFormProps) {
   const toast = useToast();
   const navigate = useNavigate();
-  const [updateColumnDefs, { error: updateError }] = useMutation(
-    UPDATE_COLUMN_DEFINITION,
-  );
+  const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_COLUMN_DEFINITION);
   const [validateColumnDefs] = useMutation(VALIDATE_COLUMN_DEFS);
 
   const getUpdatedColumnDefs = useCallback(
@@ -239,6 +238,8 @@ const ColumnManagementForm = function ({
           </FormControl>
           <HStack spacing={4}>
             <Button
+              loadingText={t`Updating column`}
+              isLoading={updateLoading}
               isDisabled={!isValid}
               type="submit"
               colorScheme="blue"

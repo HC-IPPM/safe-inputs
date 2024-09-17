@@ -10,7 +10,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 import _ from 'lodash';
 
 import { useForm } from 'react-hook-form';
@@ -120,7 +120,12 @@ function CollectionForm({ data }: CollectionFormProps) {
           fieldName="uploaders"
         />
 
-        <Button type="submit" colorScheme="teal" isLoading={loading}>
+        <Button
+          loadingText={t`Updating collection`}
+          type="submit"
+          colorScheme="teal"
+          isLoading={loading}
+        >
           <Trans>Update Collection Details</Trans>
         </Button>
       </VStack>
