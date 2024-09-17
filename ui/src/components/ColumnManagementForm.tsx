@@ -23,36 +23,14 @@ import { useForm, useWatch } from 'react-hook-form';
 
 import { useNavigate } from 'react-router-dom';
 
-import { Collection, ColumnDef } from 'src/schema/utils.ts';
+import {
+  UPDATE_COLUMN_DEFINITION,
+  VALIDATE_COLUMN_DEFS,
+} from 'src/graphql/queries.ts';
+import type { Collection, ColumnDef } from 'src/graphql/schema.ts';
 
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
 import { Link } from './Link.tsx';
-
-const UPDATE_COLUMN_DEFINITION = gql`
-  mutation ColumnUpdate(
-    $collection_id: String!
-    $column_defs: [ColumnDefInput]
-  ) {
-    update_column_defs(
-      collection_id: $collection_id
-      column_defs: $column_defs
-    ) {
-      id
-    }
-  }
-`;
-
-const VALIDATE_COLUMN_DEFS = gql`
-  mutation ColumnValidation(
-    $collection_id: String!
-    $column_defs: [ColumnDefInput]
-  ) {
-    validate_new_column_defs(
-      collection_id: $collection_id
-      column_defs: $column_defs
-    )
-  }
-`;
 
 interface ColumnManagementFormProps {
   collection: Collection;

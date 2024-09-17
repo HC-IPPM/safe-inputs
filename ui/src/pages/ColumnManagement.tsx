@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Box, Container } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
@@ -12,39 +12,8 @@ import { useSession } from 'src/components/auth/session.tsx';
 import ColumnManagementForm from 'src/components/ColumnManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { User } from 'src/schema/utils.ts';
-
-const GET_COLUMN_DETAILS = gql`
-  query ColumnDetails($collection_id: String!, $lang: String!) {
-    collection(collection_id: $collection_id) {
-      id
-      is_current_version
-      major_ver
-      minor_ver
-      created_by {
-        email
-      }
-      owners {
-        email
-      }
-      created_at
-      is_locked
-      name(lang: $lang)
-      column_defs {
-        header
-        name_en
-        name_fr
-        description_en
-        description_fr
-        data_type
-        conditions {
-          condition_type
-          parameters
-        }
-      }
-    }
-  }
-`;
+import { GET_COLUMN_DETAILS } from 'src/graphql/queries.ts';
+import type { User } from 'src/graphql/schema.ts';
 
 const ErrorDisplay = function ({
   title,

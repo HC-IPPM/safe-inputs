@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import {
   Box,
@@ -13,7 +13,6 @@ import {
   Thead,
   Tr,
   Text,
-  useToast,
 } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -27,42 +26,8 @@ import CollectionForm from 'src/components/CollectionForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { ColumnDef } from 'src/schema/utils.ts';
-
-const GET_COLLECTION_DETAILS = gql`
-  query CollectionDetails($collection_id: String!, $lang: String!) {
-    collection(collection_id: $collection_id) {
-      id
-      is_current_version
-      major_ver
-      minor_ver
-      created_by {
-        email
-      }
-      created_at
-      is_locked
-      name_en
-      name_fr
-      description_en
-      description_fr
-      owners {
-        email
-      }
-      uploaders {
-        email
-      }
-      column_defs {
-        header
-        name(lang: $lang)
-        data_type
-        conditions {
-          condition_type
-          parameters
-        }
-      }
-    }
-  }
-`;
+import { GET_COLLECTION_DETAILS } from 'src/graphql/queries.ts';
+import type { ColumnDef } from 'src/graphql/schema.ts';
 
 const ErrorDisplay = function ({
   title,
@@ -97,7 +62,6 @@ const CollectionMainPage = memo(function CollectionMainPage({
     i18n: { locale },
   } = useLingui();
   const navigate = useNavigate();
-  const toast = useToast();
 
   // Fetch the latest version of the collection. Current version is updated to false backend, when changed
   const { loading, error, data } = useQuery(GET_COLLECTION_DETAILS, {

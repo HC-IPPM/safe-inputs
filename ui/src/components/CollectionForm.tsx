@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Box,
   Button,
@@ -24,22 +24,10 @@ import {
 } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import type { Collection, User } from 'src/schema/utils.ts';
+import { UPDATE_COLLECTION } from 'src/graphql/queries.ts';
+import type { Collection, User } from 'src/graphql/schema.ts';
 
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
-const UPDATE_COLLECTION = gql`
-  mutation CollectionUpdate(
-    $collection_id: String!
-    $collection_updates: CollectionDefInput!
-  ) {
-    update_collection(
-      collection_id: $collection_id
-      collection_updates: $collection_updates
-    ) {
-      id
-    }
-  }
-`;
 
 function renderEmailFields({
   title,
