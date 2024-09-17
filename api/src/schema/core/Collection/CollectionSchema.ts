@@ -3,7 +3,6 @@ import { GraphQLError } from 'graphql';
 import { JSONResolver } from 'graphql-scalars';
 
 import _ from 'lodash';
-import mongoose from 'mongoose';
 
 import {
   user_email_is_super_user_rule,
@@ -192,31 +191,50 @@ type ConditionInput = {
   parameters: string[];
 };
 
+const add_user_to_collection_def_input_owners = (
+  collection_input: CollectionDefInput,
+  session_user: Express.AuthenticatedUser,
+): CollectionDefInput => ({
+  ...collection_input,
+  owner_emails: _.uniq([...collection_input.owner_emails, session_user.email]),
+});
+
 const collection_def_input_to_model_fields = async (
   collection_input: CollectionDefInput,
-  user: Express.AuthenticatedUser,
 ): Promise<CollectionDefInterface> => {
   const { owner_emails, uploader_emails, ...passthrough_fields } =
     collection_input;
 
-  const owner_emails_including_creator = _.uniq([...owner_emails, user.email]);
+  const all_emails = [...owner_emails, ...uploader_emails];
 
-  const users = await get_or_create_users([
-    ...owner_emails_including_creator,
-    ...uploader_emails,
-  ]);
+  const maybe_users = await UserByEmailLoader.loadMany(all_emails);
+  const maybe_users_by_email = _.zip(all_emails, maybe_users);
 
-  const user_ids_by_email = _.chain(users)
-    .map(({ _id, email }) => [email, _id])
+  const user_is_missing = (maybe_user: (typeof maybe_users)[number]) =>
+    maybe_user instanceof Error || typeof maybe_user === 'undefined';
+
+  const missing_user_emails = _.chain(maybe_users_by_email)
+    .filter(([_email, maybe_user]) => user_is_missing(maybe_user))
+    .map(([email, _missing_user]) => email)
+    .value();
+  if (!_.isEmpty(missing_user_emails)) {
+    throw new Error(
+      `\`collection_def_input\` can not be converted to valid model fields, includes emails with no corresponding users: \`[${missing_user_emails.join(', ')}]\``,
+    );
+  }
+
+  const user_ids_by_email = _.chain(maybe_users_by_email)
+    .filter(
+      (email_and_maybe_user): email_and_maybe_user is [string, UserDocument] =>
+        !user_is_missing(email_and_maybe_user[1]),
+    )
+    .map(([email, user]): [string, UserDocument['_id']] => [email, user._id])
     .fromPairs()
     .value();
 
   return {
     ...passthrough_fields,
-    owners: _.map(
-      owner_emails_including_creator,
-      (email) => user_ids_by_email[email],
-    ),
+    owners: _.map(owner_emails, (email) => user_ids_by_email[email]),
     uploaders: _.map(uploader_emails, (email) => user_ids_by_email[email]),
   };
 };
@@ -266,8 +284,8 @@ export const CollectionSchema = makeExecutableSchema({
     description_en: ValidationMessages
     description_fr: ValidationMessages
     is_locked: ValidationMessages
-    owner_emails: ValidationMessages
-    uploader_emails: ValidationMessages
+    owner_emails: [ValidationMessages]
+    uploader_emails: [ValidationMessages]
   } 
 
   input ColumnDefInput {
@@ -293,7 +311,7 @@ export const CollectionSchema = makeExecutableSchema({
     description_en: ValidationMessages
     description_fr: ValidationMessages
     data_type: ValidationMessages
-    conditions: ValidationMessages
+    conditions: [ValidationMessages]
   }
 
   type ValidationMessages {
@@ -453,17 +471,16 @@ export const CollectionSchema = makeExecutableSchema({
         async (
           _parent: unknown,
           { collection_def }: { collection_def: CollectionDefInput },
-          context,
           _info: unknown,
         ) => {
-          // Pre-check user emails, filter out invalid ones, merge error messages about them with
-          // CollectionModel.validate output
+          const { owner_emails, uploader_emails } = collection_def;
 
           const model_ready_collection_def =
-            await collection_def_input_to_model_fields(
-              collection_def,
-              context.req.user,
-            );
+            await collection_def_input_to_model_fields({
+              ...collection_def,
+              owner_emails: [],
+              uploader_emails: [],
+            });
 
           const model_validation_errors = await get_validation_errors(
             CollectionModel,
@@ -471,7 +488,20 @@ export const CollectionSchema = makeExecutableSchema({
             ['collection_def'],
           );
 
-          return model_validation_errors.collection_def;
+          return {
+            ...(model_validation_errors?.collection_def ?? {}),
+            owner_emails: _.map(owner_emails, (email) =>
+              check_authz_rules({ email }, user_email_is_super_user_rule) ||
+              check_authz_rules({ email }, user_email_can_own_collections_rule)
+                ? null
+                : { en: 'TODO', fr: 'TODO' },
+            ),
+            uploader_emails: _.map(uploader_emails, (email) =>
+              check_authz_rules({ email }, user_email_allowed_rule)
+                ? null
+                : { en: 'TODO', fr: 'TODO' },
+            ),
+          };
         },
         user_can_be_collection_owner,
       ),
@@ -497,9 +527,13 @@ export const CollectionSchema = makeExecutableSchema({
             user_can_edit_collection,
           );
 
-          return await get_validation_errors(CollectionModel, { column_defs }, [
-            'column_defs',
-          ]);
+          const model_validation_errors = await get_validation_errors(
+            CollectionModel,
+            { column_defs },
+            ['column_defs'],
+          );
+
+          return model_validation_errors.column_defs;
         },
       ),
       validate_records: resolver_with_authz(
@@ -552,10 +586,17 @@ export const CollectionSchema = makeExecutableSchema({
           );
 
           try {
+            await get_or_create_users([
+              ...collection_def.owner_emails,
+              ...collection_def.uploader_emails,
+            ]);
+
             const model_ready_collection_def =
               await collection_def_input_to_model_fields(
-                collection_def,
-                context.req.user,
+                add_user_to_collection_def_input_owners(
+                  collection_def,
+                  context.req.user,
+                ),
               );
 
             return create_collection(
@@ -625,10 +666,17 @@ export const CollectionSchema = makeExecutableSchema({
           );
 
           try {
+            await get_or_create_users([
+              ...collection_updates.owner_emails,
+              ...collection_updates.uploader_emails,
+            ]);
+
             const model_ready_collection_def =
               await collection_def_input_to_model_fields(
-                collection_updates,
-                context.req.user,
+                add_user_to_collection_def_input_owners(
+                  collection_updates,
+                  context.req.user,
+                ),
               );
 
             return update_collection_def_fields(
