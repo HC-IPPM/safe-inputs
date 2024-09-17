@@ -36,12 +36,20 @@ function EmailFields({ title, control, fieldName }: EmailFieldsProps) {
               />
             )}
           />
-          <Button colorScheme="red" onClick={() => remove(index)}>
+          <Button
+            aria-label={`Remove ${field.email} from ${fieldName}`}
+            colorScheme="red"
+            onClick={() => remove(index)}
+          >
             <Trans>Remove</Trans>
           </Button>
         </HStack>
       ))}
-      <Button colorScheme="blue" onClick={() => append({ email: '' })}>
+      <Button
+        aria-label={`Add new email to ${fieldName}`}
+        colorScheme="blue"
+        onClick={() => append({ email: '' })}
+      >
         <Trans>Add Email</Trans>
       </Button>
     </Box>
