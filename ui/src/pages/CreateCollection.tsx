@@ -19,6 +19,7 @@ import {
 import { Trans, t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
+import debounce from 'debounce-promise';
 import type { FieldProps } from 'formik';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import _ from 'lodash';
@@ -56,7 +57,9 @@ const CREATE_COLLECTION_INIT = gql`
     }
   }
 `;
-type CreateCollectionInitResult = { create_collection_init: { id: string } };
+type CreateCollectionInitResult = {
+  create_collection_init: { id: string; __typename: string };
+};
 
 const VALIDATE_COLLECTION_DEF = gql`
   query ValidateCollectionDef(
@@ -119,11 +122,13 @@ type ValidateCollectionDefResult = {
     is_locked: ValidationResult;
     owner_emails: ValidationResult;
     uploader_emails: ValidationResult;
+    __typename: string;
   };
 };
 type ValidationResult = {
   en: string;
   fr: string;
+  __typename: string;
 };
 
 // TODO at some point, I'll integrate a tool to generate types from queries
@@ -152,12 +157,10 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
 
   const client = useApolloClient();
 
-  const [
-    createCollectionInit,
-    { data, loading: creationLoading, error: creationError },
-  ] = useMutation<CreateCollectionInitResult, CollectionDefInput>(
-    CREATE_COLLECTION_INIT,
-  );
+  const [createCollectionInit, { data, error: creationError }] = useMutation<
+    CreateCollectionInitResult,
+    CollectionDefInput
+  >(CREATE_COLLECTION_INIT);
 
   const id_of_created_collection = data?.create_collection_init.id;
 
@@ -170,6 +173,57 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
     // TODO: likely still want to catch and display these at the top of the route without throwing out the user's form progress
     throw creationError;
   } else {
+    const debounced_validation_query = debounce(
+      async (collection_def: CollectionDefInput) => {
+        const {
+          data: { validate_collection_def },
+        } = await client.query<ValidateCollectionDefResult, CollectionDefInput>(
+          {
+            query: VALIDATE_COLLECTION_DEF,
+            variables: collection_def,
+          },
+        );
+
+        const {
+          owner_emails,
+          uploader_emails,
+          ...flat_field_validation_results
+        } = validate_collection_def;
+
+        const flat_field_validation_messages = _.chain(
+          flat_field_validation_results,
+        )
+          .omitBy(
+            (validation_result, key) =>
+              key === '__typename' || _.isNull(validation_result),
+          )
+          .mapValues((validation_result) => _.get(validation_result, locale))
+          .value();
+
+        const array_field_validation_messages = _.chain({
+          owner_emails,
+          uploader_emails,
+        })
+          .omitBy(
+            (validation_results) =>
+              _.isEmpty(validation_results) ||
+              _.every(validation_results, _.isNull),
+          )
+          .mapValues((validation_results) =>
+            _.map(validation_results, (validation_result) =>
+              _.get(validation_result, locale),
+            ),
+          )
+          .value();
+
+        return {
+          ...flat_field_validation_messages,
+          ...array_field_validation_messages,
+        };
+      },
+      300,
+    );
+
     return (
       <Formik
         initialValues={
@@ -183,44 +237,25 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
             is_locked: true,
           } as CollectionDefInput
         }
-        validate={async (collection_def) => {
-          const {
-            data: { validate_collection_def },
-          } = await client.query<
-            ValidateCollectionDefResult,
-            CollectionDefInput
-          >({
-            query: VALIDATE_COLLECTION_DEF,
-            variables: collection_def,
-          });
-
-          return _.mapValues(validate_collection_def, (validation_result) =>
-            _.get(validation_result, locale, null),
-          );
-        }}
-        validateOnChange={false}
-        validateOnBlur={true}
+        validate={debounced_validation_query}
+        validateOnMount={true}
         onSubmit={(collection_def) =>
           createCollectionInit({
             variables: collection_def,
           })
         }
       >
-        {({ values, touched, errors, isValid, isSubmitting }) => (
+        {({ values, errors, isValid, isValidating, isSubmitting }) => (
           <Form>
             <VStack spacing={4} align="flex-start">
               <Field name="name_en">
                 {({ field, meta }: FieldProps<string>) => (
-                  <FormControl
-                    isInvalid={
-                      meta.touched && typeof meta.error !== 'undefined'
-                    }
-                  >
+                  <FormControl isInvalid={typeof meta.error !== 'undefined'}>
                     <FormLabel>
                       <Trans>Name (English)</Trans>
                     </FormLabel>
                     <Input {...field} />
-                    {meta.touched && meta.error && (
+                    {meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
                     )}
                   </FormControl>
@@ -228,16 +263,12 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               </Field>
               <Field name="name_fr">
                 {({ field, meta }: FieldProps<string>) => (
-                  <FormControl
-                    isInvalid={
-                      meta.touched && typeof meta.error !== 'undefined'
-                    }
-                  >
+                  <FormControl isInvalid={typeof meta.error !== 'undefined'}>
                     <FormLabel>
                       <Trans>Name (French)</Trans>
                     </FormLabel>
                     <Input {...field} />
-                    {meta.touched && meta.error && (
+                    {meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
                     )}
                   </FormControl>
@@ -245,16 +276,12 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               </Field>
               <Field name="description_en">
                 {({ field, meta }: FieldProps<string>) => (
-                  <FormControl
-                    isInvalid={
-                      meta.touched && typeof meta.error !== 'undefined'
-                    }
-                  >
+                  <FormControl isInvalid={typeof meta.error !== 'undefined'}>
                     <FormLabel>
                       <Trans>Description (English)</Trans>
                     </FormLabel>
                     <Textarea {...field} />
-                    {meta.touched && meta.error && (
+                    {meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
                     )}
                   </FormControl>
@@ -262,16 +289,12 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               </Field>
               <Field name="description_fr">
                 {({ field, meta }: FieldProps<string>) => (
-                  <FormControl
-                    isInvalid={
-                      meta.touched && typeof meta.error !== 'undefined'
-                    }
-                  >
+                  <FormControl isInvalid={typeof meta.error !== 'undefined'}>
                     <FormLabel>
                       <Trans>Description (French)</Trans>
                     </FormLabel>
                     <Textarea {...field} />
-                    {meta.touched && meta.error && (
+                    {meta.error && (
                       <FormErrorMessage>{meta.error}</FormErrorMessage>
                     )}
                   </FormControl>
@@ -287,11 +310,18 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     {values.owner_emails.map((email, index) => (
                       <Field key={index} name={`owner_emails.${index}`}>
                         {({ field }: FieldProps<string>) => (
-                          <FormControl marginLeft={4}>
-                            <HStack marginBottom={2}>
-                              <FormLabel>
-                                <Trans>Email</Trans>
-                              </FormLabel>
+                          <FormControl
+                            marginLeft={8}
+                            marginBottom={2}
+                            isInvalid={
+                              typeof _.get(errors.owner_emails, index) !==
+                              'undefined'
+                            }
+                          >
+                            <FormLabel>
+                              <Trans>Owner Email</Trans>
+                            </FormLabel>
+                            <HStack>
                               <Input {...field} />
                               <IconButton
                                 aria-label={t`Remove ${email}`}
@@ -301,6 +331,12 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                                 size={'sm'}
                               />
                             </HStack>
+                            {errors.owner_emails &&
+                              errors.owner_emails[index] && (
+                                <FormErrorMessage>
+                                  {errors.owner_emails[index]}
+                                </FormErrorMessage>
+                              )}
                           </FormControl>
                         )}
                       </Field>
@@ -313,9 +349,6 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       size={'sm'}
                       marginLeft={8}
                     />
-                    {touched.owner_emails && errors.owner_emails && (
-                      <FormErrorMessage>{errors.owner_emails}</FormErrorMessage>
-                    )}
                   </FormControl>
                 )}
               />
@@ -329,11 +362,18 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     {values.uploader_emails.map((email, index) => (
                       <Field key={index} name={`uploader_emails.${index}`}>
                         {({ field }: FieldProps<string>) => (
-                          <FormControl marginLeft={4}>
-                            <HStack marginBottom={2}>
-                              <FormLabel>
-                                <Trans>Email</Trans>
-                              </FormLabel>
+                          <FormControl
+                            marginLeft={8}
+                            marginBottom={2}
+                            isInvalid={
+                              typeof _.get(errors.uploader_emails, index) !==
+                              'undefined'
+                            }
+                          >
+                            <FormLabel>
+                              <Trans>Uploader Email</Trans>
+                            </FormLabel>
+                            <HStack>
                               <Input {...field} />
                               <IconButton
                                 aria-label={t`Remove ${email}`}
@@ -343,6 +383,12 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                                 size={'sm'}
                               />
                             </HStack>
+                            {errors.uploader_emails &&
+                              errors.uploader_emails[index] && (
+                                <FormErrorMessage>
+                                  {errors.uploader_emails[index]}
+                                </FormErrorMessage>
+                              )}
                           </FormControl>
                         )}
                       </Field>
@@ -355,15 +401,24 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       size={'sm'}
                       marginLeft={8}
                     />
-                    {touched.uploader_emails && errors.uploader_emails && (
-                      <FormErrorMessage>
-                        {errors.uploader_emails}
-                      </FormErrorMessage>
-                    )}
                   </FormControl>
                 )}
               />
-              <Button type="submit" isLoading={isSubmitting} disabled={isValid}>
+              <Button
+                type="submit"
+                isLoading={isSubmitting || isValidating}
+                loadingText={
+                  isSubmitting
+                    ? t`Form is submitting, please wait`
+                    : isValidating
+                      ? t`Form is validating, please wait`
+                      : undefined
+                }
+                isDisabled={!isValid}
+                title={
+                  !isValid ? t`Form contains validation errors` : undefined
+                }
+              >
                 <Trans>Submit</Trans>
               </Button>
             </VStack>
