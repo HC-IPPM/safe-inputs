@@ -221,7 +221,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
           ...array_field_validation_messages,
         };
       },
-      300,
+      250,
     );
 
     return (
@@ -246,7 +246,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
         }
       >
         {({ values, errors, isValid, isValidating, isSubmitting }) => (
-          <Form>
+          <Form style={{ width: '100%' }}>
             <VStack spacing={4} align="flex-start">
               <Field name="name_en">
                 {({ field, meta }: FieldProps<string>) => (
@@ -303,7 +303,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               <FieldArray
                 name="owner_emails"
                 render={({ form, name, ...arrayHelpers }) => (
-                  <FormControl as="fieldset">
+                  <FormControl as="fieldset" maxWidth={600}>
                     <FormLabel as="legend">
                       <Trans>Collection Owner Emails</Trans>
                     </FormLabel>
@@ -311,7 +311,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       <Field key={index} name={`owner_emails.${index}`}>
                         {({ field }: FieldProps<string>) => (
                           <FormControl
-                            marginLeft={8}
+                            paddingLeft={8}
                             marginBottom={2}
                             isInvalid={
                               typeof _.get(errors.owner_emails, index) !==
@@ -355,7 +355,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               <FieldArray
                 name="uploader_emails"
                 render={({ form, name, ...arrayHelpers }) => (
-                  <FormControl as="fieldset">
+                  <FormControl as="fieldset" maxWidth={600}>
                     <FormLabel as="legend">
                       <Trans>Collection Uploader Emails</Trans>
                     </FormLabel>
@@ -363,7 +363,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       <Field key={index} name={`uploader_emails.${index}`}>
                         {({ field }: FieldProps<string>) => (
                           <FormControl
-                            marginLeft={8}
+                            paddingLeft={8}
                             marginBottom={2}
                             isInvalid={
                               typeof _.get(errors.uploader_emails, index) !==
@@ -415,11 +415,8 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                       : undefined
                 }
                 isDisabled={!isValid}
-                title={
-                  !isValid ? t`Form contains validation errors` : undefined
-                }
               >
-                <Trans>Submit</Trans>
+                {!isValid ? t`Form contains validation errors` : t`Submit`}
               </Button>
             </VStack>
           </Form>
