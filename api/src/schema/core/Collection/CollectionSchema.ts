@@ -494,12 +494,12 @@ export const CollectionSchema = makeExecutableSchema({
               check_authz_rules({ email }, user_email_is_super_user_rule) ||
               check_authz_rules({ email }, user_email_can_own_collections_rule)
                 ? null
-                : { en: 'TODO', fr: 'TODO' },
+                : { en: 'Not a valid owner email', fr: 'TODO' },
             ),
             uploader_emails: _.map(uploader_emails, (email) =>
               check_authz_rules({ email }, user_email_allowed_rule)
                 ? null
-                : { en: 'TODO', fr: 'TODO' },
+                : { en: 'Not a valid uploader email', fr: 'TODO' },
             ),
           };
         },

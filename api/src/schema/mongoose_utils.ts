@@ -134,6 +134,46 @@ export const number_type_mixin: TypeWithCastMessageMixin<NumberConstructor> = {
   ],
 };
 
+export const make_validators_mixin = <Value>(
+  ...validator_funcs: ((
+    value: Value,
+  ) =>
+    | undefined
+    | ValidationMessagesByLang
+    | Promise<undefined | ValidationMessagesByLang>)[]
+) => ({
+  validate: [
+    (value: Value) =>
+      Promise.all(validator_funcs.map((func) => func(value))).then(
+        (validation_results) => {
+          const validation_error_messages = _.filter(
+            validation_results,
+            (result) => typeof result !== 'undefined',
+          );
+
+          if (_.isEmpty(validation_error_messages)) {
+            return true;
+          } else {
+            throw new Error(
+              validation_messages_by_lang_to_error_string(
+                _.mergeWith(
+                  { en: 'Validation issues:', fr: 'TODO' },
+                  ...validation_error_messages,
+                  (
+                    message_accumulator: string,
+                    validation_error_message: string,
+                  ) =>
+                    `${message_accumulator}\n    • ${validation_error_message}`,
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    ({ reason }: { reason: Error }) => reason.message,
+  ] as const,
+});
+
 export const primary_key_type = {
   ...string_type_mixin,
   ...is_required_mixin,

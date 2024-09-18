@@ -5,8 +5,6 @@ import _ from 'lodash';
 import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
-import type { SetOptional } from 'type-fest';
-
 import { db_transaction } from 'src/db.ts';
 
 import { AppError } from 'src/error_utils.ts';
@@ -21,6 +19,7 @@ import {
   string_type_mixin,
   number_type_mixin,
   is_required_mixin,
+  make_validators_mixin,
   make_lang_suffixed_type,
   make_foreign_id_type,
   make_foreign_key_type,

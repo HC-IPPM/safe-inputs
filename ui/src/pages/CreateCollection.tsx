@@ -256,7 +256,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     </FormLabel>
                     <Input {...field} />
                     {meta.error && (
-                      <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      <FormErrorMessage whiteSpace={'pre-wrap'}>
+                        {meta.error}
+                      </FormErrorMessage>
                     )}
                   </FormControl>
                 )}
@@ -269,7 +271,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     </FormLabel>
                     <Input {...field} />
                     {meta.error && (
-                      <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      <FormErrorMessage whiteSpace={'pre-wrap'}>
+                        {meta.error}
+                      </FormErrorMessage>
                     )}
                   </FormControl>
                 )}
@@ -282,7 +286,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     </FormLabel>
                     <Textarea {...field} />
                     {meta.error && (
-                      <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      <FormErrorMessage whiteSpace={'pre-wrap'}>
+                        {meta.error}
+                      </FormErrorMessage>
                     )}
                   </FormControl>
                 )}
@@ -295,7 +301,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                     </FormLabel>
                     <Textarea {...field} />
                     {meta.error && (
-                      <FormErrorMessage>{meta.error}</FormErrorMessage>
+                      <FormErrorMessage whiteSpace={'pre-wrap'}>
+                        {meta.error}
+                      </FormErrorMessage>
                     )}
                   </FormControl>
                 )}
@@ -333,7 +341,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                             </HStack>
                             {errors.owner_emails &&
                               errors.owner_emails[index] && (
-                                <FormErrorMessage>
+                                <FormErrorMessage whiteSpace={'pre-wrap'}>
                                   {errors.owner_emails[index]}
                                 </FormErrorMessage>
                               )}
@@ -385,7 +393,7 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
                             </HStack>
                             {errors.uploader_emails &&
                               errors.uploader_emails[index] && (
-                                <FormErrorMessage>
+                                <FormErrorMessage whiteSpace={'pre-wrap'}>
                                   {errors.uploader_emails[index]}
                                 </FormErrorMessage>
                               )}
