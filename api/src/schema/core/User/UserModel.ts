@@ -23,10 +23,21 @@ interface UserInterface {
 const UserMongooseSchema = new Schema<UserInterface>({
   email: {
     ...primary_key_type,
-    ...make_validation_mixin<string>((value) =>
-      !validator.isEmail(value)
-        ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
-        : undefined,
+    ...make_validation_mixin<string>(
+      (value) =>
+        !validator.isEmail(value)
+          ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
+          : undefined,
+      async (value) => {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        const document_already_using_email = await UserModel.exists({
+          email: value,
+        });
+
+        if (document_already_using_email !== null) {
+          return { en: `"${value}" is already in use`, fr: 'TODO' };
+        }
+      },
     ),
   },
   created_at: {
