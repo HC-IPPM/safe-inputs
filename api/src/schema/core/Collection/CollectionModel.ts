@@ -18,8 +18,11 @@ import {
 import {
   string_type_mixin,
   number_type_mixin,
+  boolean_type_mixin,
   is_required_mixin,
-  make_validators_mixin,
+  make_validation_mixin,
+  make_string_min_length_validator,
+  make_string_max_length_validator,
   make_lang_suffixed_type,
   make_foreign_id_type,
   make_foreign_key_type,
@@ -33,9 +36,16 @@ const ConditionSchema = new Schema<ConditionInterface>({
   condition_type: {
     ...string_type_mixin,
     ...is_required_mixin,
+    // TODO validation
     immutable: true,
   },
-  parameters: [{ ...string_type_mixin, immutable: true }],
+  parameters: [
+    {
+      ...string_type_mixin,
+      // TODO validation
+      immutable: true,
+    },
+  ],
 });
 
 interface ColumnDefInterface
@@ -49,22 +59,34 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
   ...make_lang_suffixed_type('name', {
     ...string_type_mixin,
     ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(150),
+    ),
     immutable: true,
   }),
   ...make_lang_suffixed_type('description', {
     ...string_type_mixin,
     ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(3000),
+    ),
     immutable: true,
-    default: '',
   }),
   header: {
     ...string_type_mixin,
     ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(1),
+      make_string_max_length_validator(150),
+    ),
     immutable: true,
   },
   data_type: {
     ...string_type_mixin,
     ...is_required_mixin,
+    // TODO validation
     immutable: true,
   },
   conditions: [ConditionSchema],
@@ -81,21 +103,31 @@ const CollectionDefSchema = new Schema<CollectionDefInterface>({
   ...make_lang_suffixed_type('name', {
     ...string_type_mixin,
     ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(150),
+    ),
     immutable: true,
   }),
   ...make_lang_suffixed_type('description', {
     ...string_type_mixin,
     ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(3000),
+    ),
     immutable: true,
   }),
   owners: [
-    make_foreign_id_type('User', {
-      required: true,
+    {
+      ...make_foreign_id_type('User', {
+        required: true,
+      }),
       immutable: true,
-    }),
+    },
   ],
-  uploaders: [make_foreign_id_type('User', { immutable: true })],
-  is_locked: { type: Boolean, ...is_required_mixin, immutable: true },
+  uploaders: [{ ...make_foreign_id_type('User'), immutable: true }],
+  is_locked: { ...boolean_type_mixin, ...is_required_mixin, immutable: true },
 });
 
 interface CollectionInterface {
@@ -128,11 +160,13 @@ const CollectionMongooseSchema = new Schema<CollectionInterface>({
     immutable: true,
     min: 0,
   },
-  is_current_version: { type: Boolean, required: true },
-  created_by: make_foreign_id_type('User', {
-    required: true,
+  is_current_version: { ...boolean_type_mixin, required: true },
+  created_by: {
+    ...make_foreign_id_type('User', {
+      required: true,
+    }),
     immutable: true,
-  }),
+  },
   created_at: {
     ...number_type_mixin,
     ...is_required_mixin,
@@ -181,16 +215,20 @@ export interface RecordInterface {
   created_at: number;
 }
 const RecordMongooseSchema = new Schema<RecordInterface>({
-  recordset_key: make_foreign_key_type(String, 'Collection', {
-    required: true,
+  recordset_key: {
+    ...make_foreign_key_type(String, 'Collection', {
+      required: true,
+      index: true,
+    }),
     immutable: true,
-    index: true,
-  }),
+  },
   data: Schema.Types.Mixed,
-  created_by: make_foreign_id_type('User', {
-    required: true,
+  created_by: {
+    ...make_foreign_id_type('User', {
+      required: true,
+    }),
     immutable: true,
-  }),
+  },
   created_at: {
     ...number_type_mixin,
     ...is_required_mixin,

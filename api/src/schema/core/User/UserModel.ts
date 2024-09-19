@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { HydratedDocument, Schema, model } from 'mongoose';
 
+import validator from 'validator';
+
 import { user_email_allowed_rule, check_authz_rules } from 'src/authz.ts';
 
 import { AppError } from 'src/error_utils.ts';
@@ -9,6 +11,7 @@ import {
   primary_key_type,
   number_type_mixin,
   is_required_mixin,
+  make_validation_mixin,
 } from 'src/schema/mongoose_utils.ts';
 
 interface UserInterface {
@@ -18,7 +21,14 @@ interface UserInterface {
   last_login_at?: number;
 }
 const UserMongooseSchema = new Schema<UserInterface>({
-  email: primary_key_type,
+  email: {
+    ...primary_key_type,
+    ...make_validation_mixin<string>((value) =>
+      !validator.isEmail(value)
+        ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
+        : undefined,
+    ),
+  },
   created_at: {
     ...number_type_mixin,
     ...is_required_mixin,

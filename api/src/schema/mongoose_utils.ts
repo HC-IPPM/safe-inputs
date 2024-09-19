@@ -93,18 +93,6 @@ export const get_validation_errors = async <ModelInterface>(
   }
 };
 
-export const is_required_mixin = {
-  // `as ...` necessary because mongoose types needs this to be a tupple, not an array of a union type.
-  // Can't use `const` to achieve this, as mongoose's typeing doesn't accept the readonly that adds
-  required: [
-    true,
-    validation_messages_by_lang_to_error_string({
-      en: 'Required',
-      fr: 'TODO',
-    }),
-  ] as [true, string],
-};
-
 type TypeWithCastMessageMixin<Type> = {
   type: Type;
   cast: [null, (value: any) => string]; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -134,13 +122,40 @@ export const number_type_mixin: TypeWithCastMessageMixin<NumberConstructor> = {
   ],
 };
 
-export const make_validators_mixin = <Value>(
-  ...validator_funcs: ((
-    value: Value,
-  ) =>
-    | undefined
-    | ValidationMessagesByLang
-    | Promise<undefined | ValidationMessagesByLang>)[]
+export const boolean_type_mixin: TypeWithCastMessageMixin<BooleanConstructor> =
+  {
+    type: Boolean,
+    cast: [
+      null,
+      (value) =>
+        validation_messages_by_lang_to_error_string({
+          en: `Expected true or false, got "${value}"`,
+          fr: 'TODO',
+        }),
+    ],
+  };
+
+export const is_required_mixin = {
+  // `as ...` necessary because mongoose types needs this to be a tupple, not an array of a union type.
+  // Can't use `const` to achieve this, as mongoose's typeing doesn't accept the readonly that adds
+  required: [
+    true,
+    validation_messages_by_lang_to_error_string({
+      en: 'Required',
+      fr: 'TODO',
+    }),
+  ] as [true, string],
+};
+
+export type ValidatorFunction<Value> = (
+  value: Value,
+) =>
+  | undefined
+  | ValidationMessagesByLang
+  | Promise<undefined | ValidationMessagesByLang>;
+
+export const make_validation_mixin = <Value>(
+  ...validator_funcs: ValidatorFunction<Value>[]
 ) => ({
   validate: [
     (value: Value) =>
@@ -163,7 +178,7 @@ export const make_validators_mixin = <Value>(
                     message_accumulator: string,
                     validation_error_message: string,
                   ) =>
-                    `${message_accumulator}\n    • ${validation_error_message}`,
+                    `${message_accumulator}\n\t• ${validation_error_message}`,
                 ),
               ),
             );
@@ -173,6 +188,26 @@ export const make_validators_mixin = <Value>(
     ({ reason }: { reason: Error }) => reason.message,
   ] as const,
 });
+
+export const make_string_min_length_validator =
+  (min_length: number): ValidatorFunction<string> =>
+  (value) =>
+    value.length < min_length
+      ? {
+          en: `The minimum length is ${min_length}. Current length is ${value.length}.`,
+          fr: 'TODO',
+        }
+      : undefined;
+
+export const make_string_max_length_validator =
+  (max_length: number): ValidatorFunction<string> =>
+  (value) =>
+    value.length > max_length
+      ? {
+          en: `The maximum length is ${max_length}. Current length is ${value.length}.`,
+          fr: 'TODO',
+        }
+      : undefined;
 
 export const primary_key_type = {
   ...string_type_mixin,
@@ -194,7 +229,6 @@ export const primary_key_type_sparse = {
 type ForeignTypeOptions = {
   required?: boolean;
   index?: boolean;
-  immutable?: boolean;
 };
 const use_foreign_type_options = (
   options?: ForeignTypeOptions,
