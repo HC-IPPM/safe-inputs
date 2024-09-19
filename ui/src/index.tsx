@@ -31,6 +31,7 @@ import AppErrorFallback from './components/error/AppErrorFallback.tsx';
 import { messages as enMessages } from './i18n/locales/en/messages.ts';
 import { messages as frMessages } from './i18n/locales/fr/messages.ts';
 
+import AdminDashboard from './pages/AdminDashboard.tsx';
 import CollectionManagementPage from './pages/CollectionsManagement.tsx';
 import ColumnManagement from './pages/ColumnManagement.tsx';
 import ExcelParser from './pages/ExcelParser.tsx';
@@ -148,7 +149,7 @@ root.render(
                       path="upload-records/:collectionID"
                       element={<div>Upload records route TODO</div>}
                     />
-                    <Route path="admin" element={<div>Admin route TODO</div>} />
+                    <Route path="admin" element={<AdminDashboard />} />
                     <Route path="excel-parser" element={<ExcelParser />} />
                     <Route
                       path="termsAndConditions"

@@ -12,10 +12,13 @@ export type CollectionInfo = {
 };
 
 export type User = {
+  id: string;
   email: string;
   created_at?: number;
   second_last_login_at?: number;
   last_login_at?: number;
+  is_admin?: boolean;
+  can_own_collections?: boolean;
 };
 
 export type ColumnDef = {
