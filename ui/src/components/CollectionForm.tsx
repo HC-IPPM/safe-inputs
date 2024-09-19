@@ -35,46 +35,43 @@ function CollectionForm({ data }: CollectionFormProps) {
   const navigate = useNavigate();
   const toast = useToast();
 
+  // Errors during collection updation are captured by the error state of the mutation
   const onSubmit = async (formData: Collection) => {
-    try {
-      const result = await updateCollection({
-        variables: {
-          collection_id: formData.id,
-          collection_updates: {
-            ..._.pick(formData, [
-              'name_en',
-              'name_fr',
-              'description_en',
-              'description_fr',
-              'is_locked',
-            ]),
-            owner_emails: formData.owners.map((owner: User) => owner.email),
-            uploader_emails: formData.uploaders.map(
-              (uploader: User) => uploader.email,
-            ),
-          },
+    const result = await updateCollection({
+      variables: {
+        collection_id: formData.id,
+        collection_updates: {
+          ..._.pick(formData, [
+            'name_en',
+            'name_fr',
+            'description_en',
+            'description_fr',
+            'is_locked',
+          ]),
+          owner_emails: formData.owners.map((owner: User) => owner.email),
+          uploader_emails: formData.uploaders.map(
+            (uploader: User) => uploader.email,
+          ),
+        },
+      },
+    });
+    if (result.data) {
+      const { id } = result.data.update_collection;
+      if (!id) {
+        throw Error('Missing ID for updated collection');
+      }
+      toast({
+        title: <Trans>Collection Updated</Trans>,
+        description: <Trans>Collection Updated successfully</Trans>,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate(`/manage-collection/${id}`, {
+        state: {
+          redirect: true,
         },
       });
-      if (result.data) {
-        const { id } = result.data.update_collection;
-        if (!id) {
-          throw Error('Missing ID for updated collection');
-        }
-        toast({
-          title: <Trans>Collection Updated</Trans>,
-          description: <Trans>Collection Updated successfully</Trans>,
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        navigate(`/manage-collection/${id}`, {
-          state: {
-            redirect: true,
-          },
-        });
-      }
-    } catch (e) {
-      console.error('Error updating collection:', e);
     }
   };
 

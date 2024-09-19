@@ -78,32 +78,32 @@ const ColumnManagementForm = function ({
     [collection.column_defs, columnHeader],
   );
 
+  // Errors during columndef updation are captured by the error state of the mutation
   const onSubmit = async (formData: ColumnDef) => {
-    try {
-      const updatedColumnDefs = getUpdatedColumnDefs(formData);
-      const response = await updateColumnDefs({
-        variables: {
-          collection_id: collection.id,
-          column_defs: updatedColumnDefs,
-        },
-      });
-      if (response.data) {
-        const { id } = response.data.update_column_defs;
-        toast({
-          title: <Trans>Collection Updated</Trans>,
-          description: (
-            <Trans>
-              The collection has been updated with given column definitions
-            </Trans>
-          ),
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        navigate(`/manage-collection/${id}`);
+    const updatedColumnDefs = getUpdatedColumnDefs(formData);
+    const response = await updateColumnDefs({
+      variables: {
+        collection_id: collection.id,
+        column_defs: updatedColumnDefs,
+      },
+    });
+    if (response.data) {
+      const { id } = response.data.update_column_defs;
+      if (!id) {
+        throw Error('Missing ID for updated collection');
       }
-    } catch (err) {
-      console.error(err);
+      toast({
+        title: <Trans>Collection Updated</Trans>,
+        description: (
+          <Trans>
+            The collection has been updated with given column definitions
+          </Trans>
+        ),
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate(`/manage-collection/${id}`);
     }
   };
   const { register, handleSubmit, setValue, control } = useForm<ColumnDef>();
