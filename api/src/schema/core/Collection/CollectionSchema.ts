@@ -34,7 +34,6 @@ import {
   AllCollectionVersionsByStableKeyLoader,
   create_collection,
   update_collection_def_fields,
-  are_new_column_defs_compatible_with_current_records,
   update_collection_column_defs,
   validate_record_data_against_column_defs,
   insert_records,
