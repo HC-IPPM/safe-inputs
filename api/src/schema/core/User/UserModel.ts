@@ -21,17 +21,15 @@ interface UserInterface {
   second_last_login_at?: number;
   last_login_at?: number;
 }
-export type UserDocument = HydratedDocument<UserInterface>;
-
 const UserMongooseSchema = new Schema<UserInterface>({
   email: {
     ...primary_key_type,
-    ...make_validation_mixin<string, UserDocument>(
+    ...make_validation_mixin<string, UserInterface>(
       (value) =>
         !validator.isEmail(value)
           ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
           : undefined,
-      async (value, document) => {
+      async (value, _validation_props, document) => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const document_already_using_email = await UserModel.exists({
           email: value,
@@ -54,7 +52,8 @@ const UserMongooseSchema = new Schema<UserInterface>({
   second_last_login_at: { ...number_type_mixin, required: false },
   last_login_at: { ...number_type_mixin, required: false },
 });
-export const UserModel = model<UserInterface>('User', UserMongooseSchema);
+export const UserModel = model('User', UserMongooseSchema);
+export type UserDocument = HydratedDocument<UserInterface>;
 
 export const UserByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(UserModel, '_id');

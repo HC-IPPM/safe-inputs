@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { Schema, Error as MongooseError } from 'mongoose';
-import type { Model } from 'mongoose';
+import type { Model, ValidatorProps, SchemaValidator } from 'mongoose';
+import { Schema, Error as MongooseError, HydratedDocument } from 'mongoose';
 
 import type { PartialDeep } from 'type-fest';
 
@@ -154,48 +154,57 @@ export const is_required_mixin = {
   ] as [true, string],
 };
 
-export type ValidatorFunction<Value, Document> = (
-  value: Value,
-  document?: Document,
+export type ValidatorFunction<FieldType, SchemaInterface> = (
+  value: FieldType,
+  validation_props?: ValidatorProps,
+  document?: HydratedDocument<SchemaInterface>,
 ) =>
   | undefined
   | ValidationMessagesByLang
   | Promise<undefined | ValidationMessagesByLang>;
 
-export const make_validation_mixin = <Value, Document>(
-  ...validator_funcs: ValidatorFunction<Value, Document>[]
-) => ({
-  validate: [
-    function (this: Document, value: Value) {
-      return Promise.all(validator_funcs.map((func) => func(value, this))).then(
-        (validation_results) => {
-          const validation_error_messages = _.filter(
-            validation_results,
-            (result) => typeof result !== 'undefined',
-          );
+export const make_validation_mixin = <FieldType, SchemaInterface>(
+  ...validator_funcs: ValidatorFunction<FieldType, SchemaInterface>[]
+): { validate: SchemaValidator<FieldType, SchemaInterface> } => ({
+  validate: {
+    propsParameter: true,
+    validator: function (value: FieldType, validation_props) {
+      return Promise.all(
+        validator_funcs.map((func) =>
+          func(
+            value,
+            validation_props,
+            // mongoose's typing of the validator function's `this` is the SchemaInterface at this point,
+            // but in reality it's a document instance being passed here
+            this as HydratedDocument<SchemaInterface>,
+          ),
+        ),
+      ).then((validation_results) => {
+        const validation_error_messages = _.filter(
+          validation_results,
+          (result) => typeof result !== 'undefined',
+        );
 
-          if (_.isEmpty(validation_error_messages)) {
-            return true;
-          } else {
-            throw new Error(
-              validation_messages_by_lang_to_error_string(
-                _.mergeWith(
-                  { en: 'Validation issues:', fr: 'TODO' },
-                  ...validation_error_messages,
-                  (
-                    message_accumulator: string,
-                    validation_error_message: string,
-                  ) =>
-                    `${message_accumulator}\n\t• ${validation_error_message}`,
-                ),
+        if (_.isEmpty(validation_error_messages)) {
+          return true;
+        } else {
+          throw new Error(
+            validation_messages_by_lang_to_error_string(
+              _.mergeWith(
+                { en: 'Validation issues:', fr: 'TODO' },
+                ...validation_error_messages,
+                (
+                  message_accumulator: string,
+                  validation_error_message: string,
+                ) => `${message_accumulator}\n\t• ${validation_error_message}`,
               ),
-            );
-          }
-        },
-      );
+            ),
+          );
+        }
+      });
     },
-    ({ reason }: { reason: Error }) => reason.message,
-  ] as const,
+    message: (validation_props) => validation_props.reason?.message || '',
+  },
 });
 
 export const make_string_min_length_validator =

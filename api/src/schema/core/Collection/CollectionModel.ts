@@ -203,10 +203,7 @@ CollectionMongooseSchema.index({
   'collection_def.uploaders': 1,
 });
 
-export const CollectionModel = model<CollectionInterface>(
-  'Collection',
-  CollectionMongooseSchema,
-);
+export const CollectionModel = model('Collection', CollectionMongooseSchema);
 export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
 export interface RecordInterface {
@@ -238,10 +235,7 @@ const RecordMongooseSchema = new Schema<RecordInterface>({
 });
 RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
 
-export const RecordModel = model<RecordInterface>(
-  'Record',
-  RecordMongooseSchema,
-);
+export const RecordModel = model('Record', RecordMongooseSchema);
 export type RecordDocument = HydratedDocument<RecordInterface>;
 
 export const CollectionByIdLoader =
