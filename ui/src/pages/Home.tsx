@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
@@ -34,48 +34,8 @@ import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-
-const GET_HOME_INFO = gql`
-  query HomePageInfo($lang: String!) {
-    session {
-      owned_collections {
-        id
-        name(lang: $lang)
-        major_ver
-        minor_ver
-        is_locked
-        created_by {
-          email
-        }
-        created_at
-      }
-      uploadable_collections {
-        id
-        name(lang: $lang)
-        major_ver
-        minor_ver
-        is_locked
-        created_by {
-          email
-        }
-        created_at
-      }
-    }
-  }
-`;
-
-// TODO at some point, I'll integrate a tool to generate types from queries
-type CollectionInfo = {
-  id: string;
-  name: string;
-  major_ver: number;
-  minor_ver: number;
-  is_locked: boolean;
-  created_by: {
-    email: string;
-  };
-  created_at: number;
-};
+import { GET_HOME_INFO } from 'src/graphql/queries.ts';
+import type { CollectionInfo } from 'src/graphql/schema.ts';
 
 const CollectionTable = ({
   tableCaption,
