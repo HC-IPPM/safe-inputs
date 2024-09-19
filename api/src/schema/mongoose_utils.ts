@@ -135,6 +135,13 @@ export const boolean_type_mixin: TypeWithCastMessageMixin<BooleanConstructor> =
     ],
   };
 
+export const created_at_mixin = {
+  ...number_type_mixin,
+  default: function () {
+    return Date.now();
+  },
+};
+
 export const is_required_mixin = {
   // `as ...` necessary because mongoose types needs this to be a tupple, not an array of a union type.
   // Can't use `const` to achieve this, as mongoose's typeing doesn't accept the readonly that adds
@@ -147,19 +154,20 @@ export const is_required_mixin = {
   ] as [true, string],
 };
 
-export type ValidatorFunction<Value> = (
+export type ValidatorFunction<Value, Document> = (
   value: Value,
+  document?: Document,
 ) =>
   | undefined
   | ValidationMessagesByLang
   | Promise<undefined | ValidationMessagesByLang>;
 
-export const make_validation_mixin = <Value>(
-  ...validator_funcs: ValidatorFunction<Value>[]
+export const make_validation_mixin = <Value, Document>(
+  ...validator_funcs: ValidatorFunction<Value, Document>[]
 ) => ({
   validate: [
-    (value: Value) =>
-      Promise.all(validator_funcs.map((func) => func(value))).then(
+    function (this: Document, value: Value) {
+      return Promise.all(validator_funcs.map((func) => func(value, this))).then(
         (validation_results) => {
           const validation_error_messages = _.filter(
             validation_results,
@@ -184,13 +192,14 @@ export const make_validation_mixin = <Value>(
             );
           }
         },
-      ),
+      );
+    },
     ({ reason }: { reason: Error }) => reason.message,
   ] as const,
 });
 
 export const make_string_min_length_validator =
-  (min_length: number): ValidatorFunction<string> =>
+  (min_length: number): ValidatorFunction<string, unknown> =>
   (value) =>
     value.length < min_length
       ? {
@@ -200,7 +209,7 @@ export const make_string_min_length_validator =
       : undefined;
 
 export const make_string_max_length_validator =
-  (max_length: number): ValidatorFunction<string> =>
+  (max_length: number): ValidatorFunction<string, unknown> =>
   (value) =>
     value.length > max_length
       ? {

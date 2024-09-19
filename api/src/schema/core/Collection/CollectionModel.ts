@@ -19,6 +19,7 @@ import {
   string_type_mixin,
   number_type_mixin,
   boolean_type_mixin,
+  created_at_mixin,
   is_required_mixin,
   make_validation_mixin,
   make_string_min_length_validator,
@@ -168,7 +169,7 @@ const CollectionMongooseSchema = new Schema<CollectionInterface>({
     immutable: true,
   },
   created_at: {
-    ...number_type_mixin,
+    ...created_at_mixin,
     ...is_required_mixin,
     immutable: true,
   },
@@ -230,7 +231,7 @@ const RecordMongooseSchema = new Schema<RecordInterface>({
     immutable: true,
   },
   created_at: {
-    ...number_type_mixin,
+    ...created_at_mixin,
     ...is_required_mixin,
     immutable: true,
   },
@@ -332,7 +333,6 @@ export const create_collection = (
   column_defs: ColumnDefInterface[],
 ) => {
   const created_by = user._id;
-  const created_at = Date.now();
 
   return CollectionModel.create({
     // randomUUID uses an entropy cache by default, improves performance but loses entropy after 128 UUIDs
@@ -341,14 +341,12 @@ export const create_collection = (
     minor_ver: 0,
     is_current_version: true,
     created_by,
-    created_at,
 
     collection_def,
 
     column_defs: column_defs.map((column_def) => ({
       ...column_def,
       created_by,
-      created_at,
     })),
   });
 };
@@ -362,7 +360,6 @@ const create_collection_version = async (
   column_defs?: ColumnDefInterface[],
 ) => {
   const created_by = user._id;
-  const created_at = Date.now();
 
   return db_transaction(async (session) => {
     const new_collection_version = new CollectionModel(
@@ -372,7 +369,6 @@ const create_collection_version = async (
         minor_ver: new_minor_ver,
         is_current_version: true,
         created_by,
-        created_at,
 
         collection_def: collection_def || current_collection.collection_def,
         column_defs: column_defs || current_collection.column_defs,
@@ -438,12 +434,10 @@ export const update_collection_column_defs = async (
   new_column_defs: ColumnDefInterface[],
 ) => {
   const created_by = user._id;
-  const created_at = Date.now();
 
   const new_column_defs_with_meta = new_column_defs.map((column_def) => ({
     ...column_def,
     created_by,
-    created_at,
   }));
 
   const is_update_a_breaking_change =
@@ -478,6 +472,8 @@ export const insert_records = async (
     throw new AppError(400, 'Record validation failed');
   }
 
+  // providing creation timestamp rather than leaving to default setter, to give
+  // records created as a single transaction a consistent time stamp
   const created_at = Date.now();
 
   const record_documents = data.map((data) => ({

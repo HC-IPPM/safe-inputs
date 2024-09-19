@@ -10,6 +10,7 @@ import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/l
 import {
   primary_key_type,
   number_type_mixin,
+  created_at_mixin,
   is_required_mixin,
   make_validation_mixin,
 } from 'src/schema/mongoose_utils.ts';
@@ -20,37 +21,40 @@ interface UserInterface {
   second_last_login_at?: number;
   last_login_at?: number;
 }
+export type UserDocument = HydratedDocument<UserInterface>;
+
 const UserMongooseSchema = new Schema<UserInterface>({
   email: {
     ...primary_key_type,
-    ...make_validation_mixin<string>(
+    ...make_validation_mixin<string, UserDocument>(
       (value) =>
         !validator.isEmail(value)
           ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
           : undefined,
-      async (value) => {
+      async (value, document) => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const document_already_using_email = await UserModel.exists({
           email: value,
         });
 
-        if (document_already_using_email !== null) {
+        if (
+          document_already_using_email !== null &&
+          !document_already_using_email._id.equals(document?._id)
+        ) {
           return { en: `"${value}" is already in use`, fr: 'TODO' };
         }
       },
     ),
   },
   created_at: {
-    ...number_type_mixin,
+    ...created_at_mixin,
     ...is_required_mixin,
     immutable: true,
   },
   second_last_login_at: { ...number_type_mixin, required: false },
   last_login_at: { ...number_type_mixin, required: false },
 });
-
 export const UserModel = model<UserInterface>('User', UserMongooseSchema);
-export type UserDocument = HydratedDocument<UserInterface>;
 
 export const UserByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(UserModel, '_id');
@@ -69,7 +73,7 @@ export const get_or_create_users = async (
     .value();
 
   const emails_without_users = _.chain(possible_users_by_email)
-    .omitBy((user) => _.isString(user?.email))
+    .omitBy((user) => user?._id)
     .keys()
     .value();
 
@@ -84,11 +88,9 @@ export const get_or_create_users = async (
     );
   }
 
-  const created_at = Date.now();
   const new_users = await UserModel.create(
     emails_without_users.map((email) => ({
       email,
-      created_at,
     })),
   );
 
