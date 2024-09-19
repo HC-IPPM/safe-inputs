@@ -21,121 +21,128 @@ msgstr "<0><1>Privacy</1></0>"
 msgid "<0><1>Terms and Conditions</1></0>"
 msgstr "<0><1>Terms and Conditions</1></0>"
 
-#: src/pages/TermsAndConditions.tsx:80
+#: src/pages/TermsAndConditions.tsx:78
 msgid "<0>Access to Information</0>"
 msgstr "<0>Access to Information</0>"
 
-#: src/pages/TermsAndConditions.tsx:233
+#: src/pages/TermsAndConditions.tsx:228
 msgid "<0>Any data or information disclosed to TBS will be used in a manner consistent with our <1>Privacy Notice Statement<2/></1>.</0>"
 msgstr "<0>Any data or information disclosed to TBS will be used in a manner consistent with our <1>Privacy Notice Statement<2/></1>.</0>"
 
-#: src/pages/TermsAndConditions.tsx:141
+#: src/pages/TermsAndConditions.tsx:138
 msgid "<0>Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada.</0>"
 msgstr "<0>Any products or related services provided to you by TBS are and will remain the intellectual property of the Government of Canada.</0>"
 
-#: src/pages/TermsAndConditions.tsx:203
+#: src/pages/TermsAndConditions.tsx:198
 msgid "<0>Data Handling</0>"
 msgstr "<0>Data Handling</0>"
 
-#: src/pages/TermsAndConditions.tsx:110
+#: src/pages/TermsAndConditions.tsx:107
 msgid "<0>Data Security and Use</0>"
 msgstr "<0>Data Security and Use</0>"
 
-#: src/pages/TermsAndConditions.tsx:398
+#: src/pages/TermsAndConditions.tsx:392
 msgid "<0>If at any time you or your representatives wish to adjust or cancel these services, please contact us at: <1/><2>https://https-everywhere.canada.ca/en/help/<3/></2></0>"
 msgstr "<0>If at any time you or your representatives wish to adjust or cancel these services, please contact us at: <1/><2>https://https-everywhere.canada.ca/en/help/<3/></2></0>"
 
-#: src/pages/TermsAndConditions.tsx:315
+#: src/pages/TermsAndConditions.tsx:309
 msgid "<0>Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:</0>"
 msgstr "<0>Information on this site, other than protected intellectual property, such as copyright and trademarks, and Government of Canada symbols and other graphics, has been posted with the intent that it be readily available for personal and public non-commercial use and may be reproduced, in part or in whole and by any means, without charge or further permission from TBS. We ask only that:</0>"
 
-#: src/pages/TermsAndConditions.tsx:88
+#: src/pages/TermsAndConditions.tsx:86
 msgid "<0>Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the <1>Access to Information Act.<2/></1></0>"
 msgstr "<0>Information shared with TBS, or acquired via systems hosted by TBS, may be subject to public disclosure under the <1>Access to Information Act.<2/></1></0>"
 
-#: src/pages/TermsAndConditions.tsx:134
+#: src/pages/TermsAndConditions.tsx:131
 msgid "<0>Intellectual Property, Copyright and Trademarks</0>"
 msgstr "<0>Intellectual Property, Copyright and Trademarks</0>"
 
-#: src/pages/TermsAndConditions.tsx:420
+#: src/pages/TermsAndConditions.tsx:413
 msgid "<0>Jurisdiction</0>"
 msgstr "<0>Jurisdiction</0>"
 
-#: src/pages/TermsAndConditions.tsx:257
+#: src/pages/TermsAndConditions.tsx:251
 msgid "<0>Limitation of Liability</0>"
 msgstr "<0>Limitation of Liability</0>"
 
-#: src/pages/TermsAndConditions.tsx:358
+#: src/pages/TermsAndConditions.tsx:352
 msgid "<0>Notification of Changes</0>"
 msgstr "<0>Notification of Changes</0>"
 
-#: src/pages/TermsAndConditions.tsx:210
+#: src/pages/TermsAndConditions.tsx:205
 msgid "<0>TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care.</0>"
 msgstr "<0>TBS agrees to protect any information you disclose to us in a manner commensurate with the level of protection you use to secure such information, but in any event, with no less than a reasonable level of care.</0>"
 
-#: src/pages/TermsAndConditions.tsx:336
+#: src/pages/TermsAndConditions.tsx:330
 msgid "<0>TBS be identified as the source; and</0>"
 msgstr "<0>TBS be identified as the source; and</0>"
 
-#: src/pages/TermsAndConditions.tsx:383
+#: src/pages/TermsAndConditions.tsx:377
 msgid "<0>Termination</0>"
 msgstr "<0>Termination</0>"
 
-#: src/pages/TermsAndConditions.tsx:285
+#: src/pages/TermsAndConditions.tsx:279
 msgid "<0>Terms of Use</0>"
 msgstr "<0>Terms of Use</0>"
 
-#: src/pages/TermsAndConditions.tsx:264
+#: src/pages/TermsAndConditions.tsx:258
 msgid "<0>The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Safe Inputs PoC. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Safe Inputs PoC provides.</0>"
 msgstr "<0>The advice, guidance or services provided to you by TBS will be provided on an “as-is” basis, without warrantee or representation of any kind, and TBS will not be liable for any loss, liability, damage or cost, including loss of data or interruptions of business arising from the provision of such advice, guidance or services by Safe Inputs PoC. Consequently, TBS recommends, that the users exercise their own skill and care with respect to their use of the advice, guidance and services that Safe Inputs PoC provides.</0>"
 
-#: src/pages/TermsAndConditions.tsx:150
+#: src/pages/TermsAndConditions.tsx:147
 msgid "<0>The graphics displayed on the Safe Inputs PoC website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada's approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs.</0>"
 msgstr "<0>The graphics displayed on the Safe Inputs PoC website may not be used, in whole or in part, in connection with any business, products or service, or otherwise used, in a manner that is likely to lead to the belief that such business product, service or other use, has received the Government of Canada's approval and may not be copied, reproduced, imitated, or used, in whole or in part, without the prior written permission of tbs.</0>"
 
-#: src/pages/TermsAndConditions.tsx:164
+#: src/pages/TermsAndConditions.tsx:161
 msgid "<0>The material available on this web site is subject to the <1>Copyright Act </1>and <2>Trademarks Act</2>and by applicable laws, policies, regulations and international agreements.</0>"
 msgstr "<0>The material available on this web site is subject to the <1>Copyright Act </1>and <2>Trademarks Act</2>and by applicable laws, policies, regulations and international agreements.</0>"
 
-#: src/pages/TermsAndConditions.tsx:341
+#: src/pages/TermsAndConditions.tsx:335
 msgid "<0>The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS.</0>"
 msgstr "<0>The reproduction is not represented as an official version of the materials reproduced, nor as having been made, in affiliation with or under the direction of TBS.</0>"
 
-#: src/pages/TermsAndConditions.tsx:427
+#: src/pages/TermsAndConditions.tsx:420
 msgid "<0>These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions.</0>"
 msgstr "<0>These terms and conditions shall be governed by and interpreted under the laws of Canada, without regard for any choice of law rules. The courts of Canada shall have exclusive jurisdiction over all matters arising in relation to these terms and conditions.</0>"
 
-#: src/pages/TermsAndConditions.tsx:188
+#: src/pages/TermsAndConditions.tsx:183
 msgid "<0>Use of intellectual property in breach of this agreement may result in the termination of access to the Safe Inputs PoC website, product or services.</0>"
 msgstr "<0>Use of intellectual property in breach of this agreement may result in the termination of access to the Safe Inputs PoC website, product or services.</0>"
 
-#: src/pages/TermsAndConditions.tsx:328
+#: src/pages/TermsAndConditions.tsx:322
 msgid "<0>Users exercise due diligence in ensuring the accuracy of the materials reproduced;</0>"
 msgstr "<0>Users exercise due diligence in ensuring the accuracy of the materials reproduced;</0>"
 
-#: src/pages/TermsAndConditions.tsx:365
+#: src/pages/TermsAndConditions.tsx:359
 msgid "<0>We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change.</0>"
 msgstr "<0>We reserve the right to make changes to our website layout and content, policies, products, services, and these Terms and Conditions at any time without notice. Please check these Terms and Conditions regularly, as continued use of our services after a change has been made will be considered your acceptance of the change.</0>"
 
-#: src/pages/TermsAndConditions.tsx:390
+#: src/pages/TermsAndConditions.tsx:384
 msgid "<0>We reserve the right to modify or terminate our services for any reason, without notice, at any time.</0>"
 msgstr "<0>We reserve the right to modify or terminate our services for any reason, without notice, at any time.</0>"
 
-#: src/pages/TermsAndConditions.tsx:220
+#: src/pages/TermsAndConditions.tsx:215
 msgid "<0>You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS's mandate under the Policy on Government Security and the Policy on Service and Digital.</0>"
 msgstr "<0>You acknowledge that any data or information disclosed to TBS may be used to protect the Government of Canada as well as electronic information and information infrastructures designated as being of importance to the Government of Canada in accordance with cyber security and information assurance aspect of TBS's mandate under the Policy on Government Security and the Policy on Service and Digital.</0>"
 
-#: src/pages/TermsAndConditions.tsx:117
+#: src/pages/TermsAndConditions.tsx:114
 msgid "<0>You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended.</0>"
 msgstr "<0>You agree to protect any information disclosed to you by TBS in accordance with the data handling measures outlined in these Terms & Conditions. Similarly, TBS agrees to protect any information you disclose to us. Any such information must only be used for the purposes for which it was intended.</0>"
 
-#: src/pages/TermsAndConditions.tsx:292
+#: src/pages/TermsAndConditions.tsx:286
 msgid "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 msgstr "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 
 #: src/pages/Home.tsx:84
 msgid "Actions"
 msgstr "Actions"
+
+#: src/pages/CreateCollection.tsx:353
+#: src/pages/CreateCollection.tsx:354
+#: src/pages/CreateCollection.tsx:405
+#: src/pages/CreateCollection.tsx:406
+msgid "Add an owner email"
+msgstr "Add an owner email"
 
 #: src/components/ColumnManagementForm.tsx:168
 msgid "Add Column"
@@ -187,6 +194,10 @@ msgstr "Closed"
 msgid "Collection Management"
 msgstr "Collection Management"
 
+#: src/pages/CreateCollection.tsx:316
+msgid "Collection Owner Emails"
+msgstr "Collection Owner Emails"
+
 #: src/components/CollectionForm.tsx:64
 #: src/components/ColumnManagementForm.tsx:96
 msgid "Collection Updated"
@@ -195,6 +206,10 @@ msgstr "Collection Updated"
 #: src/components/CollectionForm.tsx:65
 msgid "Collection Updated successfully"
 msgstr "Collection Updated successfully"
+
+#: src/pages/CreateCollection.tsx:368
+msgid "Collection Uploader Emails"
+msgstr "Collection Uploader Emails"
 
 #: src/pages/Home.tsx:188
 msgid "Collections You Manage"
@@ -207,6 +222,10 @@ msgstr "Collections You Upload To"
 #: src/pages/ColumnManagement.tsx:117
 msgid "Column Management"
 msgstr "Column Management"
+
+#: src/pages/CreateCollection.tsx:447
+msgid "Create Collection"
+msgstr "Create Collection"
 
 #: src/pages/Home.tsx:171
 #: src/pages/Home.tsx:172
@@ -242,10 +261,12 @@ msgid "Date-Time"
 msgstr "Date-Time"
 
 #: src/components/ColumnManagementForm.tsx:193
+#: src/pages/CreateCollection.tsx:285
 msgid "Description (English)"
 msgstr "Description (English)"
 
 #: src/components/ColumnManagementForm.tsx:199
+#: src/pages/CreateCollection.tsx:300
 msgid "Description (French)"
 msgstr "Description (French)"
 
@@ -273,6 +294,18 @@ msgstr "First"
 #: src/pages/TermsAndConditions.tsx:46
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
+
+#: src/pages/CreateCollection.tsx:427
+msgid "Form contains validation errors"
+msgstr "Form contains validation errors"
+
+#: src/pages/CreateCollection.tsx:420
+msgid "Form is submitting, please wait"
+msgstr "Form is submitting, please wait"
+
+#: src/pages/CreateCollection.tsx:422
+msgid "Form is validating, please wait"
+msgstr "Form is validating, please wait"
 
 #: src/components/ColumnManagementForm.tsx:256
 msgid "Go Back"
@@ -317,10 +350,12 @@ msgid "Name"
 msgstr "Name"
 
 #: src/components/ColumnManagementForm.tsx:181
+#: src/pages/CreateCollection.tsx:255
 msgid "Name (English)"
 msgstr "Name (English)"
 
 #: src/components/ColumnManagementForm.tsx:187
+#: src/pages/CreateCollection.tsx:270
 msgid "Name (French)"
 msgstr "Name (French)"
 
@@ -349,6 +384,10 @@ msgstr "Object"
 msgid "Open"
 msgstr "Open"
 
+#: src/pages/CreateCollection.tsx:330
+msgid "Owner Email"
+msgstr "Owner Email"
+
 #: src/components/CollectionForm.tsx:109
 msgid "Owner Emails"
 msgstr "Owner Emails"
@@ -362,7 +401,7 @@ msgstr "Page {0} of {1}"
 msgid "Permission Denied"
 msgstr "Permission Denied"
 
-#: src/pages/TermsAndConditions.tsx:59
+#: src/pages/TermsAndConditions.tsx:58
 msgid "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 msgstr "Personal information will not be disclosed by Treasury Board Secretariat of Canada (TBS) except in accordance with the <0>Privacy Act<1/></0>."
 
@@ -392,15 +431,22 @@ msgstr "Remove"
 msgid "Remove {0} from {fieldName}"
 msgstr "Remove {0} from {fieldName}"
 
+#: src/pages/CreateCollection.tsx:335
+#: src/pages/CreateCollection.tsx:336
+#: src/pages/CreateCollection.tsx:387
+#: src/pages/CreateCollection.tsx:388
+msgid "Remove {email}"
+msgstr "Remove {email}"
+
 #: src/components/auth/SignInForm.tsx:64
 msgid "Required"
 msgstr "Required"
 
-#: src/pages/Home.tsx:216
+#: src/pages/Home.tsx:218
 msgid "Safe Inputs Home"
 msgstr "Safe Inputs Home"
 
-#: src/pages/ExcelParser.tsx:48
+#: src/pages/ExcelParser.tsx:49
 msgid "Safe Inputs PoC"
 msgstr "Safe Inputs PoC"
 
@@ -445,12 +491,16 @@ msgstr "Status"
 msgid "String"
 msgstr "String"
 
+#: src/pages/CreateCollection.tsx:427
+msgid "Submit"
+msgstr "Submit"
+
 #: src/components/auth/AuthNavButton.tsx:32
 #: src/components/auth/AuthNavButton.tsx:52
 msgid "Syncing session"
 msgstr "Syncing session"
 
-#: src/pages/TermsAndConditions.tsx:446
+#: src/pages/TermsAndConditions.tsx:440
 msgid "Terms and Conditions"
 msgstr "Terms and Conditions"
 
@@ -483,6 +533,10 @@ msgstr "Updating column"
 #: src/pages/Home.tsx:200
 msgid "Upload"
 msgstr "Upload"
+
+#: src/pages/CreateCollection.tsx:382
+msgid "Uploader Email"
+msgstr "Uploader Email"
 
 #: src/components/CollectionForm.tsx:115
 msgid "Uploaders Emails"
