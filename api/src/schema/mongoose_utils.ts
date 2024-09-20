@@ -2,6 +2,8 @@ import _ from 'lodash';
 import type { Model, ValidatorProps, SchemaValidator } from 'mongoose';
 import { Schema, Error as MongooseError, HydratedDocument } from 'mongoose';
 
+import uniqueValidator from 'mongoose-unique-validator';
+
 import type { PartialDeep } from 'type-fest';
 
 import { get_lang_suffixed_keys, langs } from './lang_utils.ts';
@@ -49,12 +51,13 @@ const validation_error_string_to_messages_by_lang = (
 };
 
 export const get_validation_errors = async <ModelInterface>(
-  model: Model<ModelInterface>,
+  Model: Model<ModelInterface>,
   input: PartialDeep<ModelInterface>,
-  paths_to_validate: [string],
+  paths_to_validate: string[],
 ) => {
   try {
-    await model.validate(input, paths_to_validate);
+    const dummy_instance = new Model(input);
+    await Model.validate(dummy_instance, paths_to_validate);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -154,18 +157,18 @@ export const is_required_mixin = {
   ] as [true, string],
 };
 
-export type ValidatorFunction<FieldType, SchemaInterface> = (
+export type ValidatorFunction<FieldType, ModelInterface> = (
   value: FieldType,
   validation_props?: ValidatorProps,
-  document?: HydratedDocument<SchemaInterface>,
+  document?: HydratedDocument<ModelInterface> | ModelInterface,
 ) =>
   | undefined
   | ValidationMessagesByLang
   | Promise<undefined | ValidationMessagesByLang>;
 
-export const make_validation_mixin = <FieldType, SchemaInterface>(
-  ...validator_funcs: ValidatorFunction<FieldType, SchemaInterface>[]
-): { validate: SchemaValidator<FieldType, SchemaInterface> } => ({
+export const make_validation_mixin = <FieldType, ModelInterface>(
+  ...validator_funcs: ValidatorFunction<FieldType, ModelInterface>[]
+): { validate: SchemaValidator<FieldType, ModelInterface> } => ({
   validate: {
     propsParameter: true,
     validator: function (value: FieldType, validation_props) {
@@ -174,9 +177,7 @@ export const make_validation_mixin = <FieldType, SchemaInterface>(
           func(
             value,
             validation_props,
-            // mongoose's typing of the validator function's `this` is the SchemaInterface at this point,
-            // but in reality it's a document instance being passed here
-            this as HydratedDocument<SchemaInterface>,
+            this as HydratedDocument<ModelInterface> | ModelInterface,
           ),
         ),
       ).then((validation_results) => {
@@ -282,3 +283,15 @@ export const make_lang_suffixed_type = <Key extends string, MongooseType>(
   Object.fromEntries(get_lang_suffixed_keys(key).map((key) => [key, type])) as {
     [k in LangSuffixedKeyUnion<Key>]: MongooseType;
   };
+
+export const with_uniqueness_validation_plugin = <ModelInterface>(
+  schema: Schema<ModelInterface>,
+) => {
+  return schema.plugin(uniqueValidator, {
+    message: ({ value }: { value: string }) =>
+      validation_messages_by_lang_to_error_string({
+        en: `Must be unique. Value "${value}" is already in use.`,
+        fr: 'TODO',
+      }),
+  });
+};

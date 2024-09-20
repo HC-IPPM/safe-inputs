@@ -27,6 +27,7 @@ import {
   make_lang_suffixed_type,
   make_foreign_id_type,
   make_foreign_key_type,
+  with_uniqueness_validation_plugin,
 } from 'src/schema/mongoose_utils.ts';
 
 interface ConditionInterface {
@@ -180,7 +181,11 @@ const CollectionMongooseSchema = new Schema<CollectionInterface>({
     immutable: true,
   },
 
-  column_defs: { type: [ColumnDefSchema], requied: true, immutable: true },
+  column_defs: {
+    type: [ColumnDefSchema],
+    requied: true,
+    immutable: true,
+  },
 
   recordset_key: {
     ...string_type_mixin,
@@ -203,7 +208,10 @@ CollectionMongooseSchema.index({
   'collection_def.uploaders': 1,
 });
 
-export const CollectionModel = model('Collection', CollectionMongooseSchema);
+export const CollectionModel = model(
+  'Collection',
+  with_uniqueness_validation_plugin(CollectionMongooseSchema),
+);
 export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
 export interface RecordInterface {
@@ -235,7 +243,10 @@ const RecordMongooseSchema = new Schema<RecordInterface>({
 });
 RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
 
-export const RecordModel = model('Record', RecordMongooseSchema);
+export const RecordModel = model(
+  'Record',
+  with_uniqueness_validation_plugin(RecordMongooseSchema),
+);
 export type RecordDocument = HydratedDocument<RecordInterface>;
 
 export const CollectionByIdLoader =

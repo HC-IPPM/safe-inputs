@@ -13,6 +13,7 @@ import {
   created_at_mixin,
   is_required_mixin,
   make_validation_mixin,
+  with_uniqueness_validation_plugin,
 } from 'src/schema/mongoose_utils.ts';
 
 interface UserInterface {
@@ -24,24 +25,10 @@ interface UserInterface {
 const UserMongooseSchema = new Schema<UserInterface>({
   email: {
     ...primary_key_type,
-    ...make_validation_mixin<string, UserInterface>(
-      (value) =>
-        !validator.isEmail(value)
-          ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
-          : undefined,
-      async (value, _validation_props, document) => {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        const document_already_using_email = await UserModel.exists({
-          email: value,
-        });
-
-        if (
-          document_already_using_email !== null &&
-          !document_already_using_email._id.equals(document?._id)
-        ) {
-          return { en: `"${value}" is already in use`, fr: 'TODO' };
-        }
-      },
+    ...make_validation_mixin<string, UserInterface>((value) =>
+      !validator.isEmail(value)
+        ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
+        : undefined,
     ),
   },
   created_at: {
@@ -52,7 +39,10 @@ const UserMongooseSchema = new Schema<UserInterface>({
   second_last_login_at: { ...number_type_mixin, required: false },
   last_login_at: { ...number_type_mixin, required: false },
 });
-export const UserModel = model('User', UserMongooseSchema);
+export const UserModel = model(
+  'User',
+  with_uniqueness_validation_plugin(UserMongooseSchema),
+);
 export type UserDocument = HydratedDocument<UserInterface>;
 
 export const UserByIdLoader =
