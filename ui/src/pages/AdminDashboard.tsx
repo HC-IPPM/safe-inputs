@@ -114,14 +114,6 @@ const UsersTable = ({ users }: { users: User[] }) => {
         enableGlobalFilter: false,
       },
       {
-        header: 'Second last Login',
-        accessorFn: (row) => formatDate(row.second_last_login_at),
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-        enableSorting: true,
-        enableGlobalFilter: false,
-      },
-      {
         header: 'Is Admin',
         accessorFn: (row) => row.is_super_user,
         cell: (info) => (info.getValue() ? 'Yes' : 'No'),
