@@ -44,7 +44,6 @@ import {
   getSortedRowModel,
   Column,
 } from '@tanstack/react-table';
-import _ from 'lodash';
 
 import { memo, useMemo, useState } from 'react';
 
@@ -68,7 +67,7 @@ const SortIcon = ({ column }: { column: Column<User, unknown> }) => {
 
   return (
     <IconButton
-      aria-label={`Sort by ${column.id}`}
+      aria-label={t`Sort by ${column.id}`}
       icon={
         column.getIsSorted() === 'asc' ? (
           <ChevronUpIcon />
@@ -90,7 +89,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
   const columns = useMemo<ColumnDef<User>[]>(
     () => [
       {
-        header: 'Email Address',
+        header: t`Email Address`,
         accessorFn: (row) => row.email,
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -98,7 +97,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
         enableGlobalFilter: true,
       },
       {
-        header: 'Created At',
+        header: t`Created At`,
         accessorFn: (row) => formatDate(row.created_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -106,7 +105,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
         enableGlobalFilter: false,
       },
       {
-        header: 'Last Login',
+        header: t`Last Login`,
         accessorFn: (row) => formatDate(row.last_login_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -114,17 +113,17 @@ const UsersTable = ({ users }: { users: User[] }) => {
         enableGlobalFilter: false,
       },
       {
-        header: 'Is Admin',
+        header: t`Is Admin`,
         accessorFn: (row) => row.is_super_user,
-        cell: (info) => (info.getValue() ? 'Yes' : 'No'),
+        cell: (info) => (info.getValue() ? t`Yes` : t`No`),
         footer: (props) => props.column.id,
         enableSorting: false,
         enableGlobalFilter: false,
       },
       {
-        header: 'Can Own Collections',
+        header: t`Can Own Collections`,
         accessorFn: (row) => row.can_own_collections,
-        cell: (info) => (info.getValue() ? 'Yes' : 'No'),
+        cell: (info) => (info.getValue() ? t`Yes` : t`No`),
         footer: (props) => props.column.id,
         enableSorting: false,
         enableGlobalFilter: false,
@@ -163,7 +162,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
         </InputLeftElement>
         <Input
           width="100%"
-          placeholder="Search by email"
+          placeholder={t`Search by email`}
           value={globalFilter ?? ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
         />
@@ -210,19 +209,21 @@ const UsersTable = ({ users }: { users: User[] }) => {
             isDisabled={!table.getCanPreviousPage()}
             leftIcon={<ChevronLeftIcon />}
           >
-            First
+            <Trans>First</Trans>
           </Button>
           <IconButton
-            aria-label="Previous Page"
+            aria-label={t`Previous Page`}
             icon={<ChevronLeftIcon />}
             onClick={() => table.previousPage()}
             isDisabled={!table.getCanPreviousPage()}
           />
           <Text>
-            Page {pagination.pageIndex + 1} of {table.getPageCount()}
+            <Trans>
+              Page {pagination.pageIndex + 1} of {table.getPageCount()}
+            </Trans>
           </Text>
           <IconButton
-            aria-label="Next Page"
+            aria-label={t`Next Page`}
             icon={<ChevronRightIcon />}
             onClick={() => table.nextPage()}
             isDisabled={!table.getCanNextPage()}
@@ -232,7 +233,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
             isDisabled={!table.getCanNextPage()}
             rightIcon={<ChevronRightIcon />}
           >
-            Last
+            <Trans>Last</Trans>
           </Button>
         </HStack>
         <Select
