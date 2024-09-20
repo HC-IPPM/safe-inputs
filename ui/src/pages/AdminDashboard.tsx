@@ -1,9 +1,12 @@
 import { useQuery } from '@apollo/client';
 
 import {
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronUpIcon,
   RepeatIcon,
+  SearchIcon,
 } from '@chakra-ui/icons';
 import {
   Box,
@@ -23,6 +26,9 @@ import {
   Text,
   Flex,
   Select,
+  InputGroup,
+  InputLeftElement,
+  Input,
 } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
@@ -34,9 +40,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   flexRender,
-  RowData,
   PaginationState,
   getSortedRowModel,
+  Column,
 } from '@tanstack/react-table';
 import _ from 'lodash';
 
@@ -57,6 +63,29 @@ const formatDate = (timestamp: number | undefined): string => {
   return date.toLocaleString('en-US');
 };
 
+const SortIcon = ({ column }: { column: Column<User, unknown> }) => {
+  if (!column.getCanSort()) return null;
+
+  return (
+    <IconButton
+      aria-label={`Sort by ${column.id}`}
+      icon={
+        column.getIsSorted() === 'asc' ? (
+          <ChevronUpIcon />
+        ) : column.getIsSorted() === 'desc' ? (
+          <ChevronDownIcon />
+        ) : (
+          <ChevronUpIcon opacity={0.3} />
+        )
+      }
+      size="sm"
+      variant="ghost"
+      onClick={column.getToggleSortingHandler()}
+      ml={2}
+    />
+  );
+};
+
 const UsersTable = ({ users }: { users: User[] }) => {
   const columns = useMemo<ColumnDef<User>[]>(
     () => [
@@ -65,36 +94,48 @@ const UsersTable = ({ users }: { users: User[] }) => {
         accessorFn: (row) => row.email,
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
+        enableSorting: true,
+        enableGlobalFilter: true,
       },
       {
         header: 'Created At',
         accessorFn: (row) => formatDate(row.created_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
+        enableSorting: true,
+        enableGlobalFilter: false,
       },
       {
         header: 'Last Login',
         accessorFn: (row) => formatDate(row.last_login_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
+        enableSorting: true,
+        enableGlobalFilter: false,
       },
       {
         header: 'Second last Login',
         accessorFn: (row) => formatDate(row.second_last_login_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
+        enableSorting: true,
+        enableGlobalFilter: false,
       },
       {
         header: 'Is Admin',
         accessorFn: (row) => row.is_super_user,
         cell: (info) => (info.getValue() ? 'Yes' : 'No'),
         footer: (props) => props.column.id,
+        enableSorting: false,
+        enableGlobalFilter: false,
       },
       {
         header: 'Can Own Collections',
         accessorFn: (row) => row.can_own_collections,
         cell: (info) => (info.getValue() ? 'Yes' : 'No'),
         footer: (props) => props.column.id,
+        enableSorting: false,
+        enableGlobalFilter: false,
       },
     ],
     [],
@@ -105,6 +146,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
     pageIndex: 0,
     pageSize: 5,
   });
+  const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
     columns,
@@ -112,16 +154,30 @@ const UsersTable = ({ users }: { users: User[] }) => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    // getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onPaginationChange: setPagination,
     state: {
       pagination,
+      globalFilter,
     },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'includesString',
   });
   return (
-    <Box>
-      <TableContainer mb={4}>
-        <Table variant="simple">
+    <Box width="100%">
+      <InputGroup alignContent="left" width="50%" mx="auto">
+        <InputLeftElement pointerEvents="none">
+          <SearchIcon color="gray.300" />
+        </InputLeftElement>
+        <Input
+          width="100%"
+          placeholder="Search by email"
+          value={globalFilter ?? ''}
+          onChange={(e) => setGlobalFilter(e.target.value)}
+        />
+      </InputGroup>
+      <TableContainer mb={4} maxWidth="100%">
+        <Table variant="simple" overflowX="auto">
           <TableCaption placement="top">
             <Heading>
               <Trans>Users</Trans>
@@ -131,15 +187,12 @@ const UsersTable = ({ users }: { users: User[] }) => {
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <Th
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
+                  <Th key={header.id} colSpan={header.colSpan}>
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext(),
                     )}
+                    <SortIcon column={header.column} />
                   </Th>
                 ))}
               </Tr>
