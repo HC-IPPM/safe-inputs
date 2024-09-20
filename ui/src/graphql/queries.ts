@@ -29,6 +29,20 @@ export const GET_HOME_INFO = gql`
   }
 `;
 
+export const GET_USERS = gql`
+  query UserInfo {
+    users {
+      id
+      email
+      created_at
+      second_last_login_at
+      last_login_at
+      is_super_user
+      can_own_collections
+    }
+  }
+`;
+
 export const GET_COLLECTION_DETAILS = gql`
   query CollectionDetails($collection_id: String!, $lang: String!) {
     collection(collection_id: $collection_id) {
