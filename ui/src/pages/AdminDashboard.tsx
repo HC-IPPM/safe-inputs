@@ -1,6 +1,10 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  RepeatIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Container,
@@ -17,15 +21,13 @@ import {
   Tbody,
   Td,
   Text,
-  Tag,
+  Flex,
+  Select,
 } from '@chakra-ui/react';
 
 import { Trans, t } from '@lingui/macro';
-import { useLingui } from '@lingui/react';
 
 import {
-  Column,
-  Table,
   ColumnDef,
   useReactTable,
   getCoreRowModel,
@@ -43,55 +45,62 @@ import { memo, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useSession } from 'src/components/auth/session.tsx';
-import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 import { GET_USERS } from 'src/graphql/queries.ts';
 import { User } from 'src/graphql/schema.ts';
+
+const formatDate = (timestamp: number | undefined): string => {
+  if (!timestamp) return '-';
+
+  const date = new Date(timestamp);
+
+  return date.toLocaleString('en-US');
+};
 
 const UsersTable = ({ users }: { users: User[] }) => {
   const columns = useMemo<ColumnDef<User>[]>(
     () => [
       {
         header: 'Email Address',
-        accessorKey: 'email',
+        accessorFn: (row) => row.email,
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
         header: 'Created At',
-        accessorKey: 'created_at',
+        accessorFn: (row) => formatDate(row.created_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
         header: 'Last Login',
-        accessorKey: 'last_login_at',
+        accessorFn: (row) => formatDate(row.last_login_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
         header: 'Second last Login',
-        accessorKey: 'second_last_login_at',
+        accessorFn: (row) => formatDate(row.second_last_login_at),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       },
       {
         header: 'Is Admin',
-        accessorKey: 'is_admin',
-        cell: (info) => info.getValue(),
+        accessorFn: (row) => row.is_super_user,
+        cell: (info) => (info.getValue() ? 'Yes' : 'No'),
         footer: (props) => props.column.id,
       },
       {
         header: 'Can Own Collections',
-        accessorKey: 'can_own_collections',
-        cell: (info) => info.getValue(),
+        accessorFn: (row) => row.can_own_collections,
+        cell: (info) => (info.getValue() ? 'Yes' : 'No'),
         footer: (props) => props.column.id,
       },
     ],
     [],
   );
 
-  const [data, setData] = useState(users);
+  const [data] = useState(users);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 5,
@@ -110,40 +119,92 @@ const UsersTable = ({ users }: { users: User[] }) => {
     },
   });
   return (
-    <TableContainer mb={4}>
-      <Table variant="simple">
-        <TableCaption placement="top">
-          <Heading>
-            <Trans>Users</Trans>
-          </Heading>
-        </TableCaption>
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Th key={header.id} colSpan={header.colSpan}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Box>
+      <TableContainer mb={4}>
+        <Table variant="simple">
+          <TableCaption placement="top">
+            <Heading>
+              <Trans>Users</Trans>
+            </Heading>
+          </TableCaption>
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <Th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table.getRowModel().rows.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex justify="space-between" align="center" mb={4}>
+        <HStack spacing={4}>
+          <Button
+            onClick={() => table.setPageIndex(0)}
+            isDisabled={!table.getCanPreviousPage()}
+            leftIcon={<ChevronLeftIcon />}
+          >
+            First
+          </Button>
+          <IconButton
+            aria-label="Previous Page"
+            icon={<ChevronLeftIcon />}
+            onClick={() => table.previousPage()}
+            isDisabled={!table.getCanPreviousPage()}
+          />
+          <Text>
+            Page {pagination.pageIndex + 1} of {table.getPageCount()}
+          </Text>
+          <IconButton
+            aria-label="Next Page"
+            icon={<ChevronRightIcon />}
+            onClick={() => table.nextPage()}
+            isDisabled={!table.getCanNextPage()}
+          />
+          <Button
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            isDisabled={!table.getCanNextPage()}
+            rightIcon={<ChevronRightIcon />}
+          >
+            Last
+          </Button>
+        </HStack>
+        <Select
+          value={pagination.pageSize}
+          onChange={(e) => {
+            const size = Number(e.target.value);
+            setPagination((old) => ({ ...old, pageSize: size }));
+            table.setPageSize(size);
+          }}
+          width="100px"
+        >
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={25}>25</option>
+        </Select>
+      </Flex>
+    </Box>
   );
 };
 

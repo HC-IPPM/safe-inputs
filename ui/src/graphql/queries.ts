@@ -37,7 +37,7 @@ export const GET_USERS = gql`
       created_at
       second_last_login_at
       last_login_at
-      is_admin
+      is_super_user
       can_own_collections
     }
   }

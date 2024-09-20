@@ -17,7 +17,7 @@ export type User = {
   created_at?: number;
   second_last_login_at?: number;
   last_login_at?: number;
-  is_admin?: boolean;
+  is_super_user?: boolean;
   can_own_collections?: boolean;
 };
 
