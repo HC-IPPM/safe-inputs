@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { UPDATE_COLLECTION } from 'src/graphql/queries.ts';
-import type { Collection, User } from 'src/graphql/schema.ts';
+import type { Collection, User } from 'src/graphql/schema.d.ts';
 
 import EmailFields from './EmailField.tsx';
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';

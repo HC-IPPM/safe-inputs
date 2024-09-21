@@ -2,7 +2,7 @@ import { Box, Button, FormLabel, HStack, Input } from '@chakra-ui/react';
 import { t, Trans } from '@lingui/macro';
 import { Control, Controller, useFieldArray } from 'react-hook-form';
 
-import { Collection } from 'src/graphql/schema.ts';
+import type { Collection } from 'src/graphql/schema.d.ts';
 
 type EmailFieldName = 'owners' | 'uploaders';
 

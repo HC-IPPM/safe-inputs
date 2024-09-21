@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Button,
   Container,
@@ -27,7 +27,7 @@ import {
   UPDATE_COLUMN_DEFINITION,
   VALIDATE_COLUMN_DEFS,
 } from 'src/graphql/queries.ts';
-import type { Collection, ColumnDef } from 'src/graphql/schema.ts';
+import type { Collection, ColumnDef } from 'src/graphql/schema.d.ts';
 
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
 import { Link } from './Link.tsx';
@@ -78,7 +78,7 @@ const ColumnManagementForm = function ({
     [collection.column_defs, columnHeader],
   );
 
-  // Errors during columndef updation are captured by the error state of the mutation
+  // Errors during column def updates are captured by the error state of the mutation
   const onSubmit = async (formData: ColumnDef) => {
     const updatedColumnDefs = getUpdatedColumnDefs(formData);
     const response = await updateColumnDefs({
@@ -94,11 +94,7 @@ const ColumnManagementForm = function ({
       }
       toast({
         title: <Trans>Collection Updated</Trans>,
-        description: (
-          <Trans>
-            The collection has been updated with given column definitions
-          </Trans>
-        ),
+        description: <Trans>The collection has been updated</Trans>,
         status: 'success',
         duration: 5000,
         isClosable: true,

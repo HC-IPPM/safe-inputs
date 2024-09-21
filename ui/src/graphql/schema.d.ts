@@ -1,4 +1,4 @@
-// TODO at some point, I'll integrate a tool to generate types from queries
+// TODO integrate GraphQL codegen ASAP https://github.com/HC-IPPM/safe-inputs/issues/587
 export type CollectionInfo = {
   id: string;
   name: string;
@@ -34,6 +34,7 @@ export type ColumnDef = {
     parameters: string[];
   }[];
 };
+
 export type Collection = {
   id: string;
   stable_key?: string;

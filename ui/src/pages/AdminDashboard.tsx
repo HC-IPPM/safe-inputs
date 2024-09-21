@@ -52,7 +52,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 import { GET_USERS } from 'src/graphql/queries.ts';
-import { User } from 'src/graphql/schema.ts';
+import type { User } from 'src/graphql/schema.d.ts';
 
 const formatDate = (timestamp: number | undefined): string => {
   if (!timestamp) return '-';
