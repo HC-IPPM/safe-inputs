@@ -58,7 +58,7 @@ function CollectionForm({ data }: CollectionFormProps) {
     if (result.data) {
       const { id } = result.data.update_collection;
       if (!id) {
-        throw Error('Missing ID for updated collection');
+        throw Error(t`Missing ID for updated collection`);
       }
       toast({
         title: <Trans>Collection Updated</Trans>,
@@ -82,37 +82,47 @@ function CollectionForm({ data }: CollectionFormProps) {
         {loading && <Text>Loading...</Text>}
 
         <FormControl display="flex" alignItems="center">
-          <Checkbox {...register('is_locked')}>Locked?</Checkbox>
+          <Checkbox {...register('is_locked')}>
+            <Trans>Locked</Trans>
+          </Checkbox>
         </FormControl>
 
         <FormControl id="name-en" isRequired>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>
+            <Trans>Name (English)</Trans>
+          </FormLabel>
           <Input type="text" {...register('name_en')} />
         </FormControl>
 
         <FormControl id="name-fr" isRequired>
-          <FormLabel>Nom</FormLabel>
+          <FormLabel>
+            <Trans>Name (French)</Trans>
+          </FormLabel>
           <Input type="text" {...register('name_fr')} />
         </FormControl>
 
         <FormControl id="description-en" isRequired>
-          <FormLabel>Description (English)</FormLabel>
+          <FormLabel>
+            <Trans>Description (English)</Trans>
+          </FormLabel>
           <Textarea {...register('description_en')} />
         </FormControl>
 
         <FormControl id="description-fr" isRequired>
-          <FormLabel>Description (French)</FormLabel>
+          <FormLabel>
+            <Trans>Description (French)</Trans>
+          </FormLabel>
           <Textarea {...register('description_fr')} />
         </FormControl>
 
         <EmailFields
-          title=<Trans>Owner Emails</Trans>
+          title={<Trans>Owner Emails</Trans>}
           control={control}
           fieldName="owners"
         />
 
         <EmailFields
-          title=<Trans>Uploaders Emails</Trans>
+          title={<Trans>Uploaders Emails</Trans>}
           control={control}
           fieldName="uploaders"
         />

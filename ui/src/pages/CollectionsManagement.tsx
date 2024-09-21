@@ -112,7 +112,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
             <CollectionForm data={data?.collection} />
             <Box mt={8}>
               <Heading as="h2" size="lg" mb={6}>
-                Columns Overview
+                <Trans>Columns Overview</Trans>
               </Heading>
 
               <Stack spacing={4} mb={6}>
@@ -120,11 +120,21 @@ const CollectionMainPage = memo(function CollectionMainPage({
                   <Table variant="simple">
                     <Thead>
                       <Tr>
-                        <Th>Header</Th>
-                        <Th>Name</Th>
-                        <Th>Data Type</Th>
-                        <Th>Conditions</Th>
-                        <Th>Actions</Th>
+                        <Th>
+                          <Trans>Header</Trans>
+                        </Th>
+                        <Th>
+                          <Trans>Name</Trans>
+                        </Th>
+                        <Th>
+                          <Trans>Data Type</Trans>
+                        </Th>
+                        <Th>
+                          <Trans>Conditions</Trans>
+                        </Th>
+                        <Th>
+                          <Trans>Actions</Trans>
+                        </Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -152,7 +162,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
                                 size="sm"
                                 mr={2}
                               >
-                                Edit
+                                <Trans>Edit</Trans>
                               </Button>
                             </Td>
                           </Tr>
@@ -161,7 +171,9 @@ const CollectionMainPage = memo(function CollectionMainPage({
                     </Tbody>
                   </Table>
                 ) : (
-                  <Text>No columns available.</Text>
+                  <Text>
+                    <Trans>No columns available.</Trans>
+                  </Text>
                 )}
               </Stack>
 
@@ -171,7 +183,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
                 colorScheme="green"
                 size="md"
               >
-                Add New Column
+                <Trans>Add New Column</Trans>
               </Button>
             </Box>
           </>

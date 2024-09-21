@@ -90,7 +90,7 @@ const ColumnManagementForm = function ({
     if (response.data) {
       const { id } = response.data.update_column_defs;
       if (!id) {
-        throw Error('Missing ID for updated collection');
+        throw Error(t`Missing ID for updated collection`);
       }
       toast({
         title: <Trans>Collection Updated</Trans>,
@@ -214,7 +214,6 @@ const ColumnManagementForm = function ({
               <option value="number">
                 <Trans>Number</Trans>
               </option>
-
               <option value="boolean">
                 <Trans>Boolean</Trans>
               </option>

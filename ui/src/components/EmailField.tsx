@@ -29,7 +29,7 @@ function EmailFields({ title, control, fieldName }: EmailFieldsProps) {
             render={({ field }) => (
               <Input
                 type="email"
-                placeholder="Enter email"
+                placeholder={t`Enter email`}
                 {...field}
                 value={field.value || ''}
                 isRequired

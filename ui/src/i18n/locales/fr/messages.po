@@ -133,6 +133,7 @@ msgstr "<0>Vous acceptez de protéger toute information qui vous est divulguée 
 msgid "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 msgstr "<0>Vous acceptez d'utiliser notre site Web, nos produits et nos services uniquement à des fins légales et de manière à ne pas enfreindre les droits d'un tiers, ni à restreindre ou à empêcher l'utilisation et la jouissance du site Web, des produits ou des services par un tiers. En outre, vous ne devez pas abuser, compromettre ou interférer avec nos services, ni introduire dans nos services des éléments malveillants ou technologiquement dangereux. Vous ne devez pas tenter d'obtenir un accès non autorisé à notre site Web, à nos produits ou services, au(x) serveur(s) sur le(s)quel(s) ils sont stockés, ou à tout serveur, ordinateur ou base de données connecté à notre site Web, à nos produits ou à nos services, ni les altérer, les désosser ou les modifier. Nous pouvons suspendre ou cesser de vous fournir nos produits ou services si vous ne respectez pas nos conditions ou politiques ou si nous enquêtons sur une suspicion de mauvaise conduite. Tout soupçon d'utilisation illégale de notre site web, de nos produits ou de nos services peut être signalé aux autorités compétentes chargées de l'application de la loi et, si nécessaire, nous coopérerons avec ces autorités en leur divulguant votre identité.</0>"
 
+#: src/pages/CollectionsManagement.tsx:136
 #: src/pages/Home.tsx:84
 msgid "Actions"
 msgstr ""
@@ -144,7 +145,7 @@ msgstr ""
 msgid "Add an owner email"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:168
+#: src/components/ColumnManagementForm.tsx:164
 msgid "Add Column"
 msgstr ""
 
@@ -152,20 +153,28 @@ msgstr ""
 msgid "Add Email"
 msgstr ""
 
+#: src/pages/CollectionsManagement.tsx:186
+msgid "Add New Column"
+msgstr ""
+
 #: src/components/EmailField.tsx:49
 msgid "Add new email to {fieldName}"
 msgstr ""
 
 #: src/pages/AdminDashboard.tsx:295
-#: src/pages/Home.tsx:166
+#: src/pages/Home.tsx:167
 msgid "Admin Dashboard"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:226
+#: src/components/GraphQLErrorDisplay.tsx:23
+msgid "An unknown error occurred."
+msgstr ""
+
+#: src/components/ColumnManagementForm.tsx:221
 msgid "Array"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:223
+#: src/components/ColumnManagementForm.tsx:218
 msgid "Boolean"
 msgstr ""
 
@@ -186,11 +195,15 @@ msgstr ""
 msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 msgstr "Choisissez une feuille de calcul à télécharger. Un fichier d'exemple peut être trouvé <0>ici</0>."
 
+#: src/components/GraphQLErrorDisplay.tsx:67
+msgid "Client Errors:"
+msgstr ""
+
 #: src/pages/Home.tsx:109
 msgid "Closed"
 msgstr ""
 
-#: src/pages/CollectionsManagement.tsx:198
+#: src/pages/CollectionsManagement.tsx:210
 msgid "Collection Management"
 msgstr ""
 
@@ -211,11 +224,11 @@ msgstr ""
 msgid "Collection Uploader Emails"
 msgstr ""
 
-#: src/pages/Home.tsx:188
+#: src/pages/Home.tsx:189
 msgid "Collections You Manage"
 msgstr ""
 
-#: src/pages/Home.tsx:197
+#: src/pages/Home.tsx:198
 msgid "Collections You Upload To"
 msgstr ""
 
@@ -223,12 +236,20 @@ msgstr ""
 msgid "Column Management"
 msgstr ""
 
+#: src/pages/CollectionsManagement.tsx:115
+msgid "Columns Overview"
+msgstr ""
+
+#: src/pages/CollectionsManagement.tsx:133
+msgid "Conditions"
+msgstr ""
+
 #: src/pages/CreateCollection.tsx:447
 msgid "Create Collection"
 msgstr ""
 
-#: src/pages/Home.tsx:171
 #: src/pages/Home.tsx:172
+#: src/pages/Home.tsx:173
 msgid "Create new collection"
 msgstr ""
 
@@ -248,29 +269,40 @@ msgstr ""
 msgid "Data Preview"
 msgstr "Données Prévisualisation"
 
-#: src/components/ColumnManagementForm.tsx:205
+#: src/components/ColumnManagementForm.tsx:201
+#: src/pages/CollectionsManagement.tsx:130
 msgid "Data Type"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:232
+#: src/components/ColumnManagementForm.tsx:227
 msgid "Date"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:235
+#: src/components/ColumnManagementForm.tsx:230
 msgid "Date-Time"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:193
+#: src/components/CollectionForm.tsx:106
+#: src/components/ColumnManagementForm.tsx:189
 #: src/pages/CreateCollection.tsx:285
 msgid "Description (English)"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:199
+#: src/components/CollectionForm.tsx:113
+#: src/components/ColumnManagementForm.tsx:195
 #: src/pages/CreateCollection.tsx:300
 msgid "Description (French)"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:164
+#: src/components/GraphQLErrorDisplay.tsx:50
+msgid "Details:"
+msgstr ""
+
+#: src/pages/CollectionsManagement.tsx:165
+msgid "Edit"
+msgstr ""
+
+#: src/components/ColumnManagementForm.tsx:160
 msgid "Edit Column: <0>{columnHeader}</0>"
 msgstr ""
 
@@ -281,6 +313,10 @@ msgstr ""
 
 #: src/pages/AdminDashboard.tsx:92
 msgid "Email Address"
+msgstr ""
+
+#: src/components/EmailField.tsx:32
+msgid "Enter email"
 msgstr ""
 
 #: src/components/TableOutput.tsx:100
@@ -307,7 +343,7 @@ msgstr ""
 msgid "Form is validating, please wait"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:256
+#: src/components/ColumnManagementForm.tsx:251
 msgid "Go Back"
 msgstr ""
 
@@ -316,7 +352,12 @@ msgstr ""
 msgid "Go to Home"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:175
+#: src/components/GraphQLErrorDisplay.tsx:28
+msgid "GraphQL Errors:"
+msgstr ""
+
+#: src/components/ColumnManagementForm.tsx:171
+#: src/pages/CollectionsManagement.tsx:124
 msgid "Header"
 msgstr ""
 
@@ -341,22 +382,38 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/pages/Home.tsx:191
+#: src/components/CollectionForm.tsx:86
+msgid "Locked"
+msgstr ""
+
+#: src/pages/Home.tsx:192
 msgid "Manage"
 msgstr ""
 
+#: src/components/CollectionForm.tsx:61
+#: src/components/ColumnManagementForm.tsx:93
+msgid "Missing ID for updated collection"
+msgstr ""
+
+#: src/pages/CollectionsManagement.tsx:127
 #: src/pages/Home.tsx:62
 msgid "Name"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:181
+#: src/components/CollectionForm.tsx:92
+#: src/components/ColumnManagementForm.tsx:177
 #: src/pages/CreateCollection.tsx:255
 msgid "Name (English)"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:187
+#: src/components/CollectionForm.tsx:99
+#: src/components/ColumnManagementForm.tsx:183
 #: src/pages/CreateCollection.tsx:270
 msgid "Name (French)"
+msgstr ""
+
+#: src/components/GraphQLErrorDisplay.tsx:41
+msgid "Network Error:"
 msgstr ""
 
 #: src/pages/AdminDashboard.tsx:226
@@ -368,15 +425,19 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: src/pages/CollectionsManagement.tsx:175
+msgid "No columns available."
+msgstr ""
+
 #: src/pages/TermsAndConditions.tsx:20
 msgid "Notice of Agreement"
 msgstr "Avis d'accord"
 
-#: src/components/ColumnManagementForm.tsx:219
+#: src/components/ColumnManagementForm.tsx:215
 msgid "Number"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:229
+#: src/components/ColumnManagementForm.tsx:224
 msgid "Object"
 msgstr ""
 
@@ -388,7 +449,7 @@ msgstr ""
 msgid "Owner Email"
 msgstr ""
 
-#: src/components/CollectionForm.tsx:109
+#: src/components/CollectionForm.tsx:119
 msgid "Owner Emails"
 msgstr ""
 
@@ -413,8 +474,12 @@ msgstr ""
 msgid "Privacy"
 msgstr "Confidentialité"
 
-#: src/pages/Home.tsx:179
+#: src/components/GraphQLErrorDisplay.tsx:80
+msgid "Protocol Errors:"
+msgstr ""
+
 #: src/pages/Home.tsx:180
+#: src/pages/Home.tsx:181
 msgid "Refresh collection lists"
 msgstr ""
 
@@ -442,7 +507,7 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: src/pages/Home.tsx:218
+#: src/pages/Home.tsx:219
 msgid "Safe Inputs Home"
 msgstr ""
 
@@ -487,7 +552,11 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:216
+#: src/components/GraphQLErrorDisplay.tsx:44
+msgid "Status Code:"
+msgstr ""
+
+#: src/components/ColumnManagementForm.tsx:212
 msgid "String"
 msgstr ""
 
@@ -504,33 +573,37 @@ msgstr ""
 msgid "Terms and Conditions"
 msgstr "Avis"
 
-#: src/components/ColumnManagementForm.tsx:98
-msgid "The collection has been updated with given column definitions"
+#: src/components/ColumnManagementForm.tsx:97
+msgid "The collection has been updated"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:267
+#: src/components/ColumnManagementForm.tsx:98
+#~ msgid "The collection has been updated with given column definitions"
+#~ msgstr ""
+
+#: src/components/ColumnManagementForm.tsx:262
 msgid "The current column definitions are invalid. Please check your inputs."
 msgstr ""
 
-#: src/components/CollectionForm.tsx:126
+#: src/components/CollectionForm.tsx:136
 msgid "Update Collection Details"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:248
+#: src/components/ColumnManagementForm.tsx:243
 msgid "Update Column"
 msgstr ""
 
-#: src/components/CollectionForm.tsx:121
+#: src/components/CollectionForm.tsx:131
 msgid "Updating collection"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:241
+#: src/components/ColumnManagementForm.tsx:236
 msgid "Updating column"
 msgstr ""
 
 #: src/components/ExcelUploadForm.tsx:95
-#: src/pages/Home.tsx:192
-#: src/pages/Home.tsx:200
+#: src/pages/Home.tsx:193
+#: src/pages/Home.tsx:201
 msgid "Upload"
 msgstr "Télécharger"
 
@@ -538,7 +611,7 @@ msgstr "Télécharger"
 msgid "Uploader Email"
 msgstr ""
 
-#: src/components/CollectionForm.tsx:115
+#: src/components/CollectionForm.tsx:125
 msgid "Uploaders Emails"
 msgstr ""
 
@@ -546,7 +619,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/components/ColumnManagementForm.tsx:264
+#: src/components/ColumnManagementForm.tsx:259
 msgid "Validation Error"
 msgstr ""
 

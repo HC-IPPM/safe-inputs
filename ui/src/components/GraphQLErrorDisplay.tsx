@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { Box, Text } from '@chakra-ui/react';
+import { t, Trans } from '@lingui/macro';
 
 interface GraphQLErrorDisplayProps {
   error: ApolloError;
@@ -19,11 +20,13 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
       mb={4}
     >
       <Text fontWeight="bold">Error:</Text>
-      <Text>{error.message || 'An unknown error occurred.'}</Text>
+      <Text>{error.message || t`An unknown error occurred.`}</Text>
 
       {error.graphQLErrors.length > 0 && (
         <Box mt={2}>
-          <Text fontWeight="bold">GraphQL Errors:</Text>
+          <Text fontWeight="bold">
+            <Trans>GraphQL Errors:</Trans>
+          </Text>
           {error.graphQLErrors.map((err, index) => (
             <Text key={index} ml={2}>
               {err.message}
@@ -34,11 +37,18 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
 
       {error.networkError && (
         <Box mt={2}>
-          <Text fontWeight="bold">Network Error:</Text>
-          <Text>Status Code: {error.networkError?.statusCode}</Text>
+          <Text fontWeight="bold">
+            <Trans>Network Error:</Trans>
+          </Text>
+          <Text>
+            <Trans>Status Code: </Trans>
+            {error.networkError?.statusCode}
+          </Text>
           {error.networkError.result && error.networkError.result.errors && (
             <Box mt={2}>
-              <Text fontWeight="bold">Details:</Text>
+              <Text fontWeight="bold">
+                <Trans>Details:</Trans>
+              </Text>
               {error.networkError.result.errors.map(
                 (err: any, index: number) => (
                   <Text key={index} ml={2}>
@@ -53,7 +63,9 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
 
       {error.clientErrors.length > 0 && (
         <Box mt={2}>
-          <Text fontWeight="bold">Client Errors:</Text>
+          <Text fontWeight="bold">
+            <Trans>Client Errors:</Trans>
+          </Text>
           {error.clientErrors.map((err, index) => (
             <Text key={index} ml={2}>
               {err.message}
@@ -64,7 +76,9 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
 
       {error.protocolErrors.length > 0 && (
         <Box mt={2}>
-          <Text fontWeight="bold">Protocol Errors:</Text>
+          <Text fontWeight="bold">
+            <Trans>Protocol Errors:</Trans>
+          </Text>
           {error.protocolErrors.map((err, index) => (
             <Text key={index} ml={2}>
               {err.message}
