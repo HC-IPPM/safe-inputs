@@ -166,7 +166,7 @@ msgstr "Add new email to {fieldName}"
 msgid "Admin Dashboard"
 msgstr "Admin Dashboard"
 
-#: src/components/GraphQLErrorDisplay.tsx:23
+#: src/components/GraphQLErrorDisplay.tsx:25
 msgid "An unknown error occurred."
 msgstr "An unknown error occurred."
 
@@ -195,7 +195,7 @@ msgstr "Cannot update stale version of Collection"
 msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 msgstr "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 
-#: src/components/GraphQLErrorDisplay.tsx:67
+#: src/components/GraphQLErrorDisplay.tsx:69
 msgid "Client Errors:"
 msgstr "Client Errors:"
 
@@ -294,7 +294,7 @@ msgstr "Description (English)"
 msgid "Description (French)"
 msgstr "Description (French)"
 
-#: src/components/GraphQLErrorDisplay.tsx:50
+#: src/components/GraphQLErrorDisplay.tsx:52
 msgid "Details:"
 msgstr "Details:"
 
@@ -318,6 +318,10 @@ msgstr "Email Address"
 #: src/components/EmailField.tsx:32
 msgid "Enter email"
 msgstr "Enter email"
+
+#: src/components/GraphQLErrorDisplay.tsx:23
+msgid "Error:"
+msgstr "Error:"
 
 #: src/components/TableOutput.tsx:100
 msgid "File Properties"
@@ -352,7 +356,7 @@ msgstr "Go Back"
 msgid "Go to Home"
 msgstr "Go to Home"
 
-#: src/components/GraphQLErrorDisplay.tsx:28
+#: src/components/GraphQLErrorDisplay.tsx:30
 msgid "GraphQL Errors:"
 msgstr "GraphQL Errors:"
 
@@ -412,7 +416,7 @@ msgstr "Name (English)"
 msgid "Name (French)"
 msgstr "Name (French)"
 
-#: src/components/GraphQLErrorDisplay.tsx:41
+#: src/components/GraphQLErrorDisplay.tsx:43
 msgid "Network Error:"
 msgstr "Network Error:"
 
@@ -474,7 +478,7 @@ msgstr "Previous Page"
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/components/GraphQLErrorDisplay.tsx:80
+#: src/components/GraphQLErrorDisplay.tsx:82
 msgid "Protocol Errors:"
 msgstr "Protocol Errors:"
 
@@ -552,7 +556,7 @@ msgstr "Sort by {0}"
 msgid "Status"
 msgstr "Status"
 
-#: src/components/GraphQLErrorDisplay.tsx:44
+#: src/components/GraphQLErrorDisplay.tsx:46
 msgid "Status Code:"
 msgstr "Status Code:"
 

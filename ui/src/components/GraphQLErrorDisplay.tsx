@@ -19,7 +19,9 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
       color="red.700"
       mb={4}
     >
-      <Text fontWeight="bold">Error:</Text>
+      <Text fontWeight="bold">
+        <Trans>Error:</Trans>
+      </Text>
       <Text>{error.message || t`An unknown error occurred.`}</Text>
 
       {error.graphQLErrors.length > 0 && (
@@ -41,7 +43,7 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
             <Trans>Network Error:</Trans>
           </Text>
           <Text>
-            <Trans>Status Code: </Trans>
+            <Trans>Status Code:</Trans>
             {error.networkError?.statusCode}
           </Text>
           {error.networkError.result && error.networkError.result.errors && (

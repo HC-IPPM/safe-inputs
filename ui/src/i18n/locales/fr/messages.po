@@ -166,7 +166,7 @@ msgstr ""
 msgid "Admin Dashboard"
 msgstr ""
 
-#: src/components/GraphQLErrorDisplay.tsx:23
+#: src/components/GraphQLErrorDisplay.tsx:25
 msgid "An unknown error occurred."
 msgstr ""
 
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Choose a spreadsheet to upload. Sample file can be found <0>here</0>"
 msgstr "Choisissez une feuille de calcul à télécharger. Un fichier d'exemple peut être trouvé <0>ici</0>."
 
-#: src/components/GraphQLErrorDisplay.tsx:67
+#: src/components/GraphQLErrorDisplay.tsx:69
 msgid "Client Errors:"
 msgstr ""
 
@@ -294,7 +294,7 @@ msgstr ""
 msgid "Description (French)"
 msgstr ""
 
-#: src/components/GraphQLErrorDisplay.tsx:50
+#: src/components/GraphQLErrorDisplay.tsx:52
 msgid "Details:"
 msgstr ""
 
@@ -317,6 +317,10 @@ msgstr ""
 
 #: src/components/EmailField.tsx:32
 msgid "Enter email"
+msgstr ""
+
+#: src/components/GraphQLErrorDisplay.tsx:23
+msgid "Error:"
 msgstr ""
 
 #: src/components/TableOutput.tsx:100
@@ -352,7 +356,7 @@ msgstr ""
 msgid "Go to Home"
 msgstr ""
 
-#: src/components/GraphQLErrorDisplay.tsx:28
+#: src/components/GraphQLErrorDisplay.tsx:30
 msgid "GraphQL Errors:"
 msgstr ""
 
@@ -412,7 +416,7 @@ msgstr ""
 msgid "Name (French)"
 msgstr ""
 
-#: src/components/GraphQLErrorDisplay.tsx:41
+#: src/components/GraphQLErrorDisplay.tsx:43
 msgid "Network Error:"
 msgstr ""
 
@@ -474,7 +478,7 @@ msgstr ""
 msgid "Privacy"
 msgstr "Confidentialité"
 
-#: src/components/GraphQLErrorDisplay.tsx:80
+#: src/components/GraphQLErrorDisplay.tsx:82
 msgid "Protocol Errors:"
 msgstr ""
 
@@ -552,7 +556,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/components/GraphQLErrorDisplay.tsx:44
+#: src/components/GraphQLErrorDisplay.tsx:46
 msgid "Status Code:"
 msgstr ""
 
