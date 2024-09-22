@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   UPDATE_COLUMN_DEFINITION,
   VALIDATE_COLUMN_DEFS,
-} from 'src/graphql/queries.ts';
+} from 'src/graphql/index.ts';
 import type { Collection, ColumnDef } from 'src/graphql/schema.d.ts';
 
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';

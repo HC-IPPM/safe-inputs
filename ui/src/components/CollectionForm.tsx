@@ -16,7 +16,7 @@ import _ from 'lodash';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { UPDATE_COLLECTION } from 'src/graphql/queries.ts';
+import { UPDATE_COLLECTION } from 'src/graphql/index.ts';
 import type { Collection, User } from 'src/graphql/schema.d.ts';
 
 import EmailFields from './EmailField.tsx';

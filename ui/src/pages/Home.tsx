@@ -34,7 +34,7 @@ import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_HOME_INFO } from 'src/graphql/queries.ts';
+import { GET_HOME_INFO } from 'src/graphql/index.ts';
 import type { CollectionInfo } from 'src/graphql/schema.d.ts';
 
 const CollectionTable = ({

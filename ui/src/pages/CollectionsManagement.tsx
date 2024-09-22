@@ -26,7 +26,7 @@ import CollectionForm from 'src/components/CollectionForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_COLLECTION_DETAILS } from 'src/graphql/queries.ts';
+import { GET_COLLECTION_DETAILS } from 'src/graphql/index.ts';
 import type { ColumnDef } from 'src/graphql/schema.d.ts';
 
 const ErrorDisplay = function ({

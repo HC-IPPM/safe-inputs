@@ -31,88 +31,15 @@ import { useNavigate } from 'react-router-dom';
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
+import {
+  CREATE_COLLECTION_INIT,
+  VALIDATE_COLLECTION_DEF,
+} from 'src/graphql/index.ts';
 
-const CREATE_COLLECTION_INIT = gql`
-  mutation CreateCollectionInit(
-    $name_en: String!
-    $name_fr: String!
-    $description_en: String!
-    $description_fr: String!
-    $owner_emails: [String!]!
-    $uploader_emails: [String!]!
-    $is_locked: Boolean!
-  ) {
-    create_collection_init(
-      collection_def: {
-        name_en: $name_en
-        name_fr: $name_fr
-        description_en: $description_en
-        description_fr: $description_fr
-        owner_emails: $owner_emails
-        uploader_emails: $uploader_emails
-        is_locked: $is_locked
-      }
-    ) {
-      id
-    }
-  }
-`;
 type CreateCollectionInitResult = {
   create_collection_init: { id: string; __typename: string };
 };
 
-const VALIDATE_COLLECTION_DEF = gql`
-  query ValidateCollectionDef(
-    $name_en: String!
-    $name_fr: String!
-    $description_en: String!
-    $description_fr: String!
-    $owner_emails: [String!]!
-    $uploader_emails: [String!]!
-    $is_locked: Boolean!
-  ) {
-    validate_collection_def(
-      collection_def: {
-        name_en: $name_en
-        name_fr: $name_fr
-        description_en: $description_en
-        description_fr: $description_fr
-        owner_emails: $owner_emails
-        uploader_emails: $uploader_emails
-        is_locked: $is_locked
-      }
-    ) {
-      name_en {
-        en
-        fr
-      }
-      name_fr {
-        en
-        fr
-      }
-      description_en {
-        en
-        fr
-      }
-      description_fr {
-        en
-        fr
-      }
-      is_locked {
-        en
-        fr
-      }
-      owner_emails {
-        en
-        fr
-      }
-      uploader_emails {
-        en
-        fr
-      }
-    }
-  }
-`;
 type ValidateCollectionDefResult = {
   validate_collection_def: {
     name_en: ValidationResult;
