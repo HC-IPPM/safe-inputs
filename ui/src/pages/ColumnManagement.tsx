@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { Box, Container } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
@@ -12,8 +11,7 @@ import { useSession } from 'src/components/auth/session.tsx';
 import ColumnManagementForm from 'src/components/ColumnManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { COLUMN_DETAILS } from 'src/graphql/index.ts';
-import type { User } from 'src/graphql/schema.d.ts';
+import { useCollectionWithColumnDetails } from 'src/graphql/index.ts';
 
 const ErrorDisplay = function ({
   title,
@@ -42,17 +40,23 @@ const ColumnManagement = memo(function ColumnManagement({
 }: {
   session: Session;
 }) {
-  const { collectionID, columnHeader } = useParams();
+  const { collectionID, columnHeader } = useParams() as {
+    collectionID: string;
+    columnHeader: string;
+  };
+
   const navigate = useNavigate();
+
   const {
     i18n: { locale },
   } = useLingui();
-  const { loading, error, data } = useQuery(COLUMN_DETAILS, {
+
+  const { loading, error, data } = useCollectionWithColumnDetails({
     variables: { collection_id: collectionID, lang: locale },
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && !data.collection.is_current_version) {
+  if (!loading && !data?.collection.is_current_version) {
     setTimeout(() => {
       navigate('/');
     }, 5000);
@@ -70,7 +74,7 @@ const ColumnManagement = memo(function ColumnManagement({
     );
   } else if (
     !loading &&
-    !data.collection.owners.some((owner: User) => owner.email === session.email)
+    !data?.collection.owners.some(({ email }) => email === session.email)
   ) {
     return (
       <ErrorDisplay

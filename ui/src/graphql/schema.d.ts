@@ -39,11 +39,12 @@ export type CreateCollectionInit = {
 
 export type ColumnDef = {
   header: string;
-  name: string;
   name_en: string;
   name_fr: string;
+  name: string;
   description_en: string;
   description_fr: string;
+  description: string;
   data_type: string;
   conditions: {
     condition_type: string;
@@ -62,7 +63,9 @@ export type Collection = {
   created_at: number;
   name_en: string;
   name_fr: string;
+  name: string;
   description_en: string;
+  description_fr: string;
   description_fr: string;
   is_locked: boolean;
   owners: User[];

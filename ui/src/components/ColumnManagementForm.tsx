@@ -23,17 +23,18 @@ import { useForm, useWatch } from 'react-hook-form';
 
 import { useNavigate } from 'react-router-dom';
 
+import type { CollectionWithColumnDetails } from 'src/graphql/index.ts';
 import {
   COLUMN_DEFS_UPDATE,
   COLUMN_DEFS_INPUT_VALIDATION,
 } from 'src/graphql/index.ts';
-import type { Collection, ColumnDef } from 'src/graphql/schema.d.ts';
+import type { ColumnDef } from 'src/graphql/schema.d.ts';
 
 import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
 import { Link } from './Link.tsx';
 
 interface ColumnManagementFormProps {
-  collection: Collection;
+  collection: CollectionWithColumnDetails['collection'];
   columnHeader: string | undefined;
   locale: string;
 }
@@ -60,7 +61,7 @@ const ColumnManagementForm = function ({
         'data_type',
         'conditions',
       ];
-      const updatedColumnDefs = collection.column_defs.map((col: ColumnDef) =>
+      const updatedColumnDefs = collection.column_defs.map((col) =>
         col.header === columnHeader
           ? _.pick({ ...col, ...data }, mutationFields)
           : _.pick(col, mutationFields),
@@ -131,7 +132,7 @@ const ColumnManagementForm = function ({
     if (collection && columnHeader) {
       if (columnHeader) {
         column = collection.column_defs.find(
-          (col: ColumnDef) => col.header === columnHeader,
+          (col) => col.header === columnHeader,
         );
       }
     }
