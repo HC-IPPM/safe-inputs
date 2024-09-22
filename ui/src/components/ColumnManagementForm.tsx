@@ -260,7 +260,6 @@ const ColumnManagementForm = function ({
               </AlertTitle>
               <AlertDescription>
                 <Trans>
-                  {' '}
                   The current column definitions are invalid. Please check your
                   inputs.
                 </Trans>

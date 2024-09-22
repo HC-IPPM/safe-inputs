@@ -2,10 +2,17 @@ import { ApolloError } from '@apollo/client';
 import { Box, Text } from '@chakra-ui/react';
 import { t, Trans } from '@lingui/macro';
 
+import _ from 'lodash';
+
 interface GraphQLErrorDisplayProps {
   error: ApolloError;
 }
 
+// TODO this is fine for current dev purposes, but we'll not necessarily want to display detailed
+// network/server error messages to end users in the long term. Only validation errors are the
+// end user's buisness and those should be handled directly in forms. Other server errors should
+// trigger retries and, worst case, just display a simple message to wait and try submitting again later
+// or to contact the team
 function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
   if (!error) return null;
 
@@ -42,24 +49,35 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
           <Text fontWeight="bold">
             <Trans>Network Error:</Trans>
           </Text>
-          <Text>
-            <Trans>Status Code:</Trans>
-            {error.networkError?.statusCode}
-          </Text>
-          {error.networkError.result && error.networkError.result.errors && (
-            <Box mt={2}>
-              <Text fontWeight="bold">
-                <Trans>Details:</Trans>
-              </Text>
-              {error.networkError.result.errors.map(
-                (err: any, index: number) => (
-                  <Text key={index} ml={2}>
-                    {err.message}
-                  </Text>
-                ),
-              )}
-            </Box>
+          {'statusCode' in error.networkError && (
+            <Text>
+              <Trans>Status Code: </Trans>
+              {error.networkError.statusCode}
+            </Text>
           )}
+          error.networkError.result && (
+          <Box mt={2}>
+            <Text fontWeight="bold">
+              <Trans>Details:</Trans>
+            </Text>
+
+            {'result' in error.networkError &&
+              (typeof error.networkError.result === 'string' ? (
+                <Text>{error.networkError.result}</Text>
+              ) : (
+                _.map(
+                  error.networkError.result,
+                  ({ error }: { error: any }, key: string) => (
+                    <Text key={key} ml={2}>
+                      {error.networkError.result}
+                    </Text>
+                  ),
+                )
+              ))}
+            {'bodyText' in error.networkError && (
+              <Text>{error.networkError.bodyText}</Text>
+            )}
+          </Box>
         </Box>
       )}
 

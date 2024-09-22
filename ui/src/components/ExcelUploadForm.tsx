@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
         value &&
         [
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ].includes(value.type)
+        ].includes((value as unknown as any).type) // TODO `value as unknown as any` is a bandaid for bad typing here
       );
     }),
 });
