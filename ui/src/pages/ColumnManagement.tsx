@@ -12,7 +12,7 @@ import { useSession } from 'src/components/auth/session.tsx';
 import ColumnManagementForm from 'src/components/ColumnManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_COLUMN_DETAILS } from 'src/graphql/index.ts';
+import { COLUMN_DETAILS } from 'src/graphql/index.ts';
 import type { User } from 'src/graphql/schema.d.ts';
 
 const ErrorDisplay = function ({
@@ -47,7 +47,7 @@ const ColumnManagement = memo(function ColumnManagement({
   const {
     i18n: { locale },
   } = useLingui();
-  const { loading, error, data } = useQuery(GET_COLUMN_DETAILS, {
+  const { loading, error, data } = useQuery(COLUMN_DETAILS, {
     variables: { collection_id: collectionID, lang: locale },
     fetchPolicy: 'no-cache',
   });

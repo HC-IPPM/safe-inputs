@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const UPDATE_COLLECTION = gql`
+export const COLLECTION_UPDATE = gql`
   mutation CollectionUpdate(
     $collection_id: String!
     $collection_updates: CollectionDefInput!

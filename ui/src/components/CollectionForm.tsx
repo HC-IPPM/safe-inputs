@@ -16,7 +16,7 @@ import _ from 'lodash';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { UPDATE_COLLECTION } from 'src/graphql/index.ts';
+import { COLLECTION_UPDATE } from 'src/graphql/index.ts';
 import type { Collection, User } from 'src/graphql/schema.d.ts';
 
 import EmailFields from './EmailField.tsx';
@@ -31,7 +31,7 @@ function CollectionForm({ data }: CollectionFormProps) {
     defaultValues: data,
   });
 
-  const [updateCollection, { loading, error }] = useMutation(UPDATE_COLLECTION);
+  const [updateCollection, { loading, error }] = useMutation(COLLECTION_UPDATE);
   const navigate = useNavigate();
   const toast = useToast();
 

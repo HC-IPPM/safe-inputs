@@ -24,8 +24,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import {
-  UPDATE_COLUMN_DEFINITION,
-  VALIDATE_COLUMN_DEFS,
+  COLUMN_DEFS_UPDATE,
+  COLUMN_DEFS_INPUT_VALIDATION,
 } from 'src/graphql/index.ts';
 import type { Collection, ColumnDef } from 'src/graphql/schema.d.ts';
 
@@ -46,8 +46,8 @@ const ColumnManagementForm = function ({
   const toast = useToast();
   const navigate = useNavigate();
   const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
-    useMutation(UPDATE_COLUMN_DEFINITION);
-  const [validateColumnDefs] = useMutation(VALIDATE_COLUMN_DEFS);
+    useMutation(COLUMN_DEFS_UPDATE);
+  const [validateColumnDefs] = useMutation(COLUMN_DEFS_INPUT_VALIDATION);
 
   const getUpdatedColumnDefs = useCallback(
     (data: ColumnDef) => {

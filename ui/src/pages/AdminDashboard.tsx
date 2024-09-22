@@ -51,7 +51,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_USERS } from 'src/graphql/index.ts';
+import { USERS } from 'src/graphql/index.ts';
 import type { User } from 'src/graphql/schema.d.ts';
 
 const formatDate = (timestamp: number | undefined): string => {
@@ -255,7 +255,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
 };
 
 const AdminDashboardDynamic = memo(function AdminDashboardDynamic() {
-  const { loading, error, data, refetch } = useQuery(GET_USERS);
+  const { loading, error, data, refetch } = useQuery(USERS);
 
   if (error) {
     throw error;

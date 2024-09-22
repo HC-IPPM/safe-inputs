@@ -1,4 +1,4 @@
-import { gql, useMutation, useApolloClient } from '@apollo/client';
+import { useMutation, useApolloClient } from '@apollo/client';
 
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -32,42 +32,15 @@ import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 import {
-  CREATE_COLLECTION_INIT,
-  VALIDATE_COLLECTION_DEF,
+  CREATE_COLLECTION,
+  COLLECTION_DEF_INPUT_VALIDATION,
 } from 'src/graphql/index.ts';
 
-type CreateCollectionInitResult = {
-  create_collection_init: { id: string; __typename: string };
-};
-
-type ValidateCollectionDefResult = {
-  validate_collection_def: {
-    name_en: ValidationResult;
-    name_fr: ValidationResult;
-    description_en: ValidationResult;
-    description_fr: ValidationResult;
-    is_locked: ValidationResult;
-    owner_emails: ValidationResult;
-    uploader_emails: ValidationResult;
-    __typename: string;
-  };
-};
-type ValidationResult = {
-  en: string;
-  fr: string;
-  __typename: string;
-};
-
-// TODO at some point, I'll integrate a tool to generate types from queries
-type CollectionDefInput = {
-  name_en: string;
-  name_fr: string;
-  description_en: string;
-  description_fr: string;
-  owner_emails: string[];
-  uploader_emails: string[];
-  is_locked: boolean;
-};
+import type {
+  CreateCollectionInit,
+  CollectionDefInput,
+  CollectionDefValidation,
+} from 'src/graphql/schema.d.ts';
 
 // memoizing on session so that the session sync on browser focus won't trigger rerenders
 // TODO: most routes will deal with this, bake it in to some sort of route level component
@@ -85,9 +58,9 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
   const client = useApolloClient();
 
   const [createCollectionInit, { data, error: creationError }] = useMutation<
-    CreateCollectionInitResult,
+    CreateCollectionInit,
     CollectionDefInput
-  >(CREATE_COLLECTION_INIT);
+  >(CREATE_COLLECTION);
 
   const id_of_created_collection = data?.create_collection_init.id;
 
@@ -104,12 +77,10 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
       async (collection_def: CollectionDefInput) => {
         const {
           data: { validate_collection_def },
-        } = await client.query<ValidateCollectionDefResult, CollectionDefInput>(
-          {
-            query: VALIDATE_COLLECTION_DEF,
-            variables: collection_def,
-          },
-        );
+        } = await client.query<CollectionDefValidation, CollectionDefInput>({
+          query: COLLECTION_DEF_INPUT_VALIDATION,
+          variables: collection_def,
+        });
 
         const {
           owner_emails,

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const GET_HOME_INFO = gql`
-  query HomePageInfo($lang: String!) {
+export const COLLECTIONS_FOR_CURRENT_SESSION = gql`
+  query CollectionsForCurrentSession($lang: String!) {
     session {
       owned_collections {
         id

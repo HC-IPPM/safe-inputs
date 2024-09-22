@@ -34,7 +34,7 @@ import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_HOME_INFO } from 'src/graphql/index.ts';
+import { COLLECTIONS_FOR_CURRENT_SESSION } from 'src/graphql/index.ts';
 import type { CollectionInfo } from 'src/graphql/schema.d.ts';
 
 const CollectionTable = ({
@@ -143,10 +143,13 @@ const HomeDynamic = memo(function HomeDynamic({
     i18n: { locale },
   } = useLingui();
 
-  const { loading, error, data, refetch } = useQuery(GET_HOME_INFO, {
-    variables: { lang: locale },
-    fetchPolicy: 'no-cache',
-  });
+  const { loading, error, data, refetch } = useQuery(
+    COLLECTIONS_FOR_CURRENT_SESSION,
+    {
+      variables: { lang: locale },
+      fetchPolicy: 'no-cache',
+    },
+  );
 
   if (!loading && data.session === null) {
     navigate(

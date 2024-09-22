@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const CREATE_COLLECTION_INIT = gql`
-  mutation CreateCollectionInit(
+export const COLLECTION_DEF_INPUT_VALIDATION = gql`
+  query CollectionDefInputValidation(
     $name_en: String!
     $name_fr: String!
     $description_en: String!
@@ -10,7 +10,7 @@ export const CREATE_COLLECTION_INIT = gql`
     $uploader_emails: [String!]!
     $is_locked: Boolean!
   ) {
-    create_collection_init(
+    validate_collection_def(
       collection_def: {
         name_en: $name_en
         name_fr: $name_fr
@@ -21,7 +21,34 @@ export const CREATE_COLLECTION_INIT = gql`
         is_locked: $is_locked
       }
     ) {
-      id
+      name_en {
+        en
+        fr
+      }
+      name_fr {
+        en
+        fr
+      }
+      description_en {
+        en
+        fr
+      }
+      description_fr {
+        en
+        fr
+      }
+      is_locked {
+        en
+        fr
+      }
+      owner_emails {
+        en
+        fr
+      }
+      uploader_emails {
+        en
+        fr
+      }
     }
   }
 `;

@@ -1,15 +1,13 @@
 import { gql } from '@apollo/client';
 
-export const UPDATE_COLUMN_DEFINITION = gql`
-  mutation ColumnUpdate(
+export const COLUMN_DEFS_INPUT_VALIDATION = gql`
+  mutation ColumnDefsInputValidation(
     $collection_id: String!
     $column_defs: [ColumnDefInput]
   ) {
-    update_column_defs(
+    validate_new_column_defs(
       collection_id: $collection_id
       column_defs: $column_defs
-    ) {
-      id
-    }
+    )
   }
 `;

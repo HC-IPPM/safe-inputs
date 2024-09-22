@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const GET_COLUMN_DETAILS = gql`
+export const COLUMN_DETAILS = gql`
   query ColumnDetails($collection_id: String!, $lang: String!) {
     collection(collection_id: $collection_id) {
       id

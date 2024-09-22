@@ -26,7 +26,7 @@ import CollectionForm from 'src/components/CollectionForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_COLLECTION_DETAILS } from 'src/graphql/index.ts';
+import { COLLECTION_DETAILS } from 'src/graphql/index.ts';
 import type { ColumnDef } from 'src/graphql/schema.d.ts';
 
 const ErrorDisplay = function ({
@@ -64,7 +64,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
   const navigate = useNavigate();
 
   // Fetch the latest version of the collection. Current version is updated to false backend, when changed
-  const { loading, error, data } = useQuery(GET_COLLECTION_DETAILS, {
+  const { loading, error, data } = useQuery(COLLECTION_DETAILS, {
     variables: { collection_id: collectionID, lang: locale },
     fetchPolicy: 'no-cache',
   });
