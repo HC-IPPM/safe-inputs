@@ -252,11 +252,10 @@ export const CollectionSchema = makeExecutableSchema({
   }
 
   type Mutation {
-    create_collection_init(collection_def: CollectionDefInput): Collection
-    create_collection_from_base(collection_id: String!): Collection
+    create_collection(collection_def: CollectionDefInput): Collection
+    update_collection(collection_id: String!, collection_def: CollectionDefInput): Collection
 
-    update_collection(collection_id: String!, collection_updates: CollectionDefInput): Collection
-    update_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): Collection
+    update_column_def(collection_id: String!, is_new_column: Boolean!, column_def: ColumnDefInput): Collection
 
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): Int
@@ -586,7 +585,7 @@ export const CollectionSchema = makeExecutableSchema({
     },
 
     Mutation: {
-      create_collection_init: resolver_with_authz(
+      create_collection: resolver_with_authz(
         async (
           _parent: unknown,
           { collection_def }: { collection_def: CollectionDefInput },
@@ -626,47 +625,16 @@ export const CollectionSchema = makeExecutableSchema({
           }
         },
       ),
-      create_collection_from_base: resolver_with_authz(
-        async (
-          _parent: unknown,
-          { collection_id }: { collection_id: string },
-          context,
-          { fieldName }: { fieldName: string },
-        ) => {
-          const base_collection =
-            await CollectionByIdLoader.load(collection_id);
-
-          validate_collection_level_authorization(
-            `Action \`${fieldName}\``,
-            context.req.user,
-            { collection: base_collection },
-            user_can_be_collection_owner,
-            user_can_edit_collection,
-          );
-
-          try {
-            return create_collection(
-              context.req.user.mongoose_doc,
-              base_collection!.collection_def,
-              base_collection!.column_defs,
-            );
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            throw app_error_to_gql_error(error);
-          }
-        },
-      ),
 
       update_collection: resolver_with_authz(
         async (
           _parent: unknown,
           {
             collection_id,
-            collection_updates,
+            collection_def,
           }: {
             collection_id: string;
-            collection_updates: CollectionDefInput;
+            collection_def: CollectionDefInput;
           },
           context,
           { fieldName }: { fieldName: string },
@@ -682,14 +650,14 @@ export const CollectionSchema = makeExecutableSchema({
 
           try {
             await get_or_create_users([
-              ...collection_updates.owner_emails,
-              ...collection_updates.uploader_emails,
+              ...collection_def.owner_emails,
+              ...collection_def.uploader_emails,
             ]);
 
             const model_ready_collection_def =
               await collection_def_input_to_model_fields(
                 add_user_to_collection_def_input_owners(
-                  collection_updates,
+                  collection_def,
                   context.req.user,
                 ),
               );
@@ -707,15 +675,17 @@ export const CollectionSchema = makeExecutableSchema({
         },
       ),
 
-      update_column_defs: resolver_with_authz(
+      update_column_def: resolver_with_authz(
         async (
           _parent: unknown,
           {
             collection_id,
-            column_defs,
+            is_new_column,
+            column_def,
           }: {
             collection_id: string;
-            column_defs: ColumnDefInput[];
+            is_new_column: boolean;
+            column_def: ColumnDefInput;
           },
           context,
           { fieldName }: { fieldName: string },
@@ -732,7 +702,8 @@ export const CollectionSchema = makeExecutableSchema({
             return update_collection_column_defs(
               collection!,
               context.req.user.mongoose_doc,
-              column_defs,
+              column_def,
+              is_new_column,
             );
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

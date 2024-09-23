@@ -1,27 +1,34 @@
-import { gql } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
+import type { MutationHookOptions } from '@apollo/client';
 
-export const CREATE_COLLECTION = gql`
-  mutation CreateCollection(
-    $name_en: String!
-    $name_fr: String!
-    $description_en: String!
-    $description_fr: String!
-    $owner_emails: [String!]!
-    $uploader_emails: [String!]!
-    $is_locked: Boolean!
-  ) {
-    create_collection_init(
-      collection_def: {
-        name_en: $name_en
-        name_fr: $name_fr
-        description_en: $description_en
-        description_fr: $description_fr
-        owner_emails: $owner_emails
-        uploader_emails: $uploader_emails
-        is_locked: $is_locked
-      }
-    ) {
+import type { CollectionDefInput } from 'src/graphql/schema_common.d.ts';
+
+const COLLECTION_CREATION = gql`
+  mutation CollectionCreation($collection_def: CollectionDefInput!) {
+    create_collection(collection_def: $collection_def) {
       id
     }
   }
 `;
+
+export type CollectionCreationVariables = {
+  collection_def: CollectionDefInput;
+};
+
+export type CollectionCreationResult = {
+  create_collection: {
+    id: string;
+    __typename: string;
+  };
+};
+
+export const useCollectionCreation = (
+  options?: MutationHookOptions<
+    CollectionCreationResult,
+    CollectionCreationVariables
+  >,
+) =>
+  useMutation<CollectionCreationResult, CollectionCreationVariables>(
+    COLLECTION_CREATION,
+    options,
+  );

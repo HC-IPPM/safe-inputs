@@ -23,19 +23,31 @@ export type { UsersResult } from './queries/users.ts';
 export {
   useColumnDefInputValidation,
   useLazyColumnDefInputValidation,
-} from './queries/column_defs_input_validation.ts';
+} from './queries/column_def_input_validation.ts';
 export type {
   ColumnDefInputValidationVariables,
   ColumnDefInputValidationResult,
-} from './queries/column_defs_input_validation.ts';
+} from './queries/column_def_input_validation.ts';
 
 export {
   useCollectionDefInputValidation,
   useLazyCollectionDefInputValidation,
 } from './queries/collection_def_input_validation.ts';
 
-export { COLLECTION_UPDATE } from './mutations/collection_update.ts';
+export { useCollumnDefUpdate } from './mutations/column_def_update.ts';
+export type {
+  CollumnDefUpdateVariables,
+  CollumnDefUpdateResult,
+} from './mutations/column_def_update.ts';
 
-export { COLUMN_DEFS_UPDATE } from './mutations/column_defs_update.ts';
+export { useCollectionCreation } from './mutations/collection_creation.ts';
+export type {
+  CollectionCreationVariables,
+  CollectionCreationResult,
+} from './mutations/collection_creation.ts';
 
-export { CREATE_COLLECTION } from './mutations/collection_creation.ts';
+export { useCollectionUpdate } from './mutations/collection_update.ts';
+export type {
+  CollectionUpdateVariables,
+  CollectionUpdateResult,
+} from './mutations/collection_update.ts';

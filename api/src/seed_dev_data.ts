@@ -161,7 +161,9 @@ const collection_2_new_minor_ver = await update_collection_def_fields(
     is_locked: false,
   },
 );
-await update_collection_column_defs(collection_2_new_minor_ver, owner_2, [
+await update_collection_column_defs(
+  collection_2_new_minor_ver,
+  owner_2,
   {
     header: 'column_1',
     name_en: 'Column 1 v2',
@@ -171,6 +173,11 @@ await update_collection_column_defs(collection_2_new_minor_ver, owner_2, [
     data_type: 'boolean',
     conditions: [],
   },
+  false,
+);
+await update_collection_column_defs(
+  collection_2_new_minor_ver,
+  owner_2,
   {
     header: 'column_2',
     name_en: 'Column 2 v2',
@@ -180,5 +187,6 @@ await update_collection_column_defs(collection_2_new_minor_ver, owner_2, [
     data_type: 'boolean',
     conditions: [],
   },
-]);
+  false,
+);
 console.log('   Done');

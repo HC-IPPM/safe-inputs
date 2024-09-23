@@ -76,6 +76,6 @@ export type ValidationMessages = {
   __typename: string;
 };
 
-export type CreateCollectionInit = {
-  create_collection_init: { id: string; __typename: string };
+export type CollectionCreationResult = {
+  create_collection: { id: string; __typename: string };
 };

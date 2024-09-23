@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Heading,
   Stack,
   Table,
@@ -12,38 +13,36 @@ import {
   Tr,
   Text,
 } from '@chakra-ui/react';
+
 import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
+
+import _ from 'lodash';
+
 import React, { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
-import CollectionForm from 'src/components/CollectionForm.tsx';
-
+import { CollectionManagementForm } from 'src/components/CollectionManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
-
 import { LoadingBlock } from 'src/components/Loading.tsx';
 import { useCollectionDetails } from 'src/graphql/index.ts';
 
 const ErrorDisplay = function ({
   title,
   message,
-  homeButton = true,
 }: {
   title: React.ReactNode;
   message: React.ReactNode;
-  homeButton?: boolean;
 }) {
   return (
     <div style={{ height: '50%' }} className="error-container">
       <h2>{title}</h2>
       <div className="error-message">{message}</div>
-      {homeButton && (
-        <Link className="error-home-button" to="/">
-          <Trans>Go to Home</Trans>
-        </Link>
-      )}
+      <Link className="error-home-button" to="/">
+        <Trans>Home</Trans>
+      </Link>
     </div>
   );
 };
@@ -75,18 +74,19 @@ const CollectionMainPage = memo(function CollectionMainPage({
         title={<Trans>Cannot update stale version of Collection</Trans>}
         message={
           <Trans>
-            You can only update the latest version of a collection. You will be
-            redirected back shortly.
+            You can only update the latest version of a collection. The
+            collection you were viewing may have become stale. Please return to
+            the home page and look for the latest version.
           </Trans>
         }
-        homeButton={false}
       />
     );
   } else if (
     !loading &&
     !data?.collection.owners?.some(
       (owner: { email: string }) => owner.email === session.email,
-    )
+    ) &&
+    !session.is_super_user
   ) {
     return (
       <ErrorDisplay
@@ -94,7 +94,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
         message={
           <Trans>
             You do not have access to edit this collection. Please ask the a
-            team member with owner permissions to grant access.
+            team member with owner permissions to grant you access.
           </Trans>
         }
       />
@@ -106,8 +106,34 @@ const CollectionMainPage = memo(function CollectionMainPage({
       <LoadingBlock isLoading={loading} flexDir={'column'}>
         {data && (
           <>
-            <CollectionForm data={data?.collection} />
-            <Box mt={8}>
+            <Box>
+              <Heading as="h2" size="lg" mb={6}>
+                <Trans>Update Collection</Trans>
+              </Heading>
+              <CollectionManagementForm
+                collection_id={data?.collection.id}
+                initial_collection_state={_.chain(data?.collection)
+                  .pick([
+                    'name_en',
+                    'name_fr',
+                    'description_en',
+                    'description_fr',
+                    'owners',
+                    'uploaders',
+                    'is_locked',
+                  ])
+                  .thru(({ owners, uploaders, ...pass_through }) => ({
+                    ...pass_through,
+                    owner_emails: _.map(owners, 'email'),
+                    uploader_emails: _.map(uploaders, 'email'),
+                  }))
+                  .value()}
+              />
+            </Box>
+
+            <Divider orientation="horizontal" mt={8} mb={8} />
+
+            <Box>
               <Heading as="h2" size="lg" mb={6}>
                 <Trans>Columns Overview</Trans>
               </Heading>
@@ -175,7 +201,6 @@ const CollectionMainPage = memo(function CollectionMainPage({
               <Button
                 as={Link}
                 to={`/manage-collection/${collectionID}/create-column`}
-                colorScheme="green"
                 size="md"
               >
                 <Trans>Add New Column</Trans>
@@ -188,7 +213,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
   }
 });
 
-export default function CollectionManagementPage() {
+export default function CollectionManagement() {
   const { status, session } = useSession();
 
   const has_session = session !== null;
@@ -202,7 +227,9 @@ export default function CollectionManagementPage() {
   return (
     <>
       <Box className="App-header" mb={2}>
-        <Trans>Collection Management</Trans>
+        <h1>
+          <Trans>Collection Management</Trans>
+        </h1>
       </Box>
       <Container
         maxW="7xl"

@@ -450,14 +450,22 @@ export const update_collection_def_fields = (
 export const update_collection_column_defs = async (
   current_collection: CollectionDocument,
   user: UserDocument,
-  new_column_defs: ColumnDefInterface[],
+  column_def: ColumnDefInterface,
+  is_new_column: boolean,
 ) => {
   const created_by = user._id;
-
-  const new_column_defs_with_meta = new_column_defs.map((column_def) => ({
+  const new_column_def_with_meta = {
     ...column_def,
     created_by,
-  }));
+  };
+
+  const new_column_defs = is_new_column
+    ? [...current_collection.column_defs, new_column_def_with_meta]
+    : _.map(current_collection.column_defs, (existing_column_def) =>
+        existing_column_def.header !== new_column_def_with_meta.header
+          ? existing_column_def
+          : new_column_def_with_meta,
+      );
 
   const is_update_a_breaking_change =
     await are_new_column_defs_compatible_with_current_records(
@@ -470,14 +478,14 @@ export const update_collection_column_defs = async (
       current_collection,
       user,
       current_collection.collection_def,
-      new_column_defs_with_meta,
+      new_column_defs,
     );
   } else {
     return create_collection_new_major_version(
       current_collection,
       user,
       current_collection.collection_def,
-      new_column_defs_with_meta,
+      new_column_defs,
     );
   }
 };
