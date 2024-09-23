@@ -133,6 +133,10 @@ msgstr "<0>You agree to protect any information disclosed to you by TBS in accor
 msgid "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 msgstr "<0>You agree to use our website, products and services only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of, the website, products or services by any third party. Additionally, you must not misuse, compromise or interfere with our services, or introduce material to our services that is malicious or technologically harmful. You must not attempt to gain unauthorized access to, tamper with, reverse engineer, or modify our website, products or services, the server(s) on which they are stored, or any server, computer or database connected to our website, products or services. We may suspend or stop providing our products or services to you if you do not comply with our terms or policies or if we are investigating suspected misconduct. Any suspected illegal use of our website, products or services may be reported to the relevant law enforcement authorities and where necessary we will co-operate with those authorities by disclosing your identity to them.</0>"
 
+#: src/components/auth/SignInForm.tsx:101
+msgid "A log in link has been sent to {0}. Open the provided link in this browser to complete the sign in process."
+msgstr "A log in link has been sent to {0}. Open the provided link in this browser to complete the sign in process."
+
 #: src/pages/CollectionManagement.tsx:159
 #: src/pages/Home.tsx:85
 msgid "Actions"
@@ -319,8 +323,8 @@ msgstr "Edit Column"
 #~ msgid "Edit Column: <0>{columnHeader}</0>"
 #~ msgstr "Edit Column: <0>{columnHeader}</0>"
 
-#: src/components/auth/SignInForm.tsx:58
-#: src/components/auth/SignInForm.tsx:62
+#: src/components/auth/SignInForm.tsx:67
+#: src/components/auth/SignInForm.tsx:71
 msgid "Email"
 msgstr "Email"
 
@@ -535,7 +539,7 @@ msgstr "Remove {0}"
 #~ msgid "Remove {email}"
 #~ msgstr "Remove {email}"
 
-#: src/components/auth/SignInForm.tsx:64
+#: src/components/auth/SignInForm.tsx:73
 msgid "Required"
 msgstr "Required"
 
@@ -559,20 +563,28 @@ msgstr "Show Less"
 msgid "Show More"
 msgstr "Show More"
 
-#: src/components/auth/SignInForm.tsx:78
+#: src/components/auth/SignInForm.tsx:87
 msgid "Sign in"
 msgstr "Sign in"
 
 #: src/components/auth/AuthNavButton.tsx:54
-#: src/pages/SignIn.tsx:32
+#: src/pages/SignIn.tsx:33
 msgid "Sign In"
 msgstr "Sign In"
+
+#: src/components/auth/SignInForm.tsx:98
+msgid "Sign In Email Sent"
+msgstr "Sign In Email Sent"
+
+#: src/components/auth/SignInForm.tsx:62
+msgid "Sign In Via Email"
+msgstr "Sign In Via Email"
 
 #: src/components/auth/AuthNavButton.tsx:35
 msgid "Sign Out"
 msgstr "Sign Out"
 
-#: src/components/auth/SignInForm.tsx:75
+#: src/components/auth/SignInForm.tsx:84
 msgid "Signing in"
 msgstr "Signing in"
 
