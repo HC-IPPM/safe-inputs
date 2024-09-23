@@ -385,16 +385,18 @@ const create_collection_version = async (
     await current_collection.save({ session });
 
     const [new_collection_version] = await CollectionModel.create(
-      {
-        stable_key: current_collection.stable_key,
-        major_ver: new_major_ver,
-        minor_ver: new_minor_ver,
-        is_current_version: true,
-        created_by,
+      [
+        {
+          stable_key: current_collection.stable_key,
+          major_ver: new_major_ver,
+          minor_ver: new_minor_ver,
+          is_current_version: true,
+          created_by,
 
-        collection_def: collection_def || current_collection.collection_def,
-        column_defs: column_defs || current_collection.column_defs,
-      },
+          collection_def: collection_def || current_collection.collection_def,
+          column_defs: column_defs || current_collection.column_defs,
+        },
+      ],
       { session },
     );
 
