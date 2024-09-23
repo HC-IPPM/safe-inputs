@@ -25,7 +25,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import {
   createBrowserRouter,
   RouterProvider,
-  BrowserRouter,
   Routes,
   Route,
   Navigate,
