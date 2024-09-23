@@ -161,7 +161,7 @@ const collection_2_new_minor_ver = await update_collection_def_fields(
     is_locked: false,
   },
 );
-await update_collection_column_defs(
+const collection_2_second_new_minor_ver = await update_collection_column_defs(
   collection_2_new_minor_ver,
   owner_2,
   {
@@ -176,7 +176,7 @@ await update_collection_column_defs(
   false,
 );
 await update_collection_column_defs(
-  collection_2_new_minor_ver,
+  collection_2_second_new_minor_ver,
   owner_2,
   {
     header: 'column_2',
