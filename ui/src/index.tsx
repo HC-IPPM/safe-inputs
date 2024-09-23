@@ -22,7 +22,14 @@ import { createRoot } from 'react-dom/client';
 
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
 import { SessionProvider } from './components/auth/session.tsx';
@@ -41,12 +48,7 @@ import NavWrapper from './pages/NavWrapper.tsx';
 import SignIn from './pages/SignIn.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
 
-//  _   _
-// | |_| |__   ___ _ __ ___   ___
-// | __| '_ \ / _ \ '_ ` _ \ / _ \
-// | |_| | | |  __/ | | | | |  __/
-//  \__|_| |_|\___|_| |_| |_|\___|
-
+// chakra themes
 const themeConfig: ThemeConfig = {
   useSystemColorMode: true,
   initialColorMode: 'light',
@@ -84,12 +86,7 @@ const theme = extendTheme(
   },
 );
 
-//  _ _  ___
-// (_) |( _ ) _ __
-// | | |/ _ \| '_ \
-// | | | (_) | | | |
-// |_|_|\___/|_| |_|
-
+// i18n
 i18n.load({
   en: enMessages,
   fr: frMessages,
@@ -97,12 +94,40 @@ i18n.load({
 
 i18n.activate('en');
 
-//                     _
-//  _ __ ___ _ __   __| | ___ _ __
-// | '__/ _ \ '_ \ / _` |/ _ \ '__|
-// | | |  __/ | | | (_| |  __/ |
-// |_|  \___|_| |_|\__,_|\___|_|
+// router
+// TODO https://reactrouter.com/en/main/upgrading/v6-data#start-lifting-routes-and-leveraging-the-data-apis
+const RouterRoot = () => (
+  <Routes>
+    <Route path="/" element={<NavWrapper />}>
+      <Route path="" element={<Home />} />
+      <Route path="signin" element={<SignIn />} />
+      <Route path="create-collection" element={<CreateCollection />} />
+      <Route
+        path="manage-collection/:collectionID"
+        element={<CollectionManagement />}
+      />
+      <Route
+        path="manage-collection/:collectionID/edit-column/:columnHeader"
+        element={<ColumnManagement />}
+      />
+      <Route
+        path="manage-collection/:collectionID/create-column"
+        element={<ColumnManagement />}
+      />
+      <Route
+        path="upload-records/:collectionID"
+        element={<div>Upload records route TODO</div>}
+      />
+      <Route path="admin" element={<AdminDashboard />} />
+      <Route path="excel-parser" element={<ExcelParser />} />
+      <Route path="termsAndConditions" element={<TermsAndConditions />} />
+      <Route path="*" element={<Navigate to="/" />} />
+    </Route>
+  </Routes>
+);
+const router = createBrowserRouter([{ path: '*', element: <RouterRoot /> }]);
 
+// render
 const container = document.getElementById('react-root');
 const root = createRoot(container!);
 
@@ -121,49 +146,15 @@ const client = new ApolloClient({
 root.render(
   <React.StrictMode>
     <ErrorBoundary FallbackComponent={AppErrorFallback}>
-      <BrowserRouter>
-        <SessionProvider authBaseURL={auth_base_url}>
-          <I18nProvider i18n={i18n}>
-            <ApolloProvider client={client}>
-              <ChakraProvider theme={theme}>
-                <Routes>
-                  <Route path="/" element={<NavWrapper />}>
-                    <Route path="" element={<Home />} />
-                    <Route path="signin" element={<SignIn />} />
-                    <Route
-                      path="create-collection"
-                      element={<CreateCollection />}
-                    />
-                    <Route
-                      path="manage-collection/:collectionID"
-                      element={<CollectionManagement />}
-                    />
-                    <Route
-                      path="manage-collection/:collectionID/edit-column/:columnHeader"
-                      element={<ColumnManagement />}
-                    />
-                    <Route
-                      path="manage-collection/:collectionID/create-column"
-                      element={<ColumnManagement />}
-                    />
-                    <Route
-                      path="upload-records/:collectionID"
-                      element={<div>Upload records route TODO</div>}
-                    />
-                    <Route path="admin" element={<AdminDashboard />} />
-                    <Route path="excel-parser" element={<ExcelParser />} />
-                    <Route
-                      path="termsAndConditions"
-                      element={<TermsAndConditions />}
-                    />
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Route>
-                </Routes>
-              </ChakraProvider>
-            </ApolloProvider>
-          </I18nProvider>
-        </SessionProvider>
-      </BrowserRouter>
+      <SessionProvider authBaseURL={auth_base_url}>
+        <I18nProvider i18n={i18n}>
+          <ApolloProvider client={client}>
+            <ChakraProvider theme={theme}>
+              <RouterProvider router={router} />
+            </ChakraProvider>
+          </ApolloProvider>
+        </I18nProvider>
+      </SessionProvider>
     </ErrorBoundary>
   </React.StrictMode>,
 );
