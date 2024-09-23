@@ -28,6 +28,7 @@ import {
   Routes,
   Route,
   Navigate,
+  ScrollRestoration,
 } from 'react-router-dom';
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
@@ -96,33 +97,36 @@ i18n.activate('en');
 // router
 // TODO https://reactrouter.com/en/main/upgrading/v6-data#start-lifting-routes-and-leveraging-the-data-apis
 const RouterRoot = () => (
-  <Routes>
-    <Route path="/" element={<NavWrapper />}>
-      <Route path="" element={<Home />} />
-      <Route path="signin" element={<SignIn />} />
-      <Route path="create-collection" element={<CreateCollection />} />
-      <Route
-        path="manage-collection/:collectionID"
-        element={<CollectionManagement />}
-      />
-      <Route
-        path="manage-collection/:collectionID/edit-column/:columnHeader"
-        element={<ColumnManagement />}
-      />
-      <Route
-        path="manage-collection/:collectionID/create-column"
-        element={<ColumnManagement />}
-      />
-      <Route
-        path="upload-records/:collectionID"
-        element={<div>Upload records route TODO</div>}
-      />
-      <Route path="admin" element={<AdminDashboard />} />
-      <Route path="excel-parser" element={<ExcelParser />} />
-      <Route path="termsAndConditions" element={<TermsAndConditions />} />
-      <Route path="*" element={<Navigate to="/" />} />
-    </Route>
-  </Routes>
+  <>
+    <Routes>
+      <Route path="/" element={<NavWrapper />}>
+        <Route path="" element={<Home />} />
+        <Route path="signin" element={<SignIn />} />
+        <Route path="create-collection" element={<CreateCollection />} />
+        <Route
+          path="manage-collection/:collectionID"
+          element={<CollectionManagement />}
+        />
+        <Route
+          path="manage-collection/:collectionID/edit-column/:columnHeader"
+          element={<ColumnManagement />}
+        />
+        <Route
+          path="manage-collection/:collectionID/create-column"
+          element={<ColumnManagement />}
+        />
+        <Route
+          path="upload-records/:collectionID"
+          element={<div>Upload records route TODO</div>}
+        />
+        <Route path="admin" element={<AdminDashboard />} />
+        <Route path="excel-parser" element={<ExcelParser />} />
+        <Route path="termsAndConditions" element={<TermsAndConditions />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Route>
+    </Routes>
+    <ScrollRestoration />
+  </>
 );
 const router = createBrowserRouter([{ path: '*', element: <RouterRoot /> }]);
 
