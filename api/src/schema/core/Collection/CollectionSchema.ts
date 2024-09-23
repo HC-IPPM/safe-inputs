@@ -240,14 +240,14 @@ const collection_def_input_to_model_fields = async (
 
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
-  type Query {
+  type Query { 
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
     collection(collection_id: String!): Collection
     all_collections: [Collection]
 
     validate_collection_def(collection_def: CollectionDefInput!): CollectionDefValidation
-    validate_column_defs(collection_id: String!, column_defs: [ColumnDefInput]): [ColumnDefValidation]
+    validate_column_def(collection_id: String!, is_new_column: Boolean!, column_def: ColumnDefInput!): ColumnDefValidation
     validate_records(collection_id: String!, records: [JSON!]!): [JSON!]!
   }
 
@@ -304,6 +304,7 @@ export const CollectionSchema = makeExecutableSchema({
     parameters: [String]!
   }
   type ColumnDefValidation {
+    id: String!
     header: ValidationMessages
     name_en: ValidationMessages
     name_fr: ValidationMessages
@@ -504,15 +505,17 @@ export const CollectionSchema = makeExecutableSchema({
         },
         user_can_be_collection_owner,
       ),
-      validate_column_defs: resolver_with_authz(
+      validate_column_def: resolver_with_authz(
         async (
           _parent: unknown,
           {
             collection_id,
-            column_defs,
+            is_new_column,
+            column_def,
           }: {
             collection_id: string;
-            column_defs: ColumnDefInput[];
+            is_new_column: boolean;
+            column_def: ColumnDefInput;
           },
           context,
           { fieldName }: { fieldName: string },
@@ -526,13 +529,26 @@ export const CollectionSchema = makeExecutableSchema({
             user_can_edit_collection,
           );
 
+          // TODO get_validation_errors effectively flattens and merges the error results for
+          // fields like column_defs... have to assume columns already in the database are error
+          // free for now
           const model_validation_errors = await get_validation_errors(
             CollectionModel,
-            { column_defs },
+            {
+              column_defs: [
+                ...(is_new_column
+                  ? (collection?.column_defs ?? [])
+                  : _.filter(
+                      collection?.column_defs,
+                      ({ header }) => header !== column_def.header,
+                    )),
+                column_def,
+              ],
+            },
             ['column_defs'],
           );
 
-          return model_validation_errors.column_defs;
+          return model_validation_errors?.column_defs;
         },
       ),
       validate_records: resolver_with_authz(

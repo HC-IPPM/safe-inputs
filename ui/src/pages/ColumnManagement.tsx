@@ -2,35 +2,35 @@ import { Box, Container } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
 import { useLingui } from '@lingui/react';
+
+import _ from 'lodash';
+
 import React, { memo } from 'react';
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Session } from 'src/components/auth/auth_utils.ts';
-
 import { useSession } from 'src/components/auth/session.tsx';
 import ColumnManagementForm from 'src/components/ColumnManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
+
 import { useCollectionWithColumnDetails } from 'src/graphql/index.ts';
 
 const ErrorDisplay = function ({
   title,
   message,
-  homeButton = true,
 }: {
   title: React.ReactNode;
   message: React.ReactNode;
-  homeButton?: boolean;
 }) {
   return (
     <div style={{ height: '50%' }} className="error-container">
       <h2>{title}</h2>
       <div className="error-message">{message}</div>
-      {homeButton && (
-        <Link className="error-home-button" to="/">
-          <Trans>Go to Home</Trans>
-        </Link>
-      )}
+      <Link className="error-home-button" to="/">
+        <Trans>Go to Home</Trans>
+      </Link>
     </div>
   );
 };
@@ -42,7 +42,7 @@ const ColumnManagement = memo(function ColumnManagement({
 }) {
   const { collectionID, columnHeader } = useParams() as {
     collectionID: string;
-    columnHeader: string;
+    columnHeader?: string;
   };
 
   const navigate = useNavigate();
@@ -56,6 +56,13 @@ const ColumnManagement = memo(function ColumnManagement({
     fetchPolicy: 'no-cache',
   });
 
+  const initial_column_state =
+    typeof columnHeader !== 'undefined' && !loading && data
+      ? data.collection.column_defs.find(
+          ({ header }) => header === columnHeader,
+        )
+      : undefined;
+
   if (!loading && !data?.collection.is_current_version) {
     setTimeout(() => {
       navigate('/');
@@ -65,11 +72,11 @@ const ColumnManagement = memo(function ColumnManagement({
         title={<Trans>Cannot update stale version of Collection</Trans>}
         message={
           <Trans>
-            You can only update the latest version of a collection. You will be
-            redirected back shortly.
+            You can only update the latest version of a collection. The
+            collection you were viewing may have become stale. Please return to
+            the home page and look for the latest version.
           </Trans>
         }
-        homeButton={false}
       />
     );
   } else if (
@@ -87,6 +94,22 @@ const ColumnManagement = memo(function ColumnManagement({
         }
       />
     );
+  } else if (
+    !loading &&
+    typeof columnHeader === 'string' &&
+    typeof initial_column_state === 'undefined'
+  ) {
+    return (
+      <ErrorDisplay
+        title={<Trans>Column &quot;{columnHeader}&quot; Not Found</Trans>}
+        message={
+          <Trans>
+            No column with header &quot;{columnHeader}&quot; exists on this
+            collection.
+          </Trans>
+        }
+      />
+    );
   } else if (error) {
     throw error;
   } else {
@@ -94,9 +117,8 @@ const ColumnManagement = memo(function ColumnManagement({
       <LoadingBlock isLoading={loading} flexDir={'column'}>
         {data && (
           <ColumnManagementForm
-            collection={data?.collection}
-            columnHeader={columnHeader}
-            locale={locale}
+            collection_id={collectionID}
+            initial_column_state={initial_column_state}
           />
         )}
       </LoadingBlock>

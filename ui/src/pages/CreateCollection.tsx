@@ -1,4 +1,4 @@
-import { useMutation, useApolloClient } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -20,8 +20,10 @@ import { Trans, t } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import debounce from 'debounce-promise';
+
 import type { FieldProps } from 'formik';
 import { Formik, Form, Field, FieldArray } from 'formik';
+
 import _ from 'lodash';
 
 import { memo } from 'react';
@@ -30,17 +32,17 @@ import { useNavigate } from 'react-router-dom';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
+import { GraphQLErrorDisplay } from 'src/components/GraphQLErrorDisplay.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
+
 import {
   CREATE_COLLECTION,
-  COLLECTION_DEF_INPUT_VALIDATION,
+  useLazyCollectionDefInputValidation,
 } from 'src/graphql/index.ts';
-
 import type {
   CreateCollectionInit,
   CollectionDefInput,
-  CollectionDefValidation,
-} from 'src/graphql/schema.d.ts';
+} from 'src/graphql/schema_common.d.ts';
 
 // memoizing on session so that the session sync on browser focus won't trigger rerenders
 // TODO: most routes will deal with this, bake it in to some sort of route level component
@@ -55,7 +57,8 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
     i18n: { locale },
   } = useLingui();
 
-  const client = useApolloClient();
+  const [lazyCollectionDefInputValidation, { error: validationError }] =
+    useLazyCollectionDefInputValidation();
 
   const [createCollectionInit, { data, error: creationError }] = useMutation<
     CreateCollectionInit,
@@ -68,56 +71,51 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
     navigate('/');
   } else if (id_of_created_collection) {
     navigate(`/manage-collection/${id_of_created_collection}`);
-  } else if (creationError) {
-    // Form validation to be handled within Formik, so an error at this point is something unexpected, like a network issue
-    // TODO: likely still want to catch and display these at the top of the route without throwing out the user's form progress
-    throw creationError;
   } else {
     const debounced_validation_query = debounce(
       async (collection_def: CollectionDefInput) => {
-        const {
-          data: { validate_collection_def },
-        } = await client.query<CollectionDefValidation, CollectionDefInput>({
-          query: COLLECTION_DEF_INPUT_VALIDATION,
+        const { data } = await lazyCollectionDefInputValidation({
           variables: collection_def,
         });
 
-        const {
-          owner_emails,
-          uploader_emails,
-          ...flat_field_validation_results
-        } = validate_collection_def;
+        if (typeof data !== 'undefined') {
+          const {
+            owner_emails,
+            uploader_emails,
+            ...flat_field_validation_results
+          } = data.validate_collection_def;
 
-        const flat_field_validation_messages = _.chain(
-          flat_field_validation_results,
-        )
-          .omitBy(
-            (validation_result, key) =>
-              key === '__typename' || _.isNull(validation_result),
+          const flat_field_validation_messages = _.chain(
+            flat_field_validation_results,
           )
-          .mapValues((validation_result) => _.get(validation_result, locale))
-          .value();
+            .omitBy(
+              (validation_result, key) =>
+                key === '__typename' || _.isNull(validation_result),
+            )
+            .mapValues((validation_result) => _.get(validation_result, locale))
+            .value();
 
-        const array_field_validation_messages = _.chain({
-          owner_emails,
-          uploader_emails,
-        })
-          .omitBy(
-            (validation_results) =>
-              _.isEmpty(validation_results) ||
-              _.every(validation_results, _.isNull),
-          )
-          .mapValues((validation_results) =>
-            _.map(validation_results, (validation_result) =>
-              _.get(validation_result, locale),
-            ),
-          )
-          .value();
+          const array_field_validation_messages = _.chain({
+            owner_emails,
+            uploader_emails,
+          })
+            .omitBy(
+              (validation_results) =>
+                _.isEmpty(validation_results) ||
+                _.every(validation_results, _.isNull),
+            )
+            .mapValues((validation_results) =>
+              _.map(validation_results, (validation_result) =>
+                _.get(validation_result, locale),
+              ),
+            )
+            .value();
 
-        return {
-          ...flat_field_validation_messages,
-          ...array_field_validation_messages,
-        };
+          return {
+            ...flat_field_validation_messages,
+            ...array_field_validation_messages,
+          };
+        }
       },
       250,
     );
@@ -324,6 +322,11 @@ const CreateCollectionContent = memo(function CreateCollectionContent({
               >
                 {!isValid ? t`Form contains validation errors` : t`Submit`}
               </Button>
+
+              {creationError && <GraphQLErrorDisplay error={creationError} />}
+              {validationError && (
+                <GraphQLErrorDisplay error={validationError} />
+              )}
             </VStack>
           </Form>
         )}

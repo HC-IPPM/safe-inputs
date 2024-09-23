@@ -1,6 +1,12 @@
-import { gql } from '@apollo/client';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import type { QueryHookOptions } from '@apollo/client';
 
-export const COLLECTION_DEF_INPUT_VALIDATION = gql`
+import type {
+  CollectionDefInput,
+  ValidationMessages,
+} from 'src/graphql/schema_common.d.ts';
+
+const COLLECTION_DEF_INPUT_VALIDATION = gql`
   query CollectionDefInputValidation(
     $name_en: String!
     $name_fr: String!
@@ -52,3 +58,30 @@ export const COLLECTION_DEF_INPUT_VALIDATION = gql`
     }
   }
 `;
+
+export type CollectionDefValidation = {
+  validate_collection_def: {
+    name_en?: ValidationMessages;
+    name_fr?: ValidationMessages;
+    description_en?: ValidationMessages;
+    description_fr?: ValidationMessages;
+    is_locked?: ValidationMessages;
+    owner_emails?: ValidationMessages;
+    uploader_emails?: ValidationMessages;
+    __typename: string;
+  };
+};
+
+export const useCollectionDefInputValidation = (
+  options?: QueryHookOptions<CollectionDefInput, CollectionDefValidation>,
+) =>
+  useQuery<CollectionDefInput, CollectionDefValidation>(
+    COLLECTION_DEF_INPUT_VALIDATION,
+    options,
+  );
+
+export const useLazyCollectionDefInputValidation = () =>
+  // Possibly a bug, but the useLazyQuery generic args get reversed somehow?
+  useLazyQuery<CollectionDefValidation, CollectionDefInput>(
+    COLLECTION_DEF_INPUT_VALIDATION,
+  );

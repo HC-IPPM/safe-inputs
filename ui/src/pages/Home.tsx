@@ -1,5 +1,3 @@
-import { useQuery } from '@apollo/client';
-
 import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -34,8 +32,9 @@ import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { COLLECTIONS_FOR_CURRENT_SESSION } from 'src/graphql/index.ts';
-import type { CollectionInfo } from 'src/graphql/schema.d.ts';
+
+import { useCollectionInfoForCurrentSession } from 'src/graphql/index.ts';
+import type { CollectionInfoResult } from 'src/graphql/index.ts';
 
 const CollectionTable = ({
   tableCaption,
@@ -43,8 +42,10 @@ const CollectionTable = ({
   getLinks,
 }: {
   tableCaption: string;
-  collections: CollectionInfo[];
-  getLinks: (collection: CollectionInfo) => { route: string; text: string }[];
+  collections: CollectionInfoResult[] | undefined;
+  getLinks: (
+    collection: CollectionInfoResult,
+  ) => { route: string; text: string }[];
 }) => {
   const {
     i18n: { locale },
@@ -120,11 +121,12 @@ const CollectionTable = ({
           ))}
         </Tbody>
       </Table>
-      {_.isEmpty(collections) && (
-        <Text textAlign="center">
-          <Trans>You have no collections at this time</Trans>
-        </Text>
-      )}
+      {typeof collections === 'undefined' ||
+        (_.isEmpty(collections) && (
+          <Text textAlign="center">
+            <Trans>You have no collections at this time</Trans>
+          </Text>
+        ))}
     </TableContainer>
   );
 };
@@ -143,15 +145,12 @@ const HomeDynamic = memo(function HomeDynamic({
     i18n: { locale },
   } = useLingui();
 
-  const { loading, error, data, refetch } = useQuery(
-    COLLECTIONS_FOR_CURRENT_SESSION,
-    {
-      variables: { lang: locale },
-      fetchPolicy: 'no-cache',
-    },
-  );
+  const { loading, error, data, refetch } = useCollectionInfoForCurrentSession({
+    variables: { lang: locale },
+    fetchPolicy: 'no-cache',
+  });
 
-  if (!loading && data.session === null) {
+  if (!loading && data?.session === null) {
     navigate(
       get_sign_in_path({
         post_auth_redirect: '',

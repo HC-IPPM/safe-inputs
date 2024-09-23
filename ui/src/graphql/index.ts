@@ -1,18 +1,38 @@
-export { COLLECTION_DETAILS } from './queries/collection_details.ts';
+export { useCollectionDetails } from './queries/collection_details.ts';
+export type {
+  CollectionDetailsVariables,
+  CollectionDetailsResult,
+} from './queries/collection_details.ts';
 
 export { useCollectionWithColumnDetails } from './queries/collection_with_column_details.ts';
 export type {
   CollectionWithColumnDetailsVariables,
-  CollectionWithColumnDetails,
+  CollectionWithColumnDetailsResult,
 } from './queries/collection_with_column_details.ts';
 
-export { COLLECTIONS_FOR_CURRENT_SESSION } from './queries/collections_for_current_session.ts';
+export { useCollectionInfoForCurrentSession } from './queries/collection_info_for_current_session.ts';
+export type {
+  CollectionInfoForCurrentSessionVariables,
+  CollectionInfoForCurrentSessionResult,
+  CollectionInfoResult,
+} from './queries/collection_info_for_current_session.ts';
 
-export { USERS } from './queries/users.ts';
+export { useUsers } from './queries/users.ts';
+export type { UsersResult } from './queries/users.ts';
 
-export { COLUMN_DEFS_INPUT_VALIDATION } from './queries/column_defs_input_validation.ts';
+export {
+  useColumnDefInputValidation,
+  useLazyColumnDefInputValidation,
+} from './queries/column_defs_input_validation.ts';
+export type {
+  ColumnDefInputValidationVariables,
+  ColumnDefInputValidationResult,
+} from './queries/column_defs_input_validation.ts';
 
-export { COLLECTION_DEF_INPUT_VALIDATION } from './queries/collection_def_input_validation.ts';
+export {
+  useCollectionDefInputValidation,
+  useLazyCollectionDefInputValidation,
+} from './queries/collection_def_input_validation.ts';
 
 export { COLLECTION_UPDATE } from './mutations/collection_update.ts';
 

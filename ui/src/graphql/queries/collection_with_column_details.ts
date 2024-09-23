@@ -1,7 +1,11 @@
 import { gql, useQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import type { Collection, User, ColumnDef } from 'src/graphql/schema.d.ts';
+import type {
+  Collection,
+  User,
+  ColumnDef,
+} from 'src/graphql/schema_common.d.ts';
 
 const COLLECTION_WITH_COLUMN_DETAILS = gql`
   query CollectionWithColumnDetails($collection_id: String!, $lang: String!) {
@@ -40,7 +44,7 @@ export type CollectionWithColumnDetailsVariables = {
   lang: string;
 };
 
-export type CollectionWithColumnDetails = {
+export type CollectionWithColumnDetailsResult = {
   collection: Pick<
     Collection,
     | 'id'
@@ -70,11 +74,11 @@ export type CollectionWithColumnDetails = {
 
 export const useCollectionWithColumnDetails = (
   options: QueryHookOptions<
-    CollectionWithColumnDetails,
+    CollectionWithColumnDetailsResult,
     CollectionWithColumnDetailsVariables
   >,
 ) =>
-  useQuery<CollectionWithColumnDetails, CollectionWithColumnDetailsVariables>(
-    COLLECTION_WITH_COLUMN_DETAILS,
-    options,
-  );
+  useQuery<
+    CollectionWithColumnDetailsResult,
+    CollectionWithColumnDetailsVariables
+  >(COLLECTION_WITH_COLUMN_DETAILS, options);

@@ -16,14 +16,17 @@ import _ from 'lodash';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { COLLECTION_UPDATE } from 'src/graphql/index.ts';
-import type { Collection, User } from 'src/graphql/schema.d.ts';
+import {
+  COLLECTION_UPDATE,
+  CollectionDetailsResult,
+} from 'src/graphql/index.ts';
+import type { Collection, User } from 'src/graphql/schema_common.d.ts';
 
 import EmailFields from './EmailField.tsx';
-import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
+import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
 interface CollectionFormProps {
-  data: Collection;
+  data: CollectionDetailsResult['collection'];
 }
 
 function CollectionForm({ data }: CollectionFormProps) {

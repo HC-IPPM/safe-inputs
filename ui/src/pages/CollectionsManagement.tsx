@@ -1,5 +1,3 @@
-import { useQuery } from '@apollo/client';
-
 import {
   Box,
   Button,
@@ -26,8 +24,7 @@ import CollectionForm from 'src/components/CollectionForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { COLLECTION_DETAILS } from 'src/graphql/index.ts';
-import type { ColumnDef } from 'src/graphql/schema.d.ts';
+import { useCollectionDetails } from 'src/graphql/index.ts';
 
 const ErrorDisplay = function ({
   title,
@@ -56,7 +53,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
 }: {
   session: Session;
 }) {
-  const { collectionID } = useParams();
+  const { collectionID } = useParams() as { collectionID: string };
 
   const {
     i18n: { locale },
@@ -64,12 +61,12 @@ const CollectionMainPage = memo(function CollectionMainPage({
   const navigate = useNavigate();
 
   // Fetch the latest version of the collection. Current version is updated to false backend, when changed
-  const { loading, error, data } = useQuery(COLLECTION_DETAILS, {
+  const { loading, error, data } = useCollectionDetails({
     variables: { collection_id: collectionID, lang: locale },
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && !data.collection.is_current_version) {
+  if (!loading && !data?.collection.is_current_version) {
     setTimeout(() => {
       navigate('/');
     }, 5000);
@@ -87,7 +84,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
     );
   } else if (
     !loading &&
-    !data.collection.owners?.some(
+    !data?.collection.owners?.some(
       (owner: { email: string }) => owner.email === session.email,
     )
   ) {
@@ -138,36 +135,34 @@ const CollectionMainPage = memo(function CollectionMainPage({
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {data?.collection?.column_defs.map(
-                        (column: ColumnDef) => (
-                          <Tr key={column.header}>
-                            <Td>{column.header}</Td>
-                            <Td>{column.name}</Td>
-                            <Td>{column.data_type}</Td>
-                            <Td>
-                              {column.conditions.map((condition, index) => (
-                                <Box key={index}>
-                                  <Text>{condition.condition_type}</Text>
-                                  <Text fontSize="sm" color="gray.500">
-                                    {JSON.stringify(condition.parameters)}
-                                  </Text>
-                                </Box>
-                              ))}
-                            </Td>
-                            <Td>
-                              <Button
-                                as={Link}
-                                to={`/manage-collection/${collectionID}/edit-column/${column.header}`}
-                                colorScheme="blue"
-                                size="sm"
-                                mr={2}
-                              >
-                                <Trans>Edit</Trans>
-                              </Button>
-                            </Td>
-                          </Tr>
-                        ),
-                      )}
+                      {data?.collection?.column_defs.map((column) => (
+                        <Tr key={column.header}>
+                          <Td>{column.header}</Td>
+                          <Td>{column.name}</Td>
+                          <Td>{column.data_type}</Td>
+                          <Td>
+                            {column.conditions.map((condition, index) => (
+                              <Box key={index}>
+                                <Text>{condition.condition_type}</Text>
+                                <Text fontSize="sm" color="gray.500">
+                                  {JSON.stringify(condition.parameters)}
+                                </Text>
+                              </Box>
+                            ))}
+                          </Td>
+                          <Td>
+                            <Button
+                              as={Link}
+                              to={`/manage-collection/${collectionID}/edit-column/${column.header}`}
+                              colorScheme="blue"
+                              size="sm"
+                              mr={2}
+                            >
+                              <Trans>Edit</Trans>
+                            </Button>
+                          </Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 ) : (

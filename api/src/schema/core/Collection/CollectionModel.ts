@@ -79,9 +79,23 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
   header: {
     ...string_type_mixin,
     ...is_required_mixin,
-    ...make_validation_mixin(
+    ...make_validation_mixin<string, ColumnDefInterface>(
       make_string_min_length_validator(1),
       make_string_max_length_validator(150),
+      (value, _validation_props, document) => {
+        if (document && '_id' in document) {
+          const parent_collection = document.$parent() as CollectionDocument;
+          return _.filter(
+            parent_collection.column_defs,
+            (sibling_column_def) => sibling_column_def.header === value,
+          ).length > 1
+            ? {
+                en: `A column with header "${value}" already exists on this collection`,
+                fr: 'TODO',
+              }
+            : undefined;
+        }
+      },
     ),
     immutable: true,
   },

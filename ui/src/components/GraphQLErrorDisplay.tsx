@@ -13,7 +13,7 @@ interface GraphQLErrorDisplayProps {
 // end user's buisness and those should be handled directly in forms. Other server errors should
 // trigger retries and, worst case, just display a simple message to wait and try submitting again later
 // or to contact the team
-function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
+export function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
   if (!error) return null;
 
   return (
@@ -55,7 +55,6 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
               {error.networkError.statusCode}
             </Text>
           )}
-          error.networkError.result && (
           <Box mt={2}>
             <Text fontWeight="bold">
               <Trans>Details:</Trans>
@@ -109,5 +108,3 @@ function GraphQLErrorDisplay({ error }: GraphQLErrorDisplayProps) {
     </Box>
   );
 }
-
-export default GraphQLErrorDisplay;

@@ -1,93 +1,73 @@
 import { useMutation } from '@apollo/client';
+
 import {
   Button,
   Container,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Heading,
   HStack,
   Input,
   Select,
   Stack,
   useToast,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from '@chakra-ui/react';
+
 import { t, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+
+import debounce from 'debounce-promise';
+
 import _ from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useForm, useWatch } from 'react-hook-form';
-
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import type { CollectionWithColumnDetails } from 'src/graphql/index.ts';
+import type { CollectionWithColumnDetailsResult } from 'src/graphql/index.ts';
 import {
   COLUMN_DEFS_UPDATE,
-  COLUMN_DEFS_INPUT_VALIDATION,
+  useLazyColumnDefInputValidation,
 } from 'src/graphql/index.ts';
-import type { ColumnDef } from 'src/graphql/schema.d.ts';
+import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
 
-import GraphQLErrorDisplay from './GraphQLErrorDisplay.tsx';
-import { Link } from './Link.tsx';
+import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
 interface ColumnManagementFormProps {
-  collection: CollectionWithColumnDetails['collection'];
-  columnHeader: string | undefined;
-  locale: string;
+  collection_id: string;
+  initial_column_state:
+    | CollectionWithColumnDetailsResult['collection']['column_defs'][number]
+    | undefined;
 }
 
 const ColumnManagementForm = function ({
-  collection,
-  columnHeader,
-  locale,
+  collection_id,
+  initial_column_state,
 }: ColumnManagementFormProps) {
+  const column_header = initial_column_state?.header;
+  const is_new_column = typeof column_header === 'undefined';
+
   const toast = useToast();
+
   const navigate = useNavigate();
+
+  const {
+    i18n: { locale },
+  } = useLingui();
+
   const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
     useMutation(COLUMN_DEFS_UPDATE);
-  const [validateColumnDefs] = useMutation(COLUMN_DEFS_INPUT_VALIDATION);
-
-  const getUpdatedColumnDefs = useCallback(
-    (data: ColumnDef) => {
-      const mutationFields = [
-        'header',
-        'name_en',
-        'name_fr',
-        'description_en',
-        'description_fr',
-        'data_type',
-        'conditions',
-      ];
-      const updatedColumnDefs = collection.column_defs.map((col) =>
-        col.header === columnHeader
-          ? _.pick({ ...col, ...data }, mutationFields)
-          : _.pick(col, mutationFields),
-      );
-
-      if (!columnHeader) {
-        const newColumn = _.pick(data, mutationFields);
-        updatedColumnDefs.push({
-          ...newColumn,
-          header: newColumn.header || '',
-        });
-      }
-      return updatedColumnDefs;
-    },
-    [collection.column_defs, columnHeader],
-  );
 
   // Errors during column def updates are captured by the error state of the mutation
-  const onSubmit = async (formData: ColumnDef) => {
-    const updatedColumnDefs = getUpdatedColumnDefs(formData);
+  const onSubmit = async (formData: ColumnDefInput) => {
     const response = await updateColumnDefs({
       variables: {
-        collection_id: collection.id,
-        column_defs: updatedColumnDefs,
+        collection_id,
+        column_defs: formData,
       },
     });
+
     if (response.data) {
       const { id } = response.data.update_column_defs;
       if (!id) {
@@ -103,101 +83,152 @@ const ColumnManagementForm = function ({
       navigate(`/manage-collection/${id}`);
     }
   };
-  const { register, handleSubmit, setValue, control } = useForm<ColumnDef>();
-  const [isValid, setIsValid] = useState<boolean>(true);
 
-  const watchedFields = useWatch({ control });
+  const [lazyColumnDefInputValidation, { error: validationError }] =
+    useLazyColumnDefInputValidation();
+  const debounced_form_validation = debounce(
+    async (form_data: ColumnDefInput) => {
+      const result = await lazyColumnDefInputValidation({
+        variables: {
+          collection_id,
+          is_new_column,
+          ...form_data,
+        },
+      });
 
-  const debouncedValidateColumnDefs = useMemo(
-    () =>
-      _.debounce(async (columnDefs: Partial<ColumnDef>[]) => {
-        try {
-          const result = await validateColumnDefs({
-            variables: {
-              collection_id: collection.id,
-              column_defs: columnDefs,
-            },
-          });
-          setIsValid(result.data.validate_new_column_defs);
-        } catch (e) {
-          console.error(`Error validating column definitions:${e}`);
-          setIsValid(false);
-        }
-      }, 1000),
-    [collection.id, validateColumnDefs],
+      const error_messages_in_current_locale = _.chain(
+        result.data?.validate_column_def,
+      )
+        .omitBy(
+          (validation_result, key) =>
+            key === '__typename' || _.isNull(validation_result),
+        )
+        .mapValues((validation_result) => _.get(validation_result, locale))
+        .value();
+
+      return {
+        values: _.isEmpty(error_messages_in_current_locale) ? form_data : {},
+        errors: _.isEmpty(error_messages_in_current_locale)
+          ? {}
+          : error_messages_in_current_locale,
+      };
+    },
+    250,
   );
 
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = useForm<ColumnDefInput>({
+    defaultValues:
+      typeof initial_column_state === 'undefined'
+        ? {
+            header: '',
+            name_en: '',
+            name_fr: '',
+            description_en: '',
+            description_fr: '',
+            data_type: '',
+            conditions: [],
+          }
+        : _.omit(initial_column_state, '__typename'),
+    resolver: debounced_form_validation,
+    mode: 'onChange',
+  });
+
+  // validate on initial render to get initial errors, e.g. mark required fields
   useEffect(() => {
-    let column;
-    if (collection && columnHeader) {
-      if (columnHeader) {
-        column = collection.column_defs.find(
-          (col) => col.header === columnHeader,
-        );
-      }
-    }
-    setValue('header', column?.header || '');
-    setValue('name_en', column?.name_en || '');
-    setValue('name_fr', column?.name_fr || '');
-    setValue('description_en', column?.description_en || '');
-    setValue('description_fr', column?.description_fr || '');
-    setValue('data_type', column?.data_type || '');
-    setValue('conditions', column?.conditions || []);
-  }, [collection, columnHeader, setValue]);
+    trigger();
+  }, [trigger]);
 
-  useEffect(() => {
-    const updatedColumnDefs = getUpdatedColumnDefs(watchedFields);
-
-    debouncedValidateColumnDefs(updatedColumnDefs);
-
-    return () => {
-      debouncedValidateColumnDefs.cancel();
-    };
-  }, [debouncedValidateColumnDefs, getUpdatedColumnDefs, watchedFields]);
   return (
     <Container maxW="5xl" py={8}>
       <Heading as="h2" size="md" mb={6}>
-        {columnHeader ? (
-          <Trans>
-            Edit Column: <strong>{columnHeader}</strong>
-          </Trans>
+        {column_header ? (
+          <Trans>Edit Column</Trans>
         ) : (
-          <Trans>Add Column</Trans>
+          <Trans>Create New Column</Trans>
         )}
       </Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={4}>
-          <FormControl isRequired isDisabled={!!columnHeader}>
+          <FormControl
+            id="header"
+            isDisabled={!is_new_column}
+            isInvalid={typeof errors.header === 'string'}
+          >
             <FormLabel>
               <Trans>Header</Trans>
             </FormLabel>
             <Input {...register('header')} />
+            {typeof errors.header === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.header}
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl id="name_en" isRequired>
+          <FormControl
+            id="name_en"
+            isInvalid={typeof errors.name_en === 'string'}
+          >
             <FormLabel>
               <Trans>Name (English)</Trans>
             </FormLabel>
             <Input {...register('name_en')} />
+            {typeof errors.name_en === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.name_en}
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl id="name_fr" isRequired>
+          <FormControl
+            id="name_fr"
+            isInvalid={typeof errors.name_fr === 'string'}
+          >
             <FormLabel>
               <Trans>Name (French)</Trans>
             </FormLabel>
             <Input {...register('name_fr')} />
+            {typeof errors.name_fr === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.name_fr}
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl id="description_en" isRequired>
+          <FormControl
+            id="description_en"
+            isInvalid={typeof errors.description_en === 'string'}
+          >
             <FormLabel>
               <Trans>Description (English)</Trans>
             </FormLabel>
             <Input {...register('description_en')} />
+            {typeof errors.description_en === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.description_en}
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl id="description_fr" isRequired>
+          <FormControl
+            id="description_fr"
+            isInvalid={typeof errors.description_fr === 'string'}
+          >
             <FormLabel>
               <Trans>Description (French)</Trans>
             </FormLabel>
             <Input {...register('description_fr')} />
+            {typeof errors.description_fr === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.description_fr}
+              </FormErrorMessage>
+            )}
           </FormControl>
-          <FormControl id="data_type" isRequired>
+          <FormControl
+            id="data_type"
+            isInvalid={typeof errors.data_type === 'string'}
+          >
             <FormLabel>
               <Trans>Data Type</Trans>
             </FormLabel>
@@ -231,42 +262,29 @@ const ColumnManagementForm = function ({
                 <Trans>Date-Time</Trans>
               </option>
             </Select>
+            {typeof errors.data_type === 'string' && (
+              <FormErrorMessage whiteSpace={'pre-wrap'}>
+                {errors.data_type}
+              </FormErrorMessage>
+            )}
           </FormControl>
           <HStack spacing={4}>
             <Button
               loadingText={t`Updating column`}
               isLoading={updateLoading}
-              isDisabled={!isValid}
+              isDisabled={_.some(
+                errors,
+                (error) => typeof error !== 'undefined',
+              )}
               type="submit"
               colorScheme="blue"
               size="lg"
             >
-              <Trans>Update Column</Trans>
-            </Button>
-            <Button
-              as={Link}
-              to={`/manage-collection/${collection.id}`}
-              colorScheme="gray"
-              size="lg"
-            >
-              <Trans>Go Back</Trans>
+              <Trans>Submit</Trans>
             </Button>
           </HStack>
           {updateError && <GraphQLErrorDisplay error={updateError} />}
-          {!isValid && (
-            <Alert status="error" mt={4}>
-              <AlertIcon />
-              <AlertTitle mr={2}>
-                <Trans>Validation Error</Trans>
-              </AlertTitle>
-              <AlertDescription>
-                <Trans>
-                  The current column definitions are invalid. Please check your
-                  inputs.
-                </Trans>
-              </AlertDescription>
-            </Alert>
-          )}
+          {validationError && <GraphQLErrorDisplay error={validationError} />}
         </Stack>
       </form>
     </Container>
