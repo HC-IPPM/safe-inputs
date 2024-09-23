@@ -79,6 +79,10 @@ export const configure_passport_js = (passport: PassportStatic) => {
                 template_id: AUTHN_GC_NOTIFY_TEMPLATE_ID,
                 personalisation: {
                   sign_in_link: verification_url,
+                  expiration_time: 'TODO',
+                  browser: 'TODO',
+                  operating_system: 'TODO',
+                  date_time: 'TODO',
                 },
               }),
             },
