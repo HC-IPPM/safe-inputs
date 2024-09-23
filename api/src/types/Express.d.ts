@@ -6,10 +6,13 @@ import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 declare global {
   namespace Express {
     interface Request {
-      headers: IncomingHttpHeaders;
       locals?: {
         verification_url?: string;
       };
+
+      // TODO shouldn't these be picked up from definition merging? Something might be wrong
+      // with my typing approach
+      headers: IncomingHttpHeaders;
       body?: any;
       query?: any;
     }

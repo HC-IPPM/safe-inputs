@@ -51,6 +51,7 @@
     "passport-magic-link": "^2.1.1",
     "tsx": "^4.15.6",
     "typescript": "^5.4.5",
+    "ua-parser-js": "^1.0.39",
     "validator": "^13.12.0"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "@types/node": "20.16.5",
     "@types/passport": "1.0.16",
     "@types/supertest": "6.0.2",
+    "@types/ua-parser-js": "^0.7.39",
     "@types/validator": "13.12.2",
     "eslint": "8.57.1",
     "eslint-plugin-n": "17.10.3",
