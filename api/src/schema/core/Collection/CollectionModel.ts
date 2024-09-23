@@ -381,7 +381,10 @@ const create_collection_version = async (
   const created_by = user._id;
 
   return db_transaction(async (session) => {
-    const new_collection_version = new CollectionModel(
+    current_collection.is_current_version = false;
+    await current_collection.save({ session });
+
+    const new_collection_version = await CollectionModel.create(
       {
         stable_key: current_collection.stable_key,
         major_ver: new_major_ver,
@@ -394,11 +397,6 @@ const create_collection_version = async (
       },
       { session },
     );
-
-    current_collection.is_current_version = false;
-
-    await current_collection.save({ session });
-    await new_collection_version.save({ session });
 
     return new_collection_version;
   });
