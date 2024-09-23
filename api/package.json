@@ -13,9 +13,9 @@
     "start": "tsx ./src/index.ts",
     "seed-dev-data": "tsx src/seed_dev_data.ts",
     "dev": "nodemon --exec tsx ./src/index.ts",
-    "dev:debug": "nodemon --exec tsx --inspect-brk ./src/index.ts",
+    "dev:debug": "nodemon --exec tsx --inspect ./src/index.ts",
     "dev:docker": "npm run dev",
-    "dev:docker-debug": "nodemon --exec tsx --inspect-brk='0.0.0.0:9229' ./src/index.ts",
+    "dev:docker-debug": "nodemon --exec tsx --inspect='0.0.0.0:9229' ./src/index.ts",
     "pretest": "npm run test:down",
     "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
     "jest:docker": "jest --coverage --coverageReporters text",
@@ -24,7 +24,7 @@
     "jest:docker-watch": "jest --coverage --coverageReporters text --watchAll",
     "pretest:debug": "npm run test:down",
     "test:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev-test.yaml up",
-    "jest:docker-debug": "node --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --watchAll --runInBand --no-cache",
+    "jest:docker-debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --watchAll --runInBand --no-cache",
     "test:down": "docker compose -f ./docker-compose.dev-test.yaml down"
   },
   "dependencies": {
@@ -46,6 +46,7 @@
     "graphql-yoga": "^5.6.0",
     "lodash": "^4.17.21",
     "mongoose": "^8.4.0",
+    "mongoose-unique-validator": "^5.0.1",
     "passport": "^0.7.0",
     "passport-magic-link": "^2.1.1",
     "tsx": "^4.15.6",

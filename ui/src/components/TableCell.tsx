@@ -1,5 +1,4 @@
 import { Input, Tooltip } from '@chakra-ui/react';
-import type { Table } from '@tanstack/react-table';
 import type { ErrorObject } from 'ajv';
 import { useEffect, useState } from 'react';
 
@@ -24,7 +23,8 @@ const TableCell = ({
   getValue,
   row: { index },
   column: { id },
-  table,
+  updateData,
+  rowErrors,
 }: {
   getValue: () => any;
   row: {
@@ -33,18 +33,17 @@ const TableCell = ({
   column: {
     id: string;
   };
-  table: Table<any>;
+  updateData: (rowIndex: number, columnId: string, value: any) => void;
+  rowErrors: RowError[];
 }): JSX.Element => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
-  const rowError = table.options.meta?.rowErrors[index];
+  const rowError = rowErrors[index];
   const isError = isErrorCell(rowError, id);
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
-  const onBlur = () => {
-    table.options.meta?.updateData(index, id, value);
-  };
+  const onBlur = () => updateData(index, id, value);
   return (
     <Tooltip isDisabled={!isError} label={isError} placement="bottom">
       <Input

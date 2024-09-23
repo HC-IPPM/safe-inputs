@@ -10,7 +10,7 @@
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
     "test": "jest --coverage --coverageReporters text",
-    "test:debug": "node --inspect-brk='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
+    "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "@lingui/macro": "^4.4.0",
     "@lingui/react": "^4.4.0",
     "@tanstack/react-table": "^8.10.7",
+    "debounce-promise": "^3.1.2",
     "dotenv": "^16.4.5",
     "formik": "^2.4.3",
     "lodash": "^4.17.21",
@@ -47,6 +48,7 @@
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.5.0",
     "@testing-library/react": "16.0.1",
+    "@types/debounce-promise": "^3.1.9",
     "@types/jest": "29.5.13",
     "@types/lodash": "4.17.7",
     "@types/react": "18.3.8",

@@ -1,38 +1,34 @@
-import { useQuery } from '@apollo/client';
-import { Box, Container } from '@chakra-ui/react';
+import { Box, Container, Heading } from '@chakra-ui/react';
 import { Trans } from '@lingui/macro';
 
 import { useLingui } from '@lingui/react';
+
 import React, { memo } from 'react';
+
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Session } from 'src/components/auth/auth_utils.ts';
-
 import { useSession } from 'src/components/auth/session.tsx';
-import ColumnManagementForm from 'src/components/ColumnManagementForm.tsx';
+import { ColumnManagementForm } from 'src/components/ColumnManagementForm.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { GET_COLUMN_DETAILS } from 'src/graphql/queries.ts';
-import type { User } from 'src/graphql/schema.ts';
+
+import { useCollectionWithColumnDetails } from 'src/graphql/index.ts';
 
 const ErrorDisplay = function ({
   title,
   message,
-  homeButton = true,
 }: {
   title: React.ReactNode;
   message: React.ReactNode;
-  homeButton?: boolean;
 }) {
   return (
     <div style={{ height: '50%' }} className="error-container">
       <h2>{title}</h2>
       <div className="error-message">{message}</div>
-      {homeButton && (
-        <Link className="error-home-button" to="/">
-          <Trans>Go to Home</Trans>
-        </Link>
-      )}
+      <Link className="error-home-button" to="/">
+        <Trans>Home</Trans>
+      </Link>
     </div>
   );
 };
@@ -42,17 +38,30 @@ const ColumnManagement = memo(function ColumnManagement({
 }: {
   session: Session;
 }) {
-  const { collectionID, columnHeader } = useParams();
+  const { collectionID, columnHeader } = useParams() as {
+    collectionID: string;
+    columnHeader?: string;
+  };
+
   const navigate = useNavigate();
+
   const {
     i18n: { locale },
   } = useLingui();
-  const { loading, error, data } = useQuery(GET_COLUMN_DETAILS, {
+
+  const { loading, error, data } = useCollectionWithColumnDetails({
     variables: { collection_id: collectionID, lang: locale },
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && !data.collection.is_current_version) {
+  const initial_column_state =
+    typeof columnHeader !== 'undefined' && !loading && data
+      ? data.collection.column_defs.find(
+          ({ header }) => header === columnHeader,
+        )
+      : undefined;
+
+  if (!loading && !data?.collection.is_current_version) {
     setTimeout(() => {
       navigate('/');
     }, 5000);
@@ -61,16 +70,17 @@ const ColumnManagement = memo(function ColumnManagement({
         title={<Trans>Cannot update stale version of Collection</Trans>}
         message={
           <Trans>
-            You can only update the latest version of a collection. You will be
-            redirected back shortly.
+            You can only update the latest version of a collection. The
+            collection you were viewing may have become stale. Please return to
+            the home page and look for the latest version.
           </Trans>
         }
-        homeButton={false}
       />
     );
   } else if (
     !loading &&
-    !data.collection.owners.some((owner: User) => owner.email === session.email)
+    !data?.collection.owners.some(({ email }) => email === session.email) &&
+    !session.is_super_user
   ) {
     return (
       <ErrorDisplay
@@ -78,7 +88,23 @@ const ColumnManagement = memo(function ColumnManagement({
         message={
           <Trans>
             You do not have access to edit this collection. Please ask a team
-            member with owner permissions to grant access.
+            member with owner permissions to grant you access.
+          </Trans>
+        }
+      />
+    );
+  } else if (
+    !loading &&
+    typeof columnHeader === 'string' &&
+    typeof initial_column_state === 'undefined'
+  ) {
+    return (
+      <ErrorDisplay
+        title={<Trans>Column &quot;{columnHeader}&quot; Not Found</Trans>}
+        message={
+          <Trans>
+            No column with header &quot;{columnHeader}&quot; exists on this
+            collection.
           </Trans>
         }
       />
@@ -89,11 +115,19 @@ const ColumnManagement = memo(function ColumnManagement({
     return (
       <LoadingBlock isLoading={loading} flexDir={'column'}>
         {data && (
-          <ColumnManagementForm
-            collection={data?.collection}
-            columnHeader={columnHeader}
-            locale={locale}
-          />
+          <>
+            <Heading as="h2" size="md" mb={6}>
+              {initial_column_state?.header ? (
+                <Trans>Edit Column</Trans>
+              ) : (
+                <Trans>Create New Column</Trans>
+              )}
+            </Heading>
+            <ColumnManagementForm
+              collection_id={collectionID}
+              initial_column_state={initial_column_state}
+            />
+          </>
         )}
       </LoadingBlock>
     );
@@ -114,7 +148,9 @@ export default function ColumnManagementPage() {
   return (
     <>
       <Box className="App-header" mb={2}>
-        <Trans>Column Management</Trans>
+        <h1>
+          <Trans>Column Management</Trans>
+        </h1>
       </Box>
       <Container
         maxW="7xl"

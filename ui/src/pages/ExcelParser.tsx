@@ -41,6 +41,7 @@ export default function ExcelParser(): JSX.Element {
     },
   );
 
+  // TODO: bad page boilerplate, staying consistent with other pages for now but I've opened issues to clean them all up
   return (
     <>
       <Box className="App-header" mb={2}>
