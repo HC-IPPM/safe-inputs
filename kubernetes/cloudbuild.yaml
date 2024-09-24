@@ -30,7 +30,7 @@ steps:
         'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
       - -verbose
       - -debug
-      - ./kubernetes/manifests.yaml
+      - ./manifests.yaml
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2f84488bafbf5d1bde628015f08fe2e606281719318cba3cc5526a13ec9493df'
