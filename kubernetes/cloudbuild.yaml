@@ -26,7 +26,7 @@ steps:
       set -e
       docker run \
       --rm \
-      -v ./manifests.yaml:/manifests.yaml \
+      -v $(pwd)/manifests.yaml:/tmp/manifests.yaml \
       ghcr.io/yannh/kubeconform:latest-alpine \
       -strict \
       -schema-location=default \
@@ -35,7 +35,7 @@ steps:
       -skip='Secret, CustomResourceDefinition' \
       -summary \
       -debug \
-      /manifests.yaml
+      /tmp/manifests.yaml
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2f84488bafbf5d1bde628015f08fe2e606281719318cba3cc5526a13ec9493df'
