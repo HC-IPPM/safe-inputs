@@ -24,7 +24,6 @@ steps:
     args:
       - -skip=Secret
       - -strict
-      - -ignore-missing-schemas
       - -schema-location=default
       - >-
         -schema-location=
