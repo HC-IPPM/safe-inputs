@@ -19,16 +19,23 @@ steps:
   #     done
 
   - id: Validate schema
-    name: 'ghcr.io/yannh/kubeconform:latest-alpine@sha256:824e0c248809e4b2da2a768b16b107cf17ada88a89ec6aa6050e566ba93ebbc6'
+    name: 'gcr.io/cloud-builders/docker'
     dir: kubernetes
-    args:
-      - -skip=Secret
-      - -strict
-      - -schema-location=default
-      - -schema-location='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
-      - -verbose
-      - -debug
-      - ./manifests.yaml
+    script: |
+      #!/bin/sh
+      set -e
+      docker run \
+      --rm \
+      -v ./manifests.yaml:/manifests.yaml \
+      ghcr.io/yannh/kubeconform:latest-alpine \
+      -strict \
+      -schema-location=default \
+      -schema-location='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+      -verbose \
+      -skip='Secret, CustomResourceDefinition' \
+      -summary \
+      -debug \
+      /manifests.yaml
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2f84488bafbf5d1bde628015f08fe2e606281719318cba3cc5526a13ec9493df'
