@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Request } from 'express-serve-static-core';
 
 import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
@@ -27,7 +28,7 @@ const should_send_token_via_email = () => {
   return !DEV_IS_LOCAL_ENV || DEV_FORCE_ENABLE_GCNOTIFY;
 };
 
-const get_post_auth_redirect = (req: Express.Request) => {
+const get_post_auth_redirect = (req: Request) => {
   const post_auth_redirect =
     req.body?.post_auth_redirect || req.query?.post_auth_redirect;
 
@@ -63,7 +64,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
         ttl: ten_minutes_in_miliseconds / 1000,
       },
       async function sendToken(
-        req: Express.Request,
+        req: Request,
         user: Express.User,
         token: string,
       ) {
@@ -80,13 +81,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
             received_date.getTime() + ten_minutes_in_miliseconds,
           );
 
-          const user_agent_parser = new UAParser(
-            // TODO big typing abomination, this is just a hack around my bad Express.Request
-            // typing, to get this out in time for an urgent demo
-            (req as unknown as { get: (header: string) => string }).get(
-              'user-agent',
-            ),
-          );
+          const user_agent_parser = new UAParser(req.get('user-agent'));
 
           const response = await fetch(
             'https://api.notification.canada.ca/v2/notifications/email',
@@ -123,7 +118,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
           req.locals = { verification_url, ...req.locals };
         }
       },
-      async function verifyUser(_req: Express.Request, user: Express.User) {
+      async function verifyUser(_req: Request, user: Express.User) {
         user_email_allowed_rule(user);
 
         const mongoose_doc = await get_or_create_user(user.email!);
