@@ -62,12 +62,10 @@ const DataTable = ({ initialData }: { initialData: any[] }): JSX.Element => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex: false,
-    meta: {
-      updateData,
-      rowErrors,
-    },
     defaultColumn: {
-      cell: TableCell,
+      cell: (props) => (
+        <TableCell {...props} updateData={updateData} rowErrors={rowErrors} />
+      ),
     },
   });
 

@@ -5,8 +5,6 @@ import _ from 'lodash';
 import { Schema, model, Types } from 'mongoose';
 import type { HydratedDocument } from 'mongoose';
 
-import type { SetOptional } from 'type-fest';
-
 import { db_transaction } from 'src/db.ts';
 
 import { AppError } from 'src/error_utils.ts';
@@ -18,9 +16,18 @@ import {
   create_dataloader_for_resources_by_foreign_key_attr,
 } from 'src/schema/loader_utils.ts';
 import {
+  string_type_mixin,
+  number_type_mixin,
+  boolean_type_mixin,
+  created_at_mixin,
+  is_required_mixin,
+  make_validation_mixin,
+  make_string_min_length_validator,
+  make_string_max_length_validator,
   make_lang_suffixed_type,
   make_foreign_id_type,
   make_foreign_key_type,
+  with_uniqueness_validation_plugin,
 } from 'src/schema/mongoose_utils.ts';
 
 interface ConditionInterface {
@@ -28,8 +35,19 @@ interface ConditionInterface {
   parameters?: string[];
 }
 const ConditionSchema = new Schema<ConditionInterface>({
-  condition_type: { type: String, required: true },
-  parameters: [{ type: String }],
+  condition_type: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    // TODO validation
+    immutable: true,
+  },
+  parameters: [
+    {
+      ...string_type_mixin,
+      // TODO validation
+      immutable: true,
+    },
+  ],
 });
 
 interface ColumnDefInterface
@@ -38,18 +56,55 @@ interface ColumnDefInterface
   header: string;
   data_type: string; // TODO this will be an enum once column types are formalized
   conditions: ConditionInterface[];
-  created_by: Types.ObjectId;
-  created_at: number;
 }
-export type ColumnDefInterfaceWithMetaOptional = SetOptional<
-  ColumnDefInterface,
-  'created_by' | 'created_at'
->;
 const ColumnDefSchema = new Schema<ColumnDefInterface>({
-  ...make_lang_suffixed_type('name', { type: String, required: true }),
-  ...make_lang_suffixed_type('description', { type: String, required: true }),
-  header: { type: String, required: true },
-  data_type: { type: String, required: true },
+  ...make_lang_suffixed_type('name', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(150),
+    ),
+    immutable: true,
+  }),
+  ...make_lang_suffixed_type('description', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(3000),
+    ),
+    immutable: true,
+  }),
+  header: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    ...make_validation_mixin<string, ColumnDefInterface>(
+      make_string_min_length_validator(1),
+      make_string_max_length_validator(150),
+      (value, _validation_props, document) => {
+        if (document && '_id' in document) {
+          const parent_collection = document.$parent() as CollectionDocument;
+          return _.filter(
+            parent_collection.column_defs,
+            (sibling_column_def) => sibling_column_def.header === value,
+          ).length > 1
+            ? {
+                en: `A column with header "${value}" already exists on this collection`,
+                fr: 'TODO',
+              }
+            : undefined;
+        }
+      },
+    ),
+    immutable: true,
+  },
+  data_type: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    // TODO validation
+    immutable: true,
+  },
   conditions: [ConditionSchema],
 });
 
@@ -57,18 +112,38 @@ export interface CollectionDefInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
   owners: Types.ObjectId[];
-  uploaders?: Types.ObjectId[];
+  uploaders: Types.ObjectId[];
   is_locked: boolean;
 }
 const CollectionDefSchema = new Schema<CollectionDefInterface>({
-  ...make_lang_suffixed_type('name', { type: String, required: true }),
-  ...make_lang_suffixed_type('description', { type: String, required: true }),
-  owners: {
-    type: [make_foreign_id_type('User', { required: true })],
-    required: true,
-  },
-  uploaders: { type: [make_foreign_id_type('User')], required: true },
-  is_locked: { type: Boolean, required: true },
+  ...make_lang_suffixed_type('name', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(150),
+    ),
+    immutable: true,
+  }),
+  ...make_lang_suffixed_type('description', {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    ...make_validation_mixin(
+      make_string_min_length_validator(4),
+      make_string_max_length_validator(3000),
+    ),
+    immutable: true,
+  }),
+  owners: [
+    {
+      ...make_foreign_id_type('User', {
+        required: true,
+      }),
+      immutable: true,
+    },
+  ],
+  uploaders: [{ ...make_foreign_id_type('User'), immutable: true }],
+  is_locked: { ...boolean_type_mixin, ...is_required_mixin, immutable: true },
 });
 
 interface CollectionInterface {
@@ -83,19 +158,52 @@ interface CollectionInterface {
   recordset_key: string;
 }
 const CollectionMongooseSchema = new Schema<CollectionInterface>({
-  stable_key: { type: String, required: true, index: true },
-  major_ver: { type: Number, required: true },
-  minor_ver: { type: Number, required: true },
-  is_current_version: { type: Boolean, required: true },
-  created_by: make_foreign_id_type('User', { required: true }),
-  created_at: { type: Number, required: true },
+  stable_key: {
+    ...string_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    index: true,
+  },
+  major_ver: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    min: 1,
+  },
+  minor_ver: {
+    ...number_type_mixin,
+    ...is_required_mixin,
+    immutable: true,
+    min: 0,
+  },
+  is_current_version: { ...boolean_type_mixin, required: true },
+  created_by: {
+    ...make_foreign_id_type('User', {
+      required: true,
+    }),
+    immutable: true,
+  },
+  created_at: {
+    ...created_at_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
 
-  collection_def: { type: CollectionDefSchema, required: true },
+  collection_def: {
+    type: CollectionDefSchema,
+    ...is_required_mixin,
+    immutable: true,
+  },
 
-  column_defs: { type: [ColumnDefSchema], requied: true },
+  column_defs: {
+    type: [ColumnDefSchema],
+    requied: true,
+    immutable: true,
+  },
 
   recordset_key: {
-    type: String,
+    ...string_type_mixin,
+    immutable: true,
     default: function () {
       return `${this.stable_key}_${this.major_ver}`;
     },
@@ -114,9 +222,9 @@ CollectionMongooseSchema.index({
   'collection_def.uploaders': 1,
 });
 
-export const CollectionModel = model<CollectionInterface>(
+export const CollectionModel = model(
   'Collection',
-  CollectionMongooseSchema,
+  with_uniqueness_validation_plugin(CollectionMongooseSchema),
 );
 export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
@@ -127,19 +235,31 @@ export interface RecordInterface {
   created_at: number;
 }
 const RecordMongooseSchema = new Schema<RecordInterface>({
-  recordset_key: make_foreign_key_type(String, 'Collection', {
-    required: true,
-    index: true,
-  }),
+  recordset_key: {
+    ...make_foreign_key_type(String, 'Collection', {
+      required: true,
+      index: true,
+    }),
+    immutable: true,
+  },
   data: Schema.Types.Mixed,
-  created_by: make_foreign_id_type('User', { required: true }),
-  created_at: { type: Number, required: true },
+  created_by: {
+    ...make_foreign_id_type('User', {
+      required: true,
+    }),
+    immutable: true,
+  },
+  created_at: {
+    ...created_at_mixin,
+    ...is_required_mixin,
+    immutable: true,
+  },
 });
 RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
 
-export const RecordModel = model<RecordInterface>(
+export const RecordModel = model(
   'Record',
-  RecordMongooseSchema,
+  with_uniqueness_validation_plugin(RecordMongooseSchema),
 );
 export type RecordDocument = HydratedDocument<RecordInterface>;
 
@@ -190,28 +310,48 @@ export const make_records_created_by_user_loader_with_recordset_constraint = (
     },
   );
 
-export const validate_collection_def = (_collect_def: CollectionDefInterface) =>
-  true; // TODO, check things like validity of owner/uploader emails
+type RecordDataValidation = Record<string, string>[];
+export function validate_record_data_against_column_defs<
+  Options extends { verbose: boolean },
+>(
+  column_defs: ColumnDefInterface[],
+  data: Record<string, any>[], // TODO, could better type data records
+  options?: Options,
+): Options extends { verbose: true } ? RecordDataValidation : boolean;
+export function validate_record_data_against_column_defs(
+  _column_defs: ColumnDefInterface[],
+  data: Record<string, any>[],
+  options = { verbose: false },
+): RecordDataValidation | boolean {
+  // TODO, column def details (data types and constraints) and their validation will be a follow up PR
 
-export const validate_column_defs = (
-  _column_defs: ColumnDefInterfaceWithMetaOptional[],
-) => true; // implementation TODO, data types and constraint validation will be a follow up PR
+  if (options.verbose) {
+    return _.map(data, undefined);
+  } else {
+    return true;
+  }
+}
+
+export const are_new_column_defs_compatible_with_current_records = async (
+  collection: CollectionDocument,
+  new_column_defs: ColumnDefInterface[],
+) => {
+  const records = await RecordsByRecordsetKeyLoader.load(
+    collection.recordset_key,
+  );
+
+  return validate_record_data_against_column_defs(
+    new_column_defs,
+    _.map(records, 'data'),
+  );
+};
 
 export const create_collection = (
   user: UserDocument,
   collection_def: CollectionDefInterface,
-  column_defs: ColumnDefInterfaceWithMetaOptional[],
+  column_defs: ColumnDefInterface[],
 ) => {
-  if (!validate_collection_def(collection_def)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
-  if (!validate_column_defs(column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
   const created_by = user._id;
-  const created_at = Date.now();
 
   return CollectionModel.create({
     // randomUUID uses an entropy cache by default, improves performance but loses entropy after 128 UUIDs
@@ -220,18 +360,12 @@ export const create_collection = (
     minor_ver: 0,
     is_current_version: true,
     created_by,
-    created_at,
 
-    collection_def: {
-      ...collection_def,
-      owners: _.uniqBy([...collection_def.owners, user._id], (object_id) =>
-        object_id.toString(),
-      ),
-    },
+    collection_def,
+
     column_defs: column_defs.map((column_def) => ({
       ...column_def,
       created_by,
-      created_at,
     })),
   });
 };
@@ -244,33 +378,27 @@ const create_collection_version = async (
   collection_def?: CollectionDefInterface,
   column_defs?: ColumnDefInterface[],
 ) => {
-  if (column_defs && !validate_column_defs(column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
   const created_by = user._id;
-  const created_at = Date.now();
 
   return db_transaction(async (session) => {
-    const new_collection_version = new CollectionModel(
-      {
-        stable_key: current_collection.stable_key,
-        major_ver: new_major_ver,
-        minor_ver: new_minor_ver,
-        is_current_version: true,
-        created_by,
-        created_at,
+    current_collection.is_current_version = false;
+    await current_collection.save({ session });
 
-        collection_def: collection_def || current_collection.collection_def,
-        column_defs: column_defs || current_collection.column_defs,
-      },
+    const [new_collection_version] = await CollectionModel.create(
+      [
+        {
+          stable_key: current_collection.stable_key,
+          major_ver: new_major_ver,
+          minor_ver: new_minor_ver,
+          is_current_version: true,
+          created_by,
+
+          collection_def: collection_def || current_collection.collection_def,
+          column_defs: column_defs || current_collection.column_defs,
+        },
+      ],
       { session },
     );
-
-    current_collection.is_current_version = false;
-
-    await current_collection.save({ session });
-    await new_collection_version.save({ session });
 
     return new_collection_version;
   });
@@ -318,52 +446,26 @@ export const update_collection_def_fields = (
     new_collection_def,
   );
 
-// implementation TODO, data types and constraint validation will be a follow up PR
-// Note: intending to implement this with the `verbose` flag, or some equivalent,
-// controlling whether the function exits with a boolean on the first error, or wherther
-// it runs all the way through and returns per "cell" validation failure messages
-export const validate_record_data_against_column_defs = (
-  _column_defs: ColumnDefInterfaceWithMetaOptional[],
-  _data: Record<string, any>[],
-  _verbose: boolean,
-) => true;
-
-export const are_new_column_defs_compatible_with_current_records = async (
-  collection: CollectionDocument,
-  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
-) => {
-  if (!validate_column_defs(new_column_defs)) {
-    throw new AppError(400, 'Column def validation failed');
-  }
-
-  const records = await RecordsByRecordsetKeyLoader.load(
-    collection.recordset_key,
-  );
-  return validate_record_data_against_column_defs(
-    new_column_defs,
-    _.map(records, 'data'),
-    true,
-  );
-};
-
 // Column definition updates _may_ result in a major version bump if compatibility breaks, minor version otherwise
 export const update_collection_column_defs = async (
   current_collection: CollectionDocument,
   user: UserDocument,
-  new_column_defs: ColumnDefInterfaceWithMetaOptional[],
+  column_def: ColumnDefInterface,
+  is_new_column: boolean,
 ) => {
-  if (!validate_column_defs(new_column_defs)) {
-    throw new AppError(400, 'Column defs validation failed');
-  }
-
   const created_by = user._id;
-  const created_at = Date.now();
-
-  const new_column_defs_with_meta = new_column_defs.map((column_def) => ({
+  const new_column_def_with_meta = {
     ...column_def,
     created_by,
-    created_at,
-  }));
+  };
+
+  const new_column_defs = is_new_column
+    ? [...current_collection.column_defs, new_column_def_with_meta]
+    : _.map(current_collection.column_defs, (existing_column_def) =>
+        existing_column_def.header !== new_column_def_with_meta.header
+          ? existing_column_def
+          : new_column_def_with_meta,
+      );
 
   const is_update_a_breaking_change =
     await are_new_column_defs_compatible_with_current_records(
@@ -376,14 +478,14 @@ export const update_collection_column_defs = async (
       current_collection,
       user,
       current_collection.collection_def,
-      new_column_defs_with_meta,
+      new_column_defs,
     );
   } else {
     return create_collection_new_major_version(
       current_collection,
       user,
       current_collection.collection_def,
-      new_column_defs_with_meta,
+      new_column_defs,
     );
   }
 };
@@ -393,16 +495,12 @@ export const insert_records = async (
   data: Record<string, any>[],
   user: UserDocument,
 ) => {
-  if (
-    !validate_record_data_against_column_defs(
-      collection.column_defs,
-      data,
-      false,
-    )
-  ) {
+  if (!validate_record_data_against_column_defs(collection.column_defs, data)) {
     throw new AppError(400, 'Record validation failed');
   }
 
+  // providing creation timestamp rather than leaving to default setter, to give
+  // records created as a single transaction a consistent time stamp
   const created_at = Date.now();
 
   const record_documents = data.map((data) => ({

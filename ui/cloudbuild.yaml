@@ -1,18 +1,24 @@
 steps:
-  - name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
-    id: install
+  - id: install
+    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
-    id: test
+  - id: 'Check types'
+    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    dir: ui
+    entrypoint: npm
+    args: ['run', 'typecheck']
+
+  - id: test
+    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
     dir: ui
     entrypoint: npm
     args: ['test']
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
-    id: generate-image-name
+  - id: generate-image-name
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -20,8 +26,8 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
-    id: build-if-main
+  - id: build-if-main
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -35,8 +41,8 @@ steps:
           exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
-    id: push-if-main
+  - id: push-if-main
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     args:
       - '-c'

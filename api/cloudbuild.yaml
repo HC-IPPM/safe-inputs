@@ -1,15 +1,18 @@
 steps:
+  - id: install
+    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    dir: api
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
   - id: 'Check types'
     name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
-    entrypoint: 'sh'
     dir: api
-    args:
-      - '-c'
-      - |
-        npm ci && npm run typecheck
+    entrypoint: npm
+    args: ['run', 'typecheck']
 
   - id: 'Run tests'
-    name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     script: |
       #!/usr/bin/env bash
       set -o errexit
@@ -20,8 +23,8 @@ steps:
       # are just junk characters to the GCP cloudbuild logs
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
-    id: generate-image-name
+  - id: generate-image-name
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     dir: api
     args:
@@ -29,7 +32,7 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
+  - name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     id: build-if-main
     entrypoint: 'bash'
     dir: api
@@ -44,8 +47,8 @@ steps:
           exit 0
         fi
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:9f15cfffa3cea92f81297b02ff3a4dec72d07d0e4d3e5b6d5cfaac1c2f25492a'
-    id: push-if-main
+  - id: push-if-main
+    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     args:
       - '-c'

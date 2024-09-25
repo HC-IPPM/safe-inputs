@@ -27,6 +27,7 @@ module.exports = {
     new rspack.HtmlRspackPlugin({
       template: './index.html',
       favicon: './src/assets/favicon_canadaFlag.ico',
+      publicPath: '/',
     }),
     new rspack.DefinePlugin({
       ENV: parsed,

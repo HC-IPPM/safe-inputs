@@ -1,7 +1,10 @@
 import express from 'express';
+import type { Request } from 'express-serve-static-core';
 
 import type { PassportStatic } from 'passport';
 import { Strategy as MagicLinkStrategy } from 'passport-magic-link';
+
+import { UAParser } from 'ua-parser-js';
 
 import {
   get_or_create_user,
@@ -25,7 +28,7 @@ const should_send_token_via_email = () => {
   return !DEV_IS_LOCAL_ENV || DEV_FORCE_ENABLE_GCNOTIFY;
 };
 
-const get_post_auth_redirect = (req: Express.Request) => {
+const get_post_auth_redirect = (req: Request) => {
   const post_auth_redirect =
     req.body?.post_auth_redirect || req.query?.post_auth_redirect;
 
@@ -35,6 +38,13 @@ const get_post_auth_redirect = (req: Express.Request) => {
 
   return provided_redirect_is_relative ? post_auth_redirect : '/';
 };
+
+const ten_minutes_in_miliseconds = 60 * 10 * 1000;
+const format_date = (locale: 'en' | 'fr', date: Date) =>
+  new Intl.DateTimeFormat(`${locale}-CA`, {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(date);
 
 export const configure_passport_js = (passport: PassportStatic) => {
   const {
@@ -51,9 +61,10 @@ export const configure_passport_js = (passport: PassportStatic) => {
         tokenField: 'token',
         passReqToCallbacks: true,
         verifyUserAfterToken: false, // verifyUser is called before sendToken
+        ttl: ten_minutes_in_miliseconds / 1000,
       },
       async function sendToken(
-        req: Express.Request,
+        req: Request,
         user: Express.User,
         token: string,
       ) {
@@ -65,6 +76,13 @@ export const configure_passport_js = (passport: PassportStatic) => {
         })}`;
 
         if (should_send_token_via_email()) {
+          const received_date = new Date();
+          const expires_date = new Date(
+            received_date.getTime() + ten_minutes_in_miliseconds,
+          );
+
+          const user_agent_parser = new UAParser(req.get('user-agent'));
+
           const response = await fetch(
             'https://api.notification.canada.ca/v2/notifications/email',
             {
@@ -79,6 +97,12 @@ export const configure_passport_js = (passport: PassportStatic) => {
                 template_id: AUTHN_GC_NOTIFY_TEMPLATE_ID,
                 personalisation: {
                   sign_in_link: verification_url,
+                  browser: user_agent_parser.getBrowser().name,
+                  operating_system: user_agent_parser.getOS().name,
+                  date_time_en: format_date('en', received_date),
+                  date_time_fr: format_date('fr', received_date),
+                  expiration_time_en: format_date('en', expires_date),
+                  expiration_time_fr: format_date('fr', expires_date),
                 },
               }),
             },
@@ -94,7 +118,7 @@ export const configure_passport_js = (passport: PassportStatic) => {
           req.locals = { verification_url, ...req.locals };
         }
       },
-      async function verifyUser(_req: Express.Request, user: Express.User) {
+      async function verifyUser(_req: Request, user: Express.User) {
         user_email_allowed_rule(user);
 
         const mongoose_doc = await get_or_create_user(user.email!);

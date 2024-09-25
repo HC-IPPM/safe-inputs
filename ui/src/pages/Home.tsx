@@ -1,5 +1,3 @@
-import { gql, useQuery } from '@apollo/client';
-
 import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -35,47 +33,8 @@ import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 
-const GET_HOME_INFO = gql`
-  query HomePageInfo($lang: String!) {
-    session {
-      owned_collections {
-        id
-        name(lang: $lang)
-        major_ver
-        minor_ver
-        is_locked
-        created_by {
-          email
-        }
-        created_at
-      }
-      uploadable_collections {
-        id
-        name(lang: $lang)
-        major_ver
-        minor_ver
-        is_locked
-        created_by {
-          email
-        }
-        created_at
-      }
-    }
-  }
-`;
-
-// TODO at some point, I'll integrate a tool to generate types from queries
-type CollectionInfo = {
-  id: string;
-  name: string;
-  major_ver: number;
-  minor_ver: number;
-  is_locked: boolean;
-  created_by: {
-    email: string;
-  };
-  created_at: number;
-};
+import { useCollectionInfoForCurrentSession } from 'src/graphql/index.ts';
+import type { CollectionInfoResult } from 'src/graphql/index.ts';
 
 const CollectionTable = ({
   tableCaption,
@@ -83,8 +42,10 @@ const CollectionTable = ({
   getLinks,
 }: {
   tableCaption: string;
-  collections: CollectionInfo[];
-  getLinks: (collection: CollectionInfo) => { href: string; text: string }[];
+  collections: CollectionInfoResult[] | undefined;
+  getLinks: (
+    collection: CollectionInfoResult,
+  ) => { route: string; text: string }[];
 }) => {
   const {
     i18n: { locale },
@@ -149,9 +110,9 @@ const CollectionTable = ({
                   {collection.is_locked ? t`Closed` : t`Open`}
                 </Tag>
               </Td>
-              {_.map(getLinks(collection), ({ href, text }) => (
-                <Td key={href}>
-                  <Button as={Link} to={href}>
+              {_.map(getLinks(collection), ({ route, text }) => (
+                <Td key={route}>
+                  <Button as={Link} to={route}>
                     {text}
                   </Button>
                 </Td>
@@ -160,11 +121,12 @@ const CollectionTable = ({
           ))}
         </Tbody>
       </Table>
-      {_.isEmpty(collections) && (
-        <Text textAlign="center">
-          <Trans>You have no collections at this time</Trans>
-        </Text>
-      )}
+      {typeof collections === 'undefined' ||
+        (_.isEmpty(collections) && (
+          <Text textAlign="center">
+            <Trans>You have no collections at this time</Trans>
+          </Text>
+        ))}
     </TableContainer>
   );
 };
@@ -183,11 +145,12 @@ const HomeDynamic = memo(function HomeDynamic({
     i18n: { locale },
   } = useLingui();
 
-  const { loading, error, data, refetch } = useQuery(GET_HOME_INFO, {
+  const { loading, error, data, refetch } = useCollectionInfoForCurrentSession({
     variables: { lang: locale },
+    fetchPolicy: 'no-cache',
   });
 
-  if (!loading && data.session === null) {
+  if (!loading && data?.session === null) {
     navigate(
       get_sign_in_path({
         post_auth_redirect: '',
@@ -228,8 +191,8 @@ const HomeDynamic = memo(function HomeDynamic({
             tableCaption={t`Collections You Manage`}
             collections={data?.session?.owned_collections}
             getLinks={({ id }) => [
-              { href: `/manage-collection/${id}`, text: t`Manage` },
-              { href: `/upload-records/${id}`, text: t`Upload` },
+              { route: `/manage-collection/${id}`, text: t`Manage` },
+              { route: `/upload-records/${id}`, text: t`Upload` },
             ]}
           />
         )}
@@ -237,7 +200,7 @@ const HomeDynamic = memo(function HomeDynamic({
           tableCaption={t`Collections You Upload To`}
           collections={data?.session?.uploadable_collections}
           getLinks={({ id }) => [
-            { href: `/upload-records/${id}`, text: t`Upload` },
+            { route: `/upload-records/${id}`, text: t`Upload` },
           ]}
         />
       </LoadingBlock>
@@ -246,14 +209,17 @@ const HomeDynamic = memo(function HomeDynamic({
 });
 
 export default function Home() {
-  const { status, session } = useSession();
+  const { status, session } = useSession({ allow_unauthenticated: false });
 
   const has_session = session !== null;
 
+  // TODO: bad page boilerplate, staying consistent with other pages for now but I've opened issues to clean them all up
   return (
     <>
       <Box className="App-header" mb={2}>
-        <Trans>Safe Inputs Home</Trans>
+        <h1>
+          <Trans>Safe Inputs Home</Trans>
+        </h1>
       </Box>
       <Container
         maxW="7xl"

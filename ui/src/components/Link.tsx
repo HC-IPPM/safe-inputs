@@ -16,12 +16,17 @@ type ExternalLinkProps = Omit<
   'isExternal' | 'to'
 >;
 
+const is_props_for_external_link = (
+  props: InAppLinkProps | ExternalLinkProps,
+): props is ExternalLinkProps => 'href' in props;
+
 export const Link: {
   (props: ExternalLinkProps): JSX.Element;
   (props: InAppLinkProps): JSX.Element;
 } = forwardRef<InAppLinkProps | ExternalLinkProps, As>((props, ref) =>
-  'href' in props ? (
-    <ChakraLink {...props} ref={ref} isExternal={true} />
+  is_props_for_external_link(props) ? (
+    // typesystem quirk, things don't resolve correctly without the redundant `as={ChakraLink}` here
+    <ChakraLink {...props} ref={ref} isExternal={true} as={ChakraLink} />
   ) : (
     <ChakraLink {...props} ref={ref} as={ReactRouterLink} />
   ),

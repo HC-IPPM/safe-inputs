@@ -29,7 +29,9 @@ export default function SignIn() {
   return (
     <>
       <Box className="App-header" mb={2}>
-        <Trans>Sign In</Trans>
+        <h1>
+          <Trans>Sign In</Trans>
+        </h1>
       </Box>
       <Container maxW="7xl" px={{ base: 5, md: 10 }} mt={8} minH="63vh">
         <SignInForm post_auth_redirect={post_auth_redirect} />
