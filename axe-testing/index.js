@@ -14,7 +14,7 @@ const { ROOT_URL } = process.env;
   // Launch the browser
   const browser = await puppeteer.launch({
     headless: false,
-    args: ['--ignore-certificate-errors', '--disable-web-security'],
+    // args: ['--ignore-certificate-errors', '--disable-web-security'],
   });
 
   const page = await browser.newPage();
@@ -25,34 +25,39 @@ const { ROOT_URL } = process.env;
   await page.goto(ROOT_URL, { waitUntil: 'networkidle2' }); // Wait until the page is fully loaded
 
   // Perform accessibility scan on the login page before logging in
-
   console.log('Running accessibility scan on the login page...');
   const loginPageResults = await new AxePuppeteer(page).analyze();
   console.log('http://127.0.0.1:8080 assessed');
-  // console.log('Login page accessibility report:', loginPageResults);
 
-  // Add login page URL to the list of URLs for accessibility checks
-  urls.push(ROOT_URL);
+  // Push url and axe results of login page
+  urls.push(ROOT_URL); // Add login page URL to the list of URLs for accessibility checks
 
-  // Process the login page results immediately (before login)
   allResults.push({
     url: ROOT_URL,
     results: loginPageResults,
   });
 
-  // Login interaction
+  // Login to move to the next page
   http: await page.type('#email', 'joe.smith@canada.ca'); // email field
   await page.click(
-    '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > form > button',
-  ); // login button selector
+    '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > div > form > button', // login button selector
+  );
+
+  // // Custom wait function using setTimeout
+  // const sleep = (milliseconds) =>
+  //   new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+  // // Wait for 10 seconds using the custom sleep function
+  // await sleep(40000);
+
 
   // Bypass authentication in dev environment by clicking the link
   await page.waitForXPath(
-    "//a[contains(text(), 'Click here to complete authentication')]",
+    "//a[contains(text(), 'Or click here to complete authentication')]",
     { timeout: 5000 },
   );
   const [link] = await page.$x(
-    "//a[contains(text(), 'Click here to complete authentication')]",
+    "//a[contains(text(), 'Or click here to complete authentication')]",
   );
 
   if (link) {
@@ -64,23 +69,26 @@ const { ROOT_URL } = process.env;
   }
 
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
+  // await page.waitForSelector(
+  //   '#react-root > div > div:nth-child(2) > div.chakra-container.css-tjdidn > div > div > div > table',
+  //   { visible: true, timeout: 10000 },
+  // );
 
   // Start crawling from the dashboard or starting point
   await crawlPage(page, browser, visitedPages, urls, allResults);
 
-    const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
-      await processAxeReport(allResults);
+  const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
+    await processAxeReport(allResults);
 
-    console.log('Filtered Results for Each URL:');
-    filteredResults.forEach((result) => {
-      console.log('');
-      console.log(`RESULTS FOR: ${result.url}`);
-      console.log(`Violation IDs:, ${result.violationIds}`); //This is temp to compare with other methods
-      console.log(`Violations:`, JSON.stringify(result.violations, null, 2));
-      console.log(`Incomplete:`, JSON.stringify(result.incomplete, null, 2));
-      console.log('');
-    });
-
+  console.log('Filtered Results for Each URL:');
+  filteredResults.forEach((result) => {
+    console.log('');
+    console.log(`RESULTS FOR: ${result.url}`);
+    console.log(`Violation IDs:, ${result.violationIds}`); //This is temp to compare with other methods
+    console.log(`Violations:`, JSON.stringify(result.violations, null, 2));
+    console.log(`Incomplete:`, JSON.stringify(result.incomplete, null, 2));
+    console.log('');
+  });
 
   console.log('Summary:');
   console.log('URLs with violations:', urlsWithViolations);
