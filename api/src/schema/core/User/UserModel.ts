@@ -7,13 +7,14 @@ import { user_email_allowed_rule, check_authz_rules } from 'src/authz.ts';
 
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
+
+import { with_uniqueness_validation_plugin } from 'src/schema/mongoose_schema_utils/plugin.ts';
 import {
   primary_key_type_schema_def,
   number_type_schema_def_mixin,
   created_at_schema_def,
-  make_validation_mixin,
-  with_uniqueness_validation_plugin,
-} from 'src/schema/mongoose_schema_utils.ts';
+} from 'src/schema/mongoose_schema_utils/schema_def.ts';
+import { make_validation_mixin } from 'src/schema/mongoose_schema_utils/validation_utils.ts';
 
 interface UserInterface {
   email: string;

@@ -10,25 +10,30 @@ import { db_transaction } from 'src/db.ts';
 import { AppError } from 'src/error_utils.ts';
 
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
+
 import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
+
 import {
   create_dataloader_for_resource_by_primary_key_attr,
   create_dataloader_for_resources_by_foreign_key_attr,
 } from 'src/schema/loader_utils.ts';
+
+import { with_uniqueness_validation_plugin } from 'src/schema/mongoose_schema_utils/plugin.ts';
 import {
   string_type_schema_def_mixin,
   number_type_schema_def_mixin,
   boolean_type_schema_def_mixin,
   created_at_schema_def,
   is_required_schema_def_mixin,
-  make_validation_mixin,
-  make_string_min_length_validator,
-  make_string_max_length_validator,
   make_lang_suffixed_schema_defs,
   make_foreign_id_ref_schema_def,
   make_foreign_key_schema_def,
-  with_uniqueness_validation_plugin,
-} from 'src/schema/mongoose_schema_utils.ts';
+} from 'src/schema/mongoose_schema_utils/schema_def.ts';
+import { make_validation_mixin } from 'src/schema/mongoose_schema_utils/validation_utils.ts';
+import {
+  make_string_min_length_validator,
+  make_string_max_length_validator,
+} from 'src/schema/mongoose_schema_utils/validators.ts';
 
 interface ConditionInterface {
   condition_type: string; // TODO this will be an enum once condition types are formalized
