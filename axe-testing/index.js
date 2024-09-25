@@ -2,9 +2,15 @@ import { getPages } from './src/get-url-slugs.js';
 import { processAxeReport } from './src/process-axe-report.js';
 import puppeteer from 'puppeteer';
 import { AxePuppeteer } from 'axe-puppeteer';
+import fs from 'fs';
 import 'dotenv-safe/config.js';
 
 const { ROOT_URL } = process.env;
+const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
+const blacklistUrls = config.blacklistUrls || [];
+console.log('Blacklist URLs:', blacklistUrls);
+
+
 
 (async () => {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
@@ -13,13 +19,11 @@ const { ROOT_URL } = process.env;
 
   // Launch the browser
   const browser = await puppeteer.launch({
-    headless: false,
-    // args: ['--ignore-certificate-errors', '--disable-web-security'],
+    headless: false,  
   });
 
   const page = await browser.newPage();
-  // Bypass content security policies (CSP)
-  await page.setBypassCSP(true);
+  await page.setBypassCSP(true); // Bypass content security policies (CSP)
 
   // Navigate to your login page
   await page.goto(ROOT_URL, { waitUntil: 'networkidle2' }); // Wait until the page is fully loaded
@@ -29,7 +33,7 @@ const { ROOT_URL } = process.env;
   const loginPageResults = await new AxePuppeteer(page).analyze();
   console.log('http://127.0.0.1:8080 assessed');
 
-  // Push url and axe results of login page
+  // Push login page axe result
   urls.push(ROOT_URL); // Add login page URL to the list of URLs for accessibility checks
 
   allResults.push({
@@ -37,19 +41,11 @@ const { ROOT_URL } = process.env;
     results: loginPageResults,
   });
 
-  // Login to move to the next page
+  // Perform login to move to the next page
   http: await page.type('#email', 'joe.smith@canada.ca'); // email field
   await page.click(
     '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > div > form > button', // login button selector
   );
-
-  // // Custom wait function using setTimeout
-  // const sleep = (milliseconds) =>
-  //   new Promise((resolve) => setTimeout(resolve, milliseconds));
-
-  // // Wait for 10 seconds using the custom sleep function
-  // await sleep(40000);
-
 
   // Bypass authentication in dev environment by clicking the link
   await page.waitForXPath(
@@ -69,13 +65,9 @@ const { ROOT_URL } = process.env;
   }
 
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
-  // await page.waitForSelector(
-  //   '#react-root > div > div:nth-child(2) > div.chakra-container.css-tjdidn > div > div > div > table',
-  //   { visible: true, timeout: 10000 },
-  // );
 
   // Start crawling from the dashboard or starting point
-  await crawlPage(page, browser, visitedPages, urls, allResults);
+  await crawlPage(page, browser, visitedPages, urls, allResults, blacklistUrls);
 
   const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
     await processAxeReport(allResults);
@@ -85,8 +77,8 @@ const { ROOT_URL } = process.env;
     console.log('');
     console.log(`RESULTS FOR: ${result.url}`);
     console.log(`Violation IDs:, ${result.violationIds}`); //This is temp to compare with other methods
-    console.log(`Violations:`, JSON.stringify(result.violations, null, 2));
-    console.log(`Incomplete:`, JSON.stringify(result.incomplete, null, 2));
+    // console.log(`Violations:`, JSON.stringify(result.violations, null, 2));
+    // console.log(`Incomplete:`, JSON.stringify(result.incomplete, null, 2));
     console.log('');
   });
 
@@ -99,47 +91,28 @@ const { ROOT_URL } = process.env;
 })();
 
 
-
-
-// // Function to crawl and run accessibility tests
-// async function crawlPage(page, browser, visitedPages) {
-//   const currentUrl = page.url();
-  
-//   if (visitedPages.has(currentUrl)) {
-//     console.log(`Skipping already visited page: ${currentUrl}`);
-//     return;
-//   }
-
-//   console.log(`Crawling page: ${currentUrl}`);
-//   visitedPages.add(currentUrl); // Mark this page as visited
-
-//   // Run Axe accessibility checks on the current page
-//   const results = await new AxePuppeteer(page).analyze();
-//   // console.log(`Accessibility report for ${currentUrl}:`, results);
-//   console.log(`assessing ${currentUrl}`);
-
-//   // Get all links on the current page
-//   const links = await page.$$eval('a', (anchors) =>
-//     anchors.map((anchor) => anchor.href),
-//   );
-
-//   // Crawl through each link found on the current page
-//   for (let link of links) {
-//     if (
-//       !visitedPages.has(link) &&
-//       link.startsWith(ROOT_URL) // Adjust the base URL
-//     ) {
-//       const newPage = await browser.newPage();
-//       await newPage.goto(link);
-//       await crawlPage(newPage, browser, visitedPages); // Recursively crawl new pages
-//       await newPage.close(); // Close the new page after crawling
-//     }
-//   }
-// }
-
 // Function to crawl and collect URLs for accessibility checks
-async function crawlPage(page, browser, visitedPages, urls, allResults) {
+async function crawlPage(
+  page,
+  browser,
+  visitedPages,
+  urls,
+  allResults,
+  blacklistUrls,
+) {
   const currentUrl = page.url();
+  let uniqueUrl = currentUrl
+
+  console.log('Blacklist URLs:', blacklistUrls);
+  console.log('Current URL:', currentUrl);
+
+
+  // Skip if the URL is blacklisted
+  // if (blacklistUrls.includes(currentUrl)) {
+  if (Array.isArray(blacklistUrls) && blacklistUrls.includes(currentUrl)) {
+    console.log(`Skipping blacklisted URL: ${currentUrl}`);
+    return;
+  }
 
   if (visitedPages.has(currentUrl)) {
     console.log(`Skipping already visited page: ${currentUrl}`);
@@ -148,7 +121,12 @@ async function crawlPage(page, browser, visitedPages, urls, allResults) {
 
   console.log(`Crawling page: ${currentUrl}`);
   visitedPages.add(currentUrl); // Mark this page as visited
-  urls.push(currentUrl); // Add URL for accessibility checks later
+
+  if (currentUrl == 'http://127.0.0.1:8080/') {
+    uniqueUrl += '-post-login';
+  }
+
+  urls.push(uniqueUrl); // Add URL for accessibility checks later
 
   // Run Axe accessibility checks on the current page immediately
   const results = await new AxePuppeteer(page).analyze();
@@ -156,7 +134,7 @@ async function crawlPage(page, browser, visitedPages, urls, allResults) {
 
   // Add the results to allResults
   allResults.push({
-    url: currentUrl,
+    url: uniqueUrl,
     results: results,
   });
 
@@ -171,9 +149,8 @@ async function crawlPage(page, browser, visitedPages, urls, allResults) {
     if (!visitedPages.has(link) && link.startsWith(ROOT_URL)) {
       const newPage = await browser.newPage();
       await newPage.goto(link, { waitUntil: 'networkidle2' });
-      await crawlPage(newPage, browser, visitedPages, urls, allResults); // Recursively crawl new pages
-      await newPage.close(); // Close the new page after crawling
+      await crawlPage(newPage, browser, visitedPages, urls, allResults, blacklistUrls); // Recursively crawl new pages
+      await newPage.close(); // Close new page after crawling
     }
   }
 }
-
