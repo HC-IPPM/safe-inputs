@@ -20,7 +20,7 @@ import {
 } from 'src/schema/core/User/UserModel.ts';
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
 import type { LangsUnion } from 'src/schema/lang_utils.ts';
-import { get_validation_errors } from 'src/schema/mongoose_utils.ts';
+import { get_validation_errors } from 'src/schema/mongoose_schema_utils.ts';
 import {
   resolver_with_authz,
   resolve_document_id,

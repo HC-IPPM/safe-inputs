@@ -8,13 +8,12 @@ import { user_email_allowed_rule, check_authz_rules } from 'src/authz.ts';
 import { AppError } from 'src/error_utils.ts';
 import { create_dataloader_for_resource_by_primary_key_attr } from 'src/schema/loader_utils.ts';
 import {
-  primary_key_type,
-  number_type_mixin,
-  created_at_mixin,
-  is_required_mixin,
+  primary_key_type_schema_def,
+  number_type_schema_def_mixin,
+  created_at_schema_def,
   make_validation_mixin,
   with_uniqueness_validation_plugin,
-} from 'src/schema/mongoose_utils.ts';
+} from 'src/schema/mongoose_schema_utils.ts';
 
 interface UserInterface {
   email: string;
@@ -24,20 +23,16 @@ interface UserInterface {
 }
 const UserMongooseSchema = new Schema<UserInterface>({
   email: {
-    ...primary_key_type,
+    ...primary_key_type_schema_def,
     ...make_validation_mixin<string, UserInterface>((value) =>
       !validator.isEmail(value)
         ? { en: `"${value}" is not a valid email`, fr: 'TODO' }
         : undefined,
     ),
   },
-  created_at: {
-    ...created_at_mixin,
-    ...is_required_mixin,
-    immutable: true,
-  },
-  second_last_login_at: { ...number_type_mixin, required: false },
-  last_login_at: { ...number_type_mixin, required: false },
+  created_at: created_at_schema_def,
+  second_last_login_at: { ...number_type_schema_def_mixin, required: false },
+  last_login_at: { ...number_type_schema_def_mixin, required: false },
 });
 export const UserModel = model(
   'User',
