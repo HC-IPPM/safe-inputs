@@ -49,4 +49,4 @@ export async function processAxeReport(allResults) {
   }
 
   return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
-};
+}

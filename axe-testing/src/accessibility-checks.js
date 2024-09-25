@@ -4,13 +4,11 @@
 // https://github.com/puppeteer/puppeteer/issues/290
 // https://stackoverflow.com/questions/66214552/tmp-chromium-error-while-loading-shared-libraries-libnss3-so-cannot-open-sha
 
-// https://github.com/dequelabs/axe-core-npm/blob/develop/packages/puppeteer/README.md 
+// https://github.com/dequelabs/axe-core-npm/blob/develop/packages/puppeteer/README.md
 
-
-import AxePuppeteer  from "@axe-core/puppeteer";
+import AxePuppeteer from '@axe-core/puppeteer';
 // import puppeteer from 'puppeteer'
 import fs from 'fs';
-
 
 // Evaluate accessibility for a single url
 export async function evaluateAccessibility(url, page) {
@@ -18,33 +16,35 @@ export async function evaluateAccessibility(url, page) {
   try {
     const results = await new AxePuppeteer(page).analyze();
 
-    const filename = "results.json"
-    // fs.writeFileSync(filename, JSON.stringify(results, null, 2), 'utf-8');    
-    fs.appendFileSync(filename, JSON.stringify(results, null, 2), 'utf-8');  
+    const filename = 'results.json';
+    // fs.writeFileSync(filename, JSON.stringify(results, null, 2), 'utf-8');
+    fs.appendFileSync(filename, JSON.stringify(results, null, 2), 'utf-8');
 
     // Simplified result (only incomplete and violations)
     const simplifiedResult = {
       url: results.url,
-      incomplete: (results.incomplete || []).map(item => ({
+      incomplete: (results.incomplete || []).map((item) => ({
         id: item.id,
         description: item.description,
         impact: item.impact,
         helpUrl: item.helpUrl,
-        nodes: item.nodes.map(node => ({
-          message: node.any.length > 0 ? node.any.map(msg => msg.message) : null,
+        nodes: item.nodes.map((node) => ({
+          message:
+            node.any.length > 0 ? node.any.map((msg) => msg.message) : null,
           html: node.html,
-        }))
+        })),
       })),
-      violations: (results.violations || []).map(item => ({
+      violations: (results.violations || []).map((item) => ({
         id: item.id,
         description: item.description,
         impact: item.impact,
         helpUrl: item.helpUrl,
-        nodes: item.nodes.map(node => ({
-          message: node.any.length > 0 ? node.any.map(msg => msg.message) : null,
+        nodes: item.nodes.map((node) => ({
+          message:
+            node.any.length > 0 ? node.any.map((msg) => msg.message) : null,
           html: node.html,
-        }))
-      }))
+        })),
+      })),
     };
 
     return simplifiedResult;

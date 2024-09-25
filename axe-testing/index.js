@@ -10,8 +10,6 @@ const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
 const blacklistUrls = config.blacklistUrls || [];
 console.log('Blacklist URLs:', blacklistUrls);
 
-
-
 (async () => {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const urls = []; //collect urls for Axe scan
@@ -19,7 +17,8 @@ console.log('Blacklist URLs:', blacklistUrls);
 
   // Launch the browser
   const browser = await puppeteer.launch({
-    headless: false,  
+    // headless: false,
+    headless: true,
   });
 
   const page = await browser.newPage();
@@ -90,7 +89,6 @@ console.log('Blacklist URLs:', blacklistUrls);
   await browser.close();
 })();
 
-
 // Function to crawl and collect URLs for accessibility checks
 async function crawlPage(
   page,
@@ -101,11 +99,10 @@ async function crawlPage(
   blacklistUrls,
 ) {
   const currentUrl = page.url();
-  let uniqueUrl = currentUrl
+  let uniqueUrl = currentUrl;
 
   console.log('Blacklist URLs:', blacklistUrls);
   console.log('Current URL:', currentUrl);
-
 
   // Skip if the URL is blacklisted
   // if (blacklistUrls.includes(currentUrl)) {
@@ -149,7 +146,14 @@ async function crawlPage(
     if (!visitedPages.has(link) && link.startsWith(ROOT_URL)) {
       const newPage = await browser.newPage();
       await newPage.goto(link, { waitUntil: 'networkidle2' });
-      await crawlPage(newPage, browser, visitedPages, urls, allResults, blacklistUrls); // Recursively crawl new pages
+      await crawlPage(
+        newPage,
+        browser,
+        visitedPages,
+        urls,
+        allResults,
+        blacklistUrls,
+      ); // Recursively crawl new pages
       await newPage.close(); // Close new page after crawling
     }
   }

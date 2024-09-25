@@ -1,7 +1,7 @@
 # Debian node base image
 FROM node:18-bullseye
 
-ENV NODE_ENV production
+# ENV NODE_ENV production
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true

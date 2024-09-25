@@ -66,9 +66,7 @@
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axe-puppeteer",
       "nodes": [
         {
-          "message": [
-            "The <html> element does not have a lang attribute"
-          ],
+          "message": ["The <html> element does not have a lang attribute"],
           "html": "<html data-theme=\"light\" style=\"color-scheme: light;\">"
         }
       ]
@@ -121,15 +119,11 @@
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axe-puppeteer",
       "nodes": [
         {
-          "message": [
-            "Some page content is not contained by landmarks"
-          ],
+          "message": ["Some page content is not contained by landmarks"],
           "html": "<div class=\"App-header css-bxak8j\">Sign In</div>"
         },
         {
-          "message": [
-            "Some page content is not contained by landmarks"
-          ],
+          "message": ["Some page content is not contained by landmarks"],
           "html": "<div role=\"group\" class=\"chakra-form-control css-1kxonj9\"><label for=\"email\" id=\"field-:r1:-label\" class=\"chakra-form__label css-g6pte\">Email</label><input placeholder=\"Email\" name=\"email\" id=\"email\" class=\"chakra-input css-1cjy4zv\"></div>"
         }
       ]
