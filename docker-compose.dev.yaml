@@ -63,7 +63,7 @@ services:
   gateway:
     # equivalent in behaviour to the prod k8s gateway configuration,
     # routes /api/* to the api server and everything else to the ui
-    image: nginx@sha256:6d3fa425bf88bf74e0cc8cd1965c369406a447cfba3a73608879ed3ec86d273d
+    image: nginx@sha256:b5d3f3e104699f0768e5ca8626914c16e52647943c65274d8a9e63072bd015bb
     tty: ${DOCKER_TTY:-true}
     restart: always
     networks:
