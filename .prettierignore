@@ -10,5 +10,5 @@ kubernetes/**/*.enc.yaml
 # generated (by lingui)
 ui/src/i18n/locales
 
-# not to be maintained or edited by us, comes from https://github.com/mongodb/mongodb-kubernetes-operator
-kubernetes/mongodb-operator/operator
+# not to be maintained or edited by us
+kubernetes/clusters/gke/flux-system/gotk-components.yaml
