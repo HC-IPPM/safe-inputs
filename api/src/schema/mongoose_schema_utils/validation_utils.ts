@@ -49,52 +49,6 @@ const validation_error_string_to_messages_by_lang = (
   }
 };
 
-export const get_validation_errors = async <ModelInterface>(
-  Model: Model<ModelInterface>,
-  input: PartialDeep<ModelInterface>,
-  paths_to_validate: string[],
-) => {
-  try {
-    const dummy_instance = new Model(input);
-    await Model.validate(dummy_instance, paths_to_validate);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error instanceof MongooseError.ValidationError) {
-      return _.chain(error.errors)
-        .mapValues((error) =>
-          validation_error_string_to_messages_by_lang(error.message),
-        )
-        .map((validation_messages, path_string) => {
-          const reversed_path_keys = _.chain(path_string)
-            .split('.')
-            .reverse()
-            .value();
-
-          type ValidationMessagesByExpandedPath = {
-            [key_in_path: string]:
-              | ValidationMessagesByExpandedPath
-              | ValidationMessagesByLang;
-          };
-
-          return _.reduce(
-            _.tail(reversed_path_keys),
-            (accumulator, key_in_path) => ({ [key_in_path]: accumulator }),
-            {
-              [_.head(reversed_path_keys) as string]: validation_messages,
-            } as ValidationMessagesByExpandedPath,
-          );
-        })
-        .thru((validation_messages_by_path_expanded) =>
-          _.merge({}, ...validation_messages_by_path_expanded),
-        )
-        .value();
-    } else {
-      throw error;
-    }
-  }
-};
-
 export type ValidatorFunction<SchemaDefType, ModelInterface> = (
   value: SchemaDefType,
   validation_props?: ValidatorProps,
@@ -145,3 +99,53 @@ export const make_validation_mixin = <SchemaDefType, ModelInterface>(
     message: (validation_props) => validation_props.reason?.message || '',
   },
 });
+
+export const get_validation_errors = async <ModelInterface>(
+  Model: Model<ModelInterface>,
+  input: PartialDeep<ModelInterface>,
+  paths_to_validate: string[],
+) => {
+  try {
+    // WARNING: where subdocument arrays exist (nested in the model schema itself, arrays of foreign id refs are fine)
+    // mongoose validation doesn't distinguish between the subdocument source of a given error! This can totally ruin our
+    // approach of defining user input validation rules at the schema validation level, as any sibling subdocuments in the DB
+    // with existing errors will be spitting out their errors when we try to validate new sibling entries...
+    // MUST discourage the use of subdocument arrays, normalize and use make_foreign_id_ref_schema_def instead. Ugh
+    await Model.validate(new Model(input), paths_to_validate);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error instanceof MongooseError.ValidationError) {
+      return _.chain(error.errors)
+        .mapValues((error) =>
+          validation_error_string_to_messages_by_lang(error.message),
+        )
+        .map((validation_messages, path_string) => {
+          const reversed_path_keys = _.chain(path_string)
+            .split('.')
+            .reverse()
+            .value();
+
+          type ValidationMessagesByExpandedPath = {
+            [key_in_path: string]:
+              | ValidationMessagesByExpandedPath
+              | ValidationMessagesByLang;
+          };
+
+          return _.reduce(
+            _.tail(reversed_path_keys),
+            (accumulator, key_in_path) => ({ [key_in_path]: accumulator }),
+            {
+              [_.head(reversed_path_keys) as string]: validation_messages,
+            } as ValidationMessagesByExpandedPath,
+          );
+        })
+        .thru((validation_messages_by_path_expanded) =>
+          _.merge({}, ...validation_messages_by_path_expanded),
+        )
+        .value();
+    } else {
+      throw error;
+    }
+  }
+};

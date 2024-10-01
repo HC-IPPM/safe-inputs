@@ -45,20 +45,9 @@ import {
 } from './CollectionModel.ts';
 import type {
   CollectionDocument,
-  CollectionDefInterface,
   RecordInterface,
   RecordDocument,
 } from './CollectionModel.ts';
-
-const make_collection_def_scalar_resolver =
-  <Key extends keyof CollectionDocument['collection_def']>(key: Key) =>
-  (
-    parent: CollectionDocument,
-    _args: unknown,
-    _context: unknown,
-    _info: unknown,
-  ) =>
-    parent.collection_def[key];
 
 type CollectionLevelAuthzRule = (
   user: Express.User,
@@ -80,7 +69,7 @@ const user_is_owner_of_collection: CollectionLevelAuthzRule = (
   typeof collection !== 'undefined' &&
   user_can_be_collection_owner(user) &&
   (check_authz_rules(user, user_email_is_super_user_rule) ||
-    _.chain(collection.collection_def.owners)
+    _.chain(collection.owners)
       .map(_.toString)
       .includes(user.mongoose_doc!._id.toString())
       .value());
@@ -90,7 +79,7 @@ const user_is_uploader_for_collection: CollectionLevelAuthzRule = (
   collection,
 ) =>
   typeof collection !== 'undefined' &&
-  _.chain(collection.collection_def.uploaders)
+  _.chain(collection.uploaders)
     .map(_.toString)
     .includes(user.mongoose_doc!._id.toString())
     .value() &&
@@ -99,7 +88,7 @@ const user_is_uploader_for_collection: CollectionLevelAuthzRule = (
 const user_can_view_collection: CollectionLevelAuthzRule = (user, collection) =>
   typeof collection !== 'undefined' &&
   (user_is_owner_of_collection(user, collection) ||
-    (!collection.collection_def.is_locked &&
+    (!collection.is_locked &&
       user_is_uploader_for_collection(user, collection)));
 
 const user_can_upload_to_collection: CollectionLevelAuthzRule = (
@@ -127,7 +116,7 @@ const user_can_view_records: CollectionLevelAuthzRule = (
   ) &&
   user_can_view_collection(user, collection) &&
   (user_is_owner_of_collection(user, collection) ||
-    (!collection.collection_def.is_locked &&
+    (!collection.is_locked &&
       user_is_uploader_for_collection(user, collection) &&
       _.every(
         records,
@@ -528,9 +517,6 @@ export const CollectionSchema = makeExecutableSchema({
             user_can_edit_collection,
           );
 
-          // TODO get_validation_errors effectively flattens and merges the error results for
-          // fields like column_defs... have to assume columns already in the database are error
-          // free for now
           const model_validation_errors = await get_validation_errors(
             CollectionModel,
             {
@@ -809,30 +795,12 @@ export const CollectionSchema = makeExecutableSchema({
 
     Collection: {
       id: resolve_document_id,
-      ...Object.fromEntries(
-        // key array declared `as const` to preserve key string literals for the map function's type checking
-        (
-          [
-            'name_en',
-            'name_fr',
-            'description_en',
-            'description_fr',
-            'is_locked',
-          ] as const
-        ).map((key) => [key, make_collection_def_scalar_resolver(key)]),
-      ),
       name: (
         parent: CollectionDocument,
         args: { lang: LangsUnion },
         context: unknown,
         info: unknown,
-      ) =>
-        resolve_lang_suffixed_scalar('name')(
-          parent.collection_def,
-          args,
-          context,
-          info,
-        ),
+      ) => resolve_lang_suffixed_scalar('name')(parent, args, context, info),
       description: (
         parent: CollectionDocument,
         args: { lang: LangsUnion },
@@ -840,7 +808,7 @@ export const CollectionSchema = makeExecutableSchema({
         info: unknown,
       ) =>
         resolve_lang_suffixed_scalar('description')(
-          parent.collection_def,
+          parent,
           args,
           context,
           info,
@@ -871,7 +839,7 @@ export const CollectionSchema = makeExecutableSchema({
         _info: unknown,
       ) =>
         UserByIdLoader.loadMany(
-          parent.collection_def.owners.map((object_id) => object_id.toString()),
+          parent.owners.map((object_id) => object_id.toString()),
         ),
       uploaders: (
         parent: CollectionDocument,
@@ -879,12 +847,10 @@ export const CollectionSchema = makeExecutableSchema({
         _context: unknown,
         _info: unknown,
       ) =>
-        typeof parent.collection_def.uploaders === 'undefined'
+        typeof parent.uploaders === 'undefined'
           ? []
           : UserByIdLoader.loadMany(
-              parent.collection_def.uploaders.map((object_id) =>
-                object_id.toString(),
-              ),
+              parent.uploaders.map((object_id) => object_id.toString()),
             ),
       record: resolver_with_authz(
         async (

@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import _ from 'lodash';
 
 import { Schema, model, Types } from 'mongoose';
-import type { HydratedDocument } from 'mongoose';
+import type { HydratedDocument, PopulatedDoc } from 'mongoose';
 
 import { db_transaction } from 'src/db.ts';
 
@@ -36,6 +36,7 @@ import {
 } from 'src/schema/mongoose_schema_utils/validators.ts';
 
 interface ConditionInterface {
+  recordset_key: string;
   condition_type: string; // TODO this will be an enum once condition types are formalized
   parameters?: string[];
 }
@@ -54,32 +55,21 @@ const ConditionSchema = new Schema<ConditionInterface>({
     },
   ],
 });
+export const ConditionModel = model('Condition', ConditionSchema);
+export type ConditionDocument = HydratedDocument<ConditionInterface>;
 
 interface ColumnDefInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
+  recordset_key: string;
   header: string;
   data_type: string; // TODO this will be an enum once column types are formalized
-  conditions: ConditionInterface[];
+  conditions: PopulatedDoc<ConditionDocument>[];
 }
 const ColumnDefSchema = new Schema<ColumnDefInterface>({
-  ...make_lang_suffixed_schema_defs('name', {
-    ...string_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    ...make_validation_mixin(
-      make_string_min_length_validator(4),
-      make_string_max_length_validator(150),
-    ),
-    immutable: true,
-  }),
-  ...make_lang_suffixed_schema_defs('description', {
-    ...string_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    ...make_validation_mixin(
-      make_string_min_length_validator(4),
-      make_string_max_length_validator(3000),
-    ),
-    immutable: true,
+  recordset_key: make_foreign_key_schema_def('Collection', String, {
+    make_immutable: true,
+    make_index: true,
   }),
   header: {
     ...string_type_schema_def_mixin,
@@ -87,21 +77,25 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
     ...make_validation_mixin<string, ColumnDefInterface>(
       make_string_min_length_validator(1),
       make_string_max_length_validator(150),
-      (value, _validation_props, document) => {
-        if (document && '_id' in document) {
-          const parent_collection = document.$parent() as CollectionDocument;
-          return _.filter(
-            parent_collection.column_defs,
-            (sibling_column_def) => sibling_column_def.header === value,
-          ).length > 1
-            ? {
-                en: `A column with header "${value}" already exists on this collection`,
-                fr: 'TODO',
-              }
-            : undefined;
-        }
-      },
     ),
+    ...make_lang_suffixed_schema_defs('name', {
+      ...string_type_schema_def_mixin,
+      ...is_required_schema_def_mixin,
+      ...make_validation_mixin(
+        make_string_min_length_validator(4),
+        make_string_max_length_validator(150),
+      ),
+      immutable: true,
+    }),
+    ...make_lang_suffixed_schema_defs('description', {
+      ...string_type_schema_def_mixin,
+      ...is_required_schema_def_mixin,
+      ...make_validation_mixin(
+        make_string_min_length_validator(4),
+        make_string_max_length_validator(3000),
+      ),
+      immutable: true,
+    }),
     immutable: true,
   },
   data_type: {
@@ -110,17 +104,83 @@ const ColumnDefSchema = new Schema<ColumnDefInterface>({
     // TODO validation
     immutable: true,
   },
-  conditions: [ConditionSchema],
+  conditions: [
+    make_foreign_id_ref_schema_def('Condition', {
+      make_immutable: true,
+    }),
+  ],
 });
+ColumnDefSchema.index({ recordset_key: 1, header: 1 }, { unique: true });
+export const ColumnDefModel = model(
+  'ColumnDef',
+  with_uniqueness_validation_plugin(ColumnDefSchema),
+);
+export type ColumnDefDocument = HydratedDocument<ColumnDefInterface>;
 
-export interface CollectionDefInterface
+export const ColumnDefByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(ColumnDefModel, '_id');
+export const ColumnDefsByRecordsetKeyLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    ColumnDefModel,
+    'recordset_key',
+  );
+
+export const ConditionByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(ConditionModel, '_id');
+
+interface CollectionInterface
   extends Record<LangSuffixedKeyUnion<`name`>, string>,
     Record<LangSuffixedKeyUnion<`description`>, string> {
-  owners: Types.ObjectId[];
-  uploaders: Types.ObjectId[];
+  stable_key: string;
+  major_ver: number;
+  minor_ver: number;
+  is_current_version: boolean;
+  created_by: PopulatedDoc<UserDocument>;
+  created_at: number;
   is_locked: boolean;
+  owners: PopulatedDoc<UserDocument>[];
+  uploaders: PopulatedDoc<UserDocument>[];
+  column_defs: PopulatedDoc<ColumnDefDocument>[];
+  recordset_key: string;
 }
-const CollectionDefSchema = new Schema<CollectionDefInterface>({
+const CollectionMongooseSchema = new Schema<CollectionInterface>({
+  stable_key: {
+    ...string_type_schema_def_mixin,
+    ...is_required_schema_def_mixin,
+    immutable: true,
+    index: true,
+  },
+  major_ver: {
+    ...number_type_schema_def_mixin,
+    ...is_required_schema_def_mixin,
+    immutable: true,
+    min: 1,
+  },
+  minor_ver: {
+    ...number_type_schema_def_mixin,
+    ...is_required_schema_def_mixin,
+    immutable: true,
+    min: 0,
+  },
+  recordset_key: {
+    ...string_type_schema_def_mixin,
+    immutable: true,
+    default: function () {
+      return `${this.stable_key}_${this.major_ver}`;
+    },
+  },
+
+  is_current_version: { ...boolean_type_schema_def_mixin, required: true },
+  created_by: make_foreign_id_ref_schema_def('User', {
+    make_immutable: true,
+  }),
+  created_at: created_at_schema_def,
+
+  is_locked: {
+    ...boolean_type_schema_def_mixin,
+    ...is_required_schema_def_mixin,
+    immutable: true,
+  },
   ...make_lang_suffixed_schema_defs('name', {
     ...string_type_schema_def_mixin,
     ...is_required_schema_def_mixin,
@@ -145,68 +205,6 @@ const CollectionDefSchema = new Schema<CollectionDefInterface>({
     }),
   ],
   uploaders: [make_foreign_id_ref_schema_def('User', { make_immutable: true })],
-  is_locked: {
-    ...boolean_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    immutable: true,
-  },
-});
-
-interface CollectionInterface {
-  stable_key: string;
-  major_ver: number;
-  minor_ver: number;
-  is_current_version: boolean;
-  created_by: Types.ObjectId;
-  created_at: number;
-  collection_def: CollectionDefInterface;
-  column_defs: ColumnDefInterface[];
-  recordset_key: string;
-}
-const CollectionMongooseSchema = new Schema<CollectionInterface>({
-  stable_key: {
-    ...string_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    immutable: true,
-    index: true,
-  },
-  major_ver: {
-    ...number_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    immutable: true,
-    min: 1,
-  },
-  minor_ver: {
-    ...number_type_schema_def_mixin,
-    ...is_required_schema_def_mixin,
-    immutable: true,
-    min: 0,
-  },
-  is_current_version: { ...boolean_type_schema_def_mixin, required: true },
-  created_by: make_foreign_id_ref_schema_def('User', {
-    make_immutable: true,
-  }),
-  created_at: created_at_schema_def,
-
-  collection_def: {
-    type: CollectionDefSchema,
-    ...is_required_schema_def_mixin,
-    immutable: true,
-  },
-
-  column_defs: {
-    type: [ColumnDefSchema],
-    requied: true,
-    immutable: true,
-  },
-
-  recordset_key: {
-    ...string_type_schema_def_mixin,
-    immutable: true,
-    default: function () {
-      return `${this.stable_key}_${this.major_ver}`;
-    },
-  },
 });
 CollectionMongooseSchema.index(
   { stable_key: 1, major_ver: 1, minor_ver: 1 },
@@ -214,23 +212,49 @@ CollectionMongooseSchema.index(
 );
 CollectionMongooseSchema.index({
   is_current_version: 1,
-  'collection_def.owners': 1,
+  owners: 1,
 });
 CollectionMongooseSchema.index({
   is_current_version: 1,
-  'collection_def.uploaders': 1,
+  uploaders: 1,
 });
-
 export const CollectionModel = model(
   'Collection',
   with_uniqueness_validation_plugin(CollectionMongooseSchema),
 );
 export type CollectionDocument = HydratedDocument<CollectionInterface>;
 
+export const CollectionByIdLoader =
+  create_dataloader_for_resource_by_primary_key_attr(CollectionModel, '_id');
+export const CollectionByRecordsetKeyLoader =
+  create_dataloader_for_resource_by_primary_key_attr(
+    CollectionModel,
+    'recordset_key',
+  );
+export const CurrentCollectionsByOwnersLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    CollectionModel,
+    'owners',
+    {
+      constraints: { is_current_version: true },
+    },
+  );
+export const CurrentCollectionsByUploadersLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    CollectionModel,
+    'uploaders',
+    { constraints: { is_current_version: true } },
+  );
+export const AllCollectionVersionsByStableKeyLoader =
+  create_dataloader_for_resources_by_foreign_key_attr(
+    CollectionModel,
+    'stable_key',
+  );
+
 export interface RecordInterface {
   recordset_key: string;
   data: Record<string, any>;
-  created_by: Types.ObjectId;
+  created_by: PopulatedDoc<UserDocument>;
   created_at: number;
 }
 const RecordMongooseSchema = new Schema<RecordInterface>({
@@ -245,47 +269,19 @@ const RecordMongooseSchema = new Schema<RecordInterface>({
   created_at: created_at_schema_def,
 });
 RecordMongooseSchema.index({ recordset_key: 1, created_by: 1 });
-
 export const RecordModel = model(
   'Record',
   with_uniqueness_validation_plugin(RecordMongooseSchema),
 );
 export type RecordDocument = HydratedDocument<RecordInterface>;
 
-export const CollectionByIdLoader =
-  create_dataloader_for_resource_by_primary_key_attr(CollectionModel, '_id');
-
-export const CurrentCollectionsByOwnersLoader =
-  create_dataloader_for_resources_by_foreign_key_attr(
-    CollectionModel,
-    'collection_def.owners',
-    {
-      constraints: { is_current_version: true },
-    },
-  );
-
-export const CurrentCollectionsByUploadersLoader =
-  create_dataloader_for_resources_by_foreign_key_attr(
-    CollectionModel,
-    'collection_def.uploaders',
-    { constraints: { is_current_version: true } },
-  );
-
-export const AllCollectionVersionsByStableKeyLoader =
-  create_dataloader_for_resources_by_foreign_key_attr(
-    CollectionModel,
-    'stable_key',
-  );
-
 export const RecordByIdLoader =
   create_dataloader_for_resource_by_primary_key_attr(RecordModel, '_id');
-
 export const RecordsByRecordsetKeyLoader =
   create_dataloader_for_resources_by_foreign_key_attr(
     RecordModel,
     'recordset_key',
   );
-
 export const make_records_created_by_user_loader_with_recordset_constraint = (
   recordset_key: string,
 ) =>
@@ -322,12 +318,10 @@ export function validate_record_data_against_column_defs(
 }
 
 export const are_new_column_defs_compatible_with_current_records = async (
-  collection: CollectionDocument,
+  recordset_key: string,
   new_column_defs: ColumnDefInterface[],
 ) => {
-  const records = await RecordsByRecordsetKeyLoader.load(
-    collection.recordset_key,
-  );
+  const records = await RecordsByRecordsetKeyLoader.load(recordset_key);
 
   return validate_record_data_against_column_defs(
     new_column_defs,
@@ -448,9 +442,15 @@ export const update_collection_column_defs = async (
     created_by,
   };
 
+  const current_column_defs = await ColumnDefByIdLoader.loadMany(
+    current_collection.column_defs.map((object_id) => object_id.toString()),
+  );
+
+  // TODO check for... something, uh, I had the start of a conditional on _.any here before the weekend, but forgot what I was coding
+
   const new_column_defs = is_new_column
-    ? [...current_collection.column_defs, new_column_def_with_meta]
-    : _.map(current_collection.column_defs, (existing_column_def) =>
+    ? [...current_column_defs, new_column_def_with_meta]
+    : _.map(current_column_defs, (existing_column_def) =>
         existing_column_def.header !== new_column_def_with_meta.header
           ? existing_column_def
           : new_column_def_with_meta,
@@ -458,7 +458,7 @@ export const update_collection_column_defs = async (
 
   const is_update_a_breaking_change =
     await are_new_column_defs_compatible_with_current_records(
-      current_collection,
+      current_collection.recordset_key,
       new_column_defs,
     );
 
@@ -484,7 +484,9 @@ export const insert_records = async (
   data: Record<string, any>[],
   user: UserDocument,
 ) => {
-  if (!validate_record_data_against_column_defs(collection.column_defs, data)) {
+  if (
+    !validate_record_data_against_column_defs(collection.recordset_key, data)
+  ) {
     throw new AppError(400, 'Record validation failed');
   }
 
