@@ -73,10 +73,17 @@ export async function processAxeReport(allResults) {
   };
 
   // Save the results to a file named axe_results_{timestamp}.json
-  const filename = `ci_axe_results_${timestamp}.json`;
+
+  const resultsDir = './axe-results'
+  if(!fs.existsSync(resultsDir)){
+    fs.mkdirSync(resultsDir)
+  }
+  const filename = `./axe-results/ci_axe_results_${timestamp}.json`; 
+  // const filename = `/app/results/ci_axe_results_${timestamp}.json`; // to docker container 
   fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
 
   console.log(`Results saved to ${filename}`);
+  console.log(`'****************current dir ${process.cwd()}`);
 
   return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
 }
