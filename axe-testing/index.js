@@ -1,11 +1,12 @@
-import { getPages } from './src/get-url-slugs.js';
+// import { getPages } from './src/get-url-slugs.js';
 import { processAxeReport } from './src/process-axe-report.js';
 import puppeteer from 'puppeteer';
-import { AxePuppeteer } from 'axe-puppeteer';
+import { AxePuppeteer } from '@axe-core/puppeteer';
 import fs from 'fs';
-import 'dotenv-safe/config.js';
+// import 'dotenv-safe/config.js';
 
-const { ROOT_URL } = process.env;
+// const { ROOT_URL } = process.env;
+const ROOT_URL = 'http://127.0.0.1:8080/';
 const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
 const blacklistUrls = config.blacklistUrls || [];
 console.log('Blacklist URLs:', blacklistUrls);
@@ -17,8 +18,9 @@ console.log('Blacklist URLs:', blacklistUrls);
 
   // Launch the browser
   const browser = await puppeteer.launch({
-    // headless: false,
-    headless: true,
+    headless: false,
+    // headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
   const page = await browser.newPage();
@@ -41,27 +43,18 @@ console.log('Blacklist URLs:', blacklistUrls);
   });
 
   // Perform login to move to the next page
-  http: await page.type('#email', 'joe.smith@canada.ca'); // email field
+  http: await page.type('#email', 'joe.smith@phac-aspc.gc.ca'); // email field
   await page.click(
     '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > div > form > button', // login button selector
   );
 
-  // Bypass authentication in dev environment by clicking the link
-  await page.waitForXPath(
-    "//a[contains(text(), 'Or click here to complete authentication')]",
-    { timeout: 5000 },
-  );
-  const [link] = await page.$x(
-    "//a[contains(text(), 'Or click here to complete authentication')]",
-  );
 
-  if (link) {
-    await link.click();
-    console.log('Link clicked');
-  } else {
-    console.log('Link not found');
-    return; // Exit if the link is not found
-  }
+  // Bypass authentication in the dev environment
+  const textSelector = await page
+    .locator('text/Or click here to complete authentication')
+    .waitHandle();
+
+  textSelector.click()
 
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
 
