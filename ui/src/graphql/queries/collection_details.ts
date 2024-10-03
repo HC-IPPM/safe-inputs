@@ -30,6 +30,7 @@ const COLLECTION_DETAILS = gql`
         email
       }
       column_defs {
+        id
         header
         name(lang: $lang)
         data_type
@@ -68,7 +69,7 @@ export type CollectionDetailsResult = {
   } & {
     column_defs: Pick<
       ColumnDef,
-      'header' | 'name' | 'data_type' | 'conditions' | '__typename'
+      'id' | 'header' | 'name' | 'data_type' | 'conditions' | '__typename'
     >[];
   };
 };

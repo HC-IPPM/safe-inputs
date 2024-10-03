@@ -150,15 +150,15 @@ const HomeDynamic = memo(function HomeDynamic({
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && data?.session === null) {
+  if (error) {
+    throw error;
+  } else if (!loading && data?.session === null) {
     navigate(
       get_sign_in_path({
         post_auth_redirect: '',
         message: 'SessionRequired',
       }),
     );
-  } else if (error) {
-    throw error;
   } else {
     return (
       <LoadingBlock isLoading={loading} flexDir={'column'}>

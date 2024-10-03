@@ -100,10 +100,12 @@ services:
       - ./api/.env.dev-public:/home/node-dev/project/.env
     entrypoint:
       - ../node-dev-entrypoint.once.sh
-    command: npm run seed-dev-data
+    command: npm run seed-dev-data:${DOCKER_API_COMMAND:-docker} # 'docker' or 'docker-debug'
     networks:
       - db-internal
       - host-loopback
+    ports:
+      - 9228:9228 # for the node debug server, when active
     depends_on:
       - db
 

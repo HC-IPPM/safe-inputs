@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 
 import type { CollectionWithColumnDetailsResult } from 'src/graphql/index.ts';
 import {
+  useCollumnDefCreation,
   useCollumnDefUpdate,
   useLazyColumnDefInputValidation,
 } from 'src/graphql/index.ts';
@@ -31,16 +32,17 @@ import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
 import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
 interface ColumnManagementFormProps {
-  collection_id: string;
-  initial_column_state?: CollectionWithColumnDetailsResult['collection']['column_defs'][number];
+  collectionId: string;
+  columnId?: string;
+  initialColumnState?: CollectionWithColumnDetailsResult['collection']['column_defs'][number];
 }
 
 export const ColumnManagementForm = function ({
-  collection_id,
-  initial_column_state,
+  collectionId,
+  columnId,
+  initialColumnState,
 }: ColumnManagementFormProps) {
-  const column_header = initial_column_state?.header;
-  const is_new_column = typeof column_header === 'undefined';
+  const is_new_column = typeof columnId === 'undefined';
 
   const toast = useToast();
 
@@ -50,33 +52,52 @@ export const ColumnManagementForm = function ({
     i18n: { locale },
   } = useLingui();
 
+  const [createColumnDefs, { loading: creationLoading, error: creationError }] =
+    useCollumnDefCreation();
+
   const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
     useCollumnDefUpdate();
 
+  const mutationLoading = is_new_column ? creationLoading : updateLoading;
+  const mutationError = is_new_column ? creationError : updateError;
+
   // Errors during column def updates are captured by the error state of the mutation
   const onSubmit = async (formData: ColumnDefInput) => {
-    const response = await updateColumnDefs({
-      variables: {
-        collection_id,
-        is_new_column,
-        column_def: formData,
-      },
-    });
+    const id = await (async () => {
+      if (is_new_column) {
+        const response = await createColumnDefs({
+          variables: {
+            collection_id: collectionId,
+            column_def: formData,
+          },
+        });
 
-    if (response.data) {
-      const { id } = response.data.update_column_def;
-      if (!id) {
-        throw Error(t`Missing ID for updated collection`);
+        return response?.data?.create_column_def?.id;
+      } else {
+        const response = await updateColumnDefs({
+          variables: {
+            collection_id: collectionId,
+            column_id: columnId,
+            column_def: formData,
+          },
+        });
+
+        return response?.data?.update_column_def?.id;
       }
-      toast({
-        title: <Trans>Collection Updated</Trans>,
-        description: <Trans>The collection has been updated</Trans>,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      navigate(`/manage-collection/${id}`);
+    })();
+
+    if (!id) {
+      throw Error(t`Missing ID for updated collection`);
     }
+
+    toast({
+      title: <Trans>Collection Updated</Trans>,
+      description: <Trans>The collection has been updated</Trans>,
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+    navigate(`/manage-collection/${id}`);
   };
 
   const [
@@ -87,7 +108,7 @@ export const ColumnManagementForm = function ({
     async (form_data: ColumnDefInput) => {
       const result = await lazyColumnDefInputValidation({
         variables: {
-          collection_id,
+          collection_id: collectionId,
           is_new_column,
           ...form_data,
         },
@@ -120,7 +141,7 @@ export const ColumnManagementForm = function ({
     formState: { errors },
   } = useForm<ColumnDefInput>({
     defaultValues:
-      typeof initial_column_state === 'undefined'
+      typeof initialColumnState === 'undefined'
         ? {
             header: '',
             name_en: '',
@@ -130,7 +151,7 @@ export const ColumnManagementForm = function ({
             data_type: '',
             conditions: [],
           }
-        : _.omit(initial_column_state, '__typename'),
+        : _.omit(initialColumnState, '__typename', 'id'),
     resolver: debounced_form_validation,
     mode: 'onChange',
   });
@@ -250,9 +271,9 @@ export const ColumnManagementForm = function ({
         </FormControl>
 
         <Button
-          isLoading={updateLoading || validationLoading}
+          isLoading={mutationLoading || validationLoading}
           loadingText={
-            updateLoading
+            mutationLoading
               ? t`Form is submitting, please wait`
               : validationLoading
                 ? t`Form is validating, please wait`
@@ -264,7 +285,7 @@ export const ColumnManagementForm = function ({
         >
           {!is_valid ? t`Form contains validation errors` : t`Submit`}
         </Button>
-        {updateError && <GraphQLErrorDisplay error={updateError} />}
+        {mutationError && <GraphQLErrorDisplay error={mutationError} />}
         {validationError && <GraphQLErrorDisplay error={validationError} />}
       </VStack>
     </form>

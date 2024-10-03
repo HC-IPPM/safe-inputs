@@ -2,6 +2,8 @@ import _ from 'lodash';
 
 import type { Document } from 'mongoose';
 
+import type { Paths } from 'type-fest';
+
 import { user_is_authenticated } from 'src/authn.ts';
 import { apply_rules_to_user, user_email_allowed_rule } from 'src/authz.ts';
 import type { AuthzRule } from 'src/authz.ts';
@@ -83,3 +85,13 @@ export const resolver_with_authz =
       throw app_error_to_gql_error(error);
     }
   };
+
+// Using a trick with an outer no-op function layer to achieve partial type argument inference,
+// a long-missing feature in TypeScript https://github.com/microsoft/TypeScript/issues/26242.
+// It creates some ugly syntax where calling this function looks like `make_nested_scalar_resolver<SomeDocument>()("top_level_key", "key")`,
+// but it gives proper type checking
+export const make_scalar_resolver_by_path =
+  <Document>() =>
+  <Path extends Paths<Document>>(path: Path) =>
+  (parent: Document, _args: unknown, _context: unknown, _info: unknown) =>
+    _.get(parent, path);
