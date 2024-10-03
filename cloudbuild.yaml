@@ -29,17 +29,19 @@ steps:
 
   - id: 'Build axe scanning container'
     name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'axe', './axe-testing'] 
+    args: ['build', '-t', 'axe', './axe-testing']
 
   - id: 'Run axe scan'
     name: 'gcr.io/cloud-builders/docker'
     args: [
-      'run',
-      '--network', 'host', # Use the host network to access the dev environment
-      '--rm',
-      '--volume', '/workspace/axe-results:/app/axe-results',  
-      'axe',
-    ]
+        'run',
+        '--network',
+        'host', # Use the host network to access the dev environment
+        '--rm',
+        '--volume',
+        '/workspace/axe-results:/app/axe-results',
+        'axe',
+      ]
 
     # Upload results to Google Cloud Storage
   - id: 'Upload results to GCS'
@@ -50,7 +52,6 @@ steps:
       - |
         gsutil cp /workspace/axe-results/ci_axe_results_*.json \
         gs://safe-inputs-axe-ci-results/
-
 
   - id: 'Tear down axe container'
     name: 'gcr.io/cloud-builders/docker'
@@ -70,5 +71,3 @@ steps:
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-
-

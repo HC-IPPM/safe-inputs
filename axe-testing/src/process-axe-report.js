@@ -44,10 +44,10 @@ export async function processAxeReport(allResults) {
       .filter((violation) => violation.impact === 'serious')
       .map((violation) => violation.id);
 
-      if (seriousViolationIds.length > 0) {
-        // Include the serious impact violation IDs with each URL
-        urlsWithSeriousImpact.push(url, seriousViolationIds);
-      }
+    if (seriousViolationIds.length > 0) {
+      // Include the serious impact violation IDs with each URL
+      urlsWithSeriousImpact.push(url, seriousViolationIds);
+    }
 
     // // Check if there are violations with serious impact
     // const hasSeriousImpact = filteredViolations.some(
@@ -58,7 +58,7 @@ export async function processAxeReport(allResults) {
     // }
   }
 
-// REPORT 
+  // REPORT
   // Generate a timestamp
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Replaces colons and periods with dashes to make it file-safe
 
@@ -74,12 +74,12 @@ export async function processAxeReport(allResults) {
 
   // Save the results to a file named axe_results_{timestamp}.json
 
-  const resultsDir = './axe-results'
-  if(!fs.existsSync(resultsDir)){
-    fs.mkdirSync(resultsDir)
+  const resultsDir = './axe-results';
+  if (!fs.existsSync(resultsDir)) {
+    fs.mkdirSync(resultsDir);
   }
-  const filename = `./axe-results/ci_axe_results_${timestamp}.json`; 
-  // const filename = `/app/results/ci_axe_results_${timestamp}.json`; // to docker container 
+  const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
+  // const filename = `/app/results/ci_axe_results_${timestamp}.json`; // to docker container
   fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
 
   console.log(`Results saved to ${filename}`);

@@ -48,13 +48,12 @@ console.log('Blacklist URLs:', blacklistUrls);
     '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > div > form > button', // login button selector
   );
 
-
   // Bypass authentication in the dev environment
   const textSelector = await page
     .locator('text/Or click here to complete authentication')
     .waitHandle();
 
-  textSelector.click()
+  textSelector.click();
 
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
 

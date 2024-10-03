@@ -17,5 +17,4 @@ change to format on save, and on paste
 https://marketplace.visualstudio.com/items?itemName=deque-systems.vscode-axe-linter&ssr=false#review-details
 ctrl shift p: ext install deque-systems.vscode-axe-linter
 
-
-gcloud builds submit 
+gcloud builds submit
