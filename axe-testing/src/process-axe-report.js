@@ -36,17 +36,47 @@ export async function processAxeReport(allResults) {
 
     // Check if there are any violations left after filtering
     if (filteredViolations.length > 0) {
-      urlsWithViolations.push(url);
+      urlsWithViolations.push(url, violationIds);
     }
 
-    // Check if there are violations with serious impact
-    const hasSeriousImpact = filteredViolations.some(
-      (violation) => violation.impact === 'serious',
-    );
-    if (hasSeriousImpact) {
-      urlsWithSeriousImpact.push(url);
-    }
+    // Extract serious violations and their IDs
+    const seriousViolationIds = filteredViolations
+      .filter((violation) => violation.impact === 'serious')
+      .map((violation) => violation.id);
+
+      if (seriousViolationIds.length > 0) {
+        // Include the serious impact violation IDs with each URL
+        urlsWithSeriousImpact.push(url, seriousViolationIds);
+      }
+
+    // // Check if there are violations with serious impact
+    // const hasSeriousImpact = filteredViolations.some(
+    //   (violation) => violation.impact === 'serious',
+    // );
+    // if (hasSeriousImpact) {
+    //   urlsWithSeriousImpact.push(url, iolationIds);
+    // }
   }
+
+// REPORT 
+  // Generate a timestamp
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Replaces colons and periods with dashes to make it file-safe
+
+  // Prepare the result object
+  const result = {
+    exemptedViolationIds: config.ignoreViolations || [],
+    exemptedIncompleteIds: config.ignoreIncomplete || [],
+    exemptedUrls: config.blacklistUrls || [],
+    urlsWithViolations,
+    urlsWithSeriousImpact,
+    fullResults: filteredResults,
+  };
+
+  // Save the results to a file named axe_results_{timestamp}.json
+  const filename = `ci_axe_results_${timestamp}.json`;
+  fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
+
+  console.log(`Results saved to ${filename}`);
 
   return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
 }
