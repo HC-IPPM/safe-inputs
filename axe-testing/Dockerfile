@@ -29,15 +29,21 @@ RUN apt-get update && apt-get install gnupg wget -y && \
   apt-get install google-chrome-stable -y --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
+# RUN groupadd puppeteer && useradd -r -g puppeteer -G audio,video puppeteer
+
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm ci
 
 # COPY . . 
-COPY ./.env ./.env.example ./
+# COPY ./.env ./.env.example ./
+COPY ./whitelist-config.json .
 COPY ./src ./src
 COPY ./index.js .
+
+# # Change ownership of the app directory and switch to non-root user
+# RUN chown -R puppeteer:puppeteer /app
+# USER puppeteer
 
 CMD ["npm", "--no-update-notifier", "start"]
