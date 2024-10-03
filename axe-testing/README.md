@@ -1,8 +1,12 @@
 To run cloudbuild
 
-sudo apt-get install google-cloud-cli-cloud-build-local
+<!-- sudo apt-get install google-cloud-cli-cloud-build-local -->
 gcloud auth login
-cloud-build-local --config=cloudbuild.yaml --dryrun=false .
+
+<!-- cloud-build-local --config=cloudbuild.yaml --dryrun=false .
+ -->
+
+  gcloud builds submit --region=BUILD_REGION
 
 Using Axe-core wth puppeteer
 
