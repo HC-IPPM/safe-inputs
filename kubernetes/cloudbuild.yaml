@@ -37,7 +37,7 @@ steps:
       /tmp/resources.yaml
 
   - id: Validate compliance
-    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2704230eb55dee777204f0ca203862f337f7cd1337e324c151f950b3f63f0e0e'
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:0b0381d44772d8ae768a757528a39c94c4bf15a0a56cb6e2c9b932caa383f27d'
     args:
       - apply
       - ./policies/
