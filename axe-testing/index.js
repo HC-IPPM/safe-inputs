@@ -18,8 +18,8 @@ console.log('Blacklist URLs:', blacklistUrls);
 
   // Launch the browser
   const browser = await puppeteer.launch({
-    headless: false,
-    // headless: true,
+    // headless: false,
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
