@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import type { Document } from 'mongoose';
+import type { Document, HydratedDocument } from 'mongoose';
 
 import type { Paths } from 'type-fest';
 
@@ -75,25 +75,32 @@ export const resolver_with_authz =
 
 // Using a trick with an outer no-op function layer to achieve partial type argument inference,
 // a long-missing feature in TypeScript https://github.com/microsoft/TypeScript/issues/26242.
-// It creates some ugly syntax where calling this function looks like `make_nested_scalar_resolver<SomeDocument>()("top_level_key", "key")`,
-// but it gives proper type checking
+// It creates some ugly syntax where calling this function looks like
+// `make_nested_scalar_resolver<SomeDocument>()("top_level_key", "key")`, but
+// it gives proper type checking. Also note that type-fest's `Paths<...>` has poor performance here,
+// so type checking will be slower in any module using this util
 export const make_deep_scalar_resolver =
-  <Document>() =>
-  <Path extends Paths<Document>>(path: Path) =>
-  (parent: Document, _args: unknown, _context: unknown, _info: unknown) =>
+  <DocumentInterface>() =>
+  <Path extends Paths<DocumentInterface>>(path: Path) =>
+  (
+    parent: HydratedDocument<DocumentInterface>,
+    _args: unknown,
+    _context: unknown,
+    _info: unknown,
+  ) =>
     _.get(parent, path);
 
 // Similar to `make_deep_scalar_resolver`, but with slightly more complex typing due to appending lang values to the provided path.
 // The typing complains when we want it to, but with a slightly more opaque error
 export const make_deep_lang_suffixed_scalar_resolver =
-  <Document>() =>
+  <DocumentInterface>() =>
   <UnsuffixedPath extends string>(
-    unsuffixed_path: `${LangSuffixedKeyUnion<UnsuffixedPath>}` extends Paths<Document>
+    unsuffixed_path: `${LangSuffixedKeyUnion<UnsuffixedPath>}` extends Paths<DocumentInterface>
       ? UnsuffixedPath
       : never,
   ) =>
   <ArgsType extends { lang: LangsUnion }>(
-    parent: Document,
+    parent: HydratedDocument<DocumentInterface>,
     args: ArgsType,
     _context: unknown,
     _info: unknown,

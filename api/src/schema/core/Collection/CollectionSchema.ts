@@ -54,6 +54,8 @@ import type {
   RecordInterface,
   RecordDocument,
   ColumnDefDocument,
+  ColumnDefInterface,
+  CollectionInterface,
 } from './CollectionModel.ts';
 
 const user_can_be_collection_owner = (user: Express.User) =>
@@ -925,7 +927,7 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_deep_scalar_resolver<CollectionDocument>()(`data.${key}`),
+          make_deep_scalar_resolver<CollectionInterface>()(`data.${key}`),
         ]),
       ),
       ...Object.fromEntries(
@@ -940,14 +942,14 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_deep_scalar_resolver<CollectionDocument>()(`meta.${key}`),
+          make_deep_scalar_resolver<CollectionInterface>()(`meta.${key}`),
         ]),
       ),
       ...Object.fromEntries(
         // key array declared `as const` to preserve key string literals for the map function's type checking
         (['name', 'description'] as const).map((key) => [
           key,
-          make_deep_lang_suffixed_scalar_resolver<CollectionDocument>()(
+          make_deep_lang_suffixed_scalar_resolver<CollectionInterface>()(
             `data.${key}`,
           ),
         ]),
@@ -1082,14 +1084,14 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_deep_scalar_resolver<ColumnDefDocument>()(`data.${key}`),
+          make_deep_scalar_resolver<ColumnDefInterface>()(`data.${key}`),
         ]),
       ),
       ...Object.fromEntries(
         // key array declared `as const` to preserve key string literals for the map function's type checking
         (['name', 'description'] as const).map((key) => [
           key,
-          make_deep_lang_suffixed_scalar_resolver<ColumnDefDocument>()(
+          make_deep_lang_suffixed_scalar_resolver<ColumnDefInterface>()(
             `data.${key}`,
           ),
         ]),
@@ -1099,7 +1101,7 @@ export const CollectionSchema = makeExecutableSchema({
     Record: {
       id: resolve_document_id,
       created_at:
-        make_deep_scalar_resolver<RecordDocument>()('meta.created_at'),
+        make_deep_scalar_resolver<RecordInterface>()('meta.created_at'),
       created_by: (
         parent: RecordInterface,
         _args: unknown,
