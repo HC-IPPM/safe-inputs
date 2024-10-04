@@ -19,13 +19,12 @@ import {
   get_or_create_users,
 } from 'src/schema/core/User/UserModel.ts';
 import type { UserDocument } from 'src/schema/core/User/UserModel.ts';
-import type { LangsUnion } from 'src/schema/lang_utils.ts';
 import { get_validation_errors } from 'src/schema/mongoose_schema_utils/validation_utils.ts';
 import {
   resolver_with_authz,
   resolve_document_id,
-  resolve_lang_suffixed_scalar,
-  make_scalar_resolver_by_path,
+  make_deep_lang_suffixed_scalar_resolver,
+  make_deep_scalar_resolver,
 } from 'src/schema/resolver_utils.ts';
 
 import {
@@ -926,7 +925,7 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_scalar_resolver_by_path<CollectionDocument>()(`data.${key}`),
+          make_deep_scalar_resolver<CollectionDocument>()(`data.${key}`),
         ]),
       ),
       ...Object.fromEntries(
@@ -941,28 +940,18 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_scalar_resolver_by_path<CollectionDocument>()(`meta.${key}`),
+          make_deep_scalar_resolver<CollectionDocument>()(`meta.${key}`),
         ]),
       ),
-      name: (
-        parent: CollectionDocument,
-        args: { lang: LangsUnion },
-        context: unknown,
-        info: unknown,
-      ) =>
-        resolve_lang_suffixed_scalar('name')(parent.data, args, context, info),
-      description: (
-        parent: CollectionDocument,
-        args: { lang: LangsUnion },
-        context: unknown,
-        info: unknown,
-      ) =>
-        resolve_lang_suffixed_scalar('description')(
-          parent.data,
-          args,
-          context,
-          info,
-        ),
+      ...Object.fromEntries(
+        // key array declared `as const` to preserve key string literals for the map function's type checking
+        (['name', 'description'] as const).map((key) => [
+          key,
+          make_deep_lang_suffixed_scalar_resolver<CollectionDocument>()(
+            `data.${key}`,
+          ),
+        ]),
+      ),
       previous_versions: async (
         parent: CollectionDocument,
         _args: unknown,
@@ -1093,34 +1082,24 @@ export const CollectionSchema = makeExecutableSchema({
           ] as const
         ).map((key) => [
           key,
-          make_scalar_resolver_by_path<ColumnDefDocument>()(`data.${key}`),
+          make_deep_scalar_resolver<ColumnDefDocument>()(`data.${key}`),
         ]),
       ),
-      name: (
-        parent: ColumnDefDocument,
-        args: { lang: LangsUnion },
-        context: unknown,
-        info: unknown,
-      ) =>
-        resolve_lang_suffixed_scalar('name')(parent.data, args, context, info),
-      description: (
-        parent: ColumnDefDocument,
-        args: { lang: LangsUnion },
-        context: unknown,
-        info: unknown,
-      ) =>
-        resolve_lang_suffixed_scalar('description')(
-          parent.data,
-          args,
-          context,
-          info,
-        ),
+      ...Object.fromEntries(
+        // key array declared `as const` to preserve key string literals for the map function's type checking
+        (['name', 'description'] as const).map((key) => [
+          key,
+          make_deep_lang_suffixed_scalar_resolver<ColumnDefDocument>()(
+            `data.${key}`,
+          ),
+        ]),
+      ),
     },
 
     Record: {
       id: resolve_document_id,
       created_at:
-        make_scalar_resolver_by_path<RecordDocument>()('meta.created_at'),
+        make_deep_scalar_resolver<RecordDocument>()('meta.created_at'),
       created_by: (
         parent: RecordInterface,
         _args: unknown,

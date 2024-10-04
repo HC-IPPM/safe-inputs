@@ -19,19 +19,6 @@ export const resolve_document_id = <ParentType extends Document>(
   _info: unknown,
 ) => parent._id;
 
-export const resolve_lang_suffixed_scalar =
-  <Key extends string>(base_field_name: Key) =>
-  <
-    ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any },
-    ArgsType extends { lang: LangsUnion },
-  >(
-    parent: ParentType,
-    args: ArgsType,
-    _context: unknown,
-    _info: unknown,
-  ) =>
-    parent[`${base_field_name}_${args.lang}`];
-
 export const context_has_authenticated_user = <
   Context extends {
     req?: { user?: Express.User | Express.AuthenticatedUser };
@@ -90,8 +77,25 @@ export const resolver_with_authz =
 // a long-missing feature in TypeScript https://github.com/microsoft/TypeScript/issues/26242.
 // It creates some ugly syntax where calling this function looks like `make_nested_scalar_resolver<SomeDocument>()("top_level_key", "key")`,
 // but it gives proper type checking
-export const make_scalar_resolver_by_path =
+export const make_deep_scalar_resolver =
   <Document>() =>
   <Path extends Paths<Document>>(path: Path) =>
   (parent: Document, _args: unknown, _context: unknown, _info: unknown) =>
     _.get(parent, path);
+
+// Similar to `make_deep_scalar_resolver`, but with slightly more complex typing due to appending lang values to the provided path.
+// The typing complains when we want it to, but with a slightly more opaque error
+export const make_deep_lang_suffixed_scalar_resolver =
+  <Document>() =>
+  <UnsuffixedPath extends string>(
+    unsuffixed_path: `${LangSuffixedKeyUnion<UnsuffixedPath>}` extends Paths<Document>
+      ? UnsuffixedPath
+      : never,
+  ) =>
+  <ArgsType extends { lang: LangsUnion }>(
+    parent: Document,
+    args: ArgsType,
+    _context: unknown,
+    _info: unknown,
+  ) =>
+    _.get(parent, `${unsuffixed_path}_${args.lang}`);
