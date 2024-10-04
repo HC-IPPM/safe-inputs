@@ -17,57 +17,5 @@ steps:
     dir: ./
     args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
 
-  # NOTE - this will all move into UI before merging into main - here to experiment and first pass and getting this working
-  - id: 'Spin up docker compose dev enviroment'
-    name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d
-
-  - id: 'Build axe scanning container'
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'axe', './axe-testing']
-
-  - id: 'Run axe scan'
-    name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'run',
-        '--network',
-        'host', # Use the host network to access the dev environment
-        '--rm',
-        '--volume',
-        '/workspace/axe-results:/app/axe-results',
-        'axe',
-      ]
-
-    # Upload results to Google Cloud Storage
-  - id: 'Upload results to GCS'
-    name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-        gs://safe-inputs-axe-ci-results/
-
-  - id: 'Tear down axe container'
-    name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        docker stop axe && docker rm axe
-
-  - id: 'Tear down Docker Compose environment'
-    name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        docker compose -f ./docker-compose.dev.yaml down -v
-
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
