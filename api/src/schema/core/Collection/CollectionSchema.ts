@@ -53,7 +53,6 @@ import type {
   CollectionDocument,
   RecordInterface,
   RecordDocument,
-  ColumnDefDocument,
   ColumnDefInterface,
   CollectionInterface,
 } from './CollectionModel.ts';
