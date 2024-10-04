@@ -7,9 +7,9 @@ const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 console.log('config.ignoreViolations', config.ignoreViolations);
 
 export async function processAxeReport(allResults) {
-  let urlsWithViolations = [];
-  let urlsWithSeriousImpact = [];
-  let filteredResults = [];
+  const urlsWithViolations = [];
+  const urlsWithSeriousImpact = [];
+  const filteredResults = [];
 
   for (const { url, results } of allResults) {
     console.log(`Processing results for ${url}`);
@@ -24,13 +24,13 @@ export async function processAxeReport(allResults) {
     );
 
     // Extract violation IDs for each URL
-    const violationIds = filteredViolations.map((violation) => violation.id); //This is temp to compare with other methods
+    const violationIds = filteredViolations.map((violation) => violation.id); //  This is temp to compare with other methods
 
     // Store the filtered results for the current URL
     filteredResults.push({
       url,
       violations: filteredViolations,
-      violationIds, //This is temp to compare with other methods
+      violationIds, //  This is temp to compare with other methods
       incomplete: filteredIncomplete,
     });
 
@@ -48,14 +48,6 @@ export async function processAxeReport(allResults) {
       // Include the serious impact violation IDs with each URL
       urlsWithSeriousImpact.push(url, seriousViolationIds);
     }
-
-    // // Check if there are violations with serious impact
-    // const hasSeriousImpact = filteredViolations.some(
-    //   (violation) => violation.impact === 'serious',
-    // );
-    // if (hasSeriousImpact) {
-    //   urlsWithSeriousImpact.push(url, iolationIds);
-    // }
   }
 
   // REPORT
@@ -73,17 +65,14 @@ export async function processAxeReport(allResults) {
   };
 
   // Save the results to a file named axe_results_{timestamp}.json
-
   const resultsDir = './axe-results';
   if (!fs.existsSync(resultsDir)) {
     fs.mkdirSync(resultsDir);
   }
   const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
-  // const filename = `/app/results/ci_axe_results_${timestamp}.json`; // to docker container
   fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
 
-  console.log(`Results saved to ${filename}`);
-  console.log(`'****************current dir ${process.cwd()}`);
+  console.log(`\nResults saved to ${filename}`);
 
   return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
 }
