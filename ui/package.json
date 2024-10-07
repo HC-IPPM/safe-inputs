@@ -11,7 +11,8 @@
     "dev": "rspack serve",
     "test": "jest --coverage --coverageReporters text",
     "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate": "graphql-codegen && node postProcess.mts"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
@@ -39,6 +40,8 @@
     "@babel/core": "7.25.2",
     "@babel/preset-react": "7.24.7",
     "@babel/preset-typescript": "7.24.7",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/client-preset": "4.3.3",
     "@lingui/cli": "4.11.4",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
     "@rspack/cli": "1.0.7",

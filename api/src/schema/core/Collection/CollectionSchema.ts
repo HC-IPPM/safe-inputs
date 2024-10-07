@@ -268,13 +268,13 @@ export const CollectionSchema = makeExecutableSchema({
     description_fr: String!
     is_locked: Boolean!
     """
-      \`owner_emails\` array parameter may be empty. The email of the user creating the collection is implicitly included
+      \`owner_emails\` array parameter may be an empty list. The email of the user creating the collection is implicitly included
     """
-    owner_emails: [String]!
+    owner_emails: [String!]!
     """
-      \`uploader_emails\` array parameter may be empty
+      \`uploader_emails\` array parameter may be an empty list.
     """
-    uploader_emails: [String]!
+    uploader_emails: [String!]!
   }
   type CollectionDefValidation {
     name_en: ValidationMessages
