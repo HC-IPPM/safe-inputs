@@ -17,8 +17,7 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  # Accessibility Scan
-  - id: 'Spin up docker compose dev enviroment'
+  - id: 'docker-compose-up-dev-environment-for-axe-testing'
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
@@ -27,11 +26,11 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v && \
         docker compose -f ./docker-compose.dev.yaml up -d
 
-  - id: 'Build axe scanning container'
+  - id: ''build-axe-container'
     name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'axe', './axe-testing']
 
-  - id: 'Run axe scan'
+  - id: 'run-axe-scan'
     name: 'gcr.io/cloud-builders/docker'
     args: [
         'run',
@@ -43,7 +42,7 @@ steps:
         'axe',
       ]
 
-  - id: 'Upload results to Google Cloud Storage bucket'
+  - id: 'upload-axe-results-gcs'
     name: 'gcr.io/cloud-builders/gsutil'
     entrypoint: 'bash'
     args:
@@ -52,7 +51,7 @@ steps:
         gsutil cp /workspace/axe-results/ci_axe_results_*.json \
         gs://safe-inputs-axe-ci-results/
 
-  - id: 'Tear down Docker Compose environment'
+  - id: 'docker-compose-down-dev-environment'
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
@@ -60,7 +59,7 @@ steps:
       - |
         docker compose -f ./docker-compose.dev.yaml down -v
 
-  - id: generate-image-name
+  - id: generate-ui-image-name
     name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
     entrypoint: 'bash'
     dir: ui
