@@ -34,6 +34,7 @@ export type User = {
 };
 
 export type ColumnDef = {
+  id: string;
   header: string;
   name_en: string;
   name_fr: string;
