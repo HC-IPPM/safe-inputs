@@ -1,41 +1,41 @@
-# Debian node base image
-FROM node:18-bullseye
-# FROM node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521 AS build
+FROM node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521 AS build
 
 WORKDIR /app
 
-# We don't need the standalone Chromium
+# We don't need the standalone Chromium for puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-# # Allow Puppeteer to manage browser installation
-# ENV PUPPETEER_CACHE_DIR=/home/puppeteer/.cache/puppeteer
+# Add a default value for HOMEPAGE_URL
+ENV HOMEPAGE_URL="http://127.0.0.1:8080"
+ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium-browser'
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# Install packages (Chromium and dependencies)
+RUN apk update && apk add --no-cache \
+  chromium \
+  nss \
+  freetype \
+  harfbuzz \
+  ca-certificates 
+  # ttf-freefont # only needed if testing fonts - leaving out for now 
 
-# Install Google Chrome Stable and fonts for puppeteer 
-RUN apt-get update && apt-get install gnupg wget -y && \
-  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-  apt-get update && \
-  apt-get install google-chrome-stable -y --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
-
-# #  Add user with UID 1000
-# RUN groupadd puppeteer && useradd -r -u 10000 -g puppeteer -G audio,video puppeteer
-
-# # Ensure /tmp/chrome is writable by non-root user
-# RUN mkdir -p /tmp/chrome && chown -R puppeteer:puppeteer /tmp/chrome
-
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm ci
 
+# Copy the rest of the source code for building
 # COPY ./.env ./.env.example ./
 COPY ./whitelist-config.json .
 COPY ./src ./src
 COPY ./index.js .
 
-# Change switch to non-root user
-# RUN chown -R 1000:1000 /app
-# USER puppeteer
+# Create a non-root user
+RUN addgroup -g 1001 -S puppeteer && adduser -u 1001 -S puppeteer -G puppeteer
 
+# Set ownership of the working directory to puppeteer user
+RUN chown -R puppeteer:puppeteer /app
+
+# Switch to the non-root user 
+USER puppeteer
+
+# Start application
 CMD ["npm", "--no-update-notifier", "start"]
