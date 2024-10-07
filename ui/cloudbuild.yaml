@@ -26,7 +26,7 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v && \
         docker compose -f ./docker-compose.dev.yaml up -d
 
-  - id: ''build-axe-container'
+  - id: build-axe-container
     name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'axe', './axe-testing']
 
@@ -51,7 +51,7 @@ steps:
         gsutil cp /workspace/axe-results/ci_axe_results_*.json \
         gs://safe-inputs-axe-ci-results/
 
-  - id: 'docker-compose-down-dev-environment'
+  - id: docker-compose-down-dev-environment
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
