@@ -65,7 +65,7 @@
     "@types/express-session": "1.18.0",
     "@types/jest": "29.5.13",
     "@types/lodash": "4.17.10",
-    "@types/node": "20.16.10",
+    "@types/node": "20.16.11",
     "@types/passport": "1.0.16",
     "@types/supertest": "6.0.2",
     "@types/ua-parser-js": "0.7.39",
