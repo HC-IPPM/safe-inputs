@@ -402,6 +402,39 @@ export const create_collection = (
   });
 };
 
+const get_updated_collection_meta = (
+  collection_doc: CollectionDocument,
+  updating_user: UserDocument,
+  new_major_ver: number,
+  new_minor_ver: number,
+) => ({
+  stable_key: collection_doc.meta.stable_key,
+  major_ver: new_major_ver,
+  minor_ver: new_minor_ver,
+  is_current_version: true,
+  created_by: updating_user._id,
+});
+const get_updated_collection_meta_minor = (
+  collection_doc: CollectionDocument,
+  updating_user: UserDocument,
+) =>
+  get_updated_collection_meta(
+    collection_doc,
+    updating_user,
+    collection_doc.meta.major_ver,
+    collection_doc.meta.minor_ver + 1,
+  );
+const get_updated_collection_meta_major = (
+  collection_doc: CollectionDocument,
+  updating_user: UserDocument,
+) =>
+  get_updated_collection_meta(
+    collection_doc,
+    updating_user,
+    collection_doc.meta.major_ver + 1,
+    0,
+  );
+
 export const update_collection_def = async (
   user: UserDocument,
   collection_doc: CollectionDocument,
@@ -414,14 +447,7 @@ export const update_collection_def = async (
     const [new_collection_doc] = await CollectionModel.create(
       [
         {
-          meta: {
-            stable_key: collection_doc.meta.stable_key,
-            major_ver: collection_doc.meta.major_ver,
-            minor_ver: collection_doc.meta.minor_ver + 1,
-            is_current_version: true,
-            created_by: user._id,
-          },
-
+          meta: get_updated_collection_meta_minor(collection_doc, user),
           data: updated_collection_data,
         },
       ],
@@ -444,14 +470,7 @@ export const create_column_defs_on_collection = async (
     const [new_collection_doc] = await CollectionModel.create(
       [
         {
-          meta: {
-            stable_key: collection_doc.meta.stable_key,
-            major_ver: collection_doc.meta.major_ver + 1,
-            minor_ver: 0,
-            is_current_version: true,
-            created_by: user._id,
-          },
-
+          meta: get_updated_collection_meta_major(collection_doc, user),
           data: collection_doc.data,
         },
       ],
@@ -490,14 +509,7 @@ export const remove_column_def_from_collection = async (
     const [new_collection_doc] = await CollectionModel.create(
       [
         {
-          meta: {
-            stable_key: collection_doc.meta.stable_key,
-            major_ver: collection_doc.meta.major_ver + 1,
-            minor_ver: 0,
-            is_current_version: true,
-            created_by: user._id,
-          },
-
+          meta: get_updated_collection_meta_major(collection_doc, user),
           data: collection_doc.data,
         },
       ],
@@ -554,21 +566,9 @@ export const update_column_def_on_collection = async (
     const [new_collection_doc] = await CollectionModel.create(
       [
         {
-          meta: {
-            stable_key: collection_doc.meta.stable_key,
-            ...(is_update_a_breaking_change
-              ? {
-                  major_ver: collection_doc.meta.major_ver + 1,
-                  minor_ver: 0,
-                }
-              : {
-                  major_ver: collection_doc.meta.major_ver,
-                  minor_ver: collection_doc.meta.minor_ver + 1,
-                }),
-            is_current_version: true,
-            created_by: user._id,
-          },
-
+          meta: is_update_a_breaking_change
+            ? get_updated_collection_meta_major(collection_doc, user)
+            : get_updated_collection_meta_minor(collection_doc, user),
           data: collection_doc.data,
         },
       ],
