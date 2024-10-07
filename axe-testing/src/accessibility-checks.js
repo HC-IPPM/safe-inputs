@@ -6,9 +6,10 @@
 
 // https://github.com/dequelabs/axe-core-npm/blob/develop/packages/puppeteer/README.md
 
+import fs from 'fs';
+
 import AxePuppeteer from '@axe-core/puppeteer';
 // import puppeteer from 'puppeteer'
-import fs from 'fs';
 
 // Evaluate accessibility for a single url
 export async function evaluateAccessibility(url, page) {
