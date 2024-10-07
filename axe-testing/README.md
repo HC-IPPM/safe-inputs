@@ -26,9 +26,9 @@ npm run dev
 cd axe-testing && npm start
 ```
 
-### Or manualy Triggered Cloud Build
+### Or run by manualy triggering Cloud Build
 
-1. Change the GCP bucket to one in your project in the [ui/cloudbuild.yaml](../ui/cloudbuild.yaml) file.
+1. Change the GCP bucket in the [ui/cloudbuild.yaml](../ui/cloudbuild.yaml) file to one in your project.
 
 2. Authenticate with your GCP project:
 
