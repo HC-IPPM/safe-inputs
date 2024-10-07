@@ -20,7 +20,8 @@ npm ci
 npm run dev
 ```
 
-2. Add a '.env' file in axe-testing 
+2. Add a '.env' file in axe-testing
+
 ```
 echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
 ``
@@ -28,16 +29,23 @@ echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
 3. Run the accessibility scan:
 
 ```
+
 cd axe-testing && npm start
-```
-
-OR run the accessibility scan from the docker container 
 
 ```
+
+OR run the accessibility scan from the docker container
+
+```
+
 docker build -t axe .
+
 ```
+
 ```
+
 docker run --network host axe
+
 ```
 
 ### Or run by manualy triggering Cloud Build
@@ -47,13 +55,17 @@ docker run --network host axe
 2. Authenticate with your GCP project:
 
 ```
+
 gcloud auth login
+
 ```
 
 At the root of the project, run:
 
 ```
+
 gcloud builds submit --config ./ui/cloudbuild.yaml
+
 ```
 
 This will first spin up a Docker Compose development environment, enabling interaction in a non-production setting, with the ability to by-pass the login.
@@ -81,3 +93,4 @@ To bypass specific URLs or violation ids, the [whitelist-config.json](./whitelis
 - Other options (paid) intelligent guided tests into automated workflows for manual testing
   https://www.deque.com/blog/deque-introduces-three-new-features-to-advance-accessibility-test-automation/
   keyboard trap detections
+```

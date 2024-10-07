@@ -11,7 +11,6 @@ dotenv.config();
 // dotenv.config({ example: './.env.example' });
 const { HOMEPAGE_URL } = process.env;
 
-
 const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
 const blacklistUrls = config.blacklistUrls || [];
 console.log('Blacklist URLs:', blacklistUrls);
