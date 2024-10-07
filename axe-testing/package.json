@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@axe-core/puppeteer": "^4.10.0",
-    "dotenv-safe": "^8.2.0",
+    "dotenv": "^16.4.5",
     "puppeteer": "^23.5.0"
   },
   "devDependencies": {
