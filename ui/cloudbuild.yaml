@@ -17,7 +17,7 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  - id: 'docker-compose-up-dev-environment-for-axe-testing'
+  - id: docker-compose-up-dev-environment-for-axe-testing
     name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
@@ -30,7 +30,7 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'axe', './axe-testing']
 
-  - id: 'run-axe-scan'
+  - id: run-axe-scan
     name: 'gcr.io/cloud-builders/docker'
     args: [
         'run',
@@ -42,7 +42,7 @@ steps:
         'axe',
       ]
 
-  - id: 'upload-axe-results-gcs'
+  - id: upload-axe-results-gcs
     name: 'gcr.io/cloud-builders/gsutil'
     entrypoint: 'bash'
     args:
