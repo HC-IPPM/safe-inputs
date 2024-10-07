@@ -349,9 +349,9 @@ export const are_new_column_defs_compatible_with_current_records = async (
 };
 
 const get_unused_collection_stable_key = async () => {
-  // randomUUID uses an entropy cache by default, improves performance but loses entropy after 128 UUIDs.
-  // The check against the database means we can ignore the entropy loss, most likely, but if this becomes
-  // a problem then use `randomUUID({ disableEntropyCache: true })`
+  // entropy should be sufficiently high enough to avoid collisions, even without the `{ disableEntropyCache: true }`
+  // option. Don't really expect to need to make more than one try to get an unused key, but it's not expensive to be
+  // safe here
   const new_stable_key = randomUUID();
 
   const collection_already_using_stable_key = await CollectionModel.findOne({
