@@ -1,10 +1,8 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 
-const GRAPHQL_API_URL =
-  process.env.GRAPHQL_API_URL || 'http://localhost:8080/api/graphql';
-
 const config: CodegenConfig = {
-  schema: GRAPHQL_API_URL,
+  // TODO this is just for the docker env
+  schema: 'http://api:3000/api/graphql', // eslint-disable-line
   documents: ['src/graphql/**/*.ts'],
   verbose: true,
   generates: {

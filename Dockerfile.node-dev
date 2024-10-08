@@ -23,7 +23,7 @@ USER node-dev
 # by creating a placeholder ../node_modules volume in advance. When the host's project dir is mounted
 # down the road this empty container volume will be used regardless.   
 # To make sure the node-dev user can write to the volume, we create a place holder dir first,
-# rhe empty node_modules volume will inherit the permissions from this placeholder.
+# the empty node_modules volume will inherit the permissions from this placeholder.
 RUN mkdir ./node_modules
 VOLUME /home/node-dev/project/node_modules
 
