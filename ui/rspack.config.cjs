@@ -22,7 +22,11 @@ module.exports = {
   },
   resolve: {
     tsConfig: path.resolve(__dirname, './tsconfig.json'),
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    // extensions to assume if none specified, .js, .json, and .wasm are the defaults (and need to be here
+    // for npm package resolutions). We add .ts because graphql-codegen outputs relative imports to generated
+    // .ts files without the file extension specified. Not a practice we wanted to allow, but our eslint configuration
+    // will enforce that we still specifiy extensions in our own code so this is fine
+    extensions: ['.js', '.json', '.wasm', '.ts'],
   },
   plugins: [
     new rspack.HtmlRspackPlugin({
