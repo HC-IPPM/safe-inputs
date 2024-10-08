@@ -29,26 +29,23 @@ echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
 3. Run the accessibility scan:
 
 ```
-
 cd axe-testing && npm start
 
 ```
 
-OR run the accessibility scan from the docker container
+OR run the accessibility scan using Docker container
 
 ```
-
 docker build -t axe .
 
 ```
 
 ```
-
 docker run --network host axe
 
 ```
 
-### Or run by manualy triggering Cloud Build
+### Or in GCP by manualy triggering Cloud Build
 
 1. Change the GCP bucket in the [ui/cloudbuild.yaml](../ui/cloudbuild.yaml) file to one in your project.
 
