@@ -22,7 +22,9 @@ import _ from 'lodash';
 
 import { useEffect } from 'react';
 
+import type { Control, FieldErrors } from 'react-hook-form';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
+
 import { useNavigate } from 'react-router-dom';
 
 import { CollectionDefInput } from 'src/graphql/__generated__/graphql.ts';
@@ -33,11 +35,6 @@ import {
 } from 'src/graphql/index.ts';
 
 import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
-
-interface CollectionFormProps {
-  collection_id?: string;
-  initial_collection_state?: CollectionDefInput;
-}
 
 // useFieldArray needs object values, have to wrap our string arrays in to a collection,
 // and then unwrap them afterwards
@@ -63,6 +60,89 @@ const collection_def_fields_to_input = (
   uploader_emails: _.map(fields.uploader_emails, 'email'),
 });
 
+const EmailForm = ({
+  fieldName,
+  displayName,
+  control,
+  errors,
+}: {
+  control: Control<CollectionDefFields>;
+  errors: FieldErrors<CollectionDefFields>;
+  fieldName: {
+    [Key in keyof CollectionDefFields]: Key extends `${string}_emails`
+      ? Key
+      : never;
+  }[keyof CollectionDefFields];
+  displayName: string;
+}) => {
+  const {
+    fields: email_fields,
+    append: append_email,
+    remove: remove_email,
+  } = useFieldArray({
+    control,
+    name: fieldName,
+  });
+
+  const get_email_field_error = (index: number) =>
+    errors[fieldName] &&
+    errors[fieldName][index] &&
+    typeof errors[fieldName][index]?.email !== 'undefined'
+      ? errors[fieldName][index].email.toString()
+      : undefined;
+
+  return (
+    <>
+      {email_fields.map((field, index) => (
+        <FormControl
+          key={field.id}
+          paddingLeft={8}
+          marginBottom={2}
+          isInvalid={typeof get_email_field_error(index) !== 'undefined'}
+        >
+          <FormLabel>{displayName}</FormLabel>
+          <HStack>
+            <Controller
+              control={control}
+              name={`${fieldName}.${index}.email`}
+              render={({ field }) => (
+                <Input
+                  type="email"
+                  {...field}
+                  placeholder={t`Enter email`}
+                  value={field.value || ''}
+                />
+              )}
+            />
+            <IconButton
+              aria-label={t`Remove ${field.email}`}
+              title={t`Remove ${field.email}`}
+              icon={<DeleteIcon />}
+              onClick={() => remove_email(index)}
+              size={'sm'}
+            />
+          </HStack>
+          <FormErrorMessage whiteSpace={'pre-wrap'}>
+            {get_email_field_error(index)}
+          </FormErrorMessage>
+        </FormControl>
+      ))}
+      <IconButton
+        aria-label={t`Add an input for a new ${displayName.toLowerCase()}`}
+        title={t`Add an input for a new ${displayName.toLowerCase()}`}
+        icon={<AddIcon />}
+        onClick={() => append_email({ email: '' })}
+        size={'sm'}
+        marginLeft={8}
+      />
+    </>
+  );
+};
+
+interface CollectionFormProps {
+  collection_id?: string;
+  initial_collection_state?: CollectionDefInput;
+}
 export function CollectionManagementForm({
   collection_id,
   initial_collection_state,
@@ -211,24 +291,6 @@ export function CollectionManagementForm({
     mode: 'onChange',
   });
 
-  const {
-    fields: owner_fields,
-    append: append_owner,
-    remove: remove_owner,
-  } = useFieldArray({
-    control,
-    name: 'owner_emails',
-  });
-
-  const {
-    fields: uploader_fields,
-    append: append_uploader,
-    remove: remove_uploader,
-  } = useFieldArray({
-    control,
-    name: 'uploader_emails',
-  });
-
   const is_valid = !_.some(errors, (error) => typeof error !== 'undefined');
 
   // validate on initial render to get initial errors, e.g. mark required fields
@@ -304,57 +366,11 @@ export function CollectionManagementForm({
           <FormLabel as="legend">
             <Trans>Collection Owner Emails</Trans>
           </FormLabel>
-          {owner_fields.map((field, index) => (
-            <FormControl
-              key={field.id}
-              paddingLeft={8}
-              marginBottom={2}
-              isInvalid={
-                errors.owner_emails &&
-                errors.owner_emails[index] &&
-                typeof errors.owner_emails[index]?.email === 'string'
-              }
-            >
-              <FormLabel>
-                <Trans>Owner Email</Trans>
-              </FormLabel>
-              <HStack>
-                <Controller
-                  control={control}
-                  name={`owner_emails.${index}.email`}
-                  render={({ field }) => (
-                    <Input
-                      type="email"
-                      {...field}
-                      placeholder={t`Enter email`}
-                      value={field.value || ''}
-                    />
-                  )}
-                />
-                <IconButton
-                  aria-label={t`Remove ${field.email}`}
-                  title={t`Remove ${field.email}`}
-                  icon={<DeleteIcon />}
-                  onClick={() => remove_owner(index)}
-                  size={'sm'}
-                />
-              </HStack>
-              {errors.owner_emails &&
-                errors.owner_emails[index] &&
-                typeof errors.owner_emails[index]?.email === 'string' && (
-                  <FormErrorMessage whiteSpace={'pre-wrap'}>
-                    {errors.owner_emails[index].email}
-                  </FormErrorMessage>
-                )}
-            </FormControl>
-          ))}
-          <IconButton
-            aria-label={t`Add an owner email`}
-            title={t`Add an owner email`}
-            icon={<AddIcon />}
-            onClick={() => append_owner({ email: '' })}
-            size={'sm'}
-            marginLeft={8}
+          <EmailForm
+            fieldName={'owner_emails'}
+            displayName={t`Owner Emails`}
+            control={control}
+            errors={errors}
           />
         </FormControl>
 
@@ -362,57 +378,11 @@ export function CollectionManagementForm({
           <FormLabel as="legend">
             <Trans>Collection Uploader Emails</Trans>
           </FormLabel>
-          {uploader_fields.map((field, index) => (
-            <FormControl
-              key={field.id}
-              paddingLeft={8}
-              marginBottom={2}
-              isInvalid={
-                errors.uploader_emails &&
-                errors.uploader_emails[index] &&
-                typeof errors.uploader_emails[index]?.email === 'string'
-              }
-            >
-              <FormLabel>
-                <Trans>Uploader Email</Trans>
-              </FormLabel>
-              <HStack>
-                <Controller
-                  control={control}
-                  name={`uploader_emails.${index}.email`}
-                  render={({ field }) => (
-                    <Input
-                      type="email"
-                      {...field}
-                      placeholder={t`Enter email`}
-                      value={field.value || ''}
-                    />
-                  )}
-                />
-                <IconButton
-                  aria-label={t`Remove ${field.email}`}
-                  title={t`Remove ${field.email}`}
-                  icon={<DeleteIcon />}
-                  onClick={() => remove_uploader(index)}
-                  size={'sm'}
-                />
-              </HStack>
-              {errors.uploader_emails &&
-                errors.uploader_emails[index] &&
-                typeof errors.uploader_emails[index]?.email === 'string' && (
-                  <FormErrorMessage whiteSpace={'pre-wrap'}>
-                    {errors.uploader_emails[index].email}
-                  </FormErrorMessage>
-                )}
-            </FormControl>
-          ))}
-          <IconButton
-            aria-label={t`Add an uploader email`}
-            title={t`Add an uploader email`}
-            icon={<AddIcon />}
-            onClick={() => append_uploader({ email: '' })}
-            size={'sm'}
-            marginLeft={8}
+          <EmailForm
+            fieldName={'uploader_emails'}
+            displayName={t`Uploader Emails`}
+            control={control}
+            errors={errors}
           />
         </FormControl>
 

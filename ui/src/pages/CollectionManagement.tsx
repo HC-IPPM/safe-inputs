@@ -52,23 +52,21 @@ const CollectionMainPage = memo(function CollectionMainPage({
 }: {
   session: Session;
 }) {
-  const { collectionID } = useParams() as { collectionID: string };
+  const { collectionId } = useParams() as { collectionId: string };
 
   const {
     i18n: { locale },
   } = useLingui();
-  const navigate = useNavigate();
 
   // Fetch the latest version of the collection. Current version is updated to false backend, when changed
   const { loading, error, data } = useCollectionDetails({
-    variables: { collection_id: collectionID, lang: locale },
+    variables: { collection_id: collectionId, lang: locale },
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && !data?.collection?.is_current_version) {
-    setTimeout(() => {
-      navigate('/');
-    }, 5000);
+  if (error) {
+    throw error;
+  } else if (!loading && !data?.collection.is_current_version) {
     return (
       <ErrorDisplay
         title={<Trans>Cannot update stale version of Collection</Trans>}
@@ -99,8 +97,6 @@ const CollectionMainPage = memo(function CollectionMainPage({
         }
       />
     );
-  } else if (error) {
-    throw error;
   } else {
     return (
       <LoadingBlock isLoading={loading} flexDir={'column'}>
@@ -179,7 +175,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
                           <Td>
                             <Button
                               as={Link}
-                              to={`/manage-collection/${collectionID}/edit-column/${column.header}`}
+                              to={`/manage-collection/${collectionId}/edit-column/${column.id}`}
                               colorScheme="blue"
                               size="sm"
                               mr={2}
@@ -200,7 +196,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
 
               <Button
                 as={Link}
-                to={`/manage-collection/${collectionID}/create-column`}
+                to={`/manage-collection/${collectionId}/create-column`}
                 size="md"
               >
                 <Trans>Add New Column</Trans>

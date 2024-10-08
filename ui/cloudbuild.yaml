@@ -1,24 +1,24 @@
 steps:
   - id: install
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['run', 'typecheck']
 
   - id: test
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['test']
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:394d262e6456721dcc26a62e6893646a4069b8296c66fa9cab5ce8bfe18bb8f3'
+    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -27,7 +27,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:394d262e6456721dcc26a62e6893646a4069b8296c66fa9cab5ce8bfe18bb8f3'
+    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -42,7 +42,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:394d262e6456721dcc26a62e6893646a4069b8296c66fa9cab5ce8bfe18bb8f3'
+    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
     entrypoint: 'bash'
     args:
       - '-c'

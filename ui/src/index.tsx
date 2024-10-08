@@ -104,19 +104,19 @@ const RouterRoot = () => (
         <Route path="signin" element={<SignIn />} />
         <Route path="create-collection" element={<CreateCollection />} />
         <Route
-          path="manage-collection/:collectionID"
+          path="manage-collection/:collectionId"
           element={<CollectionManagement />}
         />
         <Route
-          path="manage-collection/:collectionID/edit-column/:columnHeader"
+          path="manage-collection/:collectionId/edit-column/:columnId"
           element={<ColumnManagement />}
         />
         <Route
-          path="manage-collection/:collectionID/create-column"
+          path="manage-collection/:collectionId/create-column"
           element={<ColumnManagement />}
         />
         <Route
-          path="upload-records/:collectionID"
+          path="upload-records/:collectionId"
           element={<div>Upload records route TODO</div>}
         />
         <Route path="admin" element={<AdminDashboard />} />

@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:0c2dc4e792699eb8ae88f968e9015b0c15b4f60ba9a864dc5a343a4515e2c4cd'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:a435a4f20e757c60094b5b961afe69e8f35b041782174833654dc9c8a119c8f0'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -19,7 +19,7 @@ steps:
       done
 
   - id: Validate schema
-    name: 'gcr.io/cloud-builders/docker@sha256:394d262e6456721dcc26a62e6893646a4069b8296c66fa9cab5ce8bfe18bb8f3'
+    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
     dir: kubernetes
     script: |
       #!/bin/sh
@@ -37,7 +37,7 @@ steps:
       /tmp/resources.yaml
 
   - id: Validate compliance
-    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2f84488bafbf5d1bde628015f08fe2e606281719318cba3cc5526a13ec9493df'
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:0b0381d44772d8ae768a757528a39c94c4bf15a0a56cb6e2c9b932caa383f27d'
     args:
       - apply
       - ./policies/

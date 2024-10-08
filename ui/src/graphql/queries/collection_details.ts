@@ -30,6 +30,7 @@ const COLLECTION_DETAILS = gql(`
         email
       }
       column_defs {
+        id
         header
         name(lang: $lang)
         data_type

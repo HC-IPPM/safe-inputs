@@ -38,33 +38,28 @@ const ColumnManagement = memo(function ColumnManagement({
 }: {
   session: Session;
 }) {
-  const { collectionID, columnHeader } = useParams() as {
-    collectionID: string;
-    columnHeader?: string;
+  const { collectionId, columnId } = useParams() as {
+    collectionId: string;
+    columnId?: string;
   };
-
-  const navigate = useNavigate();
 
   const {
     i18n: { locale },
   } = useLingui();
 
   const { loading, error, data } = useCollectionWithColumnDetails({
-    variables: { collection_id: collectionID, lang: locale },
+    variables: { collection_id: collectionId, lang: locale },
     fetchPolicy: 'no-cache',
   });
 
   const initial_column_state =
-    typeof columnHeader !== 'undefined' && !loading && data
-      ? data.collection.column_defs.find(
-          ({ header }) => header === columnHeader,
-        )
+    typeof columnId !== 'undefined' && !loading && data
+      ? data.collection.column_defs.find(({ id }) => id === columnId)
       : undefined;
 
-  if (!loading && !data?.collection.is_current_version) {
-    setTimeout(() => {
-      navigate('/');
-    }, 5000);
+  if (error) {
+    throw error;
+  } else if (!loading && !data?.collection.is_current_version) {
     return (
       <ErrorDisplay
         title={<Trans>Cannot update stale version of Collection</Trans>}
@@ -95,22 +90,19 @@ const ColumnManagement = memo(function ColumnManagement({
     );
   } else if (
     !loading &&
-    typeof columnHeader === 'string' &&
+    typeof columnId === 'string' &&
     typeof initial_column_state === 'undefined'
   ) {
     return (
       <ErrorDisplay
-        title={<Trans>Column &quot;{columnHeader}&quot; Not Found</Trans>}
+        title={<Trans>Column &quot;{columnId}&quot; Not Found</Trans>}
         message={
           <Trans>
-            No column with header &quot;{columnHeader}&quot; exists on this
-            collection.
+            No column with ID &quot;{columnId}&quot; exists on this collection.
           </Trans>
         }
       />
     );
-  } else if (error) {
-    throw error;
   } else {
     return (
       <LoadingBlock isLoading={loading} flexDir={'column'}>
@@ -124,8 +116,9 @@ const ColumnManagement = memo(function ColumnManagement({
               )}
             </Heading>
             <ColumnManagementForm
-              collection_id={collectionID}
-              initial_column_state={initial_column_state}
+              collectionId={collectionId}
+              columnId={columnId}
+              initialColumnState={initial_column_state}
             />
           </>
         )}
