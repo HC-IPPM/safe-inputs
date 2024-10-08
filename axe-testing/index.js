@@ -20,7 +20,6 @@ console.log('Exempted violation ids:', ignoreViolations);
 
 (async () => {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
-  const urls = []; // collect urls for each Axe scan
   const allResults = []; // Collect all processed results
 
   const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || null; // Use docker puppeteer path if running in container, otherwise, use system degault
@@ -33,7 +32,7 @@ console.log('Exempted violation ids:', ignoreViolations);
   });
 
   const page = await browser.newPage();
-  await page.setBypassCSP(true); 
+  await page.setBypassCSP(true);
 
   // Navigate to your login page
   await page.goto(HOMEPAGE_URL, { waitUntil: 'networkidle2' }); // Wait until the page is fully loaded
@@ -41,10 +40,6 @@ console.log('Exempted violation ids:', ignoreViolations);
   // Perform accessibility scan on the login page (localhost) before logging in
   console.log('\nAssessing login page:', HOMEPAGE_URL);
   const loginPageResults = await new AxePuppeteer(page).analyze();
-  // console.log(HOMEPAGE_URL'assessed');
-
-  // Push login page to use in axe result
-  urls.push(HOMEPAGE_URL); 
 
   allResults.push({
     url: HOMEPAGE_URL,
@@ -72,7 +67,6 @@ console.log('Exempted violation ids:', ignoreViolations);
     browser,
     HOMEPAGE_URL,
     visitedPages,
-    urls,
     allResults,
     blacklistUrls,
   );

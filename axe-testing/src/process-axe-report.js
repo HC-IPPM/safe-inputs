@@ -11,7 +11,7 @@ export async function processAxeReport(allResults) {
   const urlsWithSeriousImpact = [];
   const filteredResults = [];
 
-  console.log("\nProcessing results.")
+  console.log('\nProcessing results.');
 
   for (const { url, results } of allResults) {
     // console.log(`Processing results for ${url}`);

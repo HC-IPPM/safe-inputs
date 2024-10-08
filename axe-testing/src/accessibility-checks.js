@@ -12,7 +12,7 @@ export async function evaluateAccessibility(url, page) {
     // Simplified result (i.e., only incomplete and violations - not including null or pass)
     const simplifiedResult = {
       url: results.url,
-      
+
       incomplete: (results.incomplete || []).map((item) => ({
         id: item.id,
         description: item.description,

@@ -6,7 +6,6 @@ export async function crawlPage(
   browser,
   HOMEPAGE_URL,
   visitedPages,
-  urls,
   allResults,
   blacklistUrls,
 ) {
@@ -35,8 +34,6 @@ export async function crawlPage(
 
   console.log(`Assessing page: ${uniqueUrl}`);
 
-  urls.push(uniqueUrl); // For reporting later
-
   // Run Axe accessibility checks on the current page
   const results = await new AxePuppeteer(page).analyze();
 
@@ -62,7 +59,6 @@ export async function crawlPage(
         browser,
         HOMEPAGE_URL,
         visitedPages,
-        urls,
         allResults,
         blacklistUrls,
       ); // Recursively crawl new pages
