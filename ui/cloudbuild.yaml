@@ -24,11 +24,21 @@ steps:
       - '-c'
       - |
         docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d
+        docker compose -f ./docker-compose.dev.yaml up -d && \
+        sleep 50
 
   - id: build-axe-container
     name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'axe', './axe-testing']
+
+  - id: prepare-results-directory # was having permission issues: Error: EACCES: permission denied, open './axe-results/*.json'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        mkdir -p /workspace/axe-results && \
+        chmod -R 777 /workspace/axe-results
 
   - id: run-axe-scan
     name: 'gcr.io/cloud-builders/docker'
