@@ -19,14 +19,14 @@ export async function crawlPage(
     return;
   }
 
+  // Mark page as visited
+  visitedPages.add(currentUrl);
+
   // Skip if the URL is blacklisted
   if (Array.isArray(blacklistUrls) && blacklistUrls.includes(currentUrl)) {
     console.log(`Skipping as on blacklist: ${currentUrl}`);
     return;
   }
-
-  // Mark page as visited
-  visitedPages.add(currentUrl);
 
   // Distinguish between the login page and the dashboard with the same URL for the results
   if (currentUrl === HOMEPAGE_URL) {
