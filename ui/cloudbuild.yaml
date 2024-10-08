@@ -52,14 +52,14 @@ steps:
         'axe',
       ]
 
-  - id: upload-axe-results-gcs
-    name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-        gs://safe-inputs-axe-ci-results/
+  # - id: upload-axe-results-gcs
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+  #       gs://safe-inputs-axe-ci-results/
 
   - id: docker-compose-down-dev-environment
     name: 'gcr.io/cloud-builders/docker'
