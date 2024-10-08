@@ -1,6 +1,6 @@
+// Crawl and collect URLs for accessibility checks
 import { AxePuppeteer } from '@axe-core/puppeteer';
 
-// Function to crawl and collect URLs for accessibility checks
 export async function crawlPage(
   page,
   browser,
@@ -13,27 +13,27 @@ export async function crawlPage(
   const currentUrl = page.url();
   let uniqueUrl = currentUrl;
 
-  console.log('Blacklist URLs:', blacklistUrls);
-  console.log('Current URL:', currentUrl);
-
-  // Skip if the URL is blacklisted
-  // if (blacklistUrls.includes(currentUrl)) {
-  if (Array.isArray(blacklistUrls) && blacklistUrls.includes(currentUrl)) {
-    console.log(`Skipping blacklisted URL: ${currentUrl}`);
-    return;
-  }
-
+  // Skip if page has been visited already
   if (visitedPages.has(currentUrl)) {
     console.log(`Skipping already visited page: ${currentUrl}`);
     return;
   }
 
-  console.log(`Crawling page: ${currentUrl}`);
-  visitedPages.add(currentUrl); // Mark this page as visited
+  // Skip if the URL is blacklisted
+  if (Array.isArray(blacklistUrls) && blacklistUrls.includes(currentUrl)) {
+    console.log(`Skipping as on blacklist: ${currentUrl}`);
+    return;
+  }
 
+  // Mark page as visited
+  visitedPages.add(currentUrl);
+
+  // Distinguish between the login page and the dashboard with the same URL for the results
   if (currentUrl === HOMEPAGE_URL) {
     uniqueUrl += '-post-login';
   }
+
+  console.log(`Assessing page: ${uniqueUrl}`);
 
   urls.push(uniqueUrl); // For reporting later
 

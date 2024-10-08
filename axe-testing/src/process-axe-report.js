@@ -4,15 +4,17 @@ import fs from 'fs';
 const configPath = './whitelist-config.json';
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-console.log('config.ignoreViolations', config.ignoreViolations);
+// console.log('config.ignoreViolations', config.ignoreViolations);
 
 export async function processAxeReport(allResults) {
   const urlsWithViolations = [];
   const urlsWithSeriousImpact = [];
   const filteredResults = [];
 
+  console.log("\nProcessing results.")
+
   for (const { url, results } of allResults) {
-    console.log(`Processing results for ${url}`);
+    // console.log(`Processing results for ${url}`);
 
     // Filter out ignored violations and incomplete issues from the result
     const filteredViolations = results.violations.filter(
@@ -72,7 +74,7 @@ export async function processAxeReport(allResults) {
   const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
   fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
 
-  console.log(`\nResults saved to ${filename}`);
+  console.log(`Results saved to ${filename}`);
 
   return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
 }

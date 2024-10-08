@@ -12,37 +12,39 @@ const { HOMEPAGE_URL } = process.env;
 
 const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
 const blacklistUrls = config.blacklistUrls || [];
-console.log('Blacklist URLs:', blacklistUrls);
+console.log('Exempted URLs:', blacklistUrls);
+const ignoreIncomplete = config.ignoreIncomplete || [];
+console.log('Exempted incomplete ids:', ignoreIncomplete);
+const ignoreViolations = config.ignoreViolations || [];
+console.log('Exempted violation ids:', ignoreViolations);
 
 (async () => {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const urls = []; // collect urls for each Axe scan
   const allResults = []; // Collect all processed results
 
-  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || null; // Use docker puppeteer path if using docker, otherwise, use system degault
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || null; // Use docker puppeteer path if running in container, otherwise, use system degault
 
   // Launch the browser
   const browser = await puppeteer.launch({
-    // executablePath: '/usr/bin/chromium-browser',
-    executablePath: executablePath || undefined,
-    // headless: false,
+    executablePath: executablePath || undefined, // To work in both docker with local chrome path
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
   const page = await browser.newPage();
-  await page.setBypassCSP(true); // Bypass content security policies (CSP)
+  await page.setBypassCSP(true); 
 
   // Navigate to your login page
   await page.goto(HOMEPAGE_URL, { waitUntil: 'networkidle2' }); // Wait until the page is fully loaded
 
-  // Perform accessibility scan on the login page before logging in
-  console.log('Running accessibility scan on the login page...');
+  // Perform accessibility scan on the login page (localhost) before logging in
+  console.log('\nAssessing login page:', HOMEPAGE_URL);
   const loginPageResults = await new AxePuppeteer(page).analyze();
-  console.log('login page assessed');
+  // console.log(HOMEPAGE_URL'assessed');
 
-  // Push login page axe result
-  urls.push(HOMEPAGE_URL); // Add login page URL to the list of URLs for accessibility checks
+  // Push login page to use in axe result
+  urls.push(HOMEPAGE_URL); 
 
   allResults.push({
     url: HOMEPAGE_URL,
@@ -78,15 +80,7 @@ console.log('Blacklist URLs:', blacklistUrls);
   const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
     await processAxeReport(allResults);
 
-  console.log('Filtered Results for Each URL:');
-  filteredResults.forEach((result) => {
-    console.log(`\nFor: ${result.url}`);
-    console.log(`Violation IDs:, ${result.violationIds}`); // This is temp to compare with other methods
-    // console.log(`Violations:`, JSON.stringify(result.violations, null, 2)); // full results (output to file instead as it can be lengthy)
-    // console.log(`Incomplete:`, JSON.stringify(result.incomplete, null, 2)); // full results (output to file instead as it can be lengthy)
-  });
-
-  console.log('\nSummary:');
+  console.log('\nResults Summary:');
   console.log('URLs with violations:', urlsWithViolations);
   console.log('URLs with serious impact:', urlsWithSeriousImpact);
 
