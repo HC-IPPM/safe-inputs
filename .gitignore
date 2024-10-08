@@ -9,7 +9,6 @@
 */dist
 
 deploy
-ui/src/graphql/__generated__/
 
 .eslintcache
 .vscode/chrome
