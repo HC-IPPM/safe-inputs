@@ -6,12 +6,12 @@ import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
 const COLUMN_DEF_UPDATE = gql`
   mutation ColumnDefUpdate(
     $collection_id: String!
-    $is_new_column: Boolean!
+    $column_id: String!
     $column_def: ColumnDefInput
   ) {
     update_column_def(
       collection_id: $collection_id
-      is_new_column: $is_new_column
+      column_id: $column_id
       column_def: $column_def
     ) {
       id
@@ -21,7 +21,7 @@ const COLUMN_DEF_UPDATE = gql`
 
 export type CollumnDefUpdateVariables = {
   collection_id: string;
-  is_new_column: boolean;
+  column_id: string;
   column_def: ColumnDefInput;
 };
 

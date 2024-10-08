@@ -24,6 +24,7 @@ const COLLECTION_WITH_COLUMN_DETAILS = gql`
       is_locked
       name(lang: $lang)
       column_defs {
+        id
         header
         name_en
         name_fr
@@ -60,6 +61,7 @@ export type CollectionWithColumnDetailsResult = {
   } & {
     column_defs: Pick<
       ColumnDef,
+      | 'id'
       | 'header'
       | 'name_en'
       | 'name_fr'

@@ -1,18 +1,18 @@
 steps:
   - id: install
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['run', 'typecheck']
 
   - id: test
-    name: 'node:lts-alpine3.19@sha256:20b236009deb4c33bf7e255c32fe1e82da7eb0a10245657e0a6a846851fde521'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['test']
@@ -59,8 +59,8 @@ steps:
       - |
         docker compose -f ./docker-compose.dev.yaml down -v
 
-  - id: generate-ui-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
+  - id: generate-image-name
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -69,7 +69,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -84,7 +84,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:42cece8c18dc5bc07af9428945f37d63d30ed5b6cfef115d70ca075504dd8e0b'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     args:
       - '-c'

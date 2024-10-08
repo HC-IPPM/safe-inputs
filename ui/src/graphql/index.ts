@@ -34,6 +34,12 @@ export {
   useLazyCollectionDefInputValidation,
 } from './queries/collection_def_input_validation.ts';
 
+export { useCollumnDefCreation } from './mutations/column_def_creation.ts';
+export type {
+  CollumnDefCreationVariables,
+  CollumnDefCreationResult,
+} from './mutations/column_def_creation.ts';
+
 export { useCollumnDefUpdate } from './mutations/column_def_update.ts';
 export type {
   CollumnDefUpdateVariables,

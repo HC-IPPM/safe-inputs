@@ -6,8 +6,8 @@ import { get_env } from './env.ts';
 import {
   create_collection,
   insert_records,
-  update_collection_def_fields,
-  update_collection_column_defs,
+  update_collection_def,
+  create_column_defs_on_collection,
 } from './schema/core/Collection/CollectionModel.ts';
 import { get_or_create_users } from './schema/core/User/UserModel.ts';
 
@@ -82,25 +82,17 @@ const collection_1 = await create_collection(
   ],
 );
 
-await insert_records(
-  collection_1,
-  [
-    { column_1: 1, column_2: 2 },
-    { column_1: 3, column_2: 4 },
-    { column_1: 5, column_2: 6 },
-  ],
-  owner_1,
-);
+await insert_records(user_1, collection_1, [
+  { column_1: 1, column_2: 2 },
+  { column_1: 3, column_2: 4 },
+  { column_1: 5, column_2: 6 },
+]);
 
-await insert_records(
-  collection_1,
-  [
-    { column_1: 7, column_2: 8 },
-    { column_1: 9, column_2: 10 },
-    { column_1: 11, column_2: 12 },
-  ],
-  user_1,
-);
+await insert_records(user_1, collection_1, [
+  { column_1: 7, column_2: 8 },
+  { column_1: 9, column_2: 10 },
+  { column_1: 11, column_2: 12 },
+]);
 
 await create_collection(
   owner_1,
@@ -148,45 +140,28 @@ const collection_2 = await create_collection(
     },
   ],
 );
-const collection_2_new_minor_ver = await update_collection_def_fields(
-  collection_2,
+const collection_2_new_minor_ver = await update_collection_def(
   owner_2,
+  collection_2,
   {
     name_en: 'Group 2 Collection 1',
     name_fr: 'Group 2 Collection 1 FR',
-    description_en: 'desc v1,1',
+    description_en: 'desc v1.1',
     description_fr: 'desc FR v1.1',
     owners: [owner_2._id, owner_both._id],
     uploaders: [user_2._id, user_both._id],
     is_locked: false,
   },
 );
-const collection_2_second_new_minor_ver = await update_collection_column_defs(
-  collection_2_new_minor_ver,
-  owner_2,
+await create_column_defs_on_collection(owner_2, collection_2_new_minor_ver, [
   {
-    header: 'column_1',
-    name_en: 'Column 1 v2',
-    name_fr: 'Column 1 FR v2',
-    description_en: 'Column 1 desc v2',
-    description_fr: 'Column 1 desc FR v2',
+    header: 'column_3',
+    name_en: 'Column 1',
+    name_fr: 'Column 1 FR',
+    description_en: 'Column 1 desc',
+    description_fr: 'Column 1 desc FR',
     data_type: 'boolean',
     conditions: [],
   },
-  false,
-);
-await update_collection_column_defs(
-  collection_2_second_new_minor_ver,
-  owner_2,
-  {
-    header: 'column_2',
-    name_en: 'Column 2 v2',
-    name_fr: 'Column 2 FR v2',
-    description_en: 'Column 2 desc v2',
-    description_fr: 'Column 2 desc FR v2',
-    data_type: 'boolean',
-    conditions: [],
-  },
-  false,
-);
+]);
 console.log('   Done');

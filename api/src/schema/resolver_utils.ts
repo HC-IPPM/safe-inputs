@@ -1,6 +1,8 @@
 import _ from 'lodash';
 
-import type { Document } from 'mongoose';
+import type { Document, HydratedDocument } from 'mongoose';
+
+import type { Paths } from 'type-fest';
 
 import { user_is_authenticated } from 'src/authn.ts';
 import { apply_rules_to_user, user_email_allowed_rule } from 'src/authz.ts';
@@ -16,19 +18,6 @@ export const resolve_document_id = <ParentType extends Document>(
   _context: unknown,
   _info: unknown,
 ) => parent._id;
-
-export const resolve_lang_suffixed_scalar =
-  <Key extends string>(base_field_name: Key) =>
-  <
-    ParentType extends { [k in LangSuffixedKeyUnion<Key>]: any },
-    ArgsType extends { lang: LangsUnion },
-  >(
-    parent: ParentType,
-    args: ArgsType,
-    _context: unknown,
-    _info: unknown,
-  ) =>
-    parent[`${base_field_name}_${args.lang}`];
 
 export const context_has_authenticated_user = <
   Context extends {
@@ -83,3 +72,37 @@ export const resolver_with_authz =
       throw app_error_to_gql_error(error);
     }
   };
+
+// Using a trick with an outer no-op function layer to achieve partial type argument inference,
+// a long-missing feature in TypeScript https://github.com/microsoft/TypeScript/issues/26242.
+// It creates some ugly syntax where calling this function looks like
+// `make_nested_scalar_resolver<SomeDocument>()("top_level_key", "key")`, but
+// it gives proper type checking. Also note that type-fest's `Paths<...>` has poor performance here,
+// so type checking will be slower in any module using this util
+export const make_deep_scalar_resolver =
+  <DocumentInterface>() =>
+  <Path extends Paths<DocumentInterface>>(path: Path) =>
+  (
+    parent: HydratedDocument<DocumentInterface>,
+    _args: unknown,
+    _context: unknown,
+    _info: unknown,
+  ) =>
+    _.get(parent, path);
+
+// Similar to `make_deep_scalar_resolver`, but with slightly more complex typing due to appending lang values to the provided path.
+// The typing complains when we want it to, but with a slightly more opaque error
+export const make_deep_lang_suffixed_scalar_resolver =
+  <DocumentInterface>() =>
+  <UnsuffixedPath extends string>(
+    unsuffixed_path: `${LangSuffixedKeyUnion<UnsuffixedPath>}` extends Paths<DocumentInterface>
+      ? UnsuffixedPath
+      : never,
+  ) =>
+  <ArgsType extends { lang: LangsUnion }>(
+    parent: HydratedDocument<DocumentInterface>,
+    args: ArgsType,
+    _context: unknown,
+    _info: unknown,
+  ) =>
+    _.get(parent, `${unsuffixed_path}_${args.lang}`);
