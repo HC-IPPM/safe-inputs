@@ -9,7 +9,7 @@ fs.readdir(dir, (err, files) => {
     return;
   }
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.join(dir, file);
     fs.readFile(filePath, 'utf8', (err, content) => {
       if (err) {
@@ -19,7 +19,7 @@ fs.readdir(dir, (err, files) => {
 
       const updatedContent = content.replace(/\.js/g, '.ts');
 
-      fs.writeFile(filePath, updatedContent, err => {
+      fs.writeFile(filePath, updatedContent, (err) => {
         if (err) {
           console.error(`Error writing file ${file}:`, err);
           return;

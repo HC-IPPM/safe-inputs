@@ -1,8 +1,11 @@
 import { useQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import { UsersQuery, UsersQueryVariables } from  'src/graphql/__generated__/graphql.ts';
 import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  UsersQuery,
+  UsersQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
 const USERS = gql(`
   query Users {
     users {
@@ -17,6 +20,6 @@ const USERS = gql(`
   }
 `);
 
-
-export const useUsers = (options?: QueryHookOptions<UsersQuery, UsersQueryVariables>) =>
-  useQuery<UsersQuery, UsersQueryVariables>(USERS, options);
+export const useUsers = (
+  options?: QueryHookOptions<UsersQuery, UsersQueryVariables>,
+) => useQuery<UsersQuery, UsersQueryVariables>(USERS, options);

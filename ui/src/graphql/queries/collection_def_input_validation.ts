@@ -1,8 +1,11 @@
 import { useQuery, useLazyQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import { CollectionDefInputValidationQuery, CollectionDefInputValidationQueryVariables, Exact } from 'src/graphql/__generated__/graphql.ts';
 import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  CollectionDefInputValidationQuery,
+  CollectionDefInputValidationQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
 
 const COLLECTION_DEF_INPUT_VALIDATION = gql(`
   query CollectionDefInputValidation(
@@ -58,14 +61,14 @@ const COLLECTION_DEF_INPUT_VALIDATION = gql(`
 `);
 
 export const useCollectionDefInputValidation = (
-  options?: QueryHookOptions<CollectionDefInputValidationQuery, CollectionDefInputValidationQueryVariables>,
-) =>
-  useQuery(
-    COLLECTION_DEF_INPUT_VALIDATION,
-    options,
-  );
+  options?: QueryHookOptions<
+    CollectionDefInputValidationQuery,
+    CollectionDefInputValidationQueryVariables
+  >,
+) => useQuery(COLLECTION_DEF_INPUT_VALIDATION, options);
 
 export const useLazyCollectionDefInputValidation = () =>
-  useLazyQuery<CollectionDefInputValidationQuery, CollectionDefInputValidationQueryVariables>(
-    COLLECTION_DEF_INPUT_VALIDATION,
-  );
+  useLazyQuery<
+    CollectionDefInputValidationQuery,
+    CollectionDefInputValidationQueryVariables
+  >(COLLECTION_DEF_INPUT_VALIDATION);

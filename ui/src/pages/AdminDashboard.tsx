@@ -49,8 +49,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
+import { User } from 'src/graphql/__generated__/graphql.ts';
 import { useUsers } from 'src/graphql/index.ts';
-import type { User } from 'src/graphql/schema_common.d.ts';
 
 const formatDate = (timestamp: number | undefined): string => {
   if (!timestamp) return '-';
@@ -104,7 +104,7 @@ const UsersTable = ({ users }: { users: User[] }) => {
       },
       {
         header: t`Last Login`,
-        accessorFn: (row) => formatDate(row.last_login_at),
+        accessorFn: (row) => formatDate(row.last_login_at ?? undefined),
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
         enableSorting: true,

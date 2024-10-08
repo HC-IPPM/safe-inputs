@@ -34,7 +34,6 @@ import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
 
 import { useCollectionInfoForCurrentSession } from 'src/graphql/index.ts';
-import type { CollectionInfoResult } from 'src/graphql/index.ts';
 
 const CollectionTable = ({
   tableCaption,

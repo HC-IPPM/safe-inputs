@@ -17,7 +17,7 @@ export const UserSchema = makeExecutableSchema({
   typeDefs: `
   type Query {
     user(email: String!): User
-    users: [User]
+    users: [User!]!
     session: User
   }
   

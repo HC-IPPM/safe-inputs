@@ -1,8 +1,11 @@
 import { useQuery, useLazyQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import { ColumnDefInputValidationQuery, ColumnDefInputValidationQueryVariables } from 'src/graphql/__generated__/graphql.ts';
 import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  ColumnDefInputValidationQuery,
+  ColumnDefInputValidationQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
 const COLUMN_DEF_INPUT_VALIDATION = gql(`
   query ColumnDefInputValidation(
     $collection_id: String!
@@ -66,10 +69,10 @@ export const useColumnDefInputValidation = (
     ColumnDefInputValidationQueryVariables
   >,
 ) =>
-  useQuery<ColumnDefInputValidationQuery, ColumnDefInputValidationQueryVariables>(
-    COLUMN_DEF_INPUT_VALIDATION,
-    options,
-  );
+  useQuery<
+    ColumnDefInputValidationQuery,
+    ColumnDefInputValidationQueryVariables
+  >(COLUMN_DEF_INPUT_VALIDATION, options);
 
 export const useLazyColumnDefInputValidation = () =>
   useLazyQuery<

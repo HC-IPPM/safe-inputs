@@ -1,8 +1,11 @@
 import { useQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import { CollectionWithColumnDetailsQuery, CollectionWithColumnDetailsQueryVariables } from 'src/graphql/__generated__/graphql.ts';
 import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  CollectionWithColumnDetailsQuery,
+  CollectionWithColumnDetailsQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
 
 const COLLECTION_WITH_COLUMN_DETAILS = gql(`
   query CollectionWithColumnDetails($collection_id: String!, $lang: String!) {

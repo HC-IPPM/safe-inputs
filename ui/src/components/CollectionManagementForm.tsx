@@ -25,12 +25,12 @@ import { useEffect } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { CollectionDefInput } from 'src/graphql/__generated__/graphql.ts';
 import {
   useCollectionCreation,
   useCollectionUpdate,
   useLazyCollectionDefInputValidation,
 } from 'src/graphql/index.ts';
-import type { CollectionDefInput } from 'src/graphql/schema_common.d.ts';
 
 import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
@@ -142,10 +142,10 @@ export function CollectionManagementForm({
       }
 
       const {
-        owner_emails,
-        uploader_emails,
+        owner_emails = [],
+        uploader_emails = [],
         ...flat_field_validation_results
-      } = result.data.validate_collection_def;
+      } = result.data.validate_collection_def || {};
 
       const flat_field_validation_messages = _.chain(
         flat_field_validation_results,

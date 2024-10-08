@@ -65,7 +65,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
     fetchPolicy: 'no-cache',
   });
 
-  if (!loading && !data?.collection.is_current_version) {
+  if (!loading && !data?.collection?.is_current_version) {
     setTimeout(() => {
       navigate('/');
     }, 5000);
@@ -83,7 +83,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
     );
   } else if (
     !loading &&
-    !data?.collection.owners?.some(
+    !data?.collection?.owners?.some(
       (owner: { email: string }) => owner.email === session.email,
     ) &&
     !session.is_super_user
@@ -111,7 +111,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
                 <Trans>Update Collection</Trans>
               </Heading>
               <CollectionManagementForm
-                collection_id={data?.collection.id}
+                collection_id={data?.collection?.id}
                 initial_collection_state={_.chain(data?.collection)
                   .pick([
                     'name_en',

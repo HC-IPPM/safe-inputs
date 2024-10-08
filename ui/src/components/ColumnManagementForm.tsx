@@ -21,18 +21,30 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import type { CollectionWithColumnDetailsResult } from 'src/graphql/index.ts';
+import {
+  ColumnDef,
+  ColumnDefInput,
+} from 'src/graphql/__generated__/graphql.ts';
 import {
   useCollumnDefUpdate,
   useLazyColumnDefInputValidation,
 } from 'src/graphql/index.ts';
-import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
 
 import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
 interface ColumnManagementFormProps {
   collection_id: string;
-  initial_column_state?: CollectionWithColumnDetailsResult['collection']['column_defs'][number];
+  initial_column_state?: Pick<
+    ColumnDef,
+    | 'header'
+    | 'name_en'
+    | 'name_fr'
+    | 'description_en'
+    | 'description_fr'
+    | 'data_type'
+    | 'conditions'
+    | '__typename'
+  >;
 }
 
 export const ColumnManagementForm = function ({

@@ -12,7 +12,7 @@
     "test": "jest --coverage --coverageReporters text",
     "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "typecheck": "tsc --noEmit",
-    "generate": "graphql-codegen && node postProcess.mts"
+    "generate": "graphql-codegen && node postProcess.cjs"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
