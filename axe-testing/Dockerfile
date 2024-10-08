@@ -23,7 +23,6 @@ COPY package*.json ./
 RUN npm ci
 
 # Copy the rest of the source code for building
-# COPY ./.env ./.env.example ./
 COPY ./whitelist-config.json .
 COPY ./src ./src
 COPY ./index.js .
