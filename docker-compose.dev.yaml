@@ -141,9 +141,11 @@ services:
     user: root
     volumes:
       # to balance for running as root, only the target directory for the generated types is writable
-      - ./ui:/home/node-dev/project:ro
-      - ./ui/src/graphql/__generated__:/home/node-dev/project/src/graphql/__generated__:rw
-    command: npm run get-gql-types:watch
+      - ./:/home/node-dev/project:ro
+      - ./ui/src/graphql/__generated__:/home/node-dev/project/ui/src/graphql/__generated__:rw
+    environment:
+      - GRAPHQL_ENDPOINT_URL=http://api:3000/api/graphql
+    command: npm run gql-codegen:${DOCKER_GQL_CODEGEN_COMMAND:-watch} # 'watch' or 'check'
     networks:
       - host-loopback
     depends_on:

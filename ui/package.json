@@ -13,9 +13,7 @@
     "pretest": "npm run generate",
     "test": "jest --coverage --coverageReporters text",
     "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
-    "typecheck": "tsc --noEmit",
-    "get-gql-types": "graphql-codegen",
-    "get-gql-types:watch": "graphql-codegen --watch"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
@@ -43,10 +41,8 @@
     "@babel/core": "7.25.7",
     "@babel/preset-react": "7.25.7",
     "@babel/preset-typescript": "7.25.7",
-    "@graphql-codegen/cli": "^5.0.3",
     "@lingui/cli": "4.11.4",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
-    "@parcel/watcher": "^2.4.1",
     "@rspack/cli": "1.0.8",
     "@rspack/core": "1.0.8",
     "@svgr/webpack": "8.1.0",
