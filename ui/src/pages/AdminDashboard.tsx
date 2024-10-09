@@ -49,7 +49,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSession } from 'src/components/auth/session.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
-import { User } from 'src/graphql/__generated__/graphql.ts';
+import { UsersQuery } from 'src/graphql/__generated__/graphql.ts';
 import { useUsers } from 'src/graphql/index.ts';
 
 const formatDate = (timestamp: number | undefined): string => {
@@ -59,6 +59,8 @@ const formatDate = (timestamp: number | undefined): string => {
 
   return date.toLocaleString('en-US');
 };
+
+type User = UsersQuery['users'][number];
 
 const SortIcon = ({ column }: { column: Column<User, unknown> }) => {
   if (!column.getCanSort()) return null;

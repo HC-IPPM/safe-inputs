@@ -5,6 +5,40 @@ steps:
     entrypoint: npm
     args: ['ci', '--no-optional']
 
+  - id: install-api
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    dir: api
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
+  - id: start-api
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    dir: api
+    entrypoint: sh
+    args:
+      - '-c'
+      - |
+        npm start &
+        echo $$! > ../api.pid
+        sleep 10  # Give the API some time to start up
+
+  - id: generate-types
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    dir: ui
+    entrypoint: npm
+    args: ['run', 'codegen']
+    env:
+      - 'GRAPHQL_API_URL=http://localhost:3000/api/graphql'
+
+  - id: stop-api
+    name: 'alpine'
+    entrypoint: sh
+    args:
+      - '-c'
+      - |
+        kill $(cat api.pid)
+        rm api.pid
+
   - id: 'Check types'
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui

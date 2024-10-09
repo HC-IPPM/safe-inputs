@@ -22,6 +22,7 @@ module.exports = {
   },
   resolve: {
     tsConfig: path.resolve(__dirname, './tsconfig.json'),
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
     new rspack.HtmlRspackPlugin({

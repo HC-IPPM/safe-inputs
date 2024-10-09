@@ -66,7 +66,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
 
   if (error) {
     throw error;
-  } else if (!loading && !data?.collection.is_current_version) {
+  } else if (!loading && !data?.collection?.is_current_version) {
     return (
       <ErrorDisplay
         title={<Trans>Cannot update stale version of Collection</Trans>}

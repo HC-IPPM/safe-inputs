@@ -1,10 +1,11 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
 
+const GRAPHQL_API_URL =
+  process.env.GRAPHQL_API_URL || 'http://localhost:8080/api/graphql';
+
 const config: CodegenConfig = {
-  schema: 'http://localhost:8080/api/graphql',
+  schema: GRAPHQL_API_URL,
   documents: ['src/graphql/**/*.ts'],
-  // For extensions in import statements of generated files
-  emitLegacyCommonJSImports: false,
   verbose: true,
   generates: {
     'src/graphql/__generated__/': {

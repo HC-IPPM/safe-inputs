@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import {
-  ColumnDef,
+  CollectionWithColumnDetailsQuery,
   ColumnDefInput,
 } from 'src/graphql/__generated__/graphql.ts';
 import {
@@ -36,17 +36,7 @@ import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 interface ColumnManagementFormProps {
   collectionId: string;
   columnId?: string;
-  initialColumnState?: Pick<
-    ColumnDef,
-    | 'header'
-    | 'name_en'
-    | 'name_fr'
-    | 'description_en'
-    | 'description_fr'
-    | 'data_type'
-    | 'conditions'
-    | '__typename'
-  >;
+  initialColumnState?: CollectionWithColumnDetailsQuery['collection']['column_defs'][number];
 }
 
 export const ColumnManagementForm = function ({

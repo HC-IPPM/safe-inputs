@@ -4,15 +4,18 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "prebuild": "npm run generate",
     "build": "rspack build",
     "extract": "lingui extract",
     "precompile": "npm run extract",
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
+    "pretest": "npm run generate",
     "test": "jest --coverage --coverageReporters text",
     "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "typecheck": "tsc --noEmit",
-    "generate": "graphql-codegen && node postProcess.cjs"
+    "generate": "graphql-codegen",
+    "generate:watch": "graphql-codegen --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
@@ -40,6 +43,8 @@
     "@babel/core": "7.25.7",
     "@babel/preset-react": "7.25.7",
     "@babel/preset-typescript": "7.25.7",
+    "@graphql-codegen/cli": "5.0.3",
+    "@graphql-codegen/client-preset": "4.4.0",
     "@lingui/cli": "4.11.4",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
     "@rspack/cli": "1.0.8",
@@ -57,6 +62,7 @@
     "babel-jest": "29.7.0",
     "babel-loader": "9.2.1",
     "babel-plugin-macros": "3.1.0",
+    "concurrently": "9.0.1",
     "eslint": "8.57.1",
     "eslint-plugin-jsx-a11y": "6.10.0",
     "eslint-plugin-react": "7.37.1",

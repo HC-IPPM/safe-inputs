@@ -139,6 +139,8 @@ services:
     volumes:
       - ./ui:/home/node-dev/project
       - ./ui/.env.dev-public:/home/node-dev/project/.env
+    environment:
+      - GRAPHQL_API_URL=http://gateway/api/graphql
     command: npm run dev
     networks:
       - host-loopback

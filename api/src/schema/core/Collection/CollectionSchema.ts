@@ -252,8 +252,8 @@ const collection_def_input_to_model_data_fields = async (
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
   type Query { 
-    collection(collection_id: String!): Collection
-    column_def(column_id: String!): ColumnDef
+    collection(collection_id: String!): Collection!
+    column_def(column_id: String!): ColumnDef!
     record(record_id: String!): Record
 
     user_owned_collections(email: String!): [Collection]
@@ -266,11 +266,11 @@ export const CollectionSchema = makeExecutableSchema({
   }
 
   type Mutation {
-    create_collection(collection_def: CollectionDefInput): Collection
-    update_collection(collection_id: String!, collection_def: CollectionDefInput): Collection
+    create_collection(collection_def: CollectionDefInput): Collection!
+    update_collection(collection_id: String!, collection_def: CollectionDefInput): Collection!
 
-    create_column_def(collection_id: String!, column_def: ColumnDefInput): Collection
-    update_column_def(collection_id: String!, column_id: String!, column_def: ColumnDefInput): Collection
+    create_column_def(collection_id: String!, column_def: ColumnDefInput): Collection!
+    update_column_def(collection_id: String!, column_id: String!, column_def: ColumnDefInput): Collection!
 
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): Int
@@ -373,7 +373,7 @@ export const CollectionSchema = makeExecutableSchema({
     """
     uploaders: [User!]! # note: these !'s mean neither the field itself nor elements of the array may be null, but it doesn't enforce that the array is non-empty
 
-    column_defs: [ColumnDef]
+    column_defs: [ColumnDef!]!
     
     """
       \`uploader_email\` defaults to the email of the current user session
