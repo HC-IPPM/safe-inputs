@@ -89,7 +89,7 @@ services:
     command: mongod --quiet
 
   seed-dev-data:
-    image: node:1.0
+    image: node-dev:1.0
     tty: ${DOCKER_TTY:-true}
     restart: always
     build:
