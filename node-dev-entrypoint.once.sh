@@ -8,4 +8,4 @@ container_command="${*}"
 echo "Installing packages..."
 npm ci
 
-${container_command}
+eval "${container_command}"

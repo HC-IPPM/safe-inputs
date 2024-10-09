@@ -30,7 +30,6 @@ export type CollectionDefInput = {
   uploader_emails: Array<Scalars['String']['input']>;
 };
 
-
 export type ColumnDefInput = {
   /** `conditions` array parameter may be empty */
   conditions: Array<InputMaybe<ConditionInput>>;
