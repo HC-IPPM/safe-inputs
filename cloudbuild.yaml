@@ -32,7 +32,7 @@ steps:
       docker compose -f ./docker-compose.dev.yaml up --detach --scale gateway=0 --scale seed-dev-data=0 --scale ui-gql-codegen=0 --scale ui=0
 
       # wait for the graphql endpoint to be responding before continuing
-      until node -e \"fetch(process.env.GRAPHQL_ENDPOINT_URL).then(({status}) => process.exit(status === 200 ? 0 : 1)).catch(() => process.exit(1))\"; do
+      until node -e "fetch(process.env.GRAPHQL_ENDPOINT_URL).then(({status}) => process.exit(status === 200 ? 0 : 1)).catch(() => process.exit(1))"; do
         echo "Waiting for api service..."
         sleep 2
       done
