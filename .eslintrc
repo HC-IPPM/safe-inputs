@@ -37,7 +37,7 @@
         "pathGroups": []
       }
     ],
-    "import/extensions": ["error", "ignorePackages", { "ts": "ignore" }],
+    "import/extensions": ["error", "ignorePackages"],
     "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/no-explicit-any": "warn", // TODO: tighten up typing, upgrade this to error
     "@typescript-eslint/no-unused-vars": [

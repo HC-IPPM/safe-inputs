@@ -13,7 +13,6 @@
     "predev:debug": "npm run dev:down",
     "dev:down": "docker compose -f ./docker-compose.dev.yaml down -v",
     "dev:mongosh": "docker compose -f ./docker-compose.dev.yaml exec -i -t db bash -c 'mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin $MONGO_INITDB_DATABASE'",
-    "dev:generate": "docker compose -f ./docker-compose.dev.yaml run --rm ui npm run generate",
     "prettier": "prettier --check .",
     "prettier:write": "prettier --write --loglevel warn .",
     "eslint": "eslint --max-warnings 0 --cache .",

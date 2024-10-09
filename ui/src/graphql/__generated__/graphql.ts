@@ -30,6 +30,7 @@ export type CollectionDefInput = {
   uploader_emails: Array<Scalars['String']['input']>;
 };
 
+
 export type ColumnDefInput = {
   /** `conditions` array parameter may be empty */
   conditions: Array<InputMaybe<ConditionInput>>;
@@ -51,7 +52,7 @@ export type CollectionCreationMutationVariables = Exact<{
 }>;
 
 
-export type CollectionCreationMutation = { __typename?: 'Mutation', create_collection?: { __typename?: 'Collection', id: string } | null };
+export type CollectionCreationMutation = { __typename?: 'Mutation', create_collection: { __typename?: 'Collection', id: string } };
 
 export type CollectionUpdateMutationVariables = Exact<{
   collection_id: Scalars['String']['input'];
@@ -59,7 +60,7 @@ export type CollectionUpdateMutationVariables = Exact<{
 }>;
 
 
-export type CollectionUpdateMutation = { __typename?: 'Mutation', update_collection?: { __typename?: 'Collection', id: string } | null };
+export type CollectionUpdateMutation = { __typename?: 'Mutation', update_collection: { __typename?: 'Collection', id: string } };
 
 export type ColumnDefCreationMutationVariables = Exact<{
   collection_id: Scalars['String']['input'];
@@ -67,7 +68,7 @@ export type ColumnDefCreationMutationVariables = Exact<{
 }>;
 
 
-export type ColumnDefCreationMutation = { __typename?: 'Mutation', create_column_def?: { __typename?: 'Collection', id: string } | null };
+export type ColumnDefCreationMutation = { __typename?: 'Mutation', create_column_def: { __typename?: 'Collection', id: string } };
 
 export type ColumnDefUpdateMutationVariables = Exact<{
   collection_id: Scalars['String']['input'];
@@ -76,7 +77,7 @@ export type ColumnDefUpdateMutationVariables = Exact<{
 }>;
 
 
-export type ColumnDefUpdateMutation = { __typename?: 'Mutation', update_column_def?: { __typename?: 'Collection', id: string } | null };
+export type ColumnDefUpdateMutation = { __typename?: 'Mutation', update_column_def: { __typename?: 'Collection', id: string } };
 
 export type CollectionDefInputValidationQueryVariables = Exact<{
   name_en: Scalars['String']['input'];
@@ -97,7 +98,7 @@ export type CollectionDetailsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionDetailsQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, is_current_version: boolean, major_ver: number, minor_ver: number, created_at: number, is_locked: boolean, name_en: string, name_fr: string, description_en: string, description_fr: string, created_by: { __typename?: 'User', email: string }, owners: Array<{ __typename?: 'User', email: string }>, uploaders: Array<{ __typename?: 'User', email: string }>, column_defs?: Array<{ __typename?: 'ColumnDef', id: string, header: string, name: string, data_type: string, conditions: Array<{ __typename?: 'Condition', condition_type: string, parameters: Array<string> }> } | null> | null } | null };
+export type CollectionDetailsQuery = { __typename?: 'Query', collection: { __typename?: 'Collection', id: string, is_current_version: boolean, major_ver: number, minor_ver: number, created_at: number, is_locked: boolean, name_en: string, name_fr: string, description_en: string, description_fr: string, created_by: { __typename?: 'User', email: string }, owners: Array<{ __typename?: 'User', email: string }>, uploaders: Array<{ __typename?: 'User', email: string }>, column_defs: Array<{ __typename?: 'ColumnDef', id: string, header: string, name: string, data_type: string, conditions: Array<{ __typename?: 'Condition', condition_type: string, parameters: Array<string> }> }> } };
 
 export type CollectionsInfoCurrentSessionQueryVariables = Exact<{
   lang: Scalars['String']['input'];
@@ -112,7 +113,7 @@ export type CollectionWithColumnDetailsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionWithColumnDetailsQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, is_current_version: boolean, major_ver: number, minor_ver: number, created_at: number, is_locked: boolean, name: string, created_by: { __typename?: 'User', email: string }, owners: Array<{ __typename?: 'User', email: string }>, column_defs?: Array<{ __typename?: 'ColumnDef', id: string, header: string, name_en: string, name_fr: string, description_en: string, description_fr: string, data_type: string, conditions: Array<{ __typename?: 'Condition', condition_type: string, parameters: Array<string> }> } | null> | null } | null };
+export type CollectionWithColumnDetailsQuery = { __typename?: 'Query', collection: { __typename?: 'Collection', id: string, is_current_version: boolean, major_ver: number, minor_ver: number, created_at: number, is_locked: boolean, name: string, created_by: { __typename?: 'User', email: string }, owners: Array<{ __typename?: 'User', email: string }>, column_defs: Array<{ __typename?: 'ColumnDef', id: string, header: string, name_en: string, name_fr: string, description_en: string, description_fr: string, data_type: string, conditions: Array<{ __typename?: 'Condition', condition_type: string, parameters: Array<string> }> }> } };
 
 export type ColumnDefInputValidationQueryVariables = Exact<{
   collection_id: Scalars['String']['input'];
