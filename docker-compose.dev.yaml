@@ -89,7 +89,7 @@ services:
     command: mongod --quiet
 
   seed-dev-data:
-    image: safe-inputs-api:1.2
+    image: node:1.0
     tty: ${DOCKER_TTY:-true}
     restart: always
     build:
@@ -145,6 +145,8 @@ services:
       - ./ui/src/graphql/__generated__:/home/node-dev/project/ui/src/graphql/__generated__:rw
     environment:
       - GRAPHQL_ENDPOINT_URL=http://api:3000/api/graphql
+    entrypoint:
+      - ../node-dev-entrypoint.${DOCKER_GQL_CODEGEN_ENTRYPOINT:-watch}.sh # 'watch' or 'once'
     command: npm run gql-codegen:${DOCKER_GQL_CODEGEN_COMMAND:-watch} # 'watch' or 'check'
     networks:
       - host-loopback

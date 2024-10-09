@@ -16,5 +16,18 @@ steps:
     entrypoint: 'npm'
     dir: ./
     args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
+
+  - id: 'GraphQL Codegen check'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    dir: ./
+    args:
+      - '-c'
+      - |
+        DOCKER_GQL_CODEGEN_COMMAND=check \
+        DOCKER_GQL_CODEGEN_ENTRYPOINT=once \
+        docker compose -f ./docker-compose.dev.yaml up --exit-code-from ui-gql-codegen \
+        --scale gateway=0 --scale seed-dev-data=0 --scale ui=0
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
