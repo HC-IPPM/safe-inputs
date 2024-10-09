@@ -27,7 +27,8 @@ steps:
         DOCKER_GQL_CODEGEN_COMMAND=check \
         DOCKER_GQL_CODEGEN_ENTRYPOINT=once \
         docker compose -f ./docker-compose.dev.yaml up --exit-code-from ui-gql-codegen \
-        --scale gateway=0 --scale seed-dev-data=0 --scale ui=0
+        --scale gateway=0 --scale seed-dev-data=0 --scale ui=0; \
+        echo $?
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
