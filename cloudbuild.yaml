@@ -21,7 +21,7 @@ steps:
     name: 'gcr.io/cloud-builders/docker'
     dir: ./
     script: |
-      #!/bin/sh
+      #!/bin/bash
       set -o errexit
       set -o pipefail
       set -o nounset
