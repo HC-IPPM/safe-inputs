@@ -19,16 +19,27 @@ steps:
 
   - id: 'GraphQL Codegen check'
     name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
     dir: ./
-    args:
-      - '-c'
-      - |
-        DOCKER_GQL_CODEGEN_COMMAND=check \
-        DOCKER_GQL_CODEGEN_ENTRYPOINT=once \
-        docker compose -f ./docker-compose.dev.yaml up --exit-code-from ui-gql-codegen \
-        --scale gateway=0 --scale seed-dev-data=0 --scale ui=0; \
-        echo $?
+    script: |
+      #!/bin/sh
+      set -o errexit
+      set -o pipefail
+      set -o nounset
+
+      GRAPHQL_ENDPOINT_URL=http://localhost:3000/api/graphql
+
+      # docker compose dev environment, detached mode, with the unnecessary services disabled
+      docker compose -f ./docker-compose.dev.yaml up --detach --scale gateway=0 --scale seed-dev-data=0 --scale ui-gql-codegen=0 --scale ui=0
+
+      # wait for the graphql endpoint to be responding before continuing
+      until node -e \"fetch(process.env.GRAPHQL_ENDPOINT_URL).then(({status}) => process.exit(status === 200 ? 0 : 1)).catch(() => process.exit(1))\"; do
+        echo "Waiting for api service..."
+        sleep 2
+      done
+
+      npm run gql-codegen:check
+
+      docker compose -f ./docker-compose.dev.yaml down
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
