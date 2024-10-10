@@ -26,27 +26,12 @@ steps:
       set -o pipefail
       set -o nounset
 
-      GRAPHQL_ENDPOINT_URL=
-
       # docker compose dev environment, detached mode, with the unnecessary services disabled
       docker compose -f ./docker-compose.dev.yaml up --detach --scale gateway=0 --scale seed-dev-data=0 --scale ui-gql-codegen=0 --scale ui=0
 
-      # wait for the graphql endpoint to be responding before continuing
-      retry_counter=0
-      until [[ "$(curl --output /dev/null --silent -w %{http_code} http://localhost:3000/api/graphql)" -eq 200 ]]; do
-        if [[ "${retry_counter}" -gt 8 ]]; then
-          echo "Api service took too long, out of retries!"
-          exit 1
-        fi
-        retry_counter=$((retry_counter+1))
-        echo "Waiting for api service..."
-        sleep 2
-      done
-
-      # running the codegen check from a separate container, outside of the docker compose, because when I was using the codegen
-      # check inside the compose environment (with the --exit-code-from flag), cloud build was consistently getting 137 exit codes
+      # running the codegen check from a separate container, outside of the docker compose environment, because when I was using the codegen
+      # check inside the compose environment (with the --exit-code-from flag set), cloud build was consistently getting 137 exit codes
       # regardless of the outcome of the checks. See: https://github.com/HC-IPPM/safe-inputs/pull/724/commits/36abe66a15020daf70f3ed3e4d3dbd5b3b96fd0b
-      # ... occuring to me now that this may have been a side effect of using --scale ...=0, perhaps? Eitherway, not worth the struggle, this works
       docker run \
         --volume ./:/home/project \
         --workdir /home/project \

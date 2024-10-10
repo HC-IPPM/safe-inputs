@@ -22,8 +22,11 @@
     "typecheck:api": "cd ./api && npm run typecheck",
     "typecheck:ui": "cd ./ui && npm run typecheck",
     "typecheck": "trap 'RC=1' ERR; npm run typecheck:api; npm run typecheck:ui; exit $RC",
+    "pregql-codegen": "node ./wait_for_gql_service.cjs",
     "gql-codegen": "graphql-codegen",
+    "pregql-codegen:watch": "npm run pregql-codegen",
     "gql-codegen:watch": "graphql-codegen --watch",
+    "pregql-codegen:check": "npm run pregql-codegen",
     "gql-codegen:check": "graphql-codegen --check"
   },
   "devDependencies": {

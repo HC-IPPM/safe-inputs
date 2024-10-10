@@ -151,12 +151,7 @@ services:
       - GRAPHQL_ENDPOINT_URL=http://api:3000/api/graphql
     entrypoint:
       - ../node-dev-entrypoint.watch.sh
-    command: |
-      "until node -e \"fetch(process.env.GRAPHQL_ENDPOINT_URL).then(({status}) => process.exit(status === 200 ? 0 : 1)).catch(() => process.exit(1))\"; do\
-        echo "Waiting for api service..."; \
-        sleep 2; \
-      done; \
-      npm run gql-codegen:watch"
+    command: npm run gql-codegen:watch
     networks:
       - host-loopback
     depends_on:
