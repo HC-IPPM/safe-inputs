@@ -33,7 +33,7 @@ steps:
       # check inside the compose environment (with the --exit-code-from flag set), cloud build was consistently getting 137 exit codes
       # regardless of the outcome of the checks. See: https://github.com/HC-IPPM/safe-inputs/pull/724/commits/36abe66a15020daf70f3ed3e4d3dbd5b3b96fd0b
       docker run \
-        --volume ./:/home/project \
+        --volume "${PWD}":/home/project \
         --workdir /home/project \
         --network safe-inputs_host-loopback \
         --env GRAPHQL_ENDPOINT_URL="http://api:3000/api/graphql" \
