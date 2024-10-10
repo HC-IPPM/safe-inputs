@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:a435a4f20e757c60094b5b961afe69e8f35b041782174833654dc9c8a119c8f0'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:f535c65f13961a6a546a24fd54cbeeb1976cf5984d6f703932b1af72b77e4565'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
@@ -19,7 +19,7 @@ steps:
       done
 
   - id: Validate schema
-    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     dir: kubernetes
     script: |
       #!/bin/sh
