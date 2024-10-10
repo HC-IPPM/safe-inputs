@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { setTimeout } = require('node:timers/promises');
 
-const retry_max = 10;
+const retry_max = 15;
 const endpoint =
   process.env.GRAPHQL_ENDPOINT_URL ?? 'http://localhost:3000/api/graphql';
 
