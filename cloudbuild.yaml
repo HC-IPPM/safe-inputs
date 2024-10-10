@@ -26,20 +26,35 @@ steps:
       set -o pipefail
       set -o nounset
 
-      GRAPHQL_ENDPOINT_URL=http://localhost:3000/api/graphql
+      GRAPHQL_ENDPOINT_URL=
 
       # docker compose dev environment, detached mode, with the unnecessary services disabled
       docker compose -f ./docker-compose.dev.yaml up --detach --scale gateway=0 --scale seed-dev-data=0 --scale ui-gql-codegen=0 --scale ui=0
 
       # wait for the graphql endpoint to be responding before continuing
-      until node -e "fetch(process.env.GRAPHQL_ENDPOINT_URL).then(({status}) => process.exit(status === 200 ? 0 : 1)).catch(() => process.exit(1))"; do
+      retry_counter=0
+      until [[ "$(curl --output /dev/null --silent -w %{http_code} http://localhost:3000/api/graphql)" -eq 200 ]]; do
+        if [[ "${retry_counter}" -gt 8 ]]; then
+          echo "Api service took too long, out of retries!"
+          exit 1
+        fi
+        retry_counter=$((retry_counter+1))
         echo "Waiting for api service..."
         sleep 2
       done
 
-      npm run gql-codegen:check
-
-      docker compose -f ./docker-compose.dev.yaml down
+      # running the codegen check from a separate container, outside of the docker compose, because when I was using the codegen
+      # check inside the compose environment (with the --exit-code-from flag), cloud build was consistently getting 137 exit codes
+      # regardless of the outcome of the checks. See: https://github.com/HC-IPPM/safe-inputs/pull/724/commits/36abe66a15020daf70f3ed3e4d3dbd5b3b96fd0b
+      # ... occuring to me now that this may have been a side effect of using --scale ...=0, perhaps? Eitherway, not worth the struggle, this works
+      docker run \
+        --volume ./:/home/project \
+        --workdir /home/project \
+        --network safe-inputs_host-loopback \
+        --env GRAPHQL_ENDPOINT_URL="http://api:3000/api/graphql" \
+        --entrypoint npm \
+        node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
+        run gql-codegen:check
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

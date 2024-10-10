@@ -1,5 +1,9 @@
 version: '3.8'
 
+# good to specify the project name for a more consistent resulting environment. For example, network names
+# are prefixed by the compose file's project name https://docs.docker.com/compose/how-tos/networking/
+name: safe-inputs
+
 networks:
   host-loopback:
     driver: bridge
