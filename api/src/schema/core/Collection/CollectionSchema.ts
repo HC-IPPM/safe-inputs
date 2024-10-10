@@ -334,8 +334,8 @@ export const CollectionSchema = makeExecutableSchema({
   }
 
   type User {
-    owned_collections: [Collection]
-    uploadable_collections: [Collection]
+    owned_collections: [Collection!]!
+    uploadable_collections: [Collection!]!
   }
   
   type Collection {

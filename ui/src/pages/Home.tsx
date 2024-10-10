@@ -32,19 +32,21 @@ import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';
 import { Link } from 'src/components/Link.tsx';
 import { LoadingBlock } from 'src/components/Loading.tsx';
+import { CollectionsInfoCurrentSessionQuery } from 'src/graphql/__generated__/graphql.ts';
 
 import { useCollectionInfoForCurrentSession } from 'src/graphql/index.ts';
 
+type CollectionInfo =
+  | CollectionsInfoCurrentSessionQuery['session']['owned_collections'][number]
+  | CollectionsInfoCurrentSessionQuery['session']['uploadable_collections'][number];
 const CollectionTable = ({
   tableCaption,
   collections,
   getLinks,
 }: {
   tableCaption: string;
-  collections: CollectionInfoResult[] | undefined;
-  getLinks: (
-    collection: CollectionInfoResult,
-  ) => { route: string; text: string }[];
+  collections: CollectionInfo | undefined;
+  getLinks: (collection: CollectionInfo) => { route: string; text: string }[];
 }) => {
   const {
     i18n: { locale },

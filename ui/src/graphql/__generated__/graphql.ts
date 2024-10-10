@@ -104,7 +104,7 @@ export type CollectionsInfoCurrentSessionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionsInfoCurrentSessionQuery = { __typename?: 'Query', session?: { __typename?: 'User', owned_collections?: Array<{ __typename?: 'Collection', id: string, name: string, major_ver: number, minor_ver: number, is_locked: boolean, created_at: number, created_by: { __typename?: 'User', email: string } } | null> | null, uploadable_collections?: Array<{ __typename?: 'Collection', id: string, name: string, major_ver: number, minor_ver: number, is_locked: boolean, created_at: number, created_by: { __typename?: 'User', email: string } } | null> | null } | null };
+export type CollectionsInfoCurrentSessionQuery = { __typename?: 'Query', session?: { __typename?: 'User', owned_collections: Array<{ __typename?: 'Collection', id: string, name: string, major_ver: number, minor_ver: number, is_locked: boolean, created_at: number, created_by: { __typename?: 'User', email: string } }>, uploadable_collections: Array<{ __typename?: 'Collection', id: string, name: string, major_ver: number, minor_ver: number, is_locked: boolean, created_at: number, created_by: { __typename?: 'User', email: string } }> } | null };
 
 export type CollectionWithColumnDetailsQueryVariables = Exact<{
   collection_id: Scalars['String']['input'];
