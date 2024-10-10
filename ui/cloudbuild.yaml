@@ -5,40 +5,6 @@ steps:
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - id: install-api
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    dir: api
-    entrypoint: npm
-    args: ['ci', '--no-optional']
-
-  - id: start-api
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    dir: api
-    entrypoint: sh
-    args:
-      - '-c'
-      - |
-        npm start &
-        echo $$! > ../api.pid
-        sleep 10  # Give the API some time to start up
-
-  - id: generate-types
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    dir: ui
-    entrypoint: npm
-    args: ['run', 'codegen']
-    env:
-      - 'GRAPHQL_API_URL=http://localhost:3000/api/graphql'
-
-  - id: stop-api
-    name: 'alpine'
-    entrypoint: sh
-    args:
-      - '-c'
-      - |
-        kill $(cat api.pid)
-        rm api.pid
-
   - id: 'Check types'
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
@@ -52,7 +18,7 @@ steps:
     args: ['test']
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -61,7 +27,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -76,7 +42,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:d28a9ee4087b212ad433288ed9f8e055dbbedbe83fd85667ede595acad78ffaf'
+    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     args:
       - '-c'
