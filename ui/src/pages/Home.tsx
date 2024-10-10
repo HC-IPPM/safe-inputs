@@ -45,7 +45,7 @@ const CollectionTable = ({
   getLinks,
 }: {
   tableCaption: string;
-  collections: CollectionInfo | undefined;
+  collections: CollectionInfo[] | undefined;
   getLinks: (collection: CollectionInfo) => { route: string; text: string }[];
 }) => {
   const {
