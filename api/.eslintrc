@@ -25,6 +25,12 @@
       { "ignores": ["fetch"] }
     ],
     "n/no-missing-import": 0, // https://github.com/mysticatea/eslint-plugin-node/issues/248
+    "n/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": ["src"]
+      }
+    ],
     "no-console": 0,
     "security/detect-object-injection": 0
   }
