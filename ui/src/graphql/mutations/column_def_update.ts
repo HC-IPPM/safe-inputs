@@ -24,7 +24,7 @@ const COLUMN_DEF_UPDATE = gql(`
   }
 `);
 
-export const useCollumnDefUpdate = (
+export const useColumnDefUpdate = (
   options?: MutationHookOptions<
     ColumnDefUpdateMutation,
     ColumnDefUpdateMutationVariables

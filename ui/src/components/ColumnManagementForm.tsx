@@ -26,8 +26,8 @@ import {
   ColumnDefInput,
 } from 'src/graphql/__generated__/graphql.ts';
 import {
-  useCollumnDefCreation,
-  useCollumnDefUpdate,
+  useColumnDefCreation,
+  useColumnDefUpdate,
   useLazyColumnDefInputValidation,
 } from 'src/graphql/index.ts';
 
@@ -55,10 +55,10 @@ export const ColumnManagementForm = function ({
   } = useLingui();
 
   const [createColumnDefs, { loading: creationLoading, error: creationError }] =
-    useCollumnDefCreation();
+    useColumnDefCreation();
 
   const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
-    useCollumnDefUpdate();
+    useColumnDefUpdate();
 
   const mutationLoading = is_new_column ? creationLoading : updateLoading;
   const mutationError = is_new_column ? creationError : updateError;

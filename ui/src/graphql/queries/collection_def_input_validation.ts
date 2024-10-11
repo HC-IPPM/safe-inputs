@@ -65,7 +65,11 @@ export const useCollectionDefInputValidation = (
     CollectionDefInputValidationQuery,
     CollectionDefInputValidationQueryVariables
   >,
-) => useQuery(COLLECTION_DEF_INPUT_VALIDATION, options);
+) =>
+  useQuery<
+    CollectionDefInputValidationQuery,
+    CollectionDefInputValidationQueryVariables
+  >(COLLECTION_DEF_INPUT_VALIDATION, options);
 
 export const useLazyCollectionDefInputValidation = () =>
   useLazyQuery<

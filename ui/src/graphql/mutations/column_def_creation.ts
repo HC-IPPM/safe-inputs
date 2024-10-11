@@ -18,7 +18,7 @@ const COLUMN_DEF_CREATION = gql(`
   }
 `);
 
-export const useCollumnDefCreation = (
+export const useColumnDefCreation = (
   options?: MutationHookOptions<
     ColumnDefCreationMutation,
     ColumnDefCreationMutationVariables
