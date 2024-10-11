@@ -44,8 +44,6 @@ services:
       test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'db-test:27017'}]}) }" | mongosh -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin $$MONGO_INITDB_DATABASE
       interval: 5s
       timeout: 30s
-      start_period: 0s
-      start_interval: 1s
       retries: 30
 
   api-test:
