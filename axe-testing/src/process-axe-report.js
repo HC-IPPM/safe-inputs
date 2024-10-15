@@ -1,10 +1,23 @@
 import fs from 'fs';
+import path from 'path';
 
 // Load ignored URLs and whitelisted violations and incompletes from the config
 const configPath = './whitelist-config.json';
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-// console.log('config.ignoreViolations', config.ignoreViolations);
+// Load config file 
+async function loadConfig(configPath) {
+  try {
+    const configContent = fs.readFileSync(configPath, 'utf8');
+    return JSON.parse(configContent);
+  } catch (error) {
+    console.error(`Failed to load config file at ${configPath}:`, error);
+    throw error;
+  }
+}
+
+function filterResults(results, ignoreList, type) {
+  return results.filter((item) => !ignoreList.includes(item.id));
+}
 
 export async function processAxeReport(allResults) {
   const urlsWithViolations = [];
@@ -13,32 +26,25 @@ export async function processAxeReport(allResults) {
 
   console.log('\nProcessing results.');
 
+  //load config file 
+  const config = await loadConfig(configPath);
+
   for (const { url, results } of allResults) {
-    // console.log(`Processing results for ${url}`);
-
-    // Filter out ignored violations and incomplete issues from the result
-    const filteredViolations = results.violations.filter(
-      (violation) => !config.ignoreViolations.includes(violation.id),
-    );
-
-    const filteredIncomplete = results.incomplete.filter(
-      (incomplete) => !config.ignoreIncomplete.includes(incomplete.id),
-    );
-
-    // Extract violation IDs for each URL
-    const violationIds = filteredViolations.map((violation) => violation.id); //  This is temp to compare with other methods
+    // Filter out exempted violations and incomplete issues from the result
+    const filteredViolations = filterResults(results.violations, config.ignoreViolations, 'violations');
+    const filteredIncomplete = filterResults(results.incomplete, config.ignoreIncomplete, 'incomplete');
 
     // Store the filtered results for the current URL
     filteredResults.push({
       url,
       violations: filteredViolations,
-      violationIds, //  This is temp to compare with other methods
+      // violationIds,
       incomplete: filteredIncomplete,
     });
 
     // Check if there are any violations left after filtering
     if (filteredViolations.length > 0) {
-      urlsWithViolations.push(url, violationIds);
+      urlsWithViolations.push(url);
     }
 
     // Extract serious violations and their IDs
@@ -52,8 +58,7 @@ export async function processAxeReport(allResults) {
     }
   }
 
-  // REPORT
-  // Generate a timestamp
+  // REPORT - Generate a timestamp and save the results
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Replaces colons and periods with dashes to make it file-safe
 
   // Prepare the result object
@@ -66,15 +71,17 @@ export async function processAxeReport(allResults) {
     fullResults: filteredResults,
   };
 
-  // Save the results to a file named axe_results_{timestamp}.json
-  const resultsDir = './axe-results';
-  if (!fs.existsSync(resultsDir)) {
-    fs.mkdirSync(resultsDir);
-  }
+  const resultsDir = path.resolve('./axe-results');
   const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
-  fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
 
-  console.log(`Results saved to ${filename}`);
+  try {
+    fs.mkdirSync(resultsDir, { recursive: true });
+    fs.writeFileSync(filename, JSON.stringify(result, null, 2), 'utf8');
+    console.log(`Results saved to ${filename}`);
+  } catch (error) {
+    console.error(`Failed to save results to ${filename}:`, error);
+    throw error;
+  }
 
-  return { urlsWithViolations, urlsWithSeriousImpact, filteredResults };
+  return { urlsWithViolations, urlsWithSeriousImpact};
 }

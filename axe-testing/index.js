@@ -71,8 +71,9 @@ console.log('Exempted violation ids:', ignoreViolations);
     blacklistUrls,
   );
 
-  const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
-    await processAxeReport(allResults);
+  // const { urlsWithViolations, urlsWithSeriousImpact, filteredResults } =
+  const { urlsWithViolations, urlsWithSeriousImpact } =
+  await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
   console.log('URLs with violations:', urlsWithViolations);
