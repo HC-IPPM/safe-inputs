@@ -5,106 +5,376 @@ steps:
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    dir: ui
-    entrypoint: npm
-    args: ['run', 'typecheck']
-
-  - id: test
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    dir: ui
-    entrypoint: npm
-    args: ['test']
-
-  - id: docker-compose-up-dev-environment-for-axe-testing
+  - id: generate-sbom
     name: 'gcr.io/cloud-builders/docker'
+    dir: ui
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d && \
-        sleep 50
+        # Run Syft to generate SBOM in CycloneDX format
+        docker run --rm -v /workspace:/workspace anchore/syft:latest /workspace -o cyclonedx-json > /workspace/sbom.json
 
-  - id: build-axe-container
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'axe', './axe-testing']
+    # docker run --rm -v $(pwd):/workspace anchore/syft:latest /workspace -o cyclonedx-json > /workspace/sbom.json
 
-  - id: prepare-results-directory # was having permission issues: Error: EACCES: permission denied, open './axe-results/*.json'
+# Debug step
+  - id: check-sbom
     name: 'gcr.io/cloud-builders/docker'
+    dir: ui
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        mkdir -p /workspace/axe-results && \
-        chmod -R 777 /workspace/axe-results
+        echo "************************************"
+        ls -l /workspace/sbom.json
+        echo "************************************"
 
-  - id: run-axe-scan
-    name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'run',
-        '--network',
-        'host', # to access the dev environment
-        '--rm',
-        '--volume',
-        '/workspace/axe-results:/app/axe-results',
-        'axe',
-      ]
+  - id: upload-sbom-to-gcs-bucket
+    name: 'gcr.io/cloud-builders/gsutil'
+    args:
+      - 'cp'
+      - '/workspace/sbom.json'
+      - 'gs://safe-inputs-outputs/SBOM/sbom.json'
 
-  # - id: upload-axe-results-gcs
-  #   name: 'gcr.io/cloud-builders/gsutil'
+  # - id: check-sbom
+  #   name: 'gcr.io/cloud-builders/docker'
+  #   dir: ui
   #   entrypoint: 'bash'
   #   args:
   #     - '-c'
   #     - |
-  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-  #       gs://safe-inputs-axe-ci-results/
+  #       # List the contents of the workspace to verify sbom.json was created
+  #       ls -l /workspace
 
-  - id: docker-compose-down-dev-environment
+  # - id: check-workspace-inside-trivy
+  #   name: 'gcr.io/cloud-builders/docker'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       # Run a shell in the Trivy container to see what's inside /workspace
+  #       docker run --rm -v /workspace:/workspace aquasec/trivy:latest -c 'ls -l /workspace'
+
+
+  - id: scan-filesystem-for-vulnerabilities
     name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        docker compose -f ./docker-compose.dev.yaml down -v
-
-  - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
-    entrypoint: 'bash'
     dir: ui
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        # Scan the generated SBOM using Trivy
+          docker run --rm -v /workspace:/workspace aquasec/trivy:latest sbom --scanners vuln https://storage.cloud.google.com/safe-inputs-outputs/SBOM/sbom.json
 
-  - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
-    entrypoint: 'bash'
+          docker run --rm  aquasec/trivy:latest sbom gs://safe-inputs-outputs/SBOM/sbom.json 'https://storage.cloud.google.com/safe-inputs-outputs/SBOM/sbom.json'
+    #docker run --rm -v /workspace:/workspace aquasec/trivy:latest --debug sbom --scanners vuln /workspace/sbom.json 'gs://safe-inputs-outputs/SBOM/sbom.json'
+
+  - id: secret-scan
+    name: 'gcr.io/cloud-builders/docker'
     dir: ui
-    args:
-      - '-c'
-      - |
-        if [[ "$BRANCH_NAME" == "main" ]]
-        then
-          image=$(cat /workspace/imagename)
-          docker build -t $image -f ./Dockerfile.prod .
-        else
-          exit 0
-        fi
-
-  - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "main" ]]
-        then
-          image=$(cat /workspace/imagename)
-          docker push $image
-        else
-          exit 0
-        fi
-options:
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+        docker run --rm -v $(pwd):/workspace aquasec/trivy:latest fs --scanners secrets .
+
+# # Orig
+# steps:
+#   - id: install
+#     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+#     dir: ui
+#     entrypoint: npm
+#     args: ['ci', '--no-optional']
+
+#   # - id: 'Check types'
+#   #   name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+#   #   dir: ui
+#   #   entrypoint: npm
+#   #   args: ['run', 'typecheck']
+#   # - id: test
+#   #   name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+#   #   dir: ui
+#   #   entrypoint: npm
+#   #   args: ['test']
+
+#   # # Will look at dev dependencies as well 
+#   # - id: file-system-vunerability-scan
+#   #   name: 'aquasec/trivy:latest'
+#   #   dir: ui
+#   #   entrypoint: 'sh'
+#   #   args:
+#   #     - '-c'
+#   #     - |
+#   #       trivy fs --scanners vuln,license --include-dev-deps --output /workspace/trivy-fs-results.json . 
+#   #   # --exit-code 1 --severity HIGH,CRITICAL \
+#   #   # --format json \
+
+
+#   # - id: upload-trivy-results-to-gcs-bucket
+#   #   name: 'gcr.io/cloud-builders/gsutil'
+#   #   dir: ui
+#   #   entrypoint: 'bash'
+#   #   args:
+#   #     - '-c'
+#   #     - |
+#   #       gsutil cp /workspace/trivy-fs-results.json gs://safe-inputs-outputs/trivy-scans/ui-trivy-fs-results.json
+
+
+#   - id: generate-sbom
+#     name: 'gcr.io/cloud-builders/docker'
+#     dir: ui
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         # Run Syft to generate SBOM for the current directory (including dev dependencies) 
+#         docker run --rm -v $(pwd):/workspace anchore/syft:latest /workspace -o cyclonedx-json > /workspace/sbom.json
+
+#   - id: check-sbom
+#     name: 'gcr.io/cloud-builders/docker'
+#     dir: ui
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         # List the contents of the workspace to verify sbom.json was created
+#         ls -l /workspace
+
+
+#   # docker run --rm -v $(pwd):/workspace anchore/syft:latest /workspace  -o cyclonedx-json > sbom.json
+
+
+#   # - id: format-sbom
+#   #   name: 'ubuntu'
+#   #   dir: ui
+#   #   entrypoint: 'bash'
+#   #   args:
+#   #     - '-c'
+#   #     - |
+#   #       apt-get update && apt-get install -y jq && \
+#   #       jq . sbom.json > sbom-pretty.json
+
+#   - id: scan-filesystem-sbom-for-vunerabilies
+#     name: 'gcr.io/cloud-builders/docker'
+#     dir: ui
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         docker run --rm -v $(pwd):/workspace aquasec/trivy:latest sbom --scanners vuln /workspace/sbom.json
+
+
+#   - id: secret-scan
+#     name: 'gcr.io/cloud-builders/docker'
+#     dir: ui
+#     entrypoint: 'bash'
+#     args:
+#       - '-c'
+#       - |
+#         docker run --rm -v $(pwd):/workspace aquasec/trivy:latest fs --scanners secrets .
+
+#       #apt-get update && apt-get install -y jq && \
+#       # jq . sbom.json > sbom-pretty.json
+#         #jq . sbom.json > sbom.json
+#       # can filter for clearner results if like ie
+
+
+# # docker run --rm -v $(pwd) anchore/syft:latest  
+
+#   - id: upload-sbom-to-gcs-bucket
+#     name: 'gcr.io/cloud-builders/gsutil'
+#     args:
+#       - 'cp'
+#       - 'sbom.json'
+#       - 'gs://safe-inputs-outputs/SBOM/sbom-pretty.json'
+
+#   # - id: scan-filesystem-sbom-for-vunerabilies
+#   # TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+#   # gsutil cp /workspace/trivy-fs-results.json gs://safe-inputs-outputs/trivy-scans/ui-trivy-fs-results-${TIMESTAMP}.json
+
+
+# #     # trivy fs --scanners vuln,license --include-dev-deps ./ui
+
+# #     # 
+
+# #   #   - id: docker-compose-up-dev-environment-for-axe-testing
+# #   #     name: 'gcr.io/cloud-builders/docker'
+# #   #     entrypoint: 'bash'
+# #   #     args:
+# #   #       - '-c'
+# #   #       - |
+# #   #         docker compose -f ./docker-compose.dev.yaml down -v && \
+# #   #         docker compose -f ./docker-compose.dev.yaml up -d && \
+# #   #         sleep 50
+
+# #   #   - id: build-axe-container
+# #   #     name: 'gcr.io/cloud-builders/docker'
+# #   #     args: ['build', '-t', 'axe', './axe-testing']
+
+# #   #   - id: prepare-results-directory # was having permission issues: Error: EACCES: permission denied, open './axe-results/*.json'
+# #   #     name: 'gcr.io/cloud-builders/docker'
+# #   #     entrypoint: 'bash'
+# #   #     args:
+# #   #       - '-c'
+# #   #       - |
+# #   #         mkdir -p /workspace/axe-results && \
+# #   #         chmod -R 777 /workspace/axe-results
+
+# #   #   - id: run-axe-scan
+# #   #     name: 'gcr.io/cloud-builders/docker'
+# #   #     args: [
+# #   #         'run',
+# #   #         '--network',
+# #   #         'host', # to access the dev environment
+# #   #         '--rm',
+# #   #         '--volume',
+# #   #         '/workspace/axe-results:/app/axe-results',
+# #   #         'axe',
+# #   #       ]
+
+# #   #   # - id: upload-axe-results-gcs
+# #   #   #   name: 'gcr.io/cloud-builders/gsutil'
+# #   #   #   entrypoint: 'bash'
+# #   #   #   args:
+# #   #   #     - '-c'
+# #   #   #     - |
+# #   #   #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+# #   #   #       gs://safe-inputs-axe-ci-results/
+
+# #   #   - id: docker-compose-down-dev-environment
+# #   #     name: 'gcr.io/cloud-builders/docker'
+# #   #     entrypoint: 'bash'
+# #   #     args:
+# #   #       - '-c'
+# #   #       - |
+# #   #         docker compose -f ./docker-compose.dev.yaml down -v
+
+# #   # - id: generate-image-name
+# #   #   name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
+# #   #   entrypoint: 'bash'
+# #   #   dir: ui
+# #   #   args:
+# #   #     - '-c'
+# #   #     - |
+# #   #       echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui" > /workspace/imagename
+
+# #   # echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+
+# #   #   - id: build-if-main
+# #   #     name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
+# #   #     entrypoint: 'bash'
+# #   #     dir: ui
+# #   #     args:
+# #   #       - '-c'
+# #   #       - |
+# #   #         if [[ "$BRANCH_NAME" == "main" ]]
+# #   #         then
+# #   #           image=$(cat /workspace/imagename)
+# #   #           docker build -t $image -f ./Dockerfile.prod .
+# #   #         else
+# #   #           exit 0
+# #   #         fi
+
+# #   - id: build-if-not-main
+# #     name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
+# #     entrypoint: 'bash'
+# #     dir: ui
+# #     args:
+# #       - '-c'
+# #       - |
+# #         if [[ "$BRANCH_NAME" != "main" ]]
+# #         then
+# #           image=yay
+# #           echo '*******************************************'
+# #           echo $image
+# #           docker build -t yay -f ./Dockerfile.prod .
+# #         else
+# #           exit 0
+# #         fi
+
+# #   - id: vunerability-container-scan
+# #     name: 'aquasec/trivy:latest'
+# #     dir: ui
+# #     entrypoint: 'sh'
+# #     args:
+# #       - '-c'
+# #       - |
+# #         trivy image --format json --exit-code 1 --severity HIGH,CRITICAL yay
+
+# #     # trivy image --format json --output /workspace/trivy-results.json --exit-code 1 --severity HIGH,CRITICAL yay
+
+# #   # - id: trivy-container-scan
+# #   #   name: 'gcr.io/cloud-builders/docker'
+# #   #   entrypoint: 'bash'
+# #   #   args:
+# #   #     - '-c'
+# #   #     - |
+# #   #       docker run ghcr.io/aquasecurity/trivy:latest image --format json  --exit-code 1 --severity HIGH,CRITICAL yay
+
+# #   # - id: upload-trivy-results-to-gcs-bucket
+# #   #   name: 'gcr.io/cloud-builders/gsutil'
+# #   #   args: [
+# #   #     'cp',
+# #   #     '/workspace/trivy-results.json',
+# #   #     'gs://safe-inputs-outputs/trivy-scans/ui-trivy-results.json'
+# #   #   ]
+
+# #   # - id: save-to-gcs-bucket
+
+# #   # - id: trivy-container-scan
+# #   #   name: 'aquasec/trivy'
+# #   #   args: ['image', '--exit-code', '1', '--severity', 'HIGH,CRITICAL', '$image']
+
+# #   # - id: trivy-container-scan
+# #   #   name: 'aquasec/trivy:latest'
+# #   #   args:
+# #   #     [
+# #   #       'image',
+# #   #       '--exit-code',
+# #   #       '1',
+# #   #       '--severity',
+# #   #       'HIGH,CRITICAL',
+# #   #       '$(cat /workspace/imagename)'
+# #   #     ]
+
+# #   # - id: trivy-container-scan
+# #   #   name: 'aquasec/trivy:latest'
+# #   #   entrypoint: 'sh'
+# #   #   args:
+# #   #     - '-c'
+# #   #     - |
+# #   #       trivy image --exit-code 1 --severity HIGH,CRITICAL yay
+
+# #   # - id: trivy-container-scan
+# #   #   name: 'gcr.io/cloud-builders/docker'
+# #   #   entrypoint: 'bash'
+# #   #   args:
+# #   #     - '-c'
+# #   #     - |
+# #   #       docker pull aquasec/trivy:latest && \
+# #   #       trivy image --exit-code 1 --severity HIGH,CRITICAL $image
+# #   # - id: generate-sbom
+# #   #   name: 'anchore/syft'
+# #   #   dir: ui
+# #   #   args:
+# #   #     - syft '$(cat /workspace/imagename)'
+# #   # - '-c'
+# #   # - |
+# #   #   syft $image
+
+# # #   - id: push-if-main
+# # #     name: 'gcr.io/cloud-builders/docker@sha256:0e3fa78f64d862380096fc1129fc42211965458fe6aaad57cef39494e4fb9ece'
+# # #     entrypoint: 'bash'
+# # #     args:
+# # #       - '-c'
+# # #       - |
+# # #         if [[ "$BRANCH_NAME" == "main" ]]
+# # #         then
+# # #           image=$(cat /workspace/imagename)
+# # #           docker push $image
+# # #         else
+# # #           exit 0
+# # #         fi
+# # # options:
+# # #   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
