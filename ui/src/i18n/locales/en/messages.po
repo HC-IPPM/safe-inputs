@@ -137,20 +137,25 @@ msgstr "<0>You agree to use our website, products and services only for lawful p
 msgid "A log in link has been sent to {0}. Open the provided link in this browser to complete the sign in process."
 msgstr "A log in link has been sent to {0}. Open the provided link in this browser to complete the sign in process."
 
-#: src/pages/CollectionManagement.tsx:159
+#: src/pages/CollectionManagement.tsx:155
 #: src/pages/Home.tsx:85
 msgid "Actions"
 msgstr "Actions"
 
+#: src/components/CollectionManagementForm.tsx:131
+#: src/components/CollectionManagementForm.tsx:132
+msgid "Add an input for a new {0}"
+msgstr "Add an input for a new {0}"
+
 #: src/components/CollectionManagementForm.tsx:352
 #: src/components/CollectionManagementForm.tsx:353
-msgid "Add an owner email"
-msgstr "Add an owner email"
+#~ msgid "Add an owner email"
+#~ msgstr "Add an owner email"
 
 #: src/components/CollectionManagementForm.tsx:410
 #: src/components/CollectionManagementForm.tsx:411
-msgid "Add an uploader email"
-msgstr "Add an uploader email"
+#~ msgid "Add an uploader email"
+#~ msgstr "Add an uploader email"
 
 #: src/components/ColumnManagementForm.tsx:164
 #~ msgid "Add Column"
@@ -160,7 +165,7 @@ msgstr "Add an uploader email"
 #~ msgid "Add Email"
 #~ msgstr "Add Email"
 
-#: src/pages/CollectionManagement.tsx:206
+#: src/pages/CollectionManagement.tsx:202
 msgid "Add New Column"
 msgstr "Add New Column"
 
@@ -177,11 +182,11 @@ msgstr "Admin Dashboard"
 msgid "An unknown error occurred."
 msgstr "An unknown error occurred."
 
-#: src/components/ColumnManagementForm.tsx:233
+#: src/components/ColumnManagementForm.tsx:254
 msgid "Array"
 msgstr "Array"
 
-#: src/components/ColumnManagementForm.tsx:230
+#: src/components/ColumnManagementForm.tsx:251
 msgid "Boolean"
 msgstr "Boolean"
 
@@ -193,8 +198,8 @@ msgstr "By accessing, browsing, or using our website or our services, you acknow
 msgid "Can Own Collections"
 msgstr "Can Own Collections"
 
-#: src/pages/CollectionManagement.tsx:74
-#: src/pages/ColumnManagement.tsx:70
+#: src/pages/CollectionManagement.tsx:72
+#: src/pages/ColumnManagement.tsx:65
 msgid "Cannot update stale version of Collection"
 msgstr "Cannot update stale version of Collection"
 
@@ -210,16 +215,16 @@ msgstr "Client Errors:"
 msgid "Closed"
 msgstr "Closed"
 
-#: src/pages/CollectionManagement.tsx:231
+#: src/pages/CollectionManagement.tsx:227
 msgid "Collection Management"
 msgstr "Collection Management"
 
-#: src/components/CollectionManagementForm.tsx:305
+#: src/components/CollectionManagementForm.tsx:367
 msgid "Collection Owner Emails"
 msgstr "Collection Owner Emails"
 
-#: src/components/CollectionManagementForm.tsx:116
-#: src/components/ColumnManagementForm.tsx:72
+#: src/components/CollectionManagementForm.tsx:196
+#: src/components/ColumnManagementForm.tsx:94
 msgid "Collection Updated"
 msgstr "Collection Updated"
 
@@ -227,7 +232,7 @@ msgstr "Collection Updated"
 #~ msgid "Collection Updated successfully"
 #~ msgstr "Collection Updated successfully"
 
-#: src/components/CollectionManagementForm.tsx:363
+#: src/components/CollectionManagementForm.tsx:379
 msgid "Collection Uploader Emails"
 msgstr "Collection Uploader Emails"
 
@@ -240,18 +245,22 @@ msgid "Collections You Upload To"
 msgstr "Collections You Upload To"
 
 #: src/pages/ColumnManagement.tsx:103
-msgid "Column \"{columnHeader}\" Not Found"
-msgstr "Column \"{columnHeader}\" Not Found"
+#~ msgid "Column \"{columnHeader}\" Not Found"
+#~ msgstr "Column \"{columnHeader}\" Not Found"
 
-#: src/pages/ColumnManagement.tsx:152
+#: src/pages/ColumnManagement.tsx:98
+msgid "Column \"{columnId}\" Not Found"
+msgstr "Column \"{columnId}\" Not Found"
+
+#: src/pages/ColumnManagement.tsx:145
 msgid "Column Management"
 msgstr "Column Management"
 
-#: src/pages/CollectionManagement.tsx:138
+#: src/pages/CollectionManagement.tsx:134
 msgid "Columns Overview"
 msgstr "Columns Overview"
 
-#: src/pages/CollectionManagement.tsx:156
+#: src/pages/CollectionManagement.tsx:152
 msgid "Conditions"
 msgstr "Conditions"
 
@@ -264,7 +273,7 @@ msgstr "Create Collection"
 msgid "Create new collection"
 msgstr "Create new collection"
 
-#: src/pages/ColumnManagement.tsx:123
+#: src/pages/ColumnManagement.tsx:115
 msgid "Create New Column"
 msgstr "Create New Column"
 
@@ -284,26 +293,26 @@ msgstr "Created by"
 msgid "Data Preview"
 msgstr "Data Preview"
 
-#: src/components/ColumnManagementForm.tsx:213
-#: src/pages/CollectionManagement.tsx:153
+#: src/components/ColumnManagementForm.tsx:234
+#: src/pages/CollectionManagement.tsx:149
 msgid "Data Type"
 msgstr "Data Type"
 
-#: src/components/ColumnManagementForm.tsx:239
+#: src/components/ColumnManagementForm.tsx:260
 msgid "Date"
 msgstr "Date"
 
-#: src/components/ColumnManagementForm.tsx:242
+#: src/components/ColumnManagementForm.tsx:263
 msgid "Date-Time"
 msgstr "Date-Time"
 
-#: src/components/CollectionManagementForm.tsx:281
-#: src/components/ColumnManagementForm.tsx:189
+#: src/components/CollectionManagementForm.tsx:343
+#: src/components/ColumnManagementForm.tsx:210
 msgid "Description (English)"
 msgstr "Description (English)"
 
-#: src/components/CollectionManagementForm.tsx:293
-#: src/components/ColumnManagementForm.tsx:201
+#: src/components/CollectionManagementForm.tsx:355
+#: src/components/ColumnManagementForm.tsx:222
 msgid "Description (French)"
 msgstr "Description (French)"
 
@@ -311,11 +320,11 @@ msgstr "Description (French)"
 msgid "Details:"
 msgstr "Details:"
 
-#: src/pages/CollectionManagement.tsx:187
+#: src/pages/CollectionManagement.tsx:183
 msgid "Edit"
 msgstr "Edit"
 
-#: src/pages/ColumnManagement.tsx:121
+#: src/pages/ColumnManagement.tsx:113
 msgid "Edit Column"
 msgstr "Edit Column"
 
@@ -332,8 +341,7 @@ msgstr "Email"
 msgid "Email Address"
 msgstr "Email Address"
 
-#: src/components/CollectionManagementForm.tsx:329
-#: src/components/CollectionManagementForm.tsx:387
+#: src/components/CollectionManagementForm.tsx:112
 msgid "Enter email"
 msgstr "Enter email"
 
@@ -353,18 +361,18 @@ msgstr "First"
 msgid "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 msgstr "For details related to terms pertaining to privacy, please refer to <0>our Terms and Conditions on the TBS website<1/></0>."
 
-#: src/components/CollectionManagementForm.tsx:432
-#: src/components/ColumnManagementForm.tsx:265
+#: src/components/CollectionManagementForm.tsx:402
+#: src/components/ColumnManagementForm.tsx:286
 msgid "Form contains validation errors"
 msgstr "Form contains validation errors"
 
-#: src/components/CollectionManagementForm.tsx:423
-#: src/components/ColumnManagementForm.tsx:256
+#: src/components/CollectionManagementForm.tsx:393
+#: src/components/ColumnManagementForm.tsx:277
 msgid "Form is submitting, please wait"
 msgstr "Form is submitting, please wait"
 
-#: src/components/CollectionManagementForm.tsx:425
-#: src/components/ColumnManagementForm.tsx:258
+#: src/components/CollectionManagementForm.tsx:395
+#: src/components/ColumnManagementForm.tsx:279
 msgid "Form is validating, please wait"
 msgstr "Form is validating, please wait"
 
@@ -381,8 +389,8 @@ msgstr "Form is validating, please wait"
 msgid "GraphQL Errors:"
 msgstr "GraphQL Errors:"
 
-#: src/components/ColumnManagementForm.tsx:153
-#: src/pages/CollectionManagement.tsx:147
+#: src/components/ColumnManagementForm.tsx:174
+#: src/pages/CollectionManagement.tsx:143
 msgid "Header"
 msgstr "Header"
 
@@ -409,7 +417,7 @@ msgstr "Last Login"
 msgid "Loading..."
 msgstr "Loading..."
 
-#: src/components/CollectionManagementForm.tsx:245
+#: src/components/CollectionManagementForm.tsx:307
 msgid "Locked"
 msgstr "Locked"
 
@@ -417,23 +425,23 @@ msgstr "Locked"
 msgid "Manage"
 msgstr "Manage"
 
-#: src/components/CollectionManagementForm.tsx:113
-#: src/components/ColumnManagementForm.tsx:69
+#: src/components/CollectionManagementForm.tsx:193
+#: src/components/ColumnManagementForm.tsx:90
 msgid "Missing ID for updated collection"
 msgstr "Missing ID for updated collection"
 
-#: src/pages/CollectionManagement.tsx:150
+#: src/pages/CollectionManagement.tsx:146
 #: src/pages/Home.tsx:63
 msgid "Name"
 msgstr "Name"
 
-#: src/components/CollectionManagementForm.tsx:257
-#: src/components/ColumnManagementForm.tsx:165
+#: src/components/CollectionManagementForm.tsx:319
+#: src/components/ColumnManagementForm.tsx:186
 msgid "Name (English)"
 msgstr "Name (English)"
 
-#: src/components/CollectionManagementForm.tsx:269
-#: src/components/ColumnManagementForm.tsx:177
+#: src/components/CollectionManagementForm.tsx:331
+#: src/components/ColumnManagementForm.tsx:198
 msgid "Name (French)"
 msgstr "Name (French)"
 
@@ -451,10 +459,14 @@ msgid "No"
 msgstr "No"
 
 #: src/pages/ColumnManagement.tsx:105
-msgid "No column with header \"{columnHeader}\" exists on this collection."
-msgstr "No column with header \"{columnHeader}\" exists on this collection."
+#~ msgid "No column with header \"{columnHeader}\" exists on this collection."
+#~ msgstr "No column with header \"{columnHeader}\" exists on this collection."
 
-#: src/pages/CollectionManagement.tsx:196
+#: src/pages/ColumnManagement.tsx:100
+msgid "No column with ID \"{columnId}\" exists on this collection."
+msgstr "No column with ID \"{columnId}\" exists on this collection."
+
+#: src/pages/CollectionManagement.tsx:192
 msgid "No columns available."
 msgstr "No columns available."
 
@@ -462,11 +474,11 @@ msgstr "No columns available."
 msgid "Notice of Agreement"
 msgstr "Notice of Agreement"
 
-#: src/components/ColumnManagementForm.tsx:227
+#: src/components/ColumnManagementForm.tsx:248
 msgid "Number"
 msgstr "Number"
 
-#: src/components/ColumnManagementForm.tsx:236
+#: src/components/ColumnManagementForm.tsx:257
 msgid "Object"
 msgstr "Object"
 
@@ -475,19 +487,19 @@ msgid "Open"
 msgstr "Open"
 
 #: src/components/CollectionManagementForm.tsx:319
-msgid "Owner Email"
-msgstr "Owner Email"
+#~ msgid "Owner Email"
+#~ msgstr "Owner Email"
 
-#: src/components/CollectionForm.tsx:119
-#~ msgid "Owner Emails"
-#~ msgstr "Owner Emails"
+#: src/components/CollectionManagementForm.tsx:371
+msgid "Owner Emails"
+msgstr "Owner Emails"
 
 #: src/pages/AdminDashboard.tsx:219
 msgid "Page {0} of {1}"
 msgstr "Page {0} of {1}"
 
-#: src/pages/CollectionManagement.tsx:93
-#: src/pages/ColumnManagement.tsx:87
+#: src/pages/CollectionManagement.tsx:91
+#: src/pages/ColumnManagement.tsx:82
 msgid "Permission Denied"
 msgstr "Permission Denied"
 
@@ -521,10 +533,8 @@ msgstr "Refresh user lists"
 #~ msgid "Remove"
 #~ msgstr "Remove"
 
-#: src/components/CollectionManagementForm.tsx:335
-#: src/components/CollectionManagementForm.tsx:336
-#: src/components/CollectionManagementForm.tsx:393
-#: src/components/CollectionManagementForm.tsx:394
+#: src/components/CollectionManagementForm.tsx:118
+#: src/components/CollectionManagementForm.tsx:119
 msgid "Remove {0}"
 msgstr "Remove {0}"
 
@@ -600,12 +610,12 @@ msgstr "Status"
 msgid "Status Code:"
 msgstr "Status Code:"
 
-#: src/components/ColumnManagementForm.tsx:224
+#: src/components/ColumnManagementForm.tsx:245
 msgid "String"
 msgstr "String"
 
-#: src/components/CollectionManagementForm.tsx:432
-#: src/components/ColumnManagementForm.tsx:265
+#: src/components/CollectionManagementForm.tsx:402
+#: src/components/ColumnManagementForm.tsx:286
 msgid "Submit"
 msgstr "Submit"
 
@@ -618,8 +628,8 @@ msgstr "Syncing session"
 msgid "Terms and Conditions"
 msgstr "Terms and Conditions"
 
-#: src/components/CollectionManagementForm.tsx:117
-#: src/components/ColumnManagementForm.tsx:73
+#: src/components/CollectionManagementForm.tsx:197
+#: src/components/ColumnManagementForm.tsx:95
 msgid "The collection has been updated"
 msgstr "The collection has been updated"
 
@@ -631,7 +641,7 @@ msgstr "The collection has been updated"
 #~ msgid "The current column definitions are invalid. Please check your inputs."
 #~ msgstr "The current column definitions are invalid. Please check your inputs."
 
-#: src/pages/CollectionManagement.tsx:111
+#: src/pages/CollectionManagement.tsx:107
 msgid "Update Collection"
 msgstr "Update Collection"
 
@@ -658,8 +668,12 @@ msgid "Upload"
 msgstr "Upload"
 
 #: src/components/CollectionManagementForm.tsx:377
-msgid "Uploader Email"
-msgstr "Uploader Email"
+#~ msgid "Uploader Email"
+#~ msgstr "Uploader Email"
+
+#: src/components/CollectionManagementForm.tsx:383
+msgid "Uploader Emails"
+msgstr "Uploader Emails"
 
 #: src/components/CollectionForm.tsx:125
 #~ msgid "Uploaders Emails"
@@ -682,8 +696,8 @@ msgstr "Version"
 msgid "Yes"
 msgstr "Yes"
 
-#: src/pages/CollectionManagement.tsx:76
-#: src/pages/ColumnManagement.tsx:72
+#: src/pages/CollectionManagement.tsx:74
+#: src/pages/ColumnManagement.tsx:67
 msgid "You can only update the latest version of a collection. The collection you were viewing may have become stale. Please return to the home page and look for the latest version."
 msgstr "You can only update the latest version of a collection. The collection you were viewing may have become stale. Please return to the home page and look for the latest version."
 
@@ -696,7 +710,7 @@ msgstr "You can only update the latest version of a collection. The collection y
 #~ msgid "You do not have access to edit this collection. Please ask a team member with owner permissions to grant access."
 #~ msgstr "You do not have access to edit this collection. Please ask a team member with owner permissions to grant access."
 
-#: src/pages/ColumnManagement.tsx:89
+#: src/pages/ColumnManagement.tsx:84
 msgid "You do not have access to edit this collection. Please ask a team member with owner permissions to grant you access."
 msgstr "You do not have access to edit this collection. Please ask a team member with owner permissions to grant you access."
 
@@ -704,7 +718,7 @@ msgstr "You do not have access to edit this collection. Please ask a team member
 #~ msgid "You do not have access to edit this collection. Please ask the a team member with owner permissions to grant access."
 #~ msgstr "You do not have access to edit this collection. Please ask the a team member with owner permissions to grant access."
 
-#: src/pages/CollectionManagement.tsx:95
+#: src/pages/CollectionManagement.tsx:93
 msgid "You do not have access to edit this collection. Please ask the a team member with owner permissions to grant you access."
 msgstr "You do not have access to edit this collection. Please ask the a team member with owner permissions to grant you access."
 

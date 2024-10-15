@@ -36,15 +36,15 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.25.7",
+    "@babel/core": "7.25.8",
     "@babel/preset-react": "7.25.7",
     "@babel/preset-typescript": "7.25.7",
     "@lingui/cli": "4.11.4",
     "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
-    "@rspack/cli": "1.0.8",
-    "@rspack/core": "1.0.8",
+    "@rspack/cli": "1.0.10",
+    "@rspack/core": "1.0.10",
     "@svgr/webpack": "8.1.0",
-    "@swc/core": "1.7.28",
+    "@swc/core": "1.7.35",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.5.0",
     "@testing-library/react": "16.0.1",
@@ -64,6 +64,6 @@
     "jest-environment-jsdom": "29.7.0",
     "react-test-renderer": "18.3.1",
     "type-fest": "4.26.1",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   }
 }
