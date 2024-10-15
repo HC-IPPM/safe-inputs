@@ -1,0 +1,146 @@
+# DevSecOps
+
+Shifting left, including accessibility and security analysis in the development and operations processess. Store in cloud storage bucket accessible to the dashboard.
+
+## Accessibility
+
+[axe-testing](../axe-testing/)
+
+## SBOM - Software Bill of Materials
+
+![Dependency XKCD comic](https://imgs.xkcd.com/comics/dependency.png)
+
+Source: [XKCD Comic 2347](https://xkcd.com/2347/)
+
+Generating and SBOM give insight as to what application(s) and where within the application dependencies lie to be able to resolve vunerabilities, e.g. https://en.wikipedia.org/wiki/Log4Shell.
+
+The two mainstream open source tools used to collect the SBOM are Trivy and Syft. Syft provides a more comprehensive SBOM, reporting more components than Trivy, as generating the SBOM is Syft's main objective. Syft can be used with Grype to collect associated vunerabilities as well. Trivy is primarily focused on discovering vunerabilities, with SBOM generation as a by-product. However, Trivy has the more comprehensive vunerability database and better at vunerability dection. We will use a combination of the two - Syft to create the SBOM, and Trivy for vunerability, secret and misconfiguration detection. 
+
+There are currently two standards for SBOM - CycloneDX (OWASP foundation) and SPDX (Linux Foundation).  We will use CycloneDX for Safe Inputs. 
+
+[Syft](https://github.com/anchore/syft)
+
+Syft will be run to generate the SBOM in the CI, on the filesystem, then saved to a Google Cloud Storage bucket to be used by the dashboard. 
+
+https://aquasecurity.github.io/trivy/v0.27.1/docs/
+
+docker run aquasec/trivy\
+
+Usage:
+trivy [global flags] command [flags] target
+trivy [command]
+
+Examples:
+
+# Scan a container image
+
+$ trivy image python:3.4-alpine or axe
+
+# Scan a container image from a tar archive
+
+$ trivy image --input ruby-3.1.tar
+
+# Scan local filesystem
+
+$ trivy fs .
+
+# Run in server mode
+
+$ trivy server
+
+load from template https://aquasecurity.github.io/trivy/v0.17.2/examples/report/
+
+k8s trivy plugin $ trivy plugin install github.com/aquasecurity/trivy-plugin-kubectl
+
+SBOM with syft (maybe grype)
+https://www.jit.io/resources/appsec-tools/a-guide-to-generating-sbom-with-syft-and-grype
+
+(note grype can pull in vulnerabilities, but )
+
+CycloneDX is an open-source and machine-readable SBOM format developed by the OWASP communit
+
+syft axe -o cyclonedx-json > sbom.json && \
+cat sbom.json | jq . > pretty-sbom.json
+
+Pretty printing
+sudo apt install jq
+syft axe -o cyclonedx-json > sbom.json | jq . > pretty-sbom.json
+
+syft axe -o json | jq -r '.artifacts[] | [.name, .version, (if .licenses == [] then "No license" else [ .licenses[].value ] | join(", ") end)] | @tsv' | awk -F'\t' 'BEGIN {print "Package Name\tPackage Version\tLicense"; print "-------------\t---------------\t-------"} {printf "%s\t%s\t%s\n", $1, $2, $3}'
+
+syft axe -o cyclonedx-json > cyclonedex-sbom.json -o json > sbom-to-format.json
+
+syft axe -o syft-json > sbom-to-format.json && \
+jq '[.artifacts[] | {packageName: .name, packageVersion: .version, license: (if .licenses | length == 0 then "No license" else [ .licenses[].value ] | join(", ") end)}]' sbom-to-format.json | > packages_info.json
+
+syft axe -o cyclonedx-json > cyclonedx-sbom.json && \
+cat cyclonedx-sbom.json | jq '[.artifacts[] | {packageName: .name, packageVersion: .version, license: (if .licenses | length == 0 then "No license" else [ .licenses[].value ] | join(", ") end)}]' > packages_info.json
+
+syft axe -o json > sbom.json
+syft axe -o json | jq -r '.artifacts[] | [.name, .version, (if .licenses == [] then "No license" else [ .licenses[].value ] | join(", ") end)] | @tsv' | awk -F'\t' 'BEGIN {print "Package Name\tPackage Version\tLicense"; print "-------------\t---------------\t-------"} {printf "%s\t%s\t%s\n", $1, $2, $3}' > test.json
+
+with location:
+syft axe -o json | jq '[.artifacts[] | {packageName: .name, packageVersion: .version, license: (if .licenses | length == 0 then "No license" else [ .licenses[].value ] | join(", ") end), locations: [.locations[].path]}]' > packages_with_locations.json
+
+consolidate packages in one location (https://www.jit.io/resources/appsec-tools/a-guide-to-generating-sbom-with-syft-and-grype)
+
+syft axe -o json | jq '[.artifacts[] | {packageName: .name, packageVersion: .version, license: (if .licenses | length == 0 then "No license" else [ .licenses[].value ] | join(", ") end), locations: [.locations[].path]}] | group_by(.packageName + .packageVersion) | map({packageName: .[0].packageName, packageVersion: .[0].packageVersion, license: .[0].license, locations: map(.locations[]) | unique})' > grouped_packages_with_locations.json
+
+Scan sbom for vulnerabilities
+trivy sbom ./cyclonedx-sbom.json
+
+trivy image -f json -o results.json golang:1.12-alpine
+
+gcloud builds submit --config ./ui/cloudbuild.yaml
+
+docker run --rm -v $(pwd):/workspace aquasec/trivy:latest fs --scanners vuln,secret,misconfig,license /workspace
+docker run $(pwd) aquasec/trivy:latest fs --scanners vuln,secret,misconfig,license ./ui
+
+SBOM - to determine if we have a
+
+
+
+### Report Generation
+
+We're generating 2 reports here - one in Cyclonedx format (an open-source and machine-readable SBOM format developed by the OWASP community), and the other to easily look at a glance. Cyclonedx specifies how componenets relate to each othere to hlep visualize and identify potential risks. In the future, this will be streamlined into one once we've decided on the subset of information we will need for both the dashboard and in the case of determining the use of a package the
+
+cyclonedx can represent SBOM or BOV (bill of vulnerabilities) https://aquasecurity.github.io/trivy/v0.33/docs/sbom/cyclonedx/
+\*\* Should we streamline this to one set of tooling?
+
+## Vulnerability Detection
+
+https://aquasecurity.github.io/trivy/v0.33/docs/vulnerability/detection/os/
+
+Using Trivy here as reasons above.  
+
+## Secret Scanning
+
+included egtrivy fs /path/to/your_project unelsss add the just vulnerability flag --security-checks vuln
+https://aquasecurity.github.io/trivy/v0.33/docs/secret/scanning/
+inspired by gitleaks - if we want to incorporate a more robust scan, we can add gitleaks as a separate steo
+
+https://aquasecurity.github.io/trivy/v0.33/docs/kubernetes/operator/
+
+## Configuration scanning (IaC)
+ trivy config [YOUR_IaC_DIRECTORY]
+ or 
+ trivy fs --security-checks config /path/to/dir
+ trivy image --security-checks vuln,secret,config axe
+
+
+
+
+trivy fs --scanners vuln,secret,misconfig,license ./kubernetes
+
+trivy fs --scanners misconfig ./kubernetes
+
+trivy fs --scanners license --severity UNKNOWN,HIGH,CRITICAL ./ui
+
+License - using google license classification: https://opensource.google/documentation/reference/thirdparty/licenses
+
+trivy image --scanners license --severity UNKNOWN,HIGH,CRITICAL axe
+
+
+https://medium.com/@krishnaduttpanchagnula/vulnerability-identification-of-images-and-files-using-sbom-with-trivy-23e1a4a5eea4#:~:text=In%20addition%20to%20creating%20SBOM,fixes%20for%20the%20identified%20vulnerability.
+
+trivy sbom results.json
