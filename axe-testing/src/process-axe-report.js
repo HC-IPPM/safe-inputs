@@ -15,7 +15,7 @@ async function loadConfig(configPath) {
   }
 }
 
-function filterResults(results, ignoreList, type) {
+function filterResults(results, ignoreList) {
   return results.filter((item) => !ignoreList.includes(item.id));
 }
 
@@ -26,7 +26,7 @@ export async function processAxeReport(allResults) {
 
   console.log('\nProcessing results.');
 
-  //load config file
+  // Load config file
   const config = await loadConfig(configPath);
 
   for (const { url, results } of allResults) {
