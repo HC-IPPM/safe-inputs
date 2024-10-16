@@ -4,7 +4,7 @@ import path from 'path';
 // Load ignored URLs and whitelisted violations and incompletes from the config
 const configPath = './whitelist-config.json';
 
-// Load config file 
+// Load config file
 async function loadConfig(configPath) {
   try {
     const configContent = fs.readFileSync(configPath, 'utf8');
@@ -26,13 +26,21 @@ export async function processAxeReport(allResults) {
 
   console.log('\nProcessing results.');
 
-  //load config file 
+  //load config file
   const config = await loadConfig(configPath);
 
   for (const { url, results } of allResults) {
     // Filter out exempted violations and incomplete issues from the result
-    const filteredViolations = filterResults(results.violations, config.ignoreViolations, 'violations');
-    const filteredIncomplete = filterResults(results.incomplete, config.ignoreIncomplete, 'incomplete');
+    const filteredViolations = filterResults(
+      results.violations,
+      config.ignoreViolations,
+      'violations',
+    );
+    const filteredIncomplete = filterResults(
+      results.incomplete,
+      config.ignoreIncomplete,
+      'incomplete',
+    );
 
     // Store the filtered results for the current URL
     filteredResults.push({
@@ -83,5 +91,5 @@ export async function processAxeReport(allResults) {
     throw error;
   }
 
-  return { urlsWithViolations, urlsWithSeriousImpact};
+  return { urlsWithViolations, urlsWithSeriousImpact };
 }
