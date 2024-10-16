@@ -1,6 +1,4 @@
 // Evaluate accessibility and return URL, incomplete and violation results.
-import fs from 'fs';
-
 import AxePuppeteer from '@axe-core/puppeteer';
 
 // Evaluate accessibility for a single url
