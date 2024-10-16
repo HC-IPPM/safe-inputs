@@ -460,20 +460,23 @@ export const CollectionSchema = makeExecutableSchema({
         ) => {
           const column_def = await ColumnDefByIdLoader.load(column_id);
 
-          const collection = await (typeof column_def !== 'undefined'
-            ? CurrentCollectionByRecordsetKeyLoader.load(
-                column_def.meta.recordset_key,
-              )
-            : undefined);
+          const operation_name = `Query \`${fieldName}\``;
+          if (typeof column_def === 'undefined') {
+            // Cannot validate authorization if the column doesn't exist
+            throw make_authroization_error(operation_name);
+          } else {
+            const collection = await CurrentCollectionByRecordsetKeyLoader.load(
+              column_def.meta.recordset_key,
+            );
+            validate_collection_level_authorization(
+              `Query \`${fieldName}\``,
+              context.req.user,
+              collection,
+              user_can_view_collection,
+            );
 
-          validate_collection_level_authorization(
-            `Query \`${fieldName}\``,
-            context.req.user,
-            collection,
-            user_can_view_collection,
-          );
-
-          return column_def;
+            return column_def;
+          }
         },
       ),
       record: resolver_with_authz(
