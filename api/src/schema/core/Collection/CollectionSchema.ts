@@ -260,7 +260,7 @@ export const CollectionSchema = makeExecutableSchema({
     user_uploadable_collections(email: String!): [Collection]
     all_collections: [Collection]
 
-    validate_collection_def(collection_def: CollectionDefInput!): CollectionDefValidation
+    validate_collection_def(collection_def: CollectionDefInput!): CollectionDefValidation!
     validate_column_def(collection_id: String!, is_new_column: Boolean!, column_def: ColumnDefInput!): ColumnDefValidation
     validate_records(collection_id: String!, records: [JSON!]!): [JSON!]!
   }
@@ -297,8 +297,8 @@ export const CollectionSchema = makeExecutableSchema({
     description_en: ValidationMessages
     description_fr: ValidationMessages
     is_locked: ValidationMessages
-    owner_emails: [ValidationMessages]
-    uploader_emails: [ValidationMessages]
+    owner_emails: [ValidationMessages]!
+    uploader_emails: [ValidationMessages]!
   } 
 
   input ColumnDefInput {
