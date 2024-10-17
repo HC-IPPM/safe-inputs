@@ -17,33 +17,65 @@ steps:
   #   dir: ./
   #   args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
 
-  - id: generate-sbom-if-main
-    name: 'gcr.io/cloud-builders/docker'
-    dir: ui
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo $BRANCH_NAME
-        if [[ "$BRANCH_NAME" == "main" ]]
-        then
-          docker run --rm -v /workspace:/workspace anchore/syft:latest /workspace -o cyclonedx-json > /workspace/sbom.json
-        else
-          exit 0
-        fi
+  # - id: generate-sbom-if-main
+  #   name: 'gcr.io/cloud-builders/docker'
+  #   dir: ui
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       echo $BRANCH_NAME
+  #       if [[ "$BRANCH_NAME" == "main" ]]
+  #       then          
+  #         docker run --rm -v /workspace:/workspace anchore/syft:latest /workspace -o spdx-json > /workspace/sbom.json
+  #       else
+  #         exit 0
+  #       fi
 
-  - id: upload-sbom-to-gcs-bucket-if-main
-    name: 'gcr.io/cloud-builders/gsutil'
+  # - id: upload-sbom-to-gcs-bucket-if-main
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       if [[ "$BRANCH_NAME" == "main" ]]
+  #       then
+  #         gsutil cp /workspace/sbom.json gs://safe-inputs-outputs/SBOM/SBOM-${COMMIT_SHA}.json
+  #       else
+  #         exit 0
+  #       fi
+
+  - id: license-risk-scan-if-main
+    name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "main" ]]
-        then
-          gsutil cp /workspace/sbom.json gs://safe-inputs-outputs/SBOM/SBOM-${COMMIT_SHA}.json
-        else
-          exit 0
-        fi
+        docker run --rm -v /workspace:/workspace ghcr.io/aquasecurity/trivy:latest fs -f json /workspace/license-risk.json --scanners license --severity UNKNOWN,HIGH,CRITICAL.
+
+        trivy fs  --scanners license --severity UNKNOWN,HIGH,CRITICAL -f json -o results.json .
+
+  # - id: upload-license-risk-scan-to-gcs-bucket-if-main
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       if [[ "$BRANCH_NAME" == "main" ]]
+  #       then
+  #         gsutil cp /workspace/sbom.json gs://safe-inputs-outputs/license/license-scan-${COMMIT_SHA}.json
+  #       else
+  #         exit 0
+  #       fi
+
+  # - id: upload-trivy-results-to-gcs-bucket
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   args: [
+  #     'cp',
+  #     '/workspace/trivy-results.json',
+  #     'gs://safe-inputs-outputs/trivy-scans/ui-trivy-results.json'
+  #   ]
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 # To run locally: gcloud builds submit --config ./cloudbuild.yaml --substitutions=BRANCH_NAME=main,COMMIT_SHA=abc1234
