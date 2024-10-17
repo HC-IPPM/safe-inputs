@@ -48,9 +48,9 @@ console.log('Exempted violation ids:', ignoreViolations);
 
   // Perform login to move to the next page
   await page.type('#email', 'joe.smith@phac-aspc.gc.ca'); // email field
-  await page.click(
-    '#react-root > div > div:nth-child(2) > div.chakra-container.css-o2miap > div > form > button', // login button selector
-  );
+  await page
+  .locator('button[type="submit"]', { hasText: /sign in/i }) // case insensitive regex search for sign in button
+  .click();
 
   // Bypass authentication in the dev environment
   const textSelector = await page
