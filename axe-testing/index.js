@@ -49,8 +49,8 @@ console.log('Exempted violation ids:', ignoreViolations);
   // Perform login to move to the next page
   await page.type('#email', 'joe.smith@phac-aspc.gc.ca'); // email field
   await page
-  .locator('button[type="submit"]', { hasText: /sign in/i }) // case insensitive regex search for sign in button
-  .click();
+    .locator('button[type="submit"]', { hasText: /sign in/i }) // case insensitive regex search for sign in button
+    .click();
 
   // Bypass authentication in the dev environment
   const textSelector = await page
