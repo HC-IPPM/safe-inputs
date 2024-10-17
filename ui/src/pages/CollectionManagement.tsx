@@ -66,7 +66,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
 
   if (error) {
     throw error;
-  } else if (!loading && !data?.collection.is_current_version) {
+  } else if (!loading && !data?.collection?.is_current_version) {
     return (
       <ErrorDisplay
         title={<Trans>Cannot update stale version of Collection</Trans>}
@@ -81,7 +81,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
     );
   } else if (
     !loading &&
-    !data?.collection.owners?.some(
+    !data?.collection?.owners?.some(
       (owner: { email: string }) => owner.email === session.email,
     ) &&
     !session.is_super_user
@@ -107,7 +107,7 @@ const CollectionMainPage = memo(function CollectionMainPage({
                 <Trans>Update Collection</Trans>
               </Heading>
               <CollectionManagementForm
-                collection_id={data?.collection.id}
+                collection_id={data?.collection?.id}
                 initial_collection_state={_.chain(data?.collection)
                   .pick([
                     'name_en',

@@ -1,9 +1,12 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import type { User } from 'src/graphql/schema_common.d.ts';
-
-const USERS = gql`
+import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  UsersQuery,
+  UsersQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
+const USERS = gql(`
   query Users {
     users {
       id
@@ -15,11 +18,8 @@ const USERS = gql`
       can_own_collections
     }
   }
-`;
+`);
 
-export type UsersResult = {
-  users: User[];
-};
-
-export const useUsers = (options?: QueryHookOptions<UsersResult>) =>
-  useQuery<UsersResult>(USERS, options);
+export const useUsers = (
+  options?: QueryHookOptions<UsersQuery, UsersQueryVariables>,
+) => useQuery<UsersQuery, UsersQueryVariables>(USERS, options);

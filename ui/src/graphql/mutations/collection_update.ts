@@ -1,9 +1,13 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import type { MutationHookOptions } from '@apollo/client';
 
-import type { CollectionDefInput } from 'src/graphql/schema_common.d.ts';
+import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  CollectionUpdateMutation,
+  CollectionUpdateMutationVariables,
+} from 'src/graphql/__generated__/graphql.ts';
 
-export const COLLECTION_UPDATE = gql`
+export const COLLECTION_UPDATE = gql(`
   mutation CollectionUpdate(
     $collection_id: String!
     $collection_def: CollectionDefInput!
@@ -15,27 +19,15 @@ export const COLLECTION_UPDATE = gql`
       id
     }
   }
-`;
-
-export type CollectionUpdateVariables = {
-  collection_id: string;
-  collection_def: CollectionDefInput;
-};
-
-export type CollectionUpdateResult = {
-  update_collection: {
-    id: string;
-    __typename: string;
-  };
-};
+`);
 
 export const useCollectionUpdate = (
   options?: MutationHookOptions<
-    CollectionUpdateResult,
-    CollectionUpdateVariables
+    CollectionUpdateMutation,
+    CollectionUpdateMutationVariables
   >,
 ) =>
-  useMutation<CollectionUpdateResult, CollectionUpdateVariables>(
+  useMutation<CollectionUpdateMutation, CollectionUpdateMutationVariables>(
     COLLECTION_UPDATE,
     options,
   );

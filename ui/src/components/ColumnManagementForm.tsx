@@ -21,20 +21,22 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import type { CollectionWithColumnDetailsResult } from 'src/graphql/index.ts';
 import {
-  useCollumnDefCreation,
-  useCollumnDefUpdate,
+  CollectionWithColumnDetailsQuery,
+  ColumnDefInput,
+} from 'src/graphql/__generated__/graphql.ts';
+import {
+  useColumnDefCreation,
+  useColumnDefUpdate,
   useLazyColumnDefInputValidation,
 } from 'src/graphql/index.ts';
-import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
 
 import { GraphQLErrorDisplay } from './GraphQLErrorDisplay.tsx';
 
 interface ColumnManagementFormProps {
   collectionId: string;
   columnId?: string;
-  initialColumnState?: CollectionWithColumnDetailsResult['collection']['column_defs'][number];
+  initialColumnState?: CollectionWithColumnDetailsQuery['collection']['column_defs'][number];
 }
 
 export const ColumnManagementForm = function ({
@@ -53,10 +55,10 @@ export const ColumnManagementForm = function ({
   } = useLingui();
 
   const [createColumnDefs, { loading: creationLoading, error: creationError }] =
-    useCollumnDefCreation();
+    useColumnDefCreation();
 
   const [updateColumnDefs, { loading: updateLoading, error: updateError }] =
-    useCollumnDefUpdate();
+    useColumnDefUpdate();
 
   const mutationLoading = is_new_column ? creationLoading : updateLoading;
   const mutationError = is_new_column ? creationError : updateError;

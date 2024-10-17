@@ -1,5 +1,9 @@
 version: '3.8'
 
+# good to specify the project name for a more consistent resulting environment. For example, network names
+# are prefixed by the compose file's project name https://docs.docker.com/compose/how-tos/networking/
+name: safe-inputs
+
 networks:
   host-loopback:
     driver: bridge
@@ -98,7 +102,7 @@ services:
       retries: 30
 
   seed-dev-data:
-    image: safe-inputs-api:1.2
+    image: node-dev:1.0
     tty: ${DOCKER_TTY:-true}
     restart: always
     build:
@@ -119,7 +123,7 @@ services:
       - db
 
   api:
-    image: safe-inputs-api:1.2
+    image: node-dev:1.0
     tty: ${DOCKER_TTY:-true}
     restart: always
     build:
@@ -138,8 +142,32 @@ services:
     depends_on:
       - seed-dev-data
 
+  ui-gql-codegen:
+    image: node-dev:1.0
+    tty: ${DOCKER_TTY:-true}
+    restart: always
+    build:
+      dockerfile: ./Dockerfile.node-dev
+      context: ./
+    # has to run as root to be able to write generated types back to the host. TODO: _maybe_
+    # avoidable with fixuid, but generally fixing docker to host file permissions is a nightmare
+    user: root
+    volumes:
+      # to balance for running as root, only the target directory for the generated types is writable
+      - ./:/home/node-dev/project:ro
+      - ./ui/src/graphql/__generated__:/home/node-dev/project/ui/src/graphql/__generated__:rw
+    environment:
+      - GRAPHQL_ENDPOINT_URL=http://api:3000/api/graphql
+    entrypoint:
+      - ../node-dev-entrypoint.watch.sh
+    command: npm run gql-codegen:watch
+    networks:
+      - host-loopback
+    depends_on:
+      - api
+
   ui:
-    image: safe-inputs-ui:1.2
+    image: node-dev:1.0
     tty: ${DOCKER_TTY:-true}
     restart: always
     build:
@@ -154,4 +182,4 @@ services:
     ports:
       - 8000:8080
     depends_on:
-      - api
+      - ui-gql-codegen

@@ -1,34 +1,28 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import type { MutationHookOptions } from '@apollo/client';
 
-import type { CollectionDefInput } from 'src/graphql/schema_common.d.ts';
+import { gql } from 'src/graphql/__generated__/gql.ts';
 
-const COLLECTION_CREATION = gql`
+import {
+  CollectionCreationMutation,
+  CollectionCreationMutationVariables,
+} from 'src/graphql/__generated__/graphql.ts';
+
+const COLLECTION_CREATION = gql(`
   mutation CollectionCreation($collection_def: CollectionDefInput!) {
     create_collection(collection_def: $collection_def) {
       id
     }
   }
-`;
-
-export type CollectionCreationVariables = {
-  collection_def: CollectionDefInput;
-};
-
-export type CollectionCreationResult = {
-  create_collection: {
-    id: string;
-    __typename: string;
-  };
-};
+`);
 
 export const useCollectionCreation = (
   options?: MutationHookOptions<
-    CollectionCreationResult,
-    CollectionCreationVariables
+    CollectionCreationMutation,
+    CollectionCreationMutationVariables
   >,
 ) =>
-  useMutation<CollectionCreationResult, CollectionCreationVariables>(
+  useMutation<CollectionCreationMutation, CollectionCreationMutationVariables>(
     COLLECTION_CREATION,
     options,
   );
