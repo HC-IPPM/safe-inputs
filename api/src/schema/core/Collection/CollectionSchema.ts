@@ -254,7 +254,7 @@ export const CollectionSchema = makeExecutableSchema({
   type Query { 
     collection(collection_id: String!): Collection!
     column_def(column_id: String!): ColumnDef!
-    record(record_id: String!): Record
+    record(record_id: String!): Record!
 
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
@@ -469,7 +469,7 @@ export const CollectionSchema = makeExecutableSchema({
               column_def.meta.recordset_key,
             );
             validate_collection_level_authorization(
-              `Query \`${fieldName}\``,
+              operation_name,
               context.req.user,
               collection,
               user_can_view_collection,
@@ -488,21 +488,25 @@ export const CollectionSchema = makeExecutableSchema({
         ) => {
           const record = await RecordByIdLoader.load(record_id);
 
-          const collection = await (typeof record !== 'undefined'
-            ? CurrentCollectionByRecordsetKeyLoader.load(
-                record.meta.recordset_key,
-              )
-            : undefined);
+          const operation_name = `Query \`${fieldName}\``;
+          if (typeof record === 'undefined') {
+            // Cannot validate authorization if the record doesn't exist
+            throw make_authroization_error(operation_name);
+          } else {
+            const collection = await CurrentCollectionByRecordsetKeyLoader.load(
+              record.meta.recordset_key,
+            );
 
-          validate_record_level_authorization(
-            `Query \`${fieldName}\``,
-            context.req.user,
-            collection,
-            typeof record !== 'undefined' ? [record] : [],
-            user_can_view_records,
-          );
+            validate_record_level_authorization(
+              operation_name,
+              context.req.user,
+              collection,
+              typeof record !== 'undefined' ? [record] : [],
+              user_can_view_records,
+            );
 
-          return record;
+            return record;
+          }
         },
       ),
 
