@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const { setTimeout } = require('node:timers/promises');
 
-const retry_max = 15;
+const retry_max = 30;
+const timeout_seconds = 5;
 const endpoint =
   process.env.GRAPHQL_ENDPOINT_URL ?? 'http://localhost:3000/api/graphql';
 
@@ -16,13 +17,17 @@ const try_fetch = (retry_count) =>
         process.exit(1);
       } else {
         console.log('Api service response pending...');
-        return setTimeout(3000).then(() => try_fetch(retry_count + 1));
+        return setTimeout(timeout_seconds * 1000).then(() =>
+          try_fetch(retry_count + 1),
+        );
       }
     })
     .catch((error) => {
       if (retry_count < retry_max) {
         console.log('Api service response pending...');
-        return setTimeout(3000).then(() => try_fetch(retry_count + 1));
+        return setTimeout(timeout_seconds * 1000).then(() =>
+          try_fetch(retry_count + 1),
+        );
       } else {
         throw error;
       }
