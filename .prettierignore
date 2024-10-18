@@ -10,5 +10,8 @@ kubernetes/**/*.enc.yaml
 # generated (by lingui)
 ui/src/i18n/locales
 
+# generated (by graphql-codegen)
+ui/src/graphql/__generated__
+
 # not to be maintained or edited by us
 kubernetes/clusters/gke/flux-system/gotk-components.yaml

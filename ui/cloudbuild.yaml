@@ -70,7 +70,7 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:3c208421850f9ff6621a2d82b243369ad94d7fe0c25ff8378814102ed5dcfe12'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -79,7 +79,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:3c208421850f9ff6621a2d82b243369ad94d7fe0c25ff8378814102ed5dcfe12'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -94,7 +94,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:3c208421850f9ff6621a2d82b243369ad94d7fe0c25ff8378814102ed5dcfe12'
     entrypoint: 'bash'
     args:
       - '-c'

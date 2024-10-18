@@ -1,9 +1,12 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import type { QueryHookOptions } from '@apollo/client';
 
-import type { Collection, User } from 'src/graphql/schema_common.d.ts';
-
-const COLLECTION_INFO_FOR_CURRENT_SESSION = gql`
+import { gql } from 'src/graphql/__generated__/gql.ts';
+import {
+  CollectionsInfoCurrentSessionQuery,
+  CollectionsInfoCurrentSessionQueryVariables,
+} from 'src/graphql/__generated__/graphql.ts';
+const COLLECTION_INFO_FOR_CURRENT_SESSION = gql(`
   query CollectionsInfoCurrentSession($lang: String!) {
     session {
       owned_collections {
@@ -30,37 +33,15 @@ const COLLECTION_INFO_FOR_CURRENT_SESSION = gql`
       }
     }
   }
-`;
-
-export type CollectionInfoForCurrentSessionVariables = {
-  lang: string;
-};
-
-export type CollectionInfoResult = Pick<
-  Collection,
-  | 'id'
-  | 'major_ver'
-  | 'minor_ver'
-  | 'created_at'
-  | 'is_locked'
-  | 'name'
-  | '__typename'
-> & { created_by: Pick<User, 'email' | '__typename'> };
-
-export type CollectionInfoForCurrentSessionResult = {
-  session: {
-    owned_collections: CollectionInfoResult[];
-    uploadable_collections: CollectionInfoResult[];
-  };
-};
+`);
 
 export const useCollectionInfoForCurrentSession = (
   options: QueryHookOptions<
-    CollectionInfoForCurrentSessionResult,
-    CollectionInfoForCurrentSessionVariables
+    CollectionsInfoCurrentSessionQuery,
+    CollectionsInfoCurrentSessionQueryVariables
   >,
 ) =>
   useQuery<
-    CollectionInfoForCurrentSessionResult,
-    CollectionInfoForCurrentSessionVariables
+    CollectionsInfoCurrentSessionQuery,
+    CollectionsInfoCurrentSessionQueryVariables
   >(COLLECTION_INFO_FOR_CURRENT_SESSION, options);
