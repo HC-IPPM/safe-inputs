@@ -11,8 +11,8 @@ dotenv.config();
 const { HOMEPAGE_URL } = process.env;
 
 const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
-const blacklistUrls = config.blacklistUrls || [];
-console.log('Exempted URLs:', blacklistUrls);
+const blacklistPatterns = config.blacklistPatterns || [];
+console.log('Exempted URL Patterns:', blacklistPatterns);
 const ignoreIncomplete = config.ignoreIncomplete || [];
 console.log('Exempted incomplete ids:', ignoreIncomplete);
 const ignoreViolations = config.ignoreViolations || [];
@@ -22,7 +22,7 @@ console.log('Exempted violation ids:', ignoreViolations);
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 
-  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || null; // Use docker puppeteer path if running in container, otherwise, use system degault
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || null; // Use docker puppeteer path if running in container, otherwise, use system default
 
   // Launch the browser
   const browser = await puppeteer.launch({
@@ -68,7 +68,7 @@ console.log('Exempted violation ids:', ignoreViolations);
     HOMEPAGE_URL,
     visitedPages,
     allResults,
-    blacklistUrls,
+    blacklistPatterns,
   );
 
   const { urlsWithViolations, urlsWithSeriousImpact } =

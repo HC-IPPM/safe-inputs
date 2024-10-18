@@ -8,11 +8,20 @@ const configPath = './whitelist-config.json';
 async function loadConfig(configPath) {
   try {
     const configContent = fs.readFileSync(configPath, 'utf8');
-    return JSON.parse(configContent);
+    const config = JSON.parse(configContent);
+    config.blacklistPatterns = (config.blacklistPatterns || []).map(
+      (pattern) => new RegExp(pattern),
+    );
+
+    return config;
   } catch (error) {
     console.error(`Failed to load config file at ${configPath}:`, error);
     throw error;
   }
+}
+
+function isUrlBlacklisted(url, blacklistPatterns) {
+  return blacklistPatterns.some((regex) => regex.test(url));
 }
 
 function filterResults(results, ignoreList) {
@@ -30,6 +39,11 @@ export async function processAxeReport(allResults) {
   const config = await loadConfig(configPath);
 
   for (const { url, results } of allResults) {
+    // Skip URLs based on regex blacklist patterns
+    if (isUrlBlacklisted(url, config.blacklistPatterns)) {
+      console.log(`Skipping exempted URL: ${url}`);
+      continue;
+    }
     // Filter out exempted violations and incomplete issues from the result
     const filteredViolations = filterResults(
       results.violations,
@@ -73,7 +87,7 @@ export async function processAxeReport(allResults) {
   const result = {
     exemptedViolationIds: config.ignoreViolations || [],
     exemptedIncompleteIds: config.ignoreIncomplete || [],
-    exemptedUrls: config.blacklistUrls || [],
+    exemptedUrlPattersn: config.blacklistPatterns || [],
     urlsWithViolations,
     urlsWithSeriousImpact,
     fullResults: filteredResults,

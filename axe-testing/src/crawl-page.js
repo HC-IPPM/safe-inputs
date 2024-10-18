@@ -7,7 +7,7 @@ export async function crawlPage(
   HOMEPAGE_URL,
   visitedPages,
   allResults,
-  blacklistUrls,
+  blacklistPatterns,
 ) {
   const currentUrl = page.url();
   let uniqueUrl = currentUrl;
@@ -21,8 +21,14 @@ export async function crawlPage(
   // Mark page as visited
   visitedPages.add(currentUrl);
 
+  // Check if the current URL matches any blacklist patterns
+  const isBlacklisted = blacklistPatterns.some((pattern) => {
+    const regex = new RegExp(pattern);
+    return regex.test(currentUrl);
+  });
+
   // Skip if the URL is blacklisted
-  if (Array.isArray(blacklistUrls) && blacklistUrls.includes(currentUrl)) {
+  if (isBlacklisted) {
     console.log(`Skipping as on blacklist: ${currentUrl}`);
     return;
   }
@@ -60,7 +66,7 @@ export async function crawlPage(
         HOMEPAGE_URL,
         visitedPages,
         allResults,
-        blacklistUrls,
+        blacklistPatterns,
       ); // Recursively crawl new pages
       await newPage.close(); // Close new page after crawling
     }
