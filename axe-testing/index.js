@@ -1,11 +1,11 @@
 import fs from 'fs';
+
 import { AxePuppeteer } from '@axe-core/puppeteer';
+import dotenv from 'dotenv';
 import puppeteer from 'puppeteer';
 
-import { processAxeReport } from './src/process-axe-report.js';
 import { crawlPage } from './src/crawl-page.js';
-
-import dotenv from 'dotenv';
+import { processAxeReport } from './src/process-axe-report.js';
 
 dotenv.config();
 const { HOMEPAGE_URL } = process.env;

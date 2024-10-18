@@ -1,8 +1,12 @@
-import globals from 'globals';
+/* eslint-disable n/no-extraneous-import */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
+
+// eslint-disable-next-line import/namespace
 import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+// eslint-disable-next-line n/no-unpublished-import
+import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
