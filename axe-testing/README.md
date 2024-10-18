@@ -38,15 +38,10 @@ OR run the accessibility scan using Docker container
 
 ```
 
-docker build -t axe .
+cd axe-testing && npm start:docker
 
 ```
 
-```
-
-docker run --network host axe
-
-```
 
 ### Or in GCP by manualy triggering Cloud Build
 
