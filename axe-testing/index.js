@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const { HOMEPAGE_URL } = process.env;
 
-const config = JSON.parse(fs.readFileSync('./whitelist-config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('./axeignore.json', 'utf8'));
 const blacklistPatterns = config.blacklistPatterns || [];
 console.log('Exempted URL Patterns:', blacklistPatterns);
 const ignoreIncomplete = config.ignoreIncomplete || [];

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Load ignored URLs and whitelisted violations and incompletes from the config
-const configPath = './whitelist-config.json';
+const configPath = './axeignore.json';
 
 // Load config file
 async function loadConfig(configPath) {

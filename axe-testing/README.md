@@ -76,7 +76,7 @@ The results are then parsed and saved to file. When run with Cloud Build, the re
 
 ## Adding in exceptions
 
-To bypass specific URLs or violation ids, the [whitelist-config.json](./whitelist-config.json) file is used to define exceptions.
+To bypass specific URLs or violation ids, the [axeignore.json](./axeignore.json) file is used to define exceptions.
 
 ## Other Considerations
 
