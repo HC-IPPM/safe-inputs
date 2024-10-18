@@ -10,7 +10,7 @@
     "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
     "prestart:docker": "mkdir -p axe-results && sudo chmod 777 axe-results && docker build -t axe .",
     "start": "node --experimental-vm-modules index.js",
-    "start:docker": "docker run --network host -v ${PWD}/axe-results:/app/axe-results axe"
+    "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results axe"
   },
   "author": "",
   "license": "ISC",
