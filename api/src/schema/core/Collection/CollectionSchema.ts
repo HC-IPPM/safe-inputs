@@ -980,8 +980,15 @@ export const CollectionSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => UserByIdLoader.load(parent.meta.created_by.toString()),
-      owners: (
+      ) =>
+        UserByIdLoader.load(parent.meta.created_by.toString()).then((user) => {
+          if (typeof user === 'undefined')
+            throw Error(
+              `Collection found but creator not found. User ${parent.meta.created_by.toString()} not found.`,
+            );
+          return user;
+        }),
+      owners: async (
         parent: CollectionDocument,
         _args: unknown,
         _context: unknown,
@@ -989,7 +996,18 @@ export const CollectionSchema = makeExecutableSchema({
       ) =>
         UserByIdLoader.loadMany(
           parent.data.owners.map((object_id) => object_id.toString()),
-        ),
+        ).then((users) => {
+          const owners = users.map((user, index) => {
+            if (typeof user === 'undefined') {
+              // Throw error on first occurance of User not found so it can be fixed
+              throw Error(
+                `Collection owner ${parent.data.owners[index]} not found.`,
+              );
+            }
+            return user;
+          });
+          return owners;
+        }),
       uploaders: (
         parent: CollectionDocument,
         _args: unknown,
@@ -1000,7 +1018,18 @@ export const CollectionSchema = makeExecutableSchema({
           ? []
           : UserByIdLoader.loadMany(
               parent.data.uploaders.map((object_id) => object_id.toString()),
-            ),
+            ).then((users) => {
+              const uploaders = users.map((user, index) => {
+                if (typeof user === 'undefined') {
+                  // Throw error on first occurance of User not found so it can be fixed
+                  throw Error(
+                    `Collection uploader ${parent.data.uploaders[index]} not found.`,
+                  );
+                }
+                return user;
+              });
+              return uploaders;
+            }),
       column_defs: (
         parent: CollectionDocument,
         _args: unknown,
