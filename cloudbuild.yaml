@@ -26,8 +26,8 @@ steps:
       set -o pipefail
       set -o nounset
 
-      # docker compose dev environment, detached mode, with the unnecessary services disabled
-      docker compose -f ./docker-compose.dev.yaml up --detach --scale gateway=0 --scale seed-dev-data=0 --scale ui-gql-codegen=0 --scale ui=0
+      # docker compose dev environment, detached mode, with the unnecessary services disabled (would disable the ui service too, but the gateway service needs it)
+      docker compose -f ./docker-compose.dev.yaml up --detach --scale seed-dev-data=0 --scale ui-gql-codegen=0
 
       # running the codegen check from a separate container, outside of the docker compose environment, because when I was using the codegen
       # check inside the compose environment (with the --exit-code-from flag set), cloud build was consistently getting 137 exit codes
@@ -35,11 +35,12 @@ steps:
       docker run \
         --volume "${PWD}":/home/project \
         --workdir /home/project \
-        --network safe-inputs_host-loopback \
-        --env GRAPHQL_ENDPOINT_URL="http://api:3000/api/graphql" \
+        --network host \
         --entrypoint npm \
         node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
         run gql-codegen:check
+
+      docker compose -f ./docker-compose.dev.yaml down
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
