@@ -22,10 +22,9 @@ steps:
     entrypoint: 'bash'
     args:
       - '-c'
-      - |
+      - | # scaling ui-gql-codegen to 0 because it a) doesn't need to run here, and b) has permissions issues when running in this context
         docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0 && \
-        sleep 50
+        docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
 
   - id: build-axe-container
     name: 'gcr.io/cloud-builders/docker'
@@ -39,6 +38,11 @@ steps:
       - |
         mkdir -p /workspace/axe-results && \
         chmod -R 777 /workspace/axe-results
+
+  - id: wait-for-local-ui-server
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    entrypoint: node
+    args: ['./wait_for_service.cjs', 'http://localhost:8080/signin']
 
   - id: run-axe-scan
     name: 'gcr.io/cloud-builders/docker'
