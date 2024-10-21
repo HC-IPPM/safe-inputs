@@ -24,7 +24,7 @@ steps:
       - '-c'
       - |
         docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d && \
+        docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0 && \
         sleep 50
 
   - id: build-axe-container
