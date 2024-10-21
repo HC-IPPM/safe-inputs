@@ -17,7 +17,7 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  - id: 'Axe a11y testing'
+  - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker'
     dir: ./
     script: |
@@ -45,11 +45,17 @@ steps:
         node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
         ./wait_for_service.cjs http://localhost:8080/signin
 
-      docker run \
-        --network host \
-        --rm \
-        --volume /workspace/axe-results:/app/axe-results \
-        axe
+  - id: 'Axe a11y testing'
+    name: 'gcr.io/cloud-builders/docker'
+    args: [
+        'run',
+        '--network',
+        'host', # to access the dev environment
+        '--rm',
+        '--volume',
+        '/workspace/axe-results:/app/axe-results',
+        'axe',
+      ]
 
   # - id: upload-axe-results-gcs
   #   name: 'gcr.io/cloud-builders/gsutil'
