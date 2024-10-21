@@ -1,5 +1,5 @@
 steps:
-  - id: install
+  - id: 'Install dependencies'
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
@@ -11,50 +11,45 @@ steps:
     entrypoint: npm
     args: ['run', 'typecheck']
 
-  - id: test
+  - id: Test
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['test']
 
-  - id: docker-compose-up-dev-environment-for-axe-testing
+  - id: 'Axe a11y testing'
     name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - | # scaling ui-gql-codegen to 0 because it a) doesn't need to run here, and b) has permissions issues when running in this context
-        docker compose -f ./docker-compose.dev.yaml down -v && \
-        docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
+    dir: ./
+    script: |
+      #!/bin/bash
+      set -o errexit
+      set -o pipefail
+      set -o nounset
 
-  - id: build-axe-container
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'axe', './axe-testing']
+      # docker compose dev environment, detached mode, with ui-gql-codegen disabled because it a) doesn't need to run here, and
+      # b) has permissions issues when running in this context
+      docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
 
-  - id: prepare-results-directory # was having permission issues: Error: EACCES: permission denied, open './axe-results/*.json'
-    name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        mkdir -p /workspace/axe-results && \
-        chmod -R 777 /workspace/axe-results
+      docker build -t axe ./axe-testing
 
-  - id: wait-for-local-ui-server
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-    entrypoint: node
-    args: ['./wait_for_service.cjs', 'http://localhost:8080/signin']
+      # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
+      mkdir -p /workspace/axe-results
+      chmod -R 777 /workspace/axe-results
 
-  - id: run-axe-scan
-    name: 'gcr.io/cloud-builders/docker'
-    args: [
-        'run',
-        '--network',
-        'host', # to access the dev environment
-        '--rm',
-        '--volume',
-        '/workspace/axe-results:/app/axe-results',
-        'axe',
-      ]
+      # make sure the ui server is ready before continuing
+      docker run \
+        --volume "${PWD}":/home/project \
+        --workdir /home/project \
+        --network host \
+        --entrypoint node \
+        node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
+        ./wait_for_service.cjs http://localhost:8080/signin
+
+      docker run \
+        --network host \
+        --rm \
+        --volume /workspace/axe-results:/app/axe-results \
+        axe
 
   # - id: upload-axe-results-gcs
   #   name: 'gcr.io/cloud-builders/gsutil'
