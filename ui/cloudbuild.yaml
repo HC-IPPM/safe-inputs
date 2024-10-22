@@ -57,14 +57,14 @@ steps:
         'axe',
       ]
 
-  - id: upload-axe-results-gcs
-    name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-        gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
+  # - id: upload-axe-results-gcs
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+  #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
     name: 'gcr.io/cloud-builders/docker'
