@@ -58,14 +58,15 @@ gcloud auth login
 At the root of the project, run:
 
 ```
-
-gcloud builds submit --config ./ui/cloudbuild.yaml
+export BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+export COMMIT_SHA=$(git rev-parse HEAD)
+gcloud builds submit --config ./ui/cloudbuild.yaml --substitutions=BRANCH_NAME=$BRANCH_NAME,COMMIT_SHA=runOutSideOfGitTrigger-$COMMIT_SHA
 
 ```
 
 This will first spin up a Docker Compose development environment, enabling interaction in a non-production setting, with the ability to by-pass the login.
 
-Once the development envrionemnt is active, the accessibility scan will use a headless chrome browser to render and scan each page.
+Once the development envrionment is active, the accessibility scan will use a headless chrome browser to render and scan each page.
 
 The results are then parsed and saved to file. When run with Cloud Build, the results are saved to a Google Cloud storage bucket for the dashboard to access.
 
