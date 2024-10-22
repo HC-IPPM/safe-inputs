@@ -54,12 +54,12 @@ const ColumnManagement = memo(function ColumnManagement({
 
   const initial_column_state =
     typeof columnId !== 'undefined' && !loading && data
-      ? data.collection.column_defs.find(({ id }) => id === columnId)
+      ? data.collection?.column_defs.find(({ id }) => id === columnId)
       : undefined;
 
   if (error) {
     throw error;
-  } else if (!loading && !data?.collection.is_current_version) {
+  } else if (!loading && !data?.collection?.is_current_version) {
     return (
       <ErrorDisplay
         title={<Trans>Cannot update stale version of Collection</Trans>}
@@ -74,7 +74,7 @@ const ColumnManagement = memo(function ColumnManagement({
     );
   } else if (
     !loading &&
-    !data?.collection.owners.some(({ email }) => email === session.email) &&
+    !data?.collection?.owners.some(({ email }) => email === session.email) &&
     !session.is_super_user
   ) {
     return (

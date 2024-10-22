@@ -1,9 +1,9 @@
 steps:
-  # - id: 'Install dependencies'
-  #   name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
-  #   entrypoint: 'npm'
-  #   dir: ./
-  #   args: ['ci'] # assumes postinstall script in the root level package.json to also install the sub-directory dependencies
+  - id: 'Install dependencies'
+    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    entrypoint: 'npm'
+    dir: ./
+    args: ['run', 'ci:all'] # script in the root package.json which runs ci at the root and in each sub-project
 
   # - id: 'Prettier check'
   #   name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
@@ -44,6 +44,32 @@ steps:
         else
           exit 0
         fi
+
+  - id: 'GraphQL Codegen check'
+    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
+    dir: ./
+    script: |
+      #!/bin/bash
+      set -o errexit
+      set -o pipefail
+      set -o nounset
+
+      # docker compose dev environment, detached mode, with the unnecessary services disabled (would disable the ui service too, but the gateway service needs it)
+      docker compose -f ./docker-compose.dev.yaml up --detach --scale seed-dev-data=0 --scale ui-gql-codegen=0
+
+      # running the codegen check from a separate container, outside of the docker compose environment, because when I was using the codegen
+      # check inside the compose environment (with the --exit-code-from flag set), cloud build was consistently getting 137 exit codes
+      # regardless of the outcome of the checks. See: https://github.com/HC-IPPM/safe-inputs/pull/724/commits/36abe66a15020daf70f3ed3e4d3dbd5b3b96fd0b
+      docker run \
+        --volume "${PWD}":/home/project \
+        --workdir /home/project \
+        --network host \
+        --entrypoint npm \
+        node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
+        run gql-codegen:check
+
+      docker compose -f ./docker-compose.dev.yaml down
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 # To run locally: gcloud builds submit --config ./cloudbuild.yaml --substitutions=BRANCH_NAME=main,COMMIT_SHA=abc1234

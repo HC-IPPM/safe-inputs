@@ -1,0 +1,29 @@
+{
+  "name": "axe-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "lint": "eslint src",
+    "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
+    "prestart:docker": "mkdir -p axe-results && sudo chmod 777 axe-results && docker build -t axe .",
+    "start": "node --experimental-vm-modules index.js",
+    "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results axe"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@axe-core/puppeteer": "^4.10.0",
+    "dotenv": "^16.4.5",
+    "puppeteer": "^23.5.0"
+  },
+  "devDependencies": {
+    "@microsoft/eslint-plugin-sdl": "0.2.2",
+    "eslint": "8.57.1",
+    "eslint-plugin-n": "17.11.1",
+    "eslint-plugin-security": "3.0.1",
+    "globals": "^15.10.0"
+  }
+}

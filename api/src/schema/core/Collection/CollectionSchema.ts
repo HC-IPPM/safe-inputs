@@ -252,25 +252,25 @@ const collection_def_input_to_model_data_fields = async (
 export const CollectionSchema = makeExecutableSchema({
   typeDefs: `
   type Query { 
-    collection(collection_id: String!): Collection
-    column_def(column_id: String!): ColumnDef
-    record(record_id: String!): Record
+    collection(collection_id: String!): Collection!
+    column_def(column_id: String!): ColumnDef!
+    record(record_id: String!): Record!
 
     user_owned_collections(email: String!): [Collection]
     user_uploadable_collections(email: String!): [Collection]
     all_collections: [Collection]
 
-    validate_collection_def(collection_def: CollectionDefInput!): CollectionDefValidation
+    validate_collection_def(collection_def: CollectionDefInput!): CollectionDefValidation!
     validate_column_def(collection_id: String!, is_new_column: Boolean!, column_def: ColumnDefInput!): ColumnDefValidation
     validate_records(collection_id: String!, records: [JSON!]!): [JSON!]!
   }
 
   type Mutation {
-    create_collection(collection_def: CollectionDefInput): Collection
-    update_collection(collection_id: String!, collection_def: CollectionDefInput): Collection
+    create_collection(collection_def: CollectionDefInput): Collection!
+    update_collection(collection_id: String!, collection_def: CollectionDefInput): Collection!
 
-    create_column_def(collection_id: String!, column_def: ColumnDefInput): Collection
-    update_column_def(collection_id: String!, column_id: String!, column_def: ColumnDefInput): Collection
+    create_column_def(collection_id: String!, column_def: ColumnDefInput): Collection!
+    update_column_def(collection_id: String!, column_id: String!, column_def: ColumnDefInput): Collection!
 
     insert_records(collection_id: String!, records: [JSON]): [Record]
     delete_records(collection_id: String!, record_ids: [String!]!): Int
@@ -283,13 +283,13 @@ export const CollectionSchema = makeExecutableSchema({
     description_fr: String!
     is_locked: Boolean!
     """
-      \`owner_emails\` array parameter may be empty. The email of the user creating the collection is implicitly included
+      \`owner_emails\` array parameter may be an empty list. The email of the user creating the collection is implicitly included
     """
-    owner_emails: [String]!
+    owner_emails: [String!]!
     """
-      \`uploader_emails\` array parameter may be empty
+      \`uploader_emails\` array parameter may be an empty list.
     """
-    uploader_emails: [String]!
+    uploader_emails: [String!]!
   }
   type CollectionDefValidation {
     name_en: ValidationMessages
@@ -297,8 +297,8 @@ export const CollectionSchema = makeExecutableSchema({
     description_en: ValidationMessages
     description_fr: ValidationMessages
     is_locked: ValidationMessages
-    owner_emails: [ValidationMessages]
-    uploader_emails: [ValidationMessages]
+    owner_emails: [ValidationMessages]!
+    uploader_emails: [ValidationMessages]!
   } 
 
   input ColumnDefInput {
@@ -334,8 +334,8 @@ export const CollectionSchema = makeExecutableSchema({
   }
 
   type User {
-    owned_collections: [Collection]
-    uploadable_collections: [Collection]
+    owned_collections: [Collection!]!
+    uploadable_collections: [Collection!]!
   }
   
   type Collection {
@@ -373,7 +373,7 @@ export const CollectionSchema = makeExecutableSchema({
     """
     uploaders: [User!]! # note: these !'s mean neither the field itself nor elements of the array may be null, but it doesn't enforce that the array is non-empty
 
-    column_defs: [ColumnDef]
+    column_defs: [ColumnDef!]!
     
     """
       \`uploader_email\` defaults to the email of the current user session
@@ -460,20 +460,23 @@ export const CollectionSchema = makeExecutableSchema({
         ) => {
           const column_def = await ColumnDefByIdLoader.load(column_id);
 
-          const collection = await (typeof column_def !== 'undefined'
-            ? CurrentCollectionByRecordsetKeyLoader.load(
-                column_def.meta.recordset_key,
-              )
-            : undefined);
+          const operation_name = `Query \`${fieldName}\``;
+          if (typeof column_def === 'undefined') {
+            // Cannot validate authorization if the column doesn't exist
+            throw make_authroization_error(operation_name);
+          } else {
+            const collection = await CurrentCollectionByRecordsetKeyLoader.load(
+              column_def.meta.recordset_key,
+            );
+            validate_collection_level_authorization(
+              operation_name,
+              context.req.user,
+              collection,
+              user_can_view_collection,
+            );
 
-          validate_collection_level_authorization(
-            `Query \`${fieldName}\``,
-            context.req.user,
-            collection,
-            user_can_view_collection,
-          );
-
-          return column_def;
+            return column_def;
+          }
         },
       ),
       record: resolver_with_authz(
@@ -485,21 +488,25 @@ export const CollectionSchema = makeExecutableSchema({
         ) => {
           const record = await RecordByIdLoader.load(record_id);
 
-          const collection = await (typeof record !== 'undefined'
-            ? CurrentCollectionByRecordsetKeyLoader.load(
-                record.meta.recordset_key,
-              )
-            : undefined);
+          const operation_name = `Query \`${fieldName}\``;
+          if (typeof record === 'undefined') {
+            // Cannot validate authorization if the record doesn't exist
+            throw make_authroization_error(operation_name);
+          } else {
+            const collection = await CurrentCollectionByRecordsetKeyLoader.load(
+              record.meta.recordset_key,
+            );
 
-          validate_record_level_authorization(
-            `Query \`${fieldName}\``,
-            context.req.user,
-            collection,
-            typeof record !== 'undefined' ? [record] : [],
-            user_can_view_records,
-          );
+            validate_record_level_authorization(
+              operation_name,
+              context.req.user,
+              collection,
+              typeof record !== 'undefined' ? [record] : [],
+              user_can_view_records,
+            );
 
-          return record;
+            return record;
+          }
         },
       ),
 
@@ -973,8 +980,15 @@ export const CollectionSchema = makeExecutableSchema({
         _args: unknown,
         _context: unknown,
         _info: unknown,
-      ) => UserByIdLoader.load(parent.meta.created_by.toString()),
-      owners: (
+      ) =>
+        UserByIdLoader.load(parent.meta.created_by.toString()).then((user) => {
+          if (typeof user === 'undefined')
+            throw Error(
+              `Collection found but creator not found. User ${parent.meta.created_by.toString()} not found.`,
+            );
+          return user;
+        }),
+      owners: async (
         parent: CollectionDocument,
         _args: unknown,
         _context: unknown,
@@ -982,7 +996,18 @@ export const CollectionSchema = makeExecutableSchema({
       ) =>
         UserByIdLoader.loadMany(
           parent.data.owners.map((object_id) => object_id.toString()),
-        ),
+        ).then((users) => {
+          const owners = users.map((user, index) => {
+            if (typeof user === 'undefined') {
+              // Throw error on first occurance of User not found so it can be fixed
+              throw Error(
+                `Collection owner ${parent.data.owners[index]} not found.`,
+              );
+            }
+            return user;
+          });
+          return owners;
+        }),
       uploaders: (
         parent: CollectionDocument,
         _args: unknown,
@@ -993,7 +1018,18 @@ export const CollectionSchema = makeExecutableSchema({
           ? []
           : UserByIdLoader.loadMany(
               parent.data.uploaders.map((object_id) => object_id.toString()),
-            ),
+            ).then((users) => {
+              const uploaders = users.map((user, index) => {
+                if (typeof user === 'undefined') {
+                  // Throw error on first occurance of User not found so it can be fixed
+                  throw Error(
+                    `Collection uploader ${parent.data.uploaders[index]} not found.`,
+                  );
+                }
+                return user;
+              });
+              return uploaders;
+            }),
       column_defs: (
         parent: CollectionDocument,
         _args: unknown,

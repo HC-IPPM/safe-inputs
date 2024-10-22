@@ -1,9 +1,14 @@
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import type { MutationHookOptions } from '@apollo/client';
 
-import type { ColumnDefInput } from 'src/graphql/schema_common.d.ts';
+import { gql } from 'src/graphql/__generated__/gql.ts';
 
-const COLUMN_DEF_UPDATE = gql`
+import {
+  ColumnDefUpdateMutation,
+  ColumnDefUpdateMutationVariables,
+} from 'src/graphql/__generated__/graphql.ts';
+
+const COLUMN_DEF_UPDATE = gql(`
   mutation ColumnDefUpdate(
     $collection_id: String!
     $column_id: String!
@@ -17,28 +22,15 @@ const COLUMN_DEF_UPDATE = gql`
       id
     }
   }
-`;
+`);
 
-export type CollumnDefUpdateVariables = {
-  collection_id: string;
-  column_id: string;
-  column_def: ColumnDefInput;
-};
-
-export type CollumnDefUpdateResult = {
-  update_column_def: {
-    id: string;
-    __typename: string;
-  };
-};
-
-export const useCollumnDefUpdate = (
+export const useColumnDefUpdate = (
   options?: MutationHookOptions<
-    CollumnDefUpdateResult,
-    CollumnDefUpdateVariables
+    ColumnDefUpdateMutation,
+    ColumnDefUpdateMutationVariables
   >,
 ) =>
-  useMutation<CollumnDefUpdateResult, CollumnDefUpdateVariables>(
+  useMutation<ColumnDefUpdateMutation, ColumnDefUpdateMutationVariables>(
     COLUMN_DEF_UPDATE,
     options,
   );

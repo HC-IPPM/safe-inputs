@@ -1,5 +1,5 @@
 steps:
-  - id: install
+  - id: 'Install dependencies'
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
@@ -11,23 +11,80 @@ steps:
     entrypoint: npm
     args: ['run', 'typecheck']
 
-  - id: test
+  - id: Test
     name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
     dir: ui
     entrypoint: npm
     args: ['test']
 
+  - id: 'Axe a11y testing setup'
+    name: 'gcr.io/cloud-builders/docker'
+    dir: ./
+    script: |
+      #!/bin/bash
+      set -o errexit
+      set -o pipefail
+      set -o nounset
+
+      # docker compose dev environment, detached mode, with ui-gql-codegen disabled because it a) doesn't need to run here, and
+      # b) has permissions issues when running in this context
+      docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
+
+      docker build -t axe ./axe-testing
+
+      # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
+      mkdir -p /workspace/axe-results
+      chmod -R 777 /workspace/axe-results
+
+      # make sure the ui server is ready before continuing
+      docker run \
+        --volume "${PWD}":/home/project \
+        --workdir /home/project \
+        --network host \
+        --entrypoint node \
+        node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
+        ./wait_for_service.cjs http://localhost:8080/signin
+
+  - id: 'Axe a11y testing'
+    name: 'gcr.io/cloud-builders/docker'
+    args: [
+        'run',
+        '--network',
+        'host', # to access the dev environment
+        '--rm',
+        '--volume',
+        '/workspace/axe-results:/app/axe-results',
+        'axe',
+      ]
+
+  # - id: upload-axe-results-gcs
+  #   name: 'gcr.io/cloud-builders/gsutil'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+  #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
+
+  - id: docker-compose-down-dev-environment
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker compose -f ./docker-compose.dev.yaml down -v
+
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
     entrypoint: 'bash'
     dir: ui
     args:
       - '-c'
       - |
-        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
+        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -42,7 +99,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:98b5413628d5f66f74efe5039215441bd93321b4eff2435cd32879b2a986f341'
+    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
     entrypoint: 'bash'
     args:
       - '-c'
