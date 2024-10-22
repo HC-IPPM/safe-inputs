@@ -58,6 +58,7 @@ gcloud auth login
 At the root of the project, run:
 
 ```
+
 export BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 export COMMIT_SHA=$(git rev-parse HEAD)
 gcloud builds submit --config ./ui/cloudbuild.yaml --substitutions=BRANCH_NAME=$BRANCH_NAME,COMMIT_SHA=runOutSideOfGitTrigger-$COMMIT_SHA
