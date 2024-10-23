@@ -5,8 +5,7 @@ export PROJECT_ID=phx-01hwmw2c1r4
 export PROJECT_NUMBER=
 export BUCKET_NAME=my-bucket-of-risk
 export VULN_CLOUD_FUNCTION_SERVICE_ACCOUNT=vuln-cloud-function-sa
-
-export REPO_NAME=hello-world-repo
+# export REPO_NAME=hello-world-repo
 
 gsutil mb -l northamerica-northeast1 -p $PROJECT_ID gs://$BUCKET_NAME
 gcloud config set project $PROJECT_ID
@@ -70,10 +69,11 @@ gcloud functions deploy image-vuln-cf-trigger \
     --region northamerica-northeast1
 
 # ------ Push image to Artifact Registry 
+export REPO_NAME=cloud-function-testing
 gcloud auth configure-docker northamerica-northeast1-docker.pkg.dev
 docker build --tag nginx .
-docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
-docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
+docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging2
+docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging2
 
 
 
