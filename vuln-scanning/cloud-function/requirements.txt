@@ -1,0 +1,4 @@
+functions-framework==3.*
+google-cloud-securitycenter
+google-cloud-containeranalysis
+google-cloud-storage
