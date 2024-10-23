@@ -18,7 +18,7 @@ steps:
     args: ['test']
 
   - id: 'Axe a11y testing setup'
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:9ed1e7679449947e34d9236ae177176a965877fac78af58824b83f307c2f5ab9'
     dir: ./
     script: |
       #!/bin/bash
@@ -46,7 +46,7 @@ steps:
         ./wait_for_service.cjs http://localhost:8080/signin
 
   - id: 'Axe a11y testing'
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:9ed1e7679449947e34d9236ae177176a965877fac78af58824b83f307c2f5ab9'
     args: [
         'run',
         '--network',
@@ -67,7 +67,7 @@ steps:
   #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:9ed1e7679449947e34d9236ae177176a965877fac78af58824b83f307c2f5ab9'
     entrypoint: 'bash'
     args:
       - '-c'
