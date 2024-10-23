@@ -1,0 +1,23 @@
+steps:
+  - id: deploy-cloud-function-if-main
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    dir: vuln-scanning
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "main" ]]
+        then
+          gcloud functions deploy image-vuln-cf-trigger \
+            --source ./cloud-function \
+            --runtime python39 \
+            --trigger-topic container-analysis-occurrences-v1 \
+            --allow-unauthenticated \
+            --entry-point image_vuln_pubsub_handler \
+            --region northamerica-northeast1
+        else
+          exit 0
+        fi
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
