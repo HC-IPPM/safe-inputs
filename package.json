@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.3",
-    "@microsoft/eslint-plugin-sdl": "0.2.2",
+    "@microsoft/eslint-plugin-sdl": "1.0.0",
     "@parcel/watcher": "2.4.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",

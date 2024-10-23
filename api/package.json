@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@jest/globals": "29.7.0",
-    "@microsoft/eslint-plugin-sdl": "0.2.2",
+    "@microsoft/eslint-plugin-sdl": "1.0.0",
     "@types/cookie-parser": "1.4.7",
     "@types/express": "4.17.21",
     "@types/express-session": "1.18.0",

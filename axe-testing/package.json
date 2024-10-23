@@ -20,7 +20,7 @@
     "puppeteer": "^23.5.0"
   },
   "devDependencies": {
-    "@microsoft/eslint-plugin-sdl": "0.2.2",
+    "@microsoft/eslint-plugin-sdl": "1.0.0",
     "eslint": "8.57.1",
     "eslint-plugin-n": "17.11.1",
     "eslint-plugin-security": "3.0.1",
