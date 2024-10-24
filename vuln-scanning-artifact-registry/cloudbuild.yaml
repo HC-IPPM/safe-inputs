@@ -13,7 +13,7 @@ steps:
               --runtime python39 \
               --trigger-topic container-analysis-occurrences-v1 \
               --entry-point image_vuln_pubsub_handler \
-              --no-allow-unauthenticated \
+              --allow-unauthenticated \
               --region northamerica-northeast1
         else
           exit 0

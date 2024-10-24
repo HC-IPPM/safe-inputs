@@ -1,7 +1,8 @@
 # Artifact Registry Vunerability Scanning 
 
-Artifacts are continuously scanned in the Artifact Registry. We're following this [tutorial](https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601) as a starting point - collecting vunerabilities, cosolidating them and then pushing them to Google Cloud Storage Bucket where they will be available for use by the dashboard. 
+Containers are continuously scanned for vulnerabilities in the Artifact Registry. (https://cloud.google.com/artifact-analysis/docs/container-scanning-overview) We're following this [tutorial](https://medium.com/google-cloud/centrally-managing-artifact-registry-container-image-vulnerabilities-on-google-cloud-part-one-d86fb4791601) as a starting point - collecting vunerabilities, cosolidating them and then pushing them to Google Cloud Storage Bucket where they will be available for use by the dashboard. 
 
+Note - artifacts need to be <30 days old, otherwise medatdata is archived. 
 ** Include d2 diagram 
 
 ## Set up 
@@ -14,6 +15,8 @@ The steps outlined in init.sh will need to be created and orchestrated in the Ia
 https://cloud.google.com/run/docs/tutorials/eventarc-functions
 
 https://cloud.google.com/artifact-analysis/docs/investigate-vulnerabilities
+
+https://medium.com/@a.j.abbott24/google-cloud-surfacing-container-image-vulnerabilities-91dcf3f147f3
 
 
 ## Deploy

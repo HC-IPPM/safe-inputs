@@ -35,8 +35,9 @@ gcloud artifacts repositories create $REPO_NAME \
  --repository-format=docker \
  --project=$PROJECT_ID
 
-# ---- Pub Sub ----
-gcloud pubsub topics create container-analysis-occurrences-v1 --project=$PROJECT_ID
+# # ---- Pub Sub ----
+# gcloud pubsub topics create container-analysis-occurrences-v1 --project=$PROJECT_ID
+# I don't think we need to do this - this automatically is created with vunerabiltiy scanning in Artifact Registry 
 
 # ----- Cloud Function ----
 # *** need to change the trigger of pub sub cloud function (tutorial has click ops to do this )
@@ -61,25 +62,27 @@ roles/storage.objectAdmin on phx-01hwmw2c1r4
 run invoker
 
 gcloud functions deploy image-vuln-cf-trigger \
-    --source . \
+    --source ./cloud-function \
     --runtime python39 \
     --trigger-topic container-analysis-occurrences-v1 \
     --allow-unauthenticated \
     --entry-point image_vuln_pubsub_handler \
-    --no-allow-unauthenticated \
+    --allow-unauthenticated \
     --region northamerica-northeast1
 
-gcloud run services remove-iam-policy-binding image-vuln-cf-trigger \
-  --member="allUsers" \
-  --role="roles/run.invoker"
+# gcloud run services remove-iam-policy-binding image-vuln-cf-trigger \
+#   --member="allUsers" \
+#   --role="roles/run.invoker"
 
 
 # ------ Push image to Artifact Registry 
 export REPO_NAME=cloud-function-testing
+export PROJECT_ID=phx-01hwmw2c1r4
 gcloud auth configure-docker northamerica-northeast1-docker.pkg.dev
 docker build --tag nginx .
-docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging2
-docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging2
+docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
+docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
+
 
 
 
