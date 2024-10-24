@@ -66,7 +66,13 @@ gcloud functions deploy image-vuln-cf-trigger \
     --trigger-topic container-analysis-occurrences-v1 \
     --allow-unauthenticated \
     --entry-point image_vuln_pubsub_handler \
+    --no-allow-unauthenticated \
     --region northamerica-northeast1
+
+gcloud run services remove-iam-policy-binding image-vuln-cf-trigger \
+  --member="allUsers" \
+  --role="roles/run.invoker"
+
 
 # ------ Push image to Artifact Registry 
 export REPO_NAME=cloud-function-testing
