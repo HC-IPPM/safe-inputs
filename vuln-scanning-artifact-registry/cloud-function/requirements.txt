@@ -1,4 +1,4 @@
-functions-framework==3.*
+functions-framework
 google-cloud-securitycenter
 google-cloud-containeranalysis
 google-cloud-storage
