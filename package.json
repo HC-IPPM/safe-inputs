@@ -6,7 +6,7 @@
   "keywords": [],
   "license": "MIT",
   "scripts": {
-    "ci:all": "npm ci && (cd ./api && npm ci) && (cd ui && npm ci)",
+    "ci:all": "npm ci && (cd ./api && npm ci) && (cd ./ui && npm ci) && (cd ./axe-testing && npm ci)",
     "dev": "docker compose -f ./docker-compose.dev.yaml up",
     "predev": "npm run dev:down",
     "dev:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev.yaml up",
@@ -22,7 +22,7 @@
     "typecheck:api": "cd ./api && npm run typecheck",
     "typecheck:ui": "cd ./ui && npm run typecheck",
     "typecheck": "trap 'RC=1' ERR; npm run typecheck:api; npm run typecheck:ui; exit $RC",
-    "pregql-codegen": "node ./wait_for_gql_service.cjs",
+    "pregql-codegen": "node ./wait_for_service.cjs ${GRAPHQL_ENDPOINT_URL:-http://localhost:8080/api/graphql}",
     "gql-codegen": "graphql-codegen",
     "pregql-codegen:watch": "npm run pregql-codegen",
     "gql-codegen:watch": "graphql-codegen --watch",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.3",
-    "@microsoft/eslint-plugin-sdl": "github:microsoft/eslint-plugin-sdl",
+    "@microsoft/eslint-plugin-sdl": "0.2.2",
     "@parcel/watcher": "2.4.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
