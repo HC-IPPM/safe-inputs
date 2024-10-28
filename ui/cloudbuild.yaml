@@ -18,7 +18,7 @@ steps:
     args: ['test']
 
   - id: 'Axe a11y testing setup'
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     dir: ./
     script: |
       #!/bin/bash
@@ -46,7 +46,7 @@ steps:
         ./wait_for_service.cjs http://localhost:8080/signin
 
   - id: 'Axe a11y testing'
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     args: [
         'run',
         '--network',
@@ -67,7 +67,7 @@ steps:
   #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -75,7 +75,7 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -84,7 +84,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -99,7 +99,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:a2a1fdf71556d778f15cf01a0bbb43d84a7ea3f26c71099061eca4866f4c5332'
+    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
     entrypoint: 'bash'
     args:
       - '-c'
