@@ -61,13 +61,16 @@ roles/storage.objectAdmin on phx-01hwmw2c1r4
 
 run invoker
 
+https://cloud.google.com/run/docs/configuring/cpu
+--concurrency=10
+   --allow-unauthenticated \
 gcloud functions deploy image-vuln-cf-trigger \
     --source ./cloud-function \
     --runtime python39 \
     --trigger-topic container-analysis-occurrences-v1 \
     --allow-unauthenticated \
     --entry-point image_vuln_pubsub_handler \
-    --allow-unauthenticated \
+    --max-instances=20 \
     --region northamerica-northeast1
 
 # gcloud run services remove-iam-policy-binding image-vuln-cf-trigger \
@@ -76,12 +79,12 @@ gcloud functions deploy image-vuln-cf-trigger \
 
 
 # ------ Push image to Artifact Registry 
-export REPO_NAME=cloud-function-testing
+export REPO_NAME=cloud-function-testing3
 export PROJECT_ID=phx-01hwmw2c1r4
 gcloud auth configure-docker northamerica-northeast1-docker.pkg.dev
 docker build --tag nginx .
-docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
-docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test:staging
+docker tag nginx northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test
+docker push northamerica-northeast1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/nginx-test
 
 
 

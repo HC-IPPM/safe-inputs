@@ -13,7 +13,6 @@ import json
 from google.cloud.devtools import containeranalysis_v1
 from google.cloud import storage
 import functions_framework
-# from google.cloud.devtools.containeranalysis_v1.types import NoteKind 
 
 def write_vuln_to_bucket(bucket_name, vuln_text, destination_object_name):
     storage_client = storage.Client()
@@ -21,7 +20,6 @@ def write_vuln_to_bucket(bucket_name, vuln_text, destination_object_name):
     obj = bucket.blob(destination_object_name)
     obj.upload_from_string(vuln_text)
 
-# @functions_framework.cloud_event
 def image_vuln_pubsub_handler(event, context):
     
     # Get the Pub/Sub message containing the vulnerability occurrence id
@@ -41,10 +39,7 @@ def image_vuln_pubsub_handler(event, context):
     grafeas_client = client.get_grafeas_client()
     o = grafeas_client.get_occurrence(name=occurrence_name)
 
-    # print(f"Occurrence kind: {o.kind}") # this is numeric
     print(f"Occurance content: {o}") 
-    # print(f"resource uri: {o.resource_uri}")
-    # print(f"occurance note name: {o.note_name}")
 
     if o.kind == 1: # Note o.kind of 1 = VUNERABILITY,  4 = PACKAGE, 6 = DISCOVERY
         print('VULNERABILITY')
