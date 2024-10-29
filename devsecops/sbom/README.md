@@ -1,6 +1,6 @@
 # Software Bill of Materials (SBOM)
 
-## To run locally (not GitHub triggered)
+## To trigger locally (not GitHub triggered)
 
 1. Change the bucket in the generate-sbom-if-main step to one in your GCP project
 
