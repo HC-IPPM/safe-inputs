@@ -90,4 +90,3 @@ To bypass specific URLs or violation ids, the [axeignore.json](./axeignore.json)
 - Other options (paid) intelligent guided tests into automated workflows for manual testing
   https://www.deque.com/blog/deque-introduces-three-new-features-to-advance-accessibility-test-automation/
   keyboard trap detections
-```
