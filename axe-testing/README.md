@@ -42,7 +42,6 @@ cd axe-testing && npm run start:docker
 
 ```
 
-
 ### Or in GCP by manualy triggering Cloud Build
 
 1. Change the GCP bucket in the [ui/cloudbuild.yaml](../ui/cloudbuild.yaml) file to one in your project.
