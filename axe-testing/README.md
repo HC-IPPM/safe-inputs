@@ -38,7 +38,7 @@ OR run the accessibility scan using Docker container
 
 ```
 
-cd axe-testing && npm start:docker
+cd axe-testing && npm run start:docker
 
 ```
 
