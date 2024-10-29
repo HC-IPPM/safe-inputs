@@ -24,7 +24,7 @@ npm run dev
 
 ```
 echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
-``
+```
 
 3. Run the accessibility scan:
 
