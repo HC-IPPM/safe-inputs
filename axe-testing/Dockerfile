@@ -3,7 +3,7 @@ FROM node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8
 WORKDIR /app
 
 # We don't need the standalone Chromium for puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Add a default value for HOMEPAGE_URL
 ENV HOMEPAGE_URL="http://127.0.0.1:8080"
