@@ -1,18 +1,18 @@
 steps:
   - id: 'Install dependencies'
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
     dir: ui
     entrypoint: npm
     args: ['run', 'typecheck']
 
   - id: Test
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
     dir: ui
     entrypoint: npm
     args: ['test']
