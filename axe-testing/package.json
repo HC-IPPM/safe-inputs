@@ -22,7 +22,7 @@
   "devDependencies": {
     "@microsoft/eslint-plugin-sdl": "0.2.2",
     "eslint": "8.57.1",
-    "eslint-plugin-n": "17.11.1",
+    "eslint-plugin-n": "17.12.0",
     "eslint-plugin-security": "3.0.1",
     "globals": "15.11.0"
   }
