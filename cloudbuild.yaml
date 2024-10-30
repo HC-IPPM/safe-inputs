@@ -43,7 +43,7 @@ steps:
       docker compose -f ./docker-compose.dev.yaml down
 
   - id: generate-sbom-if-main
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders/docker@sha256:345a99cacf61d1a9884050a039c2278f168eed2d8048a43d6860d950d48adfab'
     dir: ui
     entrypoint: 'bash'
     args:
@@ -58,7 +58,7 @@ steps:
         fi
 
   - id: upload-sbom-to-gcs-bucket-if-main
-    name: 'gcr.io/cloud-builders/gsutil'
+    name: 'gcr.io/cloud-builders/gsutil@sha256:8e9a6cfb668bb3fb7c06c02f2d09d5fbcbcf8a61bfd3f4e7b278415f40f19153'
     entrypoint: 'bash'
     args:
       - '-c'
