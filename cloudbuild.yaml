@@ -18,7 +18,7 @@ steps:
     args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
 
   - id: 'GraphQL Codegen check'
-    name: 'gcr.io/cloud-builders/docker@sha256:c4baf8e8322832dacbe1a97acdbfd4e2f56e24955f2853c2eddf3894e3cff39e'
+    name: 'gcr.io/cloud-builders/docker@sha256:345a99cacf61d1a9884050a039c2278f168eed2d8048a43d6860d950d48adfab'
     dir: ./
     script: |
       #!/bin/bash
