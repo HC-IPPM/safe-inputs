@@ -28,17 +28,18 @@ function filterResults(results, ignoreList) {
   return results.filter((item) => !ignoreList.includes(item.id));
 }
 
-export async function processAxeReport(allResults) {
+export async function processAxeReport(allResults, testConfig = null) {
   const urlsWithViolations = [];
   const urlsWithSeriousImpact = [];
+  const urlsWithAriaBilingualIssues = [];
   const filteredResults = [];
 
   console.log('\nProcessing results.');
 
   // Load config file
-  const config = await loadConfig(configPath);
+  const config = testConfig || (await loadConfig(configPath)); // This allows for mocking config in tests
 
-  for (const { url, results } of allResults) {
+  for (const { url, results, ariaBilingualIssues } of allResults) {
     // Skip URLs based on regex blacklist patterns
     if (isUrlBlacklisted(url, config.blacklistPatterns)) {
       console.log(`Skipping exempted URL: ${url}`);
@@ -60,8 +61,8 @@ export async function processAxeReport(allResults) {
     filteredResults.push({
       url,
       violations: filteredViolations,
-      // violationIds,
       incomplete: filteredIncomplete,
+      ariaBilingualIssues,
     });
 
     // Check if there are any violations left after filtering
@@ -78,6 +79,11 @@ export async function processAxeReport(allResults) {
       // Include the serious impact violation IDs with each URL
       urlsWithSeriousImpact.push(url, seriousViolationIds);
     }
+
+    // Add URL if there are bilingual ARIA issues
+    if (ariaBilingualIssues && ariaBilingualIssues.length > 0) {
+      urlsWithAriaBilingualIssues.push({ url, ariaBilingualIssues });
+    }
   }
 
   // REPORT - Generate a timestamp and save the results
@@ -90,6 +96,7 @@ export async function processAxeReport(allResults) {
     exemptedUrlPattersn: config.blacklistPatterns || [],
     urlsWithViolations,
     urlsWithSeriousImpact,
+    urlsWithAriaBilingualIssues,
     fullResults: filteredResults,
   };
 
@@ -105,5 +112,9 @@ export async function processAxeReport(allResults) {
     throw error;
   }
 
-  return { urlsWithViolations, urlsWithSeriousImpact };
+  return {
+    urlsWithViolations,
+    urlsWithSeriousImpact,
+    urlsWithAriaBilingualIssues,
+  };
 }

@@ -71,12 +71,16 @@ console.log('Exempted violation ids:', ignoreViolations);
     blacklistPatterns,
   );
 
-  const { urlsWithViolations, urlsWithSeriousImpact } =
-    await processAxeReport(allResults);
+  const {
+    urlsWithViolations,
+    urlsWithSeriousImpact,
+    urlsWithAriaBilingualIssues,
+  } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
   console.log('URLs with violations:', urlsWithViolations);
   console.log('URLs with serious impact:', urlsWithSeriousImpact);
+  console.log('URLs with bilingual aria issues:', urlsWithAriaBilingualIssues);
 
   // Close the browser
   await browser.close();
