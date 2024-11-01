@@ -66,14 +66,22 @@ export async function processAxeReport(allResults, testConfig = null) {
       ariaBilingualIssues,
     });
 
-    // Check if there are any violations left after filtering
+    // // Check if there are any violations left after filtering
+    // if (filteredViolations.length > 0) {
+    //   urlsWithViolations.push(url);
+    // }
+    // Collect URLs with violations and their IDs
     if (filteredViolations.length > 0) {
-      urlsWithViolations.push(url);
+      urlsWithViolations.push(url, filteredViolations.map((violation) => violation.id));
     }
 
-    // Check if there are any incompletes left after filtering
+    // // Check if there are any incompletes left after filtering
+    // if (filteredIncomplete.length > 0) {
+    //   urlsWithIncompletes.push(url);
+    // }
+    // Collect URLs with incomplete issues and their IDs
     if (filteredIncomplete.length > 0) {
-      urlsWithIncompletes.push(url);
+      urlsWithIncompletes.push(url, filteredIncomplete.map((incomplete) => incomplete.id));
     }
 
     // Extract serious violations and their IDs - not sure if this is wanted at the moment - leaving commented out
