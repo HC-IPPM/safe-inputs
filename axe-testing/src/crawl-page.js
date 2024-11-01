@@ -44,11 +44,8 @@ export async function crawlPage(
   // Run Axe accessibility checks on the current page
   const results = await new AxePuppeteer(page).analyze();
 
-  //---------------------------------------------
   // Detect ARIA labels with bilingual issues
   const ariaBilingualIssues = await detectAriaBilingualIssues(page);
-  console.log('\nARIA Bilingual Issues:', ariaBilingualIssues, '\n');
-  //---------------------------------------------
 
   // Add the results to allResults
   allResults.push({
