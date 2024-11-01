@@ -62,3 +62,4 @@ While Syft includes licenses in the SBOM, we may also add a [specific license ri
 While accessibility may not traditionally fall under DevSecOps, it is an important consideration in delivering compliant end products, and often a roadblock to gaining authority to operate (ATO). By shifting accessibility left in the development process, applications are built with accessibility considerations in mind from the start and developers are able to gain a deeper understanding of how to build for accessibility with feedback through the scans and linters. Note, not all accessibility violations can be tested through automation - automated tests are combined with manual testing at regular intervals.
 
 For further details, refer to the [axe-testing directory](../axe-testing/README.md).
+
