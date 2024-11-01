@@ -30,7 +30,8 @@ function filterResults(results, ignoreList) {
 
 export async function processAxeReport(allResults, testConfig = null) {
   const urlsWithViolations = [];
-  const urlsWithSeriousImpact = [];
+  const urlsWithSeriousImpactViolations = [];
+  const urlsWithIncompletes = [];
   const urlsWithAriaBilingualIssues = [];
   const filteredResults = [];
 
@@ -70,19 +71,25 @@ export async function processAxeReport(allResults, testConfig = null) {
       urlsWithViolations.push(url);
     }
 
-    // Extract serious violations and their IDs
+    // Check if there are any incompletes left after filtering
+    if (filteredIncomplete.length > 0) {
+      urlsWithIncompletes.push(url);
+    }
+
+    // Extract serious violations and their IDs - not sure if this is wanted at the moment - leaving commented out
     const seriousViolationIds = filteredViolations
       .filter((violation) => violation.impact === 'serious')
       .map((violation) => violation.id);
 
     if (seriousViolationIds.length > 0) {
-      // Include the serious impact violation IDs with each URL
-      urlsWithSeriousImpact.push(url, seriousViolationIds);
-    }
+       // Include the serious impact violation IDs with each URL
+      urlsWithSeriousImpactViolations.push(url, seriousViolationIds);
+     }
 
     // Add URL if there are bilingual ARIA issues
     if (ariaBilingualIssues && ariaBilingualIssues.length > 0) {
-      urlsWithAriaBilingualIssues.push({ url, ariaBilingualIssues });
+      urlsWithAriaBilingualIssues.push(url);
+
     }
   }
 
@@ -93,9 +100,10 @@ export async function processAxeReport(allResults, testConfig = null) {
   const result = {
     exemptedViolationIds: config.ignoreViolations || [],
     exemptedIncompleteIds: config.ignoreIncomplete || [],
-    exemptedUrlPattersn: config.blacklistPatterns || [],
+    exemptedUrlPatterns: config.blacklistPatterns || [],
     urlsWithViolations,
-    urlsWithSeriousImpact,
+    urlsWithSeriousImpactViolations,
+    urlsWithIncompletes,
     urlsWithAriaBilingualIssues,
     fullResults: filteredResults,
   };
@@ -114,7 +122,8 @@ export async function processAxeReport(allResults, testConfig = null) {
 
   return {
     urlsWithViolations,
-    urlsWithSeriousImpact,
+    urlsWithSeriousImpactViolations,
+    urlsWithIncompletes,
     urlsWithAriaBilingualIssues,
   };
 }

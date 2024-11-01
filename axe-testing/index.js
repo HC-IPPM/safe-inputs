@@ -73,13 +73,15 @@ console.log('Exempted violation ids:', ignoreViolations);
 
   const {
     urlsWithViolations,
-    urlsWithSeriousImpact,
+    urlsWithSeriousImpactViolations,
+    urlsWithIncompletes,
     urlsWithAriaBilingualIssues,
   } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
   console.log('URLs with violations:', urlsWithViolations);
-  console.log('URLs with serious impact:', urlsWithSeriousImpact);
+  console.log('URLs with violations with serious impact:', urlsWithSeriousImpactViolations);
+  console.log('URLs with incompletes:', urlsWithIncompletes)
   console.log('URLs with bilingual aria issues:', urlsWithAriaBilingualIssues);
 
   // Close the browser
