@@ -25,7 +25,7 @@ function filterResults(results = [], ignoreList = []) {
   return results.filter((item) => !ignoreList.includes(item.id));
 }
 
-// Check if a URL is blacklisted function 
+// Check if a URL is blacklisted function
 function isUrlBlacklisted(url, blacklistPatterns) {
   return blacklistPatterns.some((regex) => regex.test(url));
 }
@@ -41,10 +41,10 @@ async function saveResults({
 }) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const resultsDir = path.resolve('./axe-results');
-  // Read SHA from env variable 
+  // Read SHA from env variable
   const SHA = process.env.COMMIT_SHA || 'no_sha';
   // const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
-  const filename = `./axe-results/ci_axe_results_${SHA}.json`
+  const filename = `./axe-results/ci_axe_results_${SHA}.json`;
 
   // Format result so summary at the top, with url and issues subseeding
   const result = {
@@ -68,7 +68,7 @@ async function saveResults({
   }
 }
 
-// Process accessibility report 
+// Process accessibility report
 export async function processAxeReport(allResults, testConfig = null) {
   const urlsWithViolations = [];
   const urlsWithSeriousImpactViolations = [];
@@ -120,7 +120,7 @@ export async function processAxeReport(allResults, testConfig = null) {
       ]);
     }
 
-    // Collect violations with a serious impact 
+    // Collect violations with a serious impact
     const seriousViolations = filteredViolations.filter(
       (violation) => violation.impact === 'serious',
     );
@@ -145,15 +145,16 @@ export async function processAxeReport(allResults, testConfig = null) {
 
   // Save results to file - to be used by dashboard
   await saveResults({
-  config,
-  urlsWithViolations,
-  urlsWithSeriousImpactViolations,
-  urlsWithIncompletes,
-  // urlsWithAriaBilingualIssues,
-  filteredResults,
+    config,
+    urlsWithViolations,
+    urlsWithSeriousImpactViolations,
+    urlsWithIncompletes,
+    // urlsWithAriaBilingualIssues,
+    filteredResults,
   });
 
-  return {  // for logging from index.js
+  return {
+    // for logging from index.js
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,

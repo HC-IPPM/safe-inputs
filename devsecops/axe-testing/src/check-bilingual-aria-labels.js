@@ -14,7 +14,6 @@ export async function detectAriaBilingualIssues(page) {
 
   // console.log('Extracted ARIA Labels:', ariaLabels); // Check extracted labels
 
-
   const ariaBilingualIssues = ariaLabels
     .map(({ html, label }) => {
       // const detectedLanguage = franc(label, { minLength: 3 });
@@ -25,19 +24,19 @@ export async function detectAriaBilingualIssues(page) {
 
       // console.log(`Label: "${label}", Detected Language: ${detectedLanguage}`);
 
-
       if (!containsFrench || !containsEnglish) {
         return {
           label,
           detectedLanguage,
           html,
-          message: 'ARIA label does not contain both French and English content',
+          message:
+            'ARIA label does not contain both French and English content',
         };
       }
       return null;
     })
     .filter((issue) => issue !== null);
-  
-  // console.log('Bilingual Issues Detected:', ariaBilingualIssues); 
+
+  // console.log('Bilingual Issues Detected:', ariaBilingualIssues);
   return ariaBilingualIssues;
 }

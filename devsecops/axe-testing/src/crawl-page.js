@@ -45,7 +45,7 @@ export async function crawlPage(
   const results = await new AxePuppeteer(page).analyze();
 
   // Detect ARIA labels with bilingual issues
-  const ariaBilingualIssues = await detectAriaBilingualIssues(page) || [];
+  const ariaBilingualIssues = (await detectAriaBilingualIssues(page)) || [];
 
   // Add the results to allResults
   allResults.push({
