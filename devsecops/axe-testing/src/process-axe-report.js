@@ -36,14 +36,11 @@ async function saveResults({
   urlsWithViolations,
   urlsWithSeriousImpactViolations,
   urlsWithIncompletes,
-  // urlsWithAriaBilingualIssues,
   filteredResults,
 }) {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const resultsDir = path.resolve('./axe-results');
   // Read SHA from env variable
   const SHA = process.env.COMMIT_SHA || 'no_sha';
-  // const filename = `./axe-results/ci_axe_results_${timestamp}.json`;
   const filename = `./axe-results/ci_axe_results_${SHA}.json`;
 
   // Format result so summary at the top, with url and issues subseeding
@@ -54,7 +51,6 @@ async function saveResults({
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    // urlsWithAriaBilingualIssues,
     fullResults: filteredResults,
   };
 
@@ -73,7 +69,6 @@ export async function processAxeReport(allResults, testConfig = null) {
   const urlsWithViolations = [];
   const urlsWithSeriousImpactViolations = [];
   const urlsWithIncompletes = [];
-  const urlsWithAriaBilingualIssues = [];
   const filteredResults = [];
 
   console.log('\nProcessing results.');
@@ -103,7 +98,6 @@ export async function processAxeReport(allResults, testConfig = null) {
       url,
       violations: filteredViolations,
       incomplete: filteredIncomplete,
-      ariaBilingualIssues,
     });
 
     // Collect URLs with violations and incomplete issues in the specified format
@@ -130,17 +124,6 @@ export async function processAxeReport(allResults, testConfig = null) {
         seriousViolations.map((violation) => violation.id),
       ]);
     }
-
-    // // Collect bilingual ARIA issues
-    // if (ariaBilingualIssues && ariaBilingualIssues.length > 0) {
-    //   urlsWithAriaBilingualIssues.push([
-    //     url,
-    //     ariaBilingualIssues.map((issue) => ({
-    //       label: issue.label,
-    //       detectedLanguage: issue.detectedLanguage,
-    //     })),
-    //   ]);
-    // }
   }
 
   // Save results to file - to be used by dashboard
@@ -149,7 +132,6 @@ export async function processAxeReport(allResults, testConfig = null) {
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    // urlsWithAriaBilingualIssues,
     filteredResults,
   });
 
@@ -158,6 +140,5 @@ export async function processAxeReport(allResults, testConfig = null) {
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    // urlsWithAriaBilingualIssues,
   };
 }

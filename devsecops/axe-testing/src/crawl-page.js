@@ -1,6 +1,5 @@
 // Crawl and collect URLs for accessibility checks
 import { AxePuppeteer } from '@axe-core/puppeteer';
-import { detectAriaBilingualIssues } from './check-bilingual-aria-labels.js';
 
 export async function crawlPage(
   page,
