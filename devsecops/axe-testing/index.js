@@ -75,14 +75,17 @@ console.log('Exempted violation ids:', ignoreViolations);
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    urlsWithAriaBilingualIssues,
+    // urlsWithAriaBilingualIssues,
   } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
   console.log('URLs with violations:', urlsWithViolations);
-  console.log('URLs with violations with serious impact:', urlsWithSeriousImpactViolations);
-  console.log('URLs with incompletes:', urlsWithIncompletes)
-  console.log('URLs with bilingual aria issues:', urlsWithAriaBilingualIssues);
+  console.log(
+    'URLs with violations with serious impact:',
+    urlsWithSeriousImpactViolations,
+  );
+  console.log('URLs with incompletes:', urlsWithIncompletes);
+  // console.log('URLs with bilingual aria issues:', urlsWithAriaBilingualIssues);
 
   // Close the browser
   await browser.close();

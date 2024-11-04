@@ -9,7 +9,7 @@
     "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
     "prestart:docker": "mkdir -p axe-results && sudo chmod 777 axe-results && docker build -t axe .",
     "start": "node --experimental-vm-modules index.js",
-    "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results axe",
+    "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results -e COMMIT_SHA=$(git rev-parse HEAD) axe",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:e2e:startserver": "npx http-server ./test-pages -p 8080 & echo $! > server.pid",
     "test:e2e:stop": "kill $(cat server.pid) || true",
