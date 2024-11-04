@@ -1,4 +1,4 @@
-import { processAxeReport } from '../src/process-axe-report';
+import { processAxeReport } from '../src/process-axe-report.js';
 
 describe('processAxeReport function', () => {
   it('should filter out exempted violations and incompletes', async () => {
