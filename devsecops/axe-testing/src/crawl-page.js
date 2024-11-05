@@ -46,7 +46,6 @@ export async function crawlPage(
   // Add the results to allResults
   allResults.push({
     url: uniqueUrl,
-    ariaBilingualIssues,
     results,
   });
 
