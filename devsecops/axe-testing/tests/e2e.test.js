@@ -30,7 +30,6 @@ describe('End-to-End Accessibility Test', () => {
     expect(results.violations).toHaveLength(0);
     console.log('Accessible page violations:', results.violations);
   });
-  // test bilingual aria labels
 
   test('should detect violations on the inaccessible page', async () => {
     // Follow the link to the inaccessible page
@@ -42,5 +41,4 @@ describe('End-to-End Accessibility Test', () => {
     expect(results.violations.length).toBeGreaterThan(0);
     console.log('Inaccessible page violations:', results.violations);
   });
-  // test bilingual aria labels
 });
