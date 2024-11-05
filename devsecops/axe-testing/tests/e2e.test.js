@@ -24,7 +24,7 @@ describe('End-to-End Accessibility Test', () => {
   });
 
   test('should have no violations on the accessible page', async () => {
-    await page.goto('http://localhost:${PORT}/accessible.html', {
+    await page.goto(`http://localhost:${PORT}/accessible.html`, {
       waitUntil: 'networkidle2',
     });
     const results = await new AxePuppeteer(page).analyze();
