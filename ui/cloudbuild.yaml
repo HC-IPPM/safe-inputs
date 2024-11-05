@@ -30,7 +30,7 @@ steps:
       # b) has permissions issues when running in this context
       docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
 
-      docker build -t axe ./axe-testing
+      docker build -t axe ./devsecops/axe-testing
 
       # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
       mkdir -p /workspace/axe-results
