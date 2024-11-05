@@ -1,6 +1,8 @@
 import puppeteer from 'puppeteer';
 import { AxePuppeteer } from '@axe-core/puppeteer';
 
+const PORT = process.env.TEST_PORT || 8080;
+
 describe('End-to-End Accessibility Test', () => {
   let browser;
   let page;
@@ -22,7 +24,7 @@ describe('End-to-End Accessibility Test', () => {
   });
 
   test('should have no violations on the accessible page', async () => {
-    await page.goto('http://localhost:8080/accessible.html', {
+    await page.goto('http://localhost:${PORT}/accessible.html', {
       waitUntil: 'networkidle2',
     });
     const results = await new AxePuppeteer(page).analyze();
