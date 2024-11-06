@@ -37,11 +37,13 @@ async function saveResults({
   urlsWithSeriousImpactViolations,
   urlsWithIncompletes,
   filteredResults,
+  resultsDir = path.resolve('./axe-results'), // Allow path change for testing
+  commitSha = process.env.COMMIT_SHA || 'no_sha',
 }) {
-  const resultsDir = path.resolve('./axe-results');
+  // const resultsDir = path.resolve('./axe-results');
   // Read SHA from env variable
-  const SHA = process.env.COMMIT_SHA || 'no_sha';
-  const filename = `./axe-results/ci_axe_results_${SHA}.json`;
+  // const SHA = process.env.COMMIT_SHA || 'no_sha';
+  const filename = path.join(resultsDir, `/ci_axe_results_${commitSha}.json`);
 
   // Format result so summary at the top, with url and issues subseeding
   const result = {
@@ -65,7 +67,17 @@ async function saveResults({
 }
 
 // Process accessibility report
-export async function processAxeReport(allResults, testConfig = null) {
+export async function processAxeReport(
+  allResults,
+  testConfig = null,
+  options = {},
+) {
+  const {
+    saveToFile = true,
+    resultsDir = path.resolve('./axe-results'),
+    commitSha = 'no_sha',
+  } = options; // for testing
+
   const urlsWithViolations = [];
   const urlsWithSeriousImpactViolations = [];
   const urlsWithIncompletes = [];
@@ -127,13 +139,16 @@ export async function processAxeReport(allResults, testConfig = null) {
   }
 
   // Save results to file - to be used by dashboard
-  await saveResults({
-    config,
-    urlsWithViolations,
-    urlsWithSeriousImpactViolations,
-    urlsWithIncompletes,
-    filteredResults,
-  });
+  if (saveToFile) {
+    // able to set to false for testing
+    await saveResults({
+      config,
+      urlsWithViolations,
+      urlsWithSeriousImpactViolations,
+      urlsWithIncompletes,
+      filteredResults,
+    });
+  }
 
   return {
     // for logging from index.js
