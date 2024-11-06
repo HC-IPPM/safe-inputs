@@ -5,7 +5,7 @@ import path from 'path';
 const configPath = './axeignore.json';
 
 // ------ HELPER FUNCTIONS -----
-// Load config file function
+// Helper function to load config file
 async function loadConfig(configPath) {
   try {
     const configContent = fs.readFileSync(configPath, 'utf8');
@@ -20,32 +20,30 @@ async function loadConfig(configPath) {
   }
 }
 
-// Function to filter results based on ignore list
+// Helper function to filter results based on ignore list
 function filterResults(results = [], ignoreList = []) {
   return results.filter((item) => !ignoreList.includes(item.id));
 }
 
-// Check if a URL is blacklisted function
+// Helper function to check if a URL is blacklisted function
 function isUrlBlacklisted(url, blacklistPatterns) {
   return blacklistPatterns.some((regex) => regex.test(url));
 }
 
-// Save results to file function
+// Helper function to save results to file function
 async function saveResults({
   config,
   urlsWithViolations,
   urlsWithSeriousImpactViolations,
   urlsWithIncompletes,
   filteredResults,
-  resultsDir = path.resolve('./axe-results'), // Allow path change for testing
-  commitSha = process.env.COMMIT_SHA || 'no_sha',
 }) {
-  // const resultsDir = path.resolve('./axe-results');
-  // Read SHA from env variable
-  // const SHA = process.env.COMMIT_SHA || 'no_sha';
+  const commitSha = process.env.COMMIT_SHA || 'no_sha';
+  const resultsDir = path.resolve('./axe-results');
   const filename = path.join(resultsDir, `/ci_axe_results_${commitSha}.json`);
 
-  // Format result so summary at the top, with url and issues subseeding
+  // Format result so that there's a summary at the top, then full results by url following
+  //  This will likely need to be modified to be in a format more easily used by dashboard in the future.
   const result = {
     exemptedViolationIds: config.ignoreViolations || [],
     exemptedIncompleteIds: config.ignoreIncomplete || [],
@@ -74,8 +72,7 @@ export async function processAxeReport(
 ) {
   const {
     saveToFile = true,
-    resultsDir = path.resolve('./axe-results'),
-    commitSha = 'no_sha',
+    // resultsDir = path.resolve('./axe-results'),
   } = options; // for testing
 
   const urlsWithViolations = [];
