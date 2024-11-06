@@ -74,6 +74,14 @@ The results are then parsed and saved to file. When run with Cloud Build, the re
 
 To bypass specific URLs or violation ids, the [axeignore.json](./axeignore.json) file is used to define exceptions.
 
+## To Test
+
+```
+npm run test:all:docker
+```
+
+This runs both the unit and end-to-end tests. The end to end test spins up a webserver with both an accessible and inaccessible pages to ensure the scan is behaving as expected.
+
 ## Other Considerations
 
 - Add tests for language, such as the inclusion of both French and English aria labels.
