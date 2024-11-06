@@ -4,8 +4,6 @@ WORKDIR /app
 
 # We don't need the standalone Chromium for puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
-
 ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium-browser'
 
 # Install packages (Chromium and dependencies)
@@ -24,11 +22,12 @@ RUN npm ci
 # Copy the rest of the source code for building
 COPY ./axeignore.json .
 COPY ./src ./src
+COPY ./jest.config.cjs .
 COPY ./index.js .
 COPY ./tests .
 
 # Install project dependencies
-RUN npm install
+RUN npm install --include=dev 
 
 # Copy the rest of the project files
 COPY . .
@@ -36,6 +35,30 @@ COPY . .
 # Expose the port for the local server
 EXPOSE 8080
 
-# Run the test command by default
+# Run the test
+# CMD npx http-server ./tests/test-pages -p 8080 & echo $! > server.pid && NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js && kill $(cat server.pid)
+# CMD npx http-server ./tests/test-pages -p 8080 & sleep 3 && NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js
+
+# Start server, health check, run test
+# CMD ["sh", "-c", "npx http-server ./tests/test-pages -p 8080 & for i in {1..10}; do nc -z localhost 8080 && break; echo 'Waiting for server to be ready...'; sleep 1; done; NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js"]
+
+# Run the test - note - this includes the creation of server.pid and killing of server process at end, which we don't need to do with docker but the command is simpler.
 # CMD ["npm", "run", "test:e2e"]
-CMD ./node_modules/.bin/http-server ./test-pages -p 8080 & npm run test:e2e
+
+CMD ["npm", "run", "test:all"]
+
+
+# CMD ["sh", "-c", "
+#     # Start the server in the background
+#     npx http-server ./tests/test-pages -p 8080 &
+
+#     # Wait for the server to start
+#     for i in {1..10}; do
+#         nc -z localhost 8080 && break
+#         echo 'Waiting for server to be ready...'
+#         sleep 1
+#     done
+
+#     # Run the tests
+#     NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js
+# "]
