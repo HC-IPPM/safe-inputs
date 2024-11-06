@@ -6,25 +6,77 @@ describe('processAxeReport function', () => {
       {
         url: 'http://localhost:8080/test',
         results: {
-          violations: [{ id: 'test-violation-test-id', impact: 'serious' }],
-          incomplete: [{ id: 'test-incomplete-test-id' }],
+          violations: [
+            { id: 'test-violation-id', impact: 'serious' },
+            { id: 'another-test-violation-id' },
+          ],
+          incomplete: [{ id: 'test-incomplete-id' }],
         },
       },
     ];
 
     const config = {
-      ignoreViolations: ['test-violation-test-id'],
-      ignoreIncomplete: ['test-incomplete-test-id'],
+      ignoreViolations: ['test-violation-id'],
+      ignoreIncomplete: ['test-incomplete-id'],
       blacklistPatterns: [],
     };
 
-    const { urlsWithViolations, urlsWithSeriousImpact } =
-      await processAxeReport(mockResults, config);
+    const { urlsWithViolations, urlsWithSeriousImpactViolations } =
+      await processAxeReport(mockResults, config, { saveToFile: false });
 
-    console.log(urlsWithViolations, urlsWithSeriousImpact);
-
-    expect(urlsWithViolations).toHaveLength(0);
-    expect(urlsWithSeriousImpact).toHaveLength(0);
+    expect(urlsWithViolations).toHaveLength(1);
+    expect(urlsWithSeriousImpactViolations).toHaveLength(0);
   });
-  // TODO - add in having violations senario
+
+  it('should detect and return non-exempted violations and incompletes', async () => {
+    const mockResults = [
+      {
+        url: 'http://localhost:8080/test',
+        results: {
+          violations: [
+            { id: 'test-violation-id', impact: 'serious' },
+            { id: 'another-test-violation-id', impact: 'moderate' },
+          ],
+          incomplete: [{ id: 'test-incomplete-id', impact: 'moderate' }],
+        },
+      },
+      {
+        url: 'http://localhost:8080/test2',
+        results: {
+          violations: [
+            { id: 'test-another-serious-violation-id', impact: 'serious' },
+            { id: 'another-test-violation-id', impact: 'moderate' },
+          ],
+          incomplete: [],
+        },
+      },
+    ];
+
+    const config = {
+      ignoreViolations: [],
+      ignoreIncomplete: [],
+      blacklistPatterns: [],
+    };
+
+    const {
+      urlsWithViolations,
+      urlsWithSeriousImpactViolations,
+      urlsWithIncompletes,
+    } = await processAxeReport(mockResults, config, { saveToFile: false });
+
+    expect(urlsWithViolations).toHaveLength(2);
+    expect(urlsWithViolations[0][0]).toBe('http://localhost:8080/test');
+    expect(urlsWithViolations[0][1]).toContain('test-violation-id');
+    expect(urlsWithViolations[0][1]).toContain('another-test-violation-id');
+    expect(urlsWithIncompletes).toHaveLength(1);
+
+    // Serious impact violations
+    expect(urlsWithSeriousImpactViolations).toHaveLength(2);
+    expect(urlsWithSeriousImpactViolations[0][1]).toContain(
+      'test-violation-id',
+    );
+    expect(urlsWithSeriousImpactViolations[1][1]).toContain(
+      'test-another-serious-violation-id',
+    );
+  });
 });
