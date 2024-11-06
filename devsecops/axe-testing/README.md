@@ -27,6 +27,7 @@ echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
 ```
 
 3. Run the accessibility scan:
+   (Note - you will need puppeteer installed on your system for this, alternatively, run using docker below.)
 
 ```
 
@@ -69,6 +70,8 @@ This will first spin up a Docker Compose development environment, enabling inter
 Once the development envrionment is active, the accessibility scan will use a headless chrome browser to render and scan each page.
 
 The results are then parsed and saved to file. When run with Cloud Build, the results are saved to a Google Cloud storage bucket for the dashboard to access.
+
+This is triggered in the Continuous Integration as a step in the [ui/cloudbuild.yaml](../../ui/cloudbuild.yaml)
 
 ## Adding in exceptions
 
