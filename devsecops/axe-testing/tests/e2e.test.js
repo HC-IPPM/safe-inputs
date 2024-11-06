@@ -23,7 +23,7 @@ describe('End-to-End Accessibility Test', () => {
     }
   });
 
-  test('should have no violations on the accessible page', async () => {
+  it('should have no violations on the accessible page', async () => {
     await page.goto(`http://localhost:${PORT}/accessible.html`, {
       waitUntil: 'networkidle2',
     });
@@ -33,8 +33,7 @@ describe('End-to-End Accessibility Test', () => {
     console.log('Accessible page violations:', results.violations);
   });
 
-  test('should detect violations on the inaccessible page', async () => {
-    // Follow the link to the inaccessible page
+  it('should detect violations on the inaccessible page', async () => {
     await page.goto('http://localhost:8080/inaccessible.html', {
       waitUntil: 'networkidle2',
     });
