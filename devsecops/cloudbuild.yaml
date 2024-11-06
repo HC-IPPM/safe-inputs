@@ -1,0 +1,15 @@
+steps:
+  - id: 'Install a11y dependencies'
+    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
+    dir: devsecops/axe-testing
+    entrypoint: npm
+    args: ['ci', '--no-optional']
+
+  - id: Test a11y testing
+    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
+    dir: devsecops/axe-testing
+    entrypoint: npm
+    args: ['run test:all:docker']
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
