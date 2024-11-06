@@ -36,29 +36,4 @@ COPY . .
 EXPOSE 8080
 
 # Run the test
-# CMD npx http-server ./tests/test-pages -p 8080 & echo $! > server.pid && NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js && kill $(cat server.pid)
-# CMD npx http-server ./tests/test-pages -p 8080 & sleep 3 && NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js
-
-# Start server, health check, run test
-# CMD ["sh", "-c", "npx http-server ./tests/test-pages -p 8080 & for i in {1..10}; do nc -z localhost 8080 && break; echo 'Waiting for server to be ready...'; sleep 1; done; NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js"]
-
-# Run the test - note - this includes the creation of server.pid and killing of server process at end, which we don't need to do with docker but the command is simpler.
-# CMD ["npm", "run", "test:e2e"]
-
 CMD ["npm", "run", "test:all"]
-
-
-# CMD ["sh", "-c", "
-#     # Start the server in the background
-#     npx http-server ./tests/test-pages -p 8080 &
-
-#     # Wait for the server to start
-#     for i in {1..10}; do
-#         nc -z localhost 8080 && break
-#         echo 'Waiting for server to be ready...'
-#         sleep 1
-#     done
-
-#     # Run the tests
-#     NODE_OPTIONS=--experimental-vm-modules npx jest tests/e2e.test.js
-# "]
