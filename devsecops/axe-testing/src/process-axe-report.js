@@ -19,9 +19,6 @@ async function loadConfig(configPath) {
   try {
     const configContent = fs.readFileSync(configPath, 'utf8');
     const config = JSON.parse(configContent);
-    // config.blacklistPatterns = (config.blacklistPatterns || []).map(
-    //   (pattern) => new RegExp(pattern),
-    // );
     config.blacklistPatterns = await convertBlacklistPatternsToRegExp(
       config.blacklistPatterns,
     );
