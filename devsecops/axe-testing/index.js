@@ -18,6 +18,24 @@ console.log('Exempted incomplete ids:', ignoreIncomplete);
 const ignoreViolations = config.ignoreViolations || [];
 console.log('Exempted violation ids:', ignoreViolations);
 
+// Extract Safe Inputs specific logic for testing
+async function loginToSafeInputs(page, isSafeInputs = true) {
+  if (isSafeInputs) {
+    // Perform login in order to move to the next page
+    await page.type('#email', 'owner-axe@phac-aspc.gc.ca'); // email field
+    await page
+      .locator('button[type="submit"]', { hasText: /sign in/i }) // case insensitive regex search for sign in button
+      .click();
+
+    // Bypass authentication in the dev environment
+    const textSelector = await page
+      .locator('text/Or click here to complete authentication')
+      .waitHandle();
+
+    textSelector.click();
+  }
+}
+
 (async () => {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
@@ -39,26 +57,14 @@ console.log('Exempted violation ids:', ignoreViolations);
 
   // Perform accessibility scan on the login page (localhost) before logging in
   console.log('\nAssessing login page:', HOMEPAGE_URL);
-  const loginPageResults = await new AxePuppeteer(page).analyze();
+  const homePageResults = await new AxePuppeteer(page).analyze();
 
   allResults.push({
     url: HOMEPAGE_URL,
-    results: loginPageResults,
+    results: homePageResults,
   });
 
-  // Perform login to move to the next page
-  await page.type('#email', 'owner-axe@phac-aspc.gc.ca'); // email field
-  await page
-    .locator('button[type="submit"]', { hasText: /sign in/i }) // case insensitive regex search for sign in button
-    .click();
-
-  // Bypass authentication in the dev environment
-  const textSelector = await page
-    .locator('text/Or click here to complete authentication')
-    .waitHandle();
-
-  textSelector.click();
-
+  await loginToSafeInputs(page);
   await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
 
   // Start crawling from the dashboard or starting point
@@ -75,7 +81,6 @@ console.log('Exempted violation ids:', ignoreViolations);
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    // urlsWithAriaBilingualIssues,
   } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
@@ -85,7 +90,6 @@ console.log('Exempted violation ids:', ignoreViolations);
     urlsWithSeriousImpactViolations,
   );
   console.log('URLs with incompletes:', urlsWithIncompletes);
-  // console.log('URLs with bilingual aria issues:', urlsWithAriaBilingualIssues);
 
   // Close the browser
   await browser.close();
