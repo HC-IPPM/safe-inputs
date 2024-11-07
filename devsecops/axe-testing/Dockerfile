@@ -1,13 +1,12 @@
-FROM node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c
+FROM node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6
 
 WORKDIR /app
 
 # We don't need the standalone Chromium for puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
-# Add a default value for HOMEPAGE_URL
-ENV HOMEPAGE_URL="http://127.0.0.1:8080"
 ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium-browser'
+
+ENV HOMEPAGE_URL="http://127.0.0.1:8080"
 
 # Install packages (Chromium and dependencies)
 RUN apk update && apk add --no-cache \
@@ -22,10 +21,21 @@ RUN apk update && apk add --no-cache \
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the source code for building
+# Copy the rest of the source code for building (and testing)
 COPY ./axeignore.json .
 COPY ./src ./src
+COPY ./jest.config.cjs .
 COPY ./index.js .
+COPY ./tests .
+
+# Install project dependencies
+RUN npm install --include=dev 
+
+# Copy the rest of the project files
+COPY . .
+
+# Expose the port for the local server
+EXPOSE 8080
 
 # Create a non-root user
 RUN addgroup -g 1001 -S puppeteer && adduser -u 1001 -S puppeteer -G puppeteer
@@ -36,5 +46,5 @@ RUN chown -R puppeteer:puppeteer /app
 # Switch to the non-root user 
 USER puppeteer
 
-# Start application
+# Start application (this is overridden for tests at runtime)
 CMD ["npm", "--no-update-notifier", "start"]
