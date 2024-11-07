@@ -1,4 +1,5 @@
 import fs from 'fs';
+import * as url from 'node:url';
 
 import { AxePuppeteer } from '@axe-core/puppeteer';
 import dotenv from 'dotenv';
@@ -19,7 +20,7 @@ const ignoreViolations = config.ignoreViolations || [];
 console.log('Exempted violation ids:', ignoreViolations);
 
 // Extract Safe Inputs specific logic for testing
-async function loginToSafeInputs(page, isSafeInputs = true) {
+async function loginToSafeInputs(page, isSafeInputs) {
   if (isSafeInputs) {
     // Perform login in order to move to the next page
     await page.type('#email', 'owner-axe@phac-aspc.gc.ca'); // email field
@@ -33,10 +34,13 @@ async function loginToSafeInputs(page, isSafeInputs = true) {
       .waitHandle();
 
     textSelector.click();
+
+    await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
   }
 }
 
-(async () => {
+// (async () => {
+export async function runAccessibilityScan(isSafeInputs=true) {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 
@@ -64,8 +68,7 @@ async function loginToSafeInputs(page, isSafeInputs = true) {
     results: homePageResults,
   });
 
-  await loginToSafeInputs(page);
-  await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 10000 });
+  await loginToSafeInputs(page, isSafeInputs);
 
   // Start crawling from the dashboard or starting point
   await crawlPage(
@@ -93,4 +96,12 @@ async function loginToSafeInputs(page, isSafeInputs = true) {
 
   // Close the browser
   await browser.close();
-})();
+}
+
+// if main run as SafeInputs (with login section)
+if (import.meta.url.startsWith('file:')) { 
+  const modulePath = url.fileURLToPath(import.meta.url);
+  if (process.argv[1] === modulePath) { 
+    await runAccessibilityScan()
+  }
+}
