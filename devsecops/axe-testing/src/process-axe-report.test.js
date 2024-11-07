@@ -1,4 +1,7 @@
-import { processAxeReport } from './process-axe-report.js';
+import {
+  processAxeReport,
+  convertBlacklistPatternsToRegExp,
+} from './process-axe-report.js';
 
 describe('processAxeReport function', () => {
   it('should filter out exempted violations and incompletes', async () => {
@@ -44,7 +47,7 @@ describe('processAxeReport function', () => {
         url: 'http://localhost:8080/test2',
         results: {
           violations: [
-            { id: 'test-another-serious-violation-id', impact: 'serious' },
+            { id: 'another-test-serious-violation-id', impact: 'serious' },
             { id: 'another-test-violation-id', impact: 'moderate' },
           ],
           incomplete: [],
@@ -76,7 +79,51 @@ describe('processAxeReport function', () => {
       'test-violation-id',
     );
     expect(urlsWithSeriousImpactViolations[1][1]).toContain(
-      'test-another-serious-violation-id',
+      'another-test-serious-violation-id',
     );
+  });
+
+  it('should exclude URLs matching blacklist patterns', async () => {
+    const mockResults = [
+      {
+        url: 'http://localhost:8080/blacklisted',
+        results: {
+          violations: [{ id: 'test-violation-id', impact: 'serious' }],
+          incomplete: [],
+        },
+      },
+      {
+        url: 'http://localhost:8080/allowed',
+        results: {
+          violations: [{ id: 'allowed-violation-id', impact: 'moderate' }],
+          incomplete: [],
+        },
+      },
+    ];
+
+    const config = {
+      ignoreViolations: [],
+      ignoreIncomplete: [],
+      blacklistPatterns: ['blacklisted'], // Blacklist URLs containing 'blacklisted'
+    };
+
+    // Convert blacklistPatterns to Regex object
+    config.blacklistPatterns = await convertBlacklistPatternsToRegExp(
+      config.blacklistPatterns,
+    );
+
+    const { urlsWithViolations, urlsWithSeriousImpactViolations } =
+      await processAxeReport(mockResults, config, { saveToFile: false });
+
+    expect(urlsWithViolations).toHaveLength(1);
+    expect(urlsWithViolations[0][0]).toBe('http://localhost:8080/allowed');
+    expect(urlsWithViolations[0][1]).toContain('allowed-violation-id');
+
+    expect(
+      urlsWithViolations.find(
+        (entry) => entry[0] === 'http://localhost:8080/blacklisted',
+      ),
+    ).toBeUndefined();
+    expect(urlsWithSeriousImpactViolations).toHaveLength(0);
   });
 });

@@ -5,13 +5,25 @@ import path from 'path';
 const configPath = './axeignore.json';
 
 // ------ HELPER FUNCTIONS -----
+
+// Helper function to convert blacklist url patters from the config into a RegExp object (extracted from loadConfig for unit testing)
+export async function convertBlacklistPatternsToRegExp(blacklistPatterns) {
+  blacklistPatterns = (blacklistPatterns || []).map(
+    (pattern) => new RegExp(pattern),
+  );
+  return blacklistPatterns;
+}
+
 // Helper function to load config file
 async function loadConfig(configPath) {
   try {
     const configContent = fs.readFileSync(configPath, 'utf8');
     const config = JSON.parse(configContent);
-    config.blacklistPatterns = (config.blacklistPatterns || []).map(
-      (pattern) => new RegExp(pattern),
+    // config.blacklistPatterns = (config.blacklistPatterns || []).map(
+    //   (pattern) => new RegExp(pattern),
+    // );
+    config.blacklistPatterns = await convertBlacklistPatternsToRegExp(
+      config.blacklistPatterns,
     );
     return config;
   } catch (error) {
