@@ -38,7 +38,10 @@ async function loginToSafeInputs(page, isSafeInputs) {
   }
 }
 
-export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL = process.env.HOMEPAGE_URL) {
+export async function runAccessibilityScan(
+  isSafeInputs = true,
+  HOMEPAGE_URL = process.env.HOMEPAGE_URL,
+) {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 
@@ -103,7 +106,7 @@ export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL = p
   };
 }
 
-// if main, run as SafeInputs (with login section as isSafeInputs defaults to true)
+// if main, run as SafeInputs (including Safe Inputs' login section as isSafeInputs default is true)
 if (import.meta.url.startsWith('file:')) {
   const modulePath = url.fileURLToPath(import.meta.url);
   if (process.argv[1] === modulePath) {
