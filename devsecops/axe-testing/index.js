@@ -39,7 +39,7 @@ async function loginToSafeInputs(page, isSafeInputs) {
   }
 }
 
-export async function runAccessibilityScan(isSafeInputs = true) {
+export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL) {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 

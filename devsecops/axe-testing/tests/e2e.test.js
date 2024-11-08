@@ -4,9 +4,9 @@ describe('End-to-End Accessibility Test', () => {
   let scanResults;
 
   beforeAll(async () => {
-    process.env.HOMEPAGE_URL = 'http://localhost:8080';
     const isSafeInputs = false; // Skips the Safe Inputs specific login steps
-    scanResults = await runAccessibilityScan(isSafeInputs);
+    const HOMEPAGE_URL = 'http://127.0.0.1:8080';
+    scanResults = await runAccessibilityScan(isSafeInputs, HOMEPAGE_URL);
   });
 
   it('should crawl and scan more than one page', () => {
