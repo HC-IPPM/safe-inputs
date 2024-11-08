@@ -5,7 +5,7 @@ describe('End-to-End Accessibility Test', () => {
 
   beforeAll(async () => {
     const isSafeInputs = false; // Skips the Safe Inputs specific login steps
-    // eslint-disable @microsoft/sdl/no-insecure-url
+    // eslint-disable-next-line @microsoft/sdl/no-insecure-url
     const HOMEPAGE_URL = 'http://127.0.0.1:8080';
     scanResults = await runAccessibilityScan(isSafeInputs, HOMEPAGE_URL);
   });
@@ -14,12 +14,12 @@ describe('End-to-End Accessibility Test', () => {
     const { filteredResults } = scanResults;
 
     const hasAccessiblePage = filteredResults.some(
-      // eslint-disable @microsoft/sdl/no-insecure-url
+      // eslint-disable-next-line @microsoft/sdl/no-insecure-url
       (entry) => entry.url === 'http://127.0.0.1:8080/accessible.html',
     );
 
     const hasInaccessiblePage = filteredResults.some(
-      // eslint-disable @microsoft/sdl/no-insecure-url
+      // eslint-disable-next-line @microsoft/sdl/no-insecure-url
       (entry) => entry.url === 'http://127.0.0.1:8080/inaccessible.html',
     );
 
@@ -31,7 +31,7 @@ describe('End-to-End Accessibility Test', () => {
     const { urlsWithViolations } = scanResults;
 
     const accessiblePageViolations = urlsWithViolations.find(
-      // eslint-disable @microsoft/sdl/no-insecure-url
+      // eslint-disable-next-line @microsoft/sdl/no-insecure-url
       (entry) => entry[0] === 'http://127.0.0.1:8080/accessible.html',
     );
     expect(accessiblePageViolations).toBeUndefined();
@@ -41,7 +41,7 @@ describe('End-to-End Accessibility Test', () => {
     const { urlsWithViolations } = scanResults;
 
     const hasInaccessiblePageViolations = urlsWithViolations.some(
-      // eslint-disable @microsoft/sdl/no-insecure-url
+      // eslint-disable-next-line @microsoft/sdl/no-insecure-url
       (entry) => entry[0] === 'http://127.0.0.1:8080/inaccessible.html',
     );
     expect(hasInaccessiblePageViolations).toBe(true);
