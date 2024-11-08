@@ -84,6 +84,7 @@ export async function runAccessibilityScan(isSafeInputs=true) {
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
+    filteredResults // For testing
   } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
@@ -96,6 +97,12 @@ export async function runAccessibilityScan(isSafeInputs=true) {
 
   // Close the browser
   await browser.close();
+
+  // For testing 
+  return {
+    urlsWithViolations,
+    filteredResults
+  };
 }
 
 // if main run as SafeInputs (with login section)
