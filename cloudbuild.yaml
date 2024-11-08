@@ -18,7 +18,7 @@ steps:
     args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
 
   - id: 'GraphQL Codegen check'
-    name: 'gcr.io/cloud-builders/docker@sha256:505f7f83b55bfd222e0554f89aa09ee46e17245b5e376dd430b40b621b41757a'
+    name: 'gcr.io/cloud-builders/docker@sha256:8bacb3d22bc02629e45fb0dce67fb33231f8ceac4ee7e0ac6bba71c40497cd38'
     dir: ./
     script: |
       #!/bin/bash
@@ -43,7 +43,7 @@ steps:
       docker compose -f ./docker-compose.dev.yaml down
 
   - id: generate-sbom-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:505f7f83b55bfd222e0554f89aa09ee46e17245b5e376dd430b40b621b41757a'
+    name: 'gcr.io/cloud-builders/docker@sha256:8bacb3d22bc02629e45fb0dce67fb33231f8ceac4ee7e0ac6bba71c40497cd38'
     dir: ui
     entrypoint: 'bash'
     args:
@@ -58,7 +58,7 @@ steps:
         fi
 
   - id: upload-sbom-to-gcs-bucket-if-main
-    name: 'gcr.io/cloud-builders/gsutil@sha256:73670c2b572ada3e8bb8b432f5b965c5b67424000aced53c2f5a28557aca97b8'
+    name: 'gcr.io/cloud-builders/gsutil@sha256:d6f9091d42d7bd4b1a45927c3ce9d80d4701aecfacbc54d4524ae41b27061f09'
     entrypoint: 'bash'
     args:
       - '-c'
