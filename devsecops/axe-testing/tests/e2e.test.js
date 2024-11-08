@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { runAccessibilityScan } from '../index.js';
 
 describe('End-to-End Accessibility Test', () => {
