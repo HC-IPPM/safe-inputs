@@ -1,15 +1,10 @@
 steps:
-  - id: 'Install a11y dependencies'
-    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
-    dir: devsecops/axe-testing
-    entrypoint: npm
-    args: ['ci', '--no-optional']
-
-  - id: Test a11y testing
-    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
-    dir: devsecops/axe-testing
-    entrypoint: npm
-    args: ['run test:all:docker']
-
-options:
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  - id: 'Run tests for a11y scanning'
+    name: 'gcr.io/cloud-builders/docker@sha256:505f7f83b55bfd222e0554f89aa09ee46e17245b5e376dd430b40b621b41757a'
+    dir: 'devsecops/axe-testing'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker build -t axe-e2e . && \
+        docker run --rm --network host axe-e2e npm run test:all
