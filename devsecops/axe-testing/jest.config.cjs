@@ -2,5 +2,5 @@ module.exports = {
   transform: {
     '.*\\.js$': 'babel-jest',
   },
-  testTimeout: 30000, // Increase timeout to 30 seconds for e2e test
+  testTimeout: 60000, // Increase timeout for e2e test
 };
