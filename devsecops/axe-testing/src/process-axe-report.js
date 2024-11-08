@@ -161,5 +161,6 @@ export async function processAxeReport(
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
+    filteredResults, // For testing
   };
 }
