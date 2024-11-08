@@ -1,45 +1,81 @@
-import puppeteer from 'puppeteer';
-import { AxePuppeteer } from '@axe-core/puppeteer';
+import { runAccessibilityScan } from '../index.js';
 
-const PORT = process.env.TEST_PORT || 8080;
+// describe('End-to-End Accessibility Test', () => {
+//   it('should crawl and complete the accessibility for more than one pages', async () => {
+//     process.env.HOMEPAGE_URL = 'http://localhost:8080/accessible.html'; // Start this page first, then should crawl to other
+
+//     // Run the accessibility scan and capture the result
+//     const isSafeInputs = false; // Skips the Safe Inputs specific login steps
+//     const {
+//       urlsWithViolations,
+//       filteredResults
+//     } = await runAccessibilityScan(isSafeInputs);
+
+//   // Check that the scan crawled more than one page
+//   const hasAccessiblePage = filteredResults.some(
+//     (entry) => entry.url === 'http://127.0.0.1:8080/accessible.html'
+//   );
+
+//   const hasInaccessiblePage = filteredResults.some(
+//     (entry) => entry.url === 'http://127.0.0.1:8080/inaccessible.html'
+//   );
+
+//   expect(hasAccessiblePage).toBe(true);
+//   expect(hasInaccessiblePage).toBe(true);
+
+//   // Check the accessible page has no violations
+//   const accessiblePageViolations = urlsWithViolations.find(
+//     (entry) => entry[0] === 'http://127.0.0.1:8080/accessible.html'
+//   );
+//   expect(accessiblePageViolations).toBeUndefined();
+
+//   // Check the inaccessible page has violations
+//   const hasInaccessiblePageViolations = urlsWithViolations.some(
+//     (entry) => entry[0].includes('http://127.0.0.1:8080/inaccessible.html')
+//   );
+//   expect(hasInaccessiblePageViolations).toBe(true);
+//   });
+// });
 
 describe('End-to-End Accessibility Test', () => {
-  let browser;
-  let page;
+  let scanResults;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: puppeteer.executablePath(),
-    });
-    page = await browser.newPage();
-    await page.setBypassCSP(true);
+    process.env.HOMEPAGE_URL = 'http://localhost:8080/accessible.html'; // Start with the first page
+    const isSafeInputs = false; // Skips the Safe Inputs specific login steps
+    scanResults = await runAccessibilityScan(isSafeInputs);
   });
 
-  afterAll(async () => {
-    if (browser) {
-      await browser.close();
-    }
+  it('should crawl and scan more than one page', () => {
+    const { filteredResults } = scanResults;
+
+    const hasAccessiblePage = filteredResults.some(
+      (entry) => entry.url === 'http://127.0.0.1:8080/accessible.html',
+    );
+
+    const hasInaccessiblePage = filteredResults.some(
+      (entry) => entry.url === 'http://127.0.0.1:8080/inaccessible.html',
+    );
+
+    expect(hasAccessiblePage).toBe(true);
+    expect(hasInaccessiblePage).toBe(true);
   });
 
-  it('should have no violations on the accessible page', async () => {
-    await page.goto(`http://localhost:${PORT}/accessible.html`, {
-      waitUntil: 'networkidle2',
-    });
-    const results = await new AxePuppeteer(page).analyze();
+  it('should not return violations for the accessible page.', () => {
+    const { urlsWithViolations } = scanResults;
 
-    expect(results.violations).toHaveLength(0);
-    console.log('Accessible page violations:', results.violations);
+    const accessiblePageViolations = urlsWithViolations.find(
+      (entry) => entry[0] === 'http://127.0.0.1:8080/accessible.html',
+    );
+    expect(accessiblePageViolations).toBeUndefined();
   });
 
-  it('should detect violations on the inaccessible page', async () => {
-    await page.goto('http://localhost:8080/inaccessible.html', {
-      waitUntil: 'networkidle2',
-    });
-    const results = await new AxePuppeteer(page).analyze();
+  it('should return accessibility violations for the inaccessible page.', () => {
+    const { urlsWithViolations } = scanResults;
 
-    expect(results.violations.length).toBeGreaterThan(0);
-    console.log('Inaccessible page violations:', results.violations);
+    const hasInaccessiblePageViolations = urlsWithViolations.some(
+      (entry) => entry[0] === 'http://127.0.0.1:8080/inaccessible.html',
+    );
+    expect(hasInaccessiblePageViolations).toBe(true);
   });
 });
