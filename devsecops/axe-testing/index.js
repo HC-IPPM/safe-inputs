@@ -9,7 +9,6 @@ import { crawlPage } from './src/crawl-page.js';
 import { processAxeReport } from './src/process-axe-report.js';
 
 dotenv.config();
-const { HOMEPAGE_URL } = process.env;
 
 const config = JSON.parse(fs.readFileSync('./axeignore.json', 'utf8'));
 const blacklistPatterns = config.blacklistPatterns || [];
@@ -39,7 +38,7 @@ async function loginToSafeInputs(page, isSafeInputs) {
   }
 }
 
-export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL) {
+export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL = process.env.HOMEPAGE_URL) {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 
@@ -104,7 +103,7 @@ export async function runAccessibilityScan(isSafeInputs = true, HOMEPAGE_URL) {
   };
 }
 
-// if main run as SafeInputs (with login section)
+// if main, run as SafeInputs (with login section as isSafeInputs defaults to true)
 if (import.meta.url.startsWith('file:')) {
   const modulePath = url.fileURLToPath(import.meta.url);
   if (process.argv[1] === modulePath) {
