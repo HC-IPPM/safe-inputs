@@ -203,9 +203,6 @@ await insert_records(user_axe, collection_axe, [
   { column_1: 1, column_2: 2 },
   { column_1: 3, column_2: 4 },
   { column_1: 5, column_2: 6 },
-]);
-
-await insert_records(user_axe, collection_axe, [
   { column_1: 7, column_2: 8 },
   { column_1: 9, column_2: 10 },
   { column_1: 11, column_2: 12 },
