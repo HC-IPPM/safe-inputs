@@ -39,8 +39,7 @@ async function loginToSafeInputs(page, isSafeInputs) {
   }
 }
 
-// (async () => {
-export async function runAccessibilityScan(isSafeInputs=true) {
+export async function runAccessibilityScan(isSafeInputs = true) {
   const visitedPages = new Set(); // To track visited pages and avoid duplication
   const allResults = []; // Collect all processed results
 
@@ -84,7 +83,7 @@ export async function runAccessibilityScan(isSafeInputs=true) {
     urlsWithViolations,
     urlsWithSeriousImpactViolations,
     urlsWithIncompletes,
-    filteredResults // For testing
+    filteredResults, // For testing
   } = await processAxeReport(allResults);
 
   console.log('\nResults Summary:');
@@ -98,17 +97,17 @@ export async function runAccessibilityScan(isSafeInputs=true) {
   // Close the browser
   await browser.close();
 
-  // For testing 
+  // For testing
   return {
     urlsWithViolations,
-    filteredResults
+    filteredResults,
   };
 }
 
 // if main run as SafeInputs (with login section)
-if (import.meta.url.startsWith('file:')) { 
+if (import.meta.url.startsWith('file:')) {
   const modulePath = url.fileURLToPath(import.meta.url);
-  if (process.argv[1] === modulePath) { 
-    await runAccessibilityScan()
+  if (process.argv[1] === modulePath) {
+    await runAccessibilityScan();
   }
 }
