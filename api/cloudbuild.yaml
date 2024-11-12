@@ -1,12 +1,12 @@
 steps:
   - id: install
-    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
+    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
     dir: api
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:2ef8a5348c8936329810271059b2c1ba88f293f4d6849e5d2ade22652c3d396c'
+    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
     dir: api
     entrypoint: npm
     args: ['run', 'typecheck']
