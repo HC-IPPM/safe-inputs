@@ -34,7 +34,7 @@
     "@escape.tech/graphql-armor-max-aliases": "^2.0.0",
     "@escape.tech/graphql-armor-max-depth": "^2.0.0",
     "@graphql-tools/schema": "^10.0.3",
-    "@whatwg-node/node-fetch": "^0.6.0",
+    "@whatwg-node/node-fetch": "^0.7.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "csrf-csrf": "^3.0.6",
