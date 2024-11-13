@@ -33,45 +33,46 @@ gcloud services enable eventarc.googleapis.com \
 
     # (uses "service-$PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com")
 
-$PROJECT_NUMBER-compute@developer.gserviceaccount.com these roles: Artifact Registry Create-on-Push Writer
-Cloud Run Developer
-Compute Load Balancer Admin
-Compute Viewer
-Editor
-Eventarc Event Receiver
-Logs Bucket Writer
-Logs Writer
-Service Account User
-Storage Admin
-Storage Object Admin
+# ----------- ROLES ------------------
+# $PROJECT_NUMBER-compute@developer.gserviceaccount.com these roles: Artifact Registry Create-on-Push Writer
+# Cloud Run Developer
+# Compute Load Balancer Admin
+# Compute Viewer
+# Editor
+# Eventarc Event Receiver
+# Logs Bucket Writer
+# Logs Writer
+# Service Account User
+# Storage Admin
+# Storage Object Admin
 
-vuln-cloud-function-sa@$PROJECT_ID.iam.gserviceaccount.com
-Container Analysis Occurrences Viewer
+# vuln-cloud-function-sa@$PROJECT_ID.iam.gserviceaccount.com
+# Container Analysis Occurrences Viewer
 
-service-$PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com 
-Cloud Functions Service Agent
+# service-$PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com 
+# Cloud Functions Service Agent
 
-service-744920990938@gcp-sa-containerscanning.iam.gserviceaccount.com
-Container Scanner Service Agent
+# service-744920990938@gcp-sa-containerscanning.iam.gserviceaccount.com
+# Container Scanner Service Agent
 
-service-744920990938@gcp-sa-eventarc.iam.gserviceaccount.com
-Eventarc Service Agent
+# service-744920990938@gcp-sa-eventarc.iam.gserviceaccount.com
+# Eventarc Service Agent
 
-service-744920990938@gcp-sa-pubsub.iam.gserviceaccount.com
-Cloud Pub/Sub Service Agent
-Service Account Token Creator
+# service-744920990938@gcp-sa-pubsub.iam.gserviceaccount.com
+# Cloud Pub/Sub Service Agent
+# Service Account Token Creator
 
-service-744920990938@gcp-sa-runapps.iam.gserviceaccount.com
-Serverless Integrations Service Agent
+# service-744920990938@gcp-sa-runapps.iam.gserviceaccount.com
+# Serverless Integrations Service Agent
 
-service-744920990938@gcp-sa-cloudbuild.iam.gserviceaccount.com
-Cloud Build Service Agent
+# service-744920990938@gcp-sa-cloudbuild.iam.gserviceaccount.com
+# Cloud Build Service Agent
 
-service-744920990938@serverless-robot-prod.iam.gserviceaccount.com
-Cloud Run Service Agent
+# service-744920990938@serverless-robot-prod.iam.gserviceaccount.com
+# Cloud Run Service Agent
 
-service-744920990938@gs-project-accounts.iam.gserviceaccount.com
-Pub/Sub Publisher
+# service-744920990938@gs-project-accounts.iam.gserviceaccount.com
+# Pub/Sub Publisher
 
 
 # ---- IAM ----
@@ -111,18 +112,15 @@ gcloud config set run/region ${REGION}
 gcloud config set run/platform managed
 gcloud config set eventarc/location ${REGION}
 
-grant roles for $PROJECT_NUMBER-compute@developer.gserviceaccount.com:
+# grant roles for $PROJECT_NUMBER-compute@developer.gserviceaccount.com:
 
-roles/artifactregistry.createOnPushWriter on phx-01hwmw2c1r4
-roles/logging.logWriter on phx-01hwmw2c1r4
-roles/storage.objectAdmin on phx-01hwmw2c1r4
+# roles/artifactregistry.createOnPushWriter on phx-01hwmw2c1r4
+# roles/logging.logWriter on phx-01hwmw2c1r4
+# roles/storage.objectAdmin on phx-01hwmw2c1r4
 
 run invoker ?
 
 # https://cloud.google.com/run/docs/configuring/cpu
-# --concurrency=10
-#    --allow-unauthenticated \
-       # --max-instances=20 \  - default is 100 this doesn't speed it up 
 
 # # Python
 # gcloud functions deploy image-vuln-cf-trigger \
@@ -142,13 +140,9 @@ gcloud functions deploy imageVulnPubSubHandler \
     --set-env-vars BUCKET_NAME=my-bucket-of-risk-the-second \
     --region=northamerica-northeast1
 
-This gets pushed to gcf-artifacts (and is also scanned when up and running)
+# This gets pushed to gcf-artifacts (and is also scanned when up and running)
 
 # ** need service account - right now using compute engine
-
-# gcloud run services remove-iam-policy-binding image-vuln-cf-trigger \
-#   --member="allUsers" \
-#   --role="roles/run.invoker"
 
 
 # ------ Push image with lots of vunerabilities (nginx - ie Dockerfile in this dir) to Artifact Registry to test
