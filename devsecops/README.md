@@ -57,5 +57,3 @@ The SBOM results are saved to a Google Cloud Storage bucket using the Commit SHA
 
 While Syft includes licenses in the SBOM, we may also add a [specific license risk scan](https://aquasecurity.github.io/trivy/v0.47/docs/scanner/license/) to more easily flag conflicts and/or risks in the future.
 # DevSecOps in Safe Inputs
-
-## SAST - Static Vunerability Scanning
