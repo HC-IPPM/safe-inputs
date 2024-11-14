@@ -32,7 +32,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.3",
     "@microsoft/eslint-plugin-sdl": "0.2.2",
-    "@parcel/watcher": "2.4.1",
+    "@parcel/watcher": "2.5.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "eslint": "8.57.1",
@@ -40,8 +40,8 @@
     "eslint-config-standard": "17.1.0",
     "eslint-import-resolver-typescript": "3.6.3",
     "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jest": "28.8.3",
-    "eslint-plugin-no-secrets": "1.0.2",
+    "eslint-plugin-jest": "28.9.0",
+    "eslint-plugin-no-secrets": "1.1.2",
     "eslint-plugin-promise": "6.6.0",
     "prettier": "3.3.3"
   }

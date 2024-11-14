@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6
+FROM node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed
 
 ENV NODE_ENV production
 

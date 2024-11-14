@@ -1,24 +1,24 @@
 steps:
   - id: 'Install dependencies'
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
     dir: ui
     entrypoint: npm
     args: ['run', 'typecheck']
 
   - id: Test
-    name: 'node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6'
+    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
     dir: ui
     entrypoint: npm
     args: ['test']
 
   - id: 'Axe a11y testing setup'
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     dir: ./
     script: |
       #!/bin/bash
@@ -46,7 +46,7 @@ steps:
         ./wait_for_service.cjs http://localhost:8080/signin
 
   - id: 'Axe a11y testing'
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     args: [
         'run',
         '--network',
@@ -67,7 +67,7 @@ steps:
   #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -75,7 +75,7 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -84,7 +84,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -99,7 +99,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:e4c19c7dff5ffac03bec3b4349e37dcbf36aa96240c4dcd9dbc2356f1ed9086c'
+    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
     entrypoint: 'bash'
     args:
       - '-c'
