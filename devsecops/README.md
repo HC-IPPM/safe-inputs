@@ -19,9 +19,9 @@ TBA
 
 TBA
 
-### Artifact Registry Vunerability Scans
+### [Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning/README.md)
 
-TBA
+To maintain continuous security for container images deployed to Google Cloud Platform (GCP), we're using the built-in artifact vulnerability scanning. Images stored in the Artifact Registry are automatically scanned and produce occurances with discoveries, which are published to a Pub/Sub topic. While these vunerabilties occurances are also picked up and monitored through the Security Command Center, a Cloud Function is used to processes these occurrences, filtering for vulnerabilities and pushes files to a Cloud Storage bucketto allow for integration with dashboards and other tools for real-time visibility into the security status of containerized applications to share with other stakeholders.
 
 ### TODO Cluster scanning
 
