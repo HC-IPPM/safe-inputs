@@ -1,5 +1,5 @@
 # 1. Building static react app
-FROM node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed AS build
+FROM node:lts-alpine3.19@sha256:844f517e92fb8f226a52f29ed5c2b5994ae0dd05e152fefac3f2399469701234 AS build
 
 WORKDIR /app
 
