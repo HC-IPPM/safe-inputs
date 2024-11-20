@@ -24,7 +24,8 @@ RUN npm ci
 # Copy the rest of the source code for building (and testing)
 COPY ./axeignore.json .
 COPY ./src ./src
-COPY ./jest.config.cjs .
+COPY ./jest.unit.config.cjs .
+COPY ./jest.e2e.config.cjs .
 COPY ./index.js .
 COPY ./tests .
 
