@@ -13,13 +13,13 @@ TBA
 - versioned
 - least priviledge
 
-## Continuous Vunerability Scanning
+## Vunerability Scanning
 
-### GitHub Dependabot
+### Continuous Scanning with GitHub Dependabot
 
 TBA
 
-### [Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning/README.md)
+### [Continuous Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
 
 To maintain continuous security for container images deployed to Google Cloud Platform (GCP), we're using the built-in artifact vulnerability scanning. Images stored in the Artifact Registry are automatically scanned and produce occurances with discoveries, which are published to a Pub/Sub topic. While these vunerabilties occurances are also picked up and monitored through the Security Command Center, a Cloud Function is used to processes these occurrences, filtering for vulnerabilities and pushes files to a Cloud Storage bucketto allow for integration with dashboards and other tools for real-time visibility into the security status of containerized applications to share with other stakeholders.
 
@@ -47,7 +47,7 @@ TBA
 
 TBA
 
-## Software Bill of Materials (SBOM) Collection
+## [Software Bill of Materials (SBOM) Collection](./sbom)
 
 An SBOM provides a detailed inventory of all components, libraries, and dependencies within a software application. We scan the application in the main Cloud Build pipeline to maintain an up-to-date bill of materials for everything included in the software from the GitHub repository, which is updated on every push to the main branch. This will enables quicker impact assesments to incidents, such as the [Log4j vunerability](https://en.wikipedia.org/wiki/Log4Shell), and helps ensure adherence to security compliance requirements.
 
