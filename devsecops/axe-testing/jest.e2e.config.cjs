@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'e2e',
-  testMatch: ['<rootDir>/tests/*.test.js'], // Match unit tests
+  testMatch: ['<rootDir>/tests/*.test.js'],
   transform: {
     '.*\\.js$': 'babel-jest',
   },
