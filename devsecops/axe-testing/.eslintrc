@@ -15,33 +15,33 @@
             "ignores": ["modules"]
           }
         ],
-        "n/no-unsupported-features/node-builtins": [
-          "error",
-          {
-            "ignores": ["fetch"]
-          }
-        ],
-        "n/no-missing-import": 0,
+        // "n/no-unsupported-features/node-builtins": [
+        //   "error",
+        //   {
+        //     "ignores": ["fetch"]
+        //   }
+        // ],
+        // "n/no-missing-import": 0,
         "n/no-extraneous-import": [
           "error",
           {
             "allowModules": ["src"]
           }
         ],
-        "no-console": 0,
-        "security/detect-object-injection": 0
+        "no-console": 0
+        // "security/detect-object-injection": 0
       },
     "overrides": [
       {
         "files": ["**/*test.unit.js", "**/*test.e2e.js"],
         "plugins": ["jest"],
-        "rules": {
-          "jest/no-disabled-tests": "warn",
-          "jest/no-focused-tests": "error",
-          "jest/no-identical-title": "error",
-          "jest/prefer-to-have-length": "warn",
-          "jest/valid-expect": "error"
-        },
+        // "rules": {
+        //   "jest/no-disabled-tests": "warn",
+        //   "jest/no-focused-tests": "error",
+        //   "jest/no-identical-title": "error",
+        //   "jest/prefer-to-have-length": "warn",
+        //   "jest/valid-expect": "error"
+        // },
         "env": {
           "jest/globals": true
         }
