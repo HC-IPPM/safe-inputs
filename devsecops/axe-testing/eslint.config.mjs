@@ -71,7 +71,7 @@ export default [
     files: ['**/*.test.unit.js', '**/test.e2e.js'],
     languageOptions: {
       globals: {
-        ...globals.jest, 
+        ...globals.jest,
       },
     },
   },
