@@ -19,7 +19,7 @@ steps:
       done
 
   - id: Validate schema
-    name: 'gcr.io/cloud-builders/docker@sha256:02fb63661ad38c8f96fc11c056a5cc6e4eccd8081fed2abc5e337adfde81a703'
+    name: 'gcr.io/cloud-builders/docker@sha256:59a7a12fcc2f356f80b5e72c0581ed66d77a99a9f99ebdc98d61899c17998727'
     dir: kubernetes
     script: |
       #!/bin/sh
