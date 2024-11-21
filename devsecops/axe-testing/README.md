@@ -24,9 +24,10 @@ npm run dev
 
 ```
 echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > axe-testing/.env
-``
+```
 
 3. Run the accessibility scan:
+   (Note - you will need puppeteer installed on your system for this, alternatively, run using docker below.)
 
 ```
 
@@ -38,10 +39,9 @@ OR run the accessibility scan using Docker container
 
 ```
 
-cd axe-testing && npm start:docker
+cd axe-testing && npm run start:docker
 
 ```
-
 
 ### Or in GCP by manualy triggering Cloud Build
 
@@ -71,9 +71,27 @@ Once the development envrionment is active, the accessibility scan will use a he
 
 The results are then parsed and saved to file. When run with Cloud Build, the results are saved to a Google Cloud storage bucket for the dashboard to access.
 
+This is triggered in the Continuous Integration as a step in the [ui/cloudbuild.yaml](../../ui/cloudbuild.yaml)
+
 ## Adding in exceptions
 
 To bypass specific URLs or violation ids, the [axeignore.json](./axeignore.json) file is used to define exceptions.
+
+## To Test
+
+```
+npm run test:all:docker
+```
+
+### Or test in Cloud Build
+
+From the root of safe-inputs, run:
+
+```
+gcloud builds submit --config ./devsecops/cloudbuild.yaml
+```
+
+This runs both the unit and end-to-end tests. The end to end test spins up a webserver with both an accessible and inaccessible pages to ensure the scan is behaving as expected.
 
 ## Other Considerations
 
@@ -90,4 +108,3 @@ To bypass specific URLs or violation ids, the [axeignore.json](./axeignore.json)
 - Other options (paid) intelligent guided tests into automated workflows for manual testing
   https://www.deque.com/blog/deque-introduces-three-new-features-to-advance-accessibility-test-automation/
   keyboard trap detections
-```

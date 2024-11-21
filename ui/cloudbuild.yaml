@@ -30,7 +30,7 @@ steps:
       # b) has permissions issues when running in this context
       docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
 
-      docker build -t axe ./axe-testing
+      docker build -t axe ./devsecops/axe-testing
 
       # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
       mkdir -p /workspace/axe-results
@@ -54,17 +54,19 @@ steps:
         '--rm',
         '--volume',
         '/workspace/axe-results:/app/axe-results',
+        '--env',
+        '${COMMIT_SHA}',
         'axe',
       ]
 
-  # - id: upload-axe-results-gcs
-  #   name: 'gcr.io/cloud-builders/gsutil'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-  #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
+  - id: upload-axe-results-gcs
+    name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+        gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
     name: 'gcr.io/cloud-builders/docker@sha256:59a7a12fcc2f356f80b5e72c0581ed66d77a99a9f99ebdc98d61899c17998727'
