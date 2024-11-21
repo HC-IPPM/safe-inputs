@@ -3,7 +3,7 @@
         "node": true
       },
     "extends": [
-      "../.eslintrc",
+      "../../.eslintrc",
       "plugin:n/recommended",
       "plugin:react-hooks/recommended",
       "plugin:security/recommended-legacy",
