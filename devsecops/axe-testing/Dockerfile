@@ -27,7 +27,7 @@ COPY ./src ./src
 COPY ./jest.unit.config.cjs .
 COPY ./jest.e2e.config.cjs .
 COPY ./index.js .
-COPY ./tests .
+COPY ./e2e-tests .
 
 # Install project dependencies
 RUN npm install --include=dev 

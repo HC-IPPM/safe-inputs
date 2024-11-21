@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'e2e',
-  testMatch: ['<rootDir>/tests/*.test.js'],
+  testMatch: ['<rootDir>/e2e-tests/*test.e2e.js'],
   transform: {
     '.*\\.js$': 'babel-jest',
   },
