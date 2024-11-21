@@ -94,7 +94,7 @@ export async function processAxeReport(
   // Load config file
   const config = testConfig || (await loadConfig(configPath)); // Load config file
 
-  for (const { url, results, ariaBilingualIssues } of allResults) {
+  for (const { url, results } of allResults) {
     // Skip URLs based on blacklist patterns
     if (isUrlBlacklisted(url, config.blacklistPatterns)) {
       console.log(`Skipping exempted URL: ${url}`);
