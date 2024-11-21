@@ -27,6 +27,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
     },
 
@@ -64,6 +65,14 @@ export default [
 
       'no-console': 0,
       'security/detect-object-injection': 0,
+    },
+  },
+  {
+    files: ['**/*.test.unit.js', '**/test.e2e.js'],
+    languageOptions: {
+      globals: {
+        ...globals.jest, 
+      },
     },
   },
 ];
