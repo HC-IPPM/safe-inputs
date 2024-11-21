@@ -5,7 +5,6 @@
     "extends": [
       "../../.eslintrc",
       "plugin:n/recommended",
-      "plugin:react-hooks/recommended",
       "plugin:security/recommended-legacy",
       "plugin:@microsoft/sdl/node"
     ],
