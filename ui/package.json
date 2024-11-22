@@ -64,6 +64,6 @@
     "jest-environment-jsdom": "29.7.0",
     "react-test-renderer": "18.3.1",
     "type-fest": "4.27.0",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   }
 }
