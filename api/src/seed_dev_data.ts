@@ -31,16 +31,16 @@ console.log('   Done');
 console.log('Creating users...');
 await get_or_create_users(AUTHZ_SUPER_ADMINS);
 
-const test_cases = ['group1', 'group2', 'both', 'empty'];
+const test_cases = ['group1', 'group2', 'both', 'axe', 'empty'];
 
-const [owner_1, owner_2, owner_both] = await get_or_create_users(
+const [owner_1, owner_2, owner_both, owner_axe] = await get_or_create_users(
   test_cases.map(
     (code) =>
       `owner-${code}@${AUTHZ_EMAIL_HOSTS_ALLOWED_TO_OWN_COLLECTIONS[0]}`,
   ),
 );
 
-const [user_1, user_2, user_both] = await get_or_create_users(
+const [user_1, user_2, user_both, user_axe] = await get_or_create_users(
   test_cases.map(
     (code) =>
       `user-${code}@${AUTHZ_EMAIL_HOSTS_ALLOWED === '*' ? 'test.com' : AUTHZ_EMAIL_HOSTS_ALLOWED[0]}`,
@@ -163,5 +163,48 @@ await create_column_defs_on_collection(owner_2, collection_2_new_minor_ver, [
     data_type: 'boolean',
     conditions: [],
   },
+]);
+
+// For accessibility testing
+const collection_axe = await create_collection(
+  owner_axe,
+  {
+    name_en: 'Group axe Collection axe',
+    name_fr: 'Group axe Collection axe FR',
+    description_en: 'desc',
+    description_fr: 'desc FR',
+    owners: [owner_axe._id],
+    uploaders: [user_axe._id],
+    is_locked: false,
+  },
+  [
+    {
+      header: 'column_1',
+      name_en: 'Column 1',
+      name_fr: 'Column 1 FR',
+      description_en: 'Column 1 desc',
+      description_fr: 'Column 1 desc FR',
+      data_type: 'boolean',
+      conditions: [],
+    },
+    {
+      header: 'column_2',
+      name_en: 'Column 2',
+      name_fr: 'Column 2 FR',
+      description_en: 'Column 2 desc',
+      description_fr: 'Column 2 desc FR',
+      data_type: 'boolean',
+      conditions: [],
+    },
+  ],
+);
+
+await insert_records(user_axe, collection_axe, [
+  { column_1: 1, column_2: 2 },
+  { column_1: 3, column_2: 4 },
+  { column_1: 5, column_2: 6 },
+  { column_1: 7, column_2: 8 },
+  { column_1: 9, column_2: 10 },
+  { column_1: 11, column_2: 12 },
 ]);
 console.log('   Done');

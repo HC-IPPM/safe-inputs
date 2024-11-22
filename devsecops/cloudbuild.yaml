@@ -1,0 +1,10 @@
+steps:
+  - id: 'Run tests for a11y scanning'
+    name: 'gcr.io/cloud-builders/docker@sha256:505f7f83b55bfd222e0554f89aa09ee46e17245b5e376dd430b40b621b41757a'
+    dir: 'devsecops/axe-testing'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker build -t axe-e2e . && \
+        docker run --rm --network host axe-e2e npm run test:all

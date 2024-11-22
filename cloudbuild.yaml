@@ -1,24 +1,24 @@
 steps:
   - id: 'Install dependencies'
-    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
+    name: 'node:lts-alpine3.19@sha256:844f517e92fb8f226a52f29ed5c2b5994ae0dd05e152fefac3f2399469701234'
     entrypoint: 'npm'
     dir: ./
     args: ['run', 'ci:all'] # script in the root package.json which runs ci at the root and in each sub-project
 
   - id: 'Prettier check'
-    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
+    name: 'node:lts-alpine3.19@sha256:844f517e92fb8f226a52f29ed5c2b5994ae0dd05e152fefac3f2399469701234'
     entrypoint: 'npm'
     dir: ./
     args: ['run', 'prettier']
 
   - id: 'Eslint check'
-    name: 'node:lts-alpine3.19@sha256:da778fcbffb7c3a83f1649d029a53b5f21ac6635ac24cf1b7fa7c2956d5509ed'
+    name: 'node:lts-alpine3.19@sha256:844f517e92fb8f226a52f29ed5c2b5994ae0dd05e152fefac3f2399469701234'
     entrypoint: 'npm'
     dir: ./
     args: ['run', 'eslint:ci'] # currently allowing warnings, but could be tightened up post https://github.com/PHACDataHub/safe-inputs/issues/144
 
   - id: 'GraphQL Codegen check'
-    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
+    name: 'gcr.io/cloud-builders/docker@sha256:59a7a12fcc2f356f80b5e72c0581ed66d77a99a9f99ebdc98d61899c17998727'
     dir: ./
     script: |
       #!/bin/bash
@@ -43,7 +43,7 @@ steps:
       docker compose -f ./docker-compose.dev.yaml down
 
   - id: generate-sbom-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:e7df62b153b4ffb55b1f44b8c98a80a6e0b6d3c6ad9cdcd2b520ce446e6541a0'
+    name: 'gcr.io/cloud-builders/docker@sha256:59a7a12fcc2f356f80b5e72c0581ed66d77a99a9f99ebdc98d61899c17998727'
     dir: ui
     entrypoint: 'bash'
     args:
@@ -58,7 +58,7 @@ steps:
         fi
 
   - id: upload-sbom-to-gcs-bucket-if-main
-    name: 'gcr.io/cloud-builders/gsutil@sha256:8018aee020781b661a7a6e91eb861866ae8f0a300d744e66e585996a85a81971'
+    name: 'gcr.io/cloud-builders/gsutil@sha256:94d140cab9583e7a97c6c85ad9ba05f9387ce2b538e08d3f7ea0be8bee9d847a'
     entrypoint: 'bash'
     args:
       - '-c'
