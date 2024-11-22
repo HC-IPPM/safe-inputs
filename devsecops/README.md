@@ -4,7 +4,7 @@
 
 TBA
 
-- Pull based pipeline using Flux - removing the need to include environment variables in the pipeline (e.g., preventing codecov incident)
+- Pull based pipeline using Flux/ArgoCD - removing the need to include environment variables in the pipeline (e.g., preventing codecov incident)
 
 ## Infrastructure as Code
 
@@ -15,13 +15,21 @@ TBA
 
 ## Vunerability Scanning
 
-### Continuous Scanning with GitHub Dependabot
+Scanning for vulnerabilities using third party tools in CI have the limitation of only being scanned at the time of commit. As both Dependabot/Renovate and Artifact Registry already continuously scanning for vulnerabilities, we can use this information from these sources for the (non-public) DevSecOps dashboard.
 
-TBA
+### Continuous Scanning with Renovate
+
+[Renovate](https://docs.renovatebot.com/) continuously scans source code in GitHub, including development dependencies, for vulnerabilities. It automates dependency updates.
 
 ### [Continuous Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
 
-To maintain continuous security for container images deployed to Google Cloud Platform (GCP), we're using the built-in artifact vulnerability scanning. Images stored in the Artifact Registry are automatically scanned and produce occurances with discoveries, which are published to a Pub/Sub topic. While these vunerabilties occurances are also picked up and monitored through the Security Command Center, a Cloud Function is used to processes these occurrences, filtering for vulnerabilities and pushes files to a Cloud Storage bucketto allow for integration with dashboards and other tools for real-time visibility into the security status of containerized applications to share with other stakeholders.
+The Artifact Registry is where the container images used by other Google Cloud Platform (GCP) services are stored. When continuous vunerability scanning is enabled on the Artifact Registry, it pushes occurrences via Pub/Sub, which can be monitored in the Security Command Center.  
+
+To enable visibility into these vulnerability occurrences outside of GCP and integrate them with the DevSecOps dashboard, we use a Cloud Function.This Cloud Function:
+
+* Subscribes to Pub/Sub messages.
+* Filters for vulnerability-related occurrences.
+* Saves the filtered data to a Google Cloud Storage bucket for the dashboard to access. 
 
 ### TODO Cluster scanning
 
