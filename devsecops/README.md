@@ -15,7 +15,7 @@ TBA
 
 ## Vunerability Scanning
 
-Scanning for vulnerabilities using third party tools in CI have the limitation of only being scanned at the time of commit. As both Dependabot/Renovate and Artifact Registry already continuously scanning for vulnerabilities, we can use this information from these sources for the (non-public) DevSecOps dashboard.
+Scanning for vulnerabilities using third-party tools in CI is limited to the time of commit. Since both Dependabot/Renovate and Artifact Registry already already perform continuously vulnerability scanning, we can pull from these to gain insights and assess risk.
 
 ### Continuous Scanning with Renovate
 
@@ -23,13 +23,9 @@ Scanning for vulnerabilities using third party tools in CI have the limitation o
 
 ### [Continuous Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
 
-The Artifact Registry is where the container images used by other Google Cloud Platform (GCP) services are stored. When continuous vunerability scanning is enabled on the Artifact Registry, it pushes occurrences via Pub/Sub, which can be monitored in the Security Command Center.  
+The Artifact Registry is where the container images used by other Google Cloud Platform (GCP) services are stored. When continuous vunerability scanning is enabled on the Artifact Registry, it pushes occurrences via Pub/Sub, which can be monitored in the Security Command Center.
 
-To enable visibility into these vulnerability occurrences outside of GCP and integrate them with the DevSecOps dashboard, we use a Cloud Function.This Cloud Function:
-
-* Subscribes to Pub/Sub messages.
-* Filters for vulnerability-related occurrences.
-* Saves the filtered data to a Google Cloud Storage bucket for the dashboard to access. 
+We're using these occurances to push vunerability information to a storage bucket with a Cloud Run Function, so we're able to view these external to GCP on the (non-public) DevSecOps dashboard.
 
 ### TODO Cluster scanning
 
