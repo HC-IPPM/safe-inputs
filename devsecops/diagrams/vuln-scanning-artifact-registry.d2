@@ -23,7 +23,7 @@ Google Cloud: {
 }
 
 # Define connections
-Google Cloud.ArtifactRegistry -> Google Cloud.PubSub: "Scans continuously - occurrences published on new events in Artifact Registry."
-Google Cloud.PubSub -> Google Cloud.CloudFunctions: "Triggers function on new occurrences"
-Google Cloud.CloudFunctions -> Google Cloud.CloudStorage: "Filters for only vulnerability occurrences, saves vulnerabilities as files."
-Google Cloud.CloudStorage -> Dashboard: "Provides data for cATO"
+Google Cloud.ArtifactRegistry -> Google Cloud.PubSub: "Publishes occurrences from continuous scan."
+Google Cloud.PubSub -> Google Cloud.CloudFunctions: "Triggers Cloud Function on new occurrence."
+Google Cloud.CloudFunctions -> Google Cloud.CloudStorage: "Filters for vulnerability occurrences, saves each as file."
+Google Cloud.CloudStorage -> Dashboard: "Provides data for dashboard"
