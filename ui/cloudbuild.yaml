@@ -18,7 +18,7 @@ steps:
     args: ['test']
 
   - id: 'Axe a11y testing setup'
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     dir: ./
     script: |
       #!/bin/bash
@@ -46,7 +46,7 @@ steps:
         ./wait_for_service.cjs http://localhost:8080/signin
 
   - id: 'Axe a11y testing'
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     args: [
         'run',
         '--network',
@@ -69,7 +69,7 @@ steps:
         gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
   - id: docker-compose-down-dev-environment
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -77,7 +77,7 @@ steps:
         docker compose -f ./docker-compose.dev.yaml down -v
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -86,7 +86,7 @@ steps:
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: build-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     entrypoint: 'bash'
     dir: ui
     args:
@@ -101,7 +101,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:c0987008cb5e77741dc616177ba48cb27a7458f3f62161c82b6c6d5fa4ae8ab5'
+    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
     entrypoint: 'bash'
     args:
       - '-c'
