@@ -15,17 +15,17 @@ TBA
 
 ## Vunerability Scanning
 
-Scanning for vulnerabilities using third-party tools in CI is limited to the time of commit. Since both Dependabot/Renovate and Artifact Registry already already perform continuously vulnerability scanning, we can pull from these to gain insights and assess risk.
+Scanning for vulnerabilities using third-party tools in CI is limited to the time of commit. Since both Dependabot/Renovate and Artifact Registry both already scan for vunerabilities continuously, we can use these assess risk.
 
 ### Continuous Scanning with Renovate
 
-[Renovate](https://docs.renovatebot.com/) continuously scans source code in GitHub, including development dependencies, for vulnerabilities. It automates dependency updates.
+[Renovate](https://docs.renovatebot.com/) continuously scans the source code in GitHub, which will include any development dependencies, for vulnerabilities. Renovate will automatically create PRs with patches and update these dependencies.
 
 ### [Continuous Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
 
-The Artifact Registry is where the container images used by other Google Cloud Platform (GCP) services are stored. When continuous vunerability scanning is enabled on the Artifact Registry, it pushes occurrences via Pub/Sub, which can be monitored in the Security Command Center.
+Artifact Registry stores container images that are used by GCP services. When the container analysis service is turned on, Artifact Registry publishes occurances (i.e. discovery, package, vunerability) to Pub/Sub which can be monitored.
 
-We're using these occurances to push vunerability information to a storage bucket with a Cloud Run Function, so we're able to view these external to GCP on the (non-public) DevSecOps dashboard.
+As we're looking to access these vunerabilities through an external (non-public) DevSecOps dashboard, we're using a cloud function to filter the occurances, then save the vunerabilities to a storage bucket that the dashboard will have access to.
 
 ### TODO Cluster scanning
 
