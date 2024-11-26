@@ -15,3 +15,5 @@ deploy
 .eslintcache
 .vscode/chrome
 **/.DS_Store
+
+**/venv
