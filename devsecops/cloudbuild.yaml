@@ -1,6 +1,6 @@
 steps:
   - id: 'Run tests for a11y scanning'
-    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+    name: 'gcr.io/cloud-builders/docker@sha256:2d97a392a1f0c3dce9ff853d2c05791195fb556850f8ba6c3794ae2c8e958dd7'
     dir: 'devsecops/axe-testing'
     entrypoint: 'bash'
     args:
