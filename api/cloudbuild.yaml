@@ -12,7 +12,7 @@ steps:
     args: ['run', 'typecheck']
 
   - id: 'Run tests'
-    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+    name: 'gcr.io/cloud-builders/docker@sha256:2d97a392a1f0c3dce9ff853d2c05791195fb556850f8ba6c3794ae2c8e958dd7'
     script: |
       #!/usr/bin/env bash
       set -o errexit
@@ -24,7 +24,7 @@ steps:
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
 
   - id: generate-image-name
-    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+    name: 'gcr.io/cloud-builders/docker@sha256:2d97a392a1f0c3dce9ff853d2c05791195fb556850f8ba6c3794ae2c8e958dd7'
     entrypoint: 'bash'
     dir: api
     args:
@@ -32,7 +32,7 @@ steps:
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/api:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
-  - name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+  - name: 'gcr.io/cloud-builders/docker@sha256:2d97a392a1f0c3dce9ff853d2c05791195fb556850f8ba6c3794ae2c8e958dd7'
     id: build-if-main
     entrypoint: 'bash'
     dir: api
@@ -48,7 +48,7 @@ steps:
         fi
 
   - id: push-if-main
-    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+    name: 'gcr.io/cloud-builders/docker@sha256:2d97a392a1f0c3dce9ff853d2c05791195fb556850f8ba6c3794ae2c8e958dd7'
     entrypoint: 'bash'
     args:
       - '-c'
