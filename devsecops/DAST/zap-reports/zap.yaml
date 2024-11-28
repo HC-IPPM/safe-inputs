@@ -3,7 +3,7 @@ env:
   - excludePaths: []
     name: baseline
     urls:
-    - https://example.com
+    - https://8080-cs-281831690367-default.cs-us-east1-pkhd.cloudshell.dev/
   parameters:
     failOnError: true
     progressToStdout: false
@@ -14,7 +14,7 @@ jobs:
   type: passiveScan-config
 - parameters:
     maxDuration: 1
-    url: https://example.com
+    url: https://8080-cs-281831690367-default.cs-us-east1-pkhd.cloudshell.dev/
   type: spider
 - parameters:
     maxDuration: 0
@@ -27,7 +27,14 @@ jobs:
 - parameters:
     reportDescription: ''
     reportDir: /zap/wrk/
-    reportFile: report.json
+    reportFile: testreport.html
+    reportTitle: ZAP Scanning Report
+    template: traditional-html
+  type: report
+- parameters:
+    reportDescription: ''
+    reportDir: /zap/wrk/
+    reportFile: report_json
     reportTitle: ZAP Scanning Report
     template: traditional-json
   type: report

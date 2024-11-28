@@ -16,4 +16,6 @@ deploy
 .vscode/chrome
 **/.DS_Store
 
-**/venv
+**/.venv
+**/zap-reports
+**/__pycache__

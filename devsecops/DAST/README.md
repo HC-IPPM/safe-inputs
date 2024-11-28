@@ -2,6 +2,15 @@
 
 Zed Attack Proxy 
 
+securityheaders https://securityheaders.com/
+
+ define assessments as the analysis and discovery of vulnerabilities without attempting to actually exploit those vulnerabilities. We define testing as the discovery and attempted exploitation of vulnerabilities:
+ https://www.zaproxy.org/getting-started/#:~:text=define%20assessments%20as%20the%20analysis%20and%20discovery%20of%20vulnerabilities%20without%20attempting%20to%20actually%20exploit%20those%20vulnerabilities.%20We%20define%20testing%20as%20the%20discovery%20and%20attempted%20exploitation%20of%20vulnerabilities.
+
+tutorial https://github.com/rezen/zap-tutorial/tree/master
+
+there is a github action for baseline scan
+
 ## Set up 
 
 2. Add a '.env' file in axe-testing
@@ -9,16 +18,33 @@ Zed Attack Proxy
 echo "HOMEPAGE_URL=http://127.0.0.1:8080/" > .env
 ```
 
-2. Start the dev enviroment.  From the root of the safe-inputs project, run 
+2. Start the dev environment.  From the root of the safe-inputs project, run 
 ```
 npm run dev
 ```
+## Exit codes:
+The script will exit with codes of:
+
+0: Success
+1: At least 1 FAIL
+2: At least one WARN and no FAILs
+3: Any other failure
+
+use zap_started hook then:
+
+ zap-baseline.py -t https://example.com --hook=my-hooks.py
+
+ docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+    -t https://www.example.com -g gen.conf -r testreport.html --hook=/zap/wrk/my-hooks.py
+
+
+adjust and supply config (to modify)
 
 ## To Run
 1. virtual env
 ```
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 2. install dependencies 
@@ -28,7 +54,48 @@ pip install -r requirements.txt
 
 3. Run
 ```
+# Baseline Scan (https://www.zaproxy.org/docs/docker/baseline-scan/)
+
+docker run -t zaproxy/zap-stable zap-baseline.py -t https://www.example.com
+
+# mount directory:
+
+docker run --rm -t -v $(pwd)/zap-reports:/zap/wrk/ \
+  zaproxy/zap-stable zap-baseline.py \
+-t https://8080-cs-281831690367-default.cs-us-east1-pkhd.cloudshell.dev/signin?post_auth_redirect=%2F&message=SessionRequired -r testreport.html -v
+
+
 <!-- python3 login_to_safe_inputs.py -->
+
+To save as json 
+
+docker run --rm -t -v $(pwd):/zap/wrk zaproxy/zap-stable zap-baseline.py -t https://example.com -J report_json
+
+### Saves as json and writes report (example.com)-------------------------------------------------
+docker run --rm -t \
+  -v $(pwd)/zap-reports:/zap/wrk \
+  zaproxy/zap-stable zap-baseline.py \
+  -t https://example.com  \
+  -J report_json \
+  -r testreport.html
+
+
+### Saves as json and writes report (safe-inputs cloudshell)
+export target_url=https://safeinputs.alpha.phac-aspc.gc.ca/
+export target_url=
+docker run --rm -t \
+  -v $(pwd)/zap-reports:/zap/wrk \
+  zaproxy/zap-stable zap-baseline.py \
+  -t $target_url \
+  -J report_json \
+  -r testreport.html
+
+docker run --rm -p 8090:8080 \
+  -t -v $(pwd)/zap-reports:/zap/wrk \
+  zaproxy/zap-stable \
+  zap-baseline.py -t   \
+  -J /zap/wrk/report_json
+
 
 docker run --rm -p 8090:8080 \
   -v $(pwd)/safe-inputs.context:/zap/wrk/safe-inputs.context \
