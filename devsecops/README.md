@@ -21,9 +21,9 @@ Scanning for vulnerabilities using third-party tools in CI is limited to the tim
 
 [Renovate](https://docs.renovatebot.com/) continuously scans the source code in GitHub, which will include any development dependencies, for vulnerabilities. Renovate will automatically create PRs with patches and update these dependencies.
 
-### [Continuous Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
+### [Automatic Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
 
-Artifact Registry stores container images that are used by GCP services. When the container analysis service is turned on, Artifact Registry publishes occurances (i.e. discovery, package, vunerability) to Pub/Sub which can be monitored.
+Artifact Registry stores container images that are used by GCP services. When the container analysis service is turned on, Artifact Registry checks for vunerabilities multiple times a day, then publishes occurances (i.e. discovery, package, vunerability) to Pub/Sub which can be monitored.
 
 As we're looking to access these vunerabilities through an external (non-public) DevSecOps dashboard, we're using a cloud function to filter the occurances, then save the vunerabilities to a storage bucket that the dashboard will have access to.
 
