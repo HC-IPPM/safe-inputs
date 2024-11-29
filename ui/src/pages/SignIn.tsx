@@ -1,6 +1,6 @@
-import { Box, Container } from '@chakra-ui/react';
+import { Trans } from '@lingui/react/macro';
 
-import { Trans } from '@lingui/macro';
+import { Box, Container } from '@chakra-ui/react';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
