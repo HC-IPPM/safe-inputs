@@ -1,13 +1,19 @@
 # DAST Dynamic Application Security Testing using Zap Proxy 
 
 Zed Attack Proxy 
+tutorial https://github.com/rezen/zap-tutorial/tree/master
 
+behaves like proxy
+
+[OSWAP Top 10 Web Application Security Risks](https://owasp.org/www-project-top-ten/#OWASP_Top_Ten_Cheat_Sheet)
 securityheaders https://securityheaders.com/
+
+juice shop docker run --net=host --rm -p 3000:3000 bkimminich/juice-shop
 
  define assessments as the analysis and discovery of vulnerabilities without attempting to actually exploit those vulnerabilities. We define testing as the discovery and attempted exploitation of vulnerabilities:
  https://www.zaproxy.org/getting-started/#:~:text=define%20assessments%20as%20the%20analysis%20and%20discovery%20of%20vulnerabilities%20without%20attempting%20to%20actually%20exploit%20those%20vulnerabilities.%20We%20define%20testing%20as%20the%20discovery%20and%20attempted%20exploitation%20of%20vulnerabilities.
 
-tutorial https://github.com/rezen/zap-tutorial/tree/master
+https://github.com/rezen/zap-tutorial/blob/master/assets/hooks.py
 
 there is a github action for baseline scan
 

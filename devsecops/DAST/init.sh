@@ -67,7 +67,8 @@ docker run --rm -t \
 
 
 # -------------------------------------------------
-
+https://www.zaproxy.org/docs/automate/automation-framework/
+https://www.youtube.com/watch?v=19Rptj2be1Y use the automated framework! 
 
 
 docker run --rm -p 8090:8080 \
