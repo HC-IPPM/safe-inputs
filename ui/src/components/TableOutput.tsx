@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/react/macro';
 import {
   Box,
   Accordion,
@@ -12,7 +13,6 @@ import {
   Td,
   Tbody,
 } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
 
 import { FcMinus, FcPlus } from 'react-icons/fc';
 

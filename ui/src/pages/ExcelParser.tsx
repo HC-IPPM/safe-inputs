@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/react/macro';
 import { Box, Container } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
 import { useState } from 'react';
 import type { WorkBook } from 'xlsx';
 
