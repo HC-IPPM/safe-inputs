@@ -58,7 +58,7 @@ steps:
         fi
 
   - id: upload-sbom-to-gcs-bucket-if-main
-    name: 'gcr.io/cloud-builders/gsutil@sha256:01ba9cc0f67662c7896312b18987e7f7508cfe52920145efe4f4c58146012b4f'
+    name: 'gcr.io/cloud-builders/gsutil@sha256:f38f76a694254b82cd57c38e07e23b025b55faaf3c61729274716cdf2fcff9d2'
     entrypoint: 'bash'
     args:
       - '-c'
