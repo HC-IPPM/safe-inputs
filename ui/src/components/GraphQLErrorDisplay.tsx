@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/react/macro';
+import { t } from '@lingui/core/macro';
 import { ApolloError } from '@apollo/client';
 import { Box, Text } from '@chakra-ui/react';
-import { t, Trans } from '@lingui/macro';
 
 import _ from 'lodash';
 

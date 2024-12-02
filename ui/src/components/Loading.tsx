@@ -1,6 +1,6 @@
+import { t } from '@lingui/core/macro';
 import { Spinner as ChakraSpinner, Skeleton } from '@chakra-ui/react';
 import type { SpinnerProps, SkeletonProps } from '@chakra-ui/react';
-import { t } from '@lingui/macro';
 import type { PropsWithChildren } from 'react';
 
 export const LoadingSpinner = (props: Omit<SpinnerProps, 'label'>) => (

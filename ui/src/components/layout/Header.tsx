@@ -1,6 +1,6 @@
-import { HStack, Box, Container, Text } from '@chakra-ui/react';
+import { Trans } from '@lingui/react/macro';
 
-import { Trans } from '@lingui/macro';
+import { HStack, Box, Container, Text } from '@chakra-ui/react';
 import { useLingui } from '@lingui/react';
 
 import CanadaLogoEn from 'src/assets/sig-blk-en.svg';
