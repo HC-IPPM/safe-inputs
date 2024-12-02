@@ -88,7 +88,7 @@ npm run test:all:docker
 From the root of safe-inputs, run:
 
 ```
-gcloud builds submit --config ./devsecops/cloudbuild.yaml
+gcloud builds submit --config ./devsecops/axe-testing/cloudbuild.yaml
 ```
 
 This runs both the unit and end-to-end tests. The end to end test spins up a webserver with both an accessible and inaccessible pages to ensure the scan is behaving as expected.
