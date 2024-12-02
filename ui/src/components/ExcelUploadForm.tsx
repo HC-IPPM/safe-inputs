@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/react/macro';
 import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
-import { Trans } from '@lingui/macro';
 import type { FormikHelpers, FieldProps } from 'formik';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -15,10 +15,11 @@ const validationSchema = Yup.object().shape({
     .required('Please select a file')
     .test('fileFormat', 'Invalid file format', (value) => {
       return (
+        // TODO `value as unknown as any` is a bandaid for bad typing here
         value &&
         [
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ].includes((value as unknown as any).type) // TODO `value as unknown as any` is a bandaid for bad typing here
+        ].includes((value as unknown as any).type)
       );
     }),
 });
