@@ -43,6 +43,6 @@
     "eslint-plugin-jest": "28.9.0",
     "eslint-plugin-no-secrets": "1.1.2",
     "eslint-plugin-promise": "6.6.0",
-    "prettier": "3.4.1"
+    "prettier": "3.4.2"
   }
 }
