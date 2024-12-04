@@ -45,7 +45,7 @@
     "@rspack/cli": "1.1.5",
     "@rspack/core": "1.1.5",
     "@svgr/webpack": "8.1.0",
-    "@swc/core": "1.9.3",
+    "@swc/core": "1.10.0",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.0.1",
