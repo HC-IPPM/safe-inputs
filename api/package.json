@@ -41,7 +41,7 @@
     "dataloader": "^2.2.2",
     "dotenv": "^16.0.3",
     "envalid": "^8.0.0",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "express-session": "^1.18.0",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.23.0",
