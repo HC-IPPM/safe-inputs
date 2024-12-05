@@ -6,7 +6,7 @@
   "keywords": [],
   "license": "MIT",
   "scripts": {
-    "ci:all": "npm ci && (cd ./api && npm ci) && (cd ./ui && npm ci) && (cd ./devsecops/axe-testing && npm ci)",
+    "ci:all": "npm ci && (cd ./api && npm ci) && (cd ./ui && npm ci) && (cd ./devsecops/axe-testing && npm ci) && (cd ./devsecops/artifact-registry-vulnerability-scanning/cloud-function && npm ci)",
     "dev": "docker compose -f ./docker-compose.dev.yaml up",
     "predev": "npm run dev:down",
     "dev:debug": "DOCKER_API_COMMAND=docker-debug docker compose -f ./docker-compose.dev.yaml up",
@@ -41,8 +41,8 @@
     "eslint-import-resolver-typescript": "3.7.0",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jest": "28.9.0",
-    "eslint-plugin-no-secrets": "1.1.2",
+    "eslint-plugin-no-secrets": "2.1.1",
     "eslint-plugin-promise": "6.6.0",
-    "prettier": "3.4.1"
+    "prettier": "3.4.2"
   }
 }
