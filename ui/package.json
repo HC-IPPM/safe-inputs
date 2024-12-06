@@ -16,7 +16,7 @@
   "dependencies": {
     "@apollo/client": "^3.9.4",
     "@chakra-ui/icons": "^2.0.17",
-    "@chakra-ui/react": "^2.4.9",
+    "@chakra-ui/react": "^3.0.0",
     "@dts-stn/service-canada-design-system": "^1.67.3",
     "@lingui/macro": "5.0.0",
     "@lingui/react": "5.0.0",
