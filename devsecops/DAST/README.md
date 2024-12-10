@@ -62,12 +62,12 @@ for selenium
 ```
 debug 
 docker pull selenium/standalone-chrome-debug 
-docker run -p 4444:4444 --name selenium-chrome selenium/standalone-chrome-debug 
+docker run --rm -p 4444:4444 --name selenium-chrome selenium/standalone-chrome-debug 
 
 or 
 
 docker pull selenium/standalone-chrome
-docker run -d -p 4444:4444 --name selenium-chrome selenium/standalone-chrome
+docker run --rm -p 4444:4444 --network host --name selenium-chrome selenium/standalone-chrome
 
 ```
 ------------------------------------------------------------------------------------
@@ -154,19 +154,48 @@ Add check to after every week? with cloud run? - trigger to run after time perio
 ```
 docker pull ghcr.io/zaproxy/zaproxy:stable
 docker pull zaproxy/zap-stable
-docker run --rm -t zaproxy/zap-stable zap-baseline.py -t https://safeinputs.alpha.phac-aspc.gc.ca/
+docker run --rm --network host -t zaproxy/zap-stable zap-baseline.py -j -t http://127.0.0.1:8080/
+
+-t tag, -t target, -j - ajax spider, baseline -> only passive, not actively attacking 
+to add in later:
+-n context_file
+after -g context_file.json generate default config to modify
 
 Baseline scan - runs ZAP spider against target for by default 1 minute, followed by optional ajax spikder scan before reporting the results
 
 docker run --rm -t -v zaproxy/zap-stable zap-baseline.py -t https://8080-cs-281831690367-default.cs-us-east1-pkhd.cloudshell.dev/signin?post_auth_redirect=%2F&message=SessionRequired
 
 
-To save as json docker run --rm -t -v $(pwd):/zap/wrk zaproxy/zap-stable zap-baseline.py -t https://example.com -J /zap/wrk/report_json
+docker run -v $(pwd)/zap-reports:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+    -t http://127.0.0.1:8080/ -g gen.conf -r testreport.html
+
+To save as json 
+
+docker run --network host --rm -v $(pwd)/zap-reports:/zap/wrk/:rw -t zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8080/ -J report.json -j
+
+#no report 
+docker run --network host --rm -t zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8080/ 
+
+# (run as root to avoid permission errors in VM) THIS WORKS!!!!
+docker run --network host --rm -v $(pwd)/zap-reports:/zap/wrk/:rw -t -u 0 zaproxy/zap-stable zap-baseline.py -t http://127.0.0.1:8080/ -J report.json
+
+
+To custom login: 1. start proxy: 
+docker run --rm -d -p 8080:8080 -v $(pwd)/zap-reports:/zap/wrk/:rw --name zaproxy zaproxy/zap-stable zap.sh -daemon -port 8080 -host 0.0.0.0
+
+scan etc...
+
+
+
+docker run --rm --network host -v $(pwd):/zap/wrk zaproxy/zap-stable -t zap-baseline.py -t http://127.0.0.1:8080/ -j -J report.json --hook ./hook.***
+
+Ajax - will launch brosers and click on things - modern web application - uses headless browsers. 
+
 
 <!-- --------------------------------------------------------- -->
 mount 
 mkdir -p zap-reports
-docker run --rm -t -v $(pwd)/zap-reports:/zap/wrk zaproxy/zap-stable zap-baseline.py -t https://example.com -J report.json
+docker run --rm -t -v $(pwd)/zap-reports:/zap/wrk zaproxy/zap-stable zap-baseline.py -g gen_config -t http://127.0.0.1:8080/ -J report.json
  SOFT gating this at the moment until figure out how to work this 
 
 API SCAN https://www.zaproxy.org/docs/docker/api-scan/
