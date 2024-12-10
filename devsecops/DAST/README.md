@@ -58,6 +58,24 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+for selenium 
+```
+debug 
+docker pull selenium/standalone-chrome-debug 
+docker run -p 4444:4444 --name selenium-chrome selenium/standalone-chrome-debug 
+
+or 
+
+docker pull selenium/standalone-chrome
+docker run -d -p 4444:4444 --name selenium-chrome selenium/standalone-chrome
+
+```
+------------------------------------------------------------------------------------
+
+debug the hook: 
+python login_to_safe_inputs.py
+
+
 3. Run
 ```
 # Baseline Scan (https://www.zaproxy.org/docs/docker/baseline-scan/)

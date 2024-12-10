@@ -1,0 +1,13 @@
+FROM python:3.12-slim
+
+# Install dependencies
+RUN pip install selenium python-dotenv
+
+# Copy the script and .env file
+WORKDIR /app
+COPY . /app
+
+# Set environment variables
+ENV SELENIUM_HOST=selenium SELENIUM_PORT=4444
+
+CMD ["python", "login_to_safe_inputs.py"]
