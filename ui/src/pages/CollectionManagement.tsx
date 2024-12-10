@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/react/macro';
+
 import {
   Box,
   Button,
@@ -13,8 +15,6 @@ import {
   Tr,
   Text,
 } from '@chakra-ui/react';
-
-import { Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import _ from 'lodash';

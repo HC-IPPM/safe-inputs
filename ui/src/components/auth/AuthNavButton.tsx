@@ -1,7 +1,7 @@
+import { t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
 import type { ButtonProps } from '@chakra-ui/react';
 import { Text, Button } from '@chakra-ui/react';
-
-import { Trans, t } from '@lingui/macro';
 
 import { useLocation } from 'react-router-dom';
 

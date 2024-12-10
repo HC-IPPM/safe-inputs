@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/react/macro';
+import { t } from '@lingui/core/macro';
 import {
   Button,
   FormControl,
@@ -10,7 +12,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-import { t, Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 
 import debounce from 'debounce-promise';

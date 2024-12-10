@@ -1,6 +1,6 @@
 steps:
   - id: 'Run tests for a11y scanning'
-    name: 'gcr.io/cloud-builders/docker@sha256:7d8da042bf0c03a47df219cfd73c9c54646bfdaa6a82375697503290af85b545'
+    name: 'gcr.io/cloud-builders/docker@sha256:371be7d6ff284257c33a159859d46495cec495e050766a4f087425247f12a132'
     dir: 'devsecops/axe-testing'
     entrypoint: 'bash'
     args:
@@ -8,3 +8,5 @@ steps:
       - |
         docker build -t axe-e2e . && \
         docker run --rm --network host axe-e2e npm run test:all
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

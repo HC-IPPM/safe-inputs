@@ -1,5 +1,5 @@
 # 1. Building static react app
-FROM node:lts-alpine3.19@sha256:844f517e92fb8f226a52f29ed5c2b5994ae0dd05e152fefac3f2399469701234 AS build
+FROM node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654 AS build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY . /app
 RUN npm run build
 
 # 2. Serve static app via nginx
-FROM docker.io/library/nginx:alpine@sha256:74175cf34632e88c6cfe206897cbfe2d2fecf9bf033c40e7f9775a3689e8adc7
+FROM docker.io/library/nginx:alpine@sha256:41523187cf7d7a2f2677a80609d9caa14388bf5c1fbca9c410ba3de602aaaab4
 
 RUN chown -R 1000:1000 /var/cache/nginx /var/run/ 
 

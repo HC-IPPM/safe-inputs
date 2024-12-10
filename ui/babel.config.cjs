@@ -5,5 +5,5 @@ module.exports = {
     // so that React doesn't need to be explicitly imported in every jsx file
     ['@babel/preset-react', { runtime: 'automatic' }],
   ],
-  plugins: ['macros'],
+  plugins: ['@lingui/babel-plugin-lingui-macro'],
 };

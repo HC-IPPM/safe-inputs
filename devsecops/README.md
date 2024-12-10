@@ -4,7 +4,7 @@
 
 TBA
 
-- Pull based pipeline using Flux - removing the need to include environment variables in the pipeline (e.g., preventing codecov incident)
+- Pull based pipeline using Flux/ArgoCD - removing the need to include environment variables in the pipeline (e.g., preventing codecov incident)
 
 ## Infrastructure as Code
 
@@ -13,15 +13,19 @@ TBA
 - versioned
 - least priviledge
 
-## Continuous Vunerability Scanning
+## Vunerability Scanning
 
-### GitHub Dependabot
+Scanning for vulnerabilities using third-party tools in CI is limited to the time of commit. Since both Dependabot/Renovate and Artifact Registry both already scan for vunerabilities continuously, we can use these assess risk.
 
-TBA
+### Continuous Scanning with Renovate
 
-### Artifact Registry Vunerability Scans
+[Renovate](https://docs.renovatebot.com/) continuously scans the source code in GitHub, which will include any development dependencies, for vulnerabilities. Renovate will automatically create PRs with patches and update these dependencies.
 
-TBA
+### [Automatic Artifact Registry Vunerability Scans](./artifact-registry-vulnerability-scanning)
+
+Artifact Registry stores container images that are used by GCP services. When the container analysis service is turned on, Artifact Registry checks for vunerabilities multiple times a day, then publishes occurances (i.e. discovery, package, vunerability) to Pub/Sub which can be monitored.
+
+As we're looking to access these vunerabilities through an external (non-public) DevSecOps dashboard, we're using a cloud function to filter the occurances, then save the vunerabilities to a storage bucket that the dashboard will have access to.
 
 ### TODO Cluster scanning
 
@@ -47,7 +51,7 @@ TBA
 
 TBA
 
-## Software Bill of Materials (SBOM) Collection
+## [Software Bill of Materials (SBOM) Collection](./sbom)
 
 An SBOM provides a detailed inventory of all components, libraries, and dependencies within a software application. We scan the application in the main Cloud Build pipeline to maintain an up-to-date bill of materials for everything included in the software from the GitHub repository, which is updated on every push to the main branch. This will enables quicker impact assesments to incidents, such as the [Log4j vunerability](https://en.wikipedia.org/wiki/Log4Shell), and helps ensure adherence to security compliance requirements.
 
