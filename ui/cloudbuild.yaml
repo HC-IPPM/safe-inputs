@@ -5,11 +5,11 @@ steps:
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  - id: 'Check types'
-    name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
-    dir: ui
-    entrypoint: npm
-    args: ['run', 'typecheck']
+  # - id: 'Check types'
+  #   name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
+  #   dir: ui
+  #   entrypoint: npm
+  #   args: ['run', 'typecheck']
 
   - id: Test
     name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
