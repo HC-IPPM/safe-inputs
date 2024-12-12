@@ -16,6 +16,7 @@ module.exports = {
     'test_utils',
   ],
   coverageDirectory: '<rootDir>/ui/coverage',
+  coverageReporters: ['json', 'text'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/src/test_utils/mocks/styleMock.js',
     '\\.svg$': '<rootDir>/src/test_utils/mocks/svgMock.js',
