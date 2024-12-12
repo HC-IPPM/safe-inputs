@@ -19,19 +19,20 @@ steps:
       - '-c'
       - |
         echo "Make globally writable coverge dir, to be mounted as a volume on the test container"
-        mkdir --mode 777 ./ui/coverage
+        mkdir -p ./coverage
         npm test
         echo "Listing coverage directory contents:"
         ls -la ./coverage
 
   - id: 'Upload test coverage'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    dir: ui
     entrypoint: bash
     args:
       - '-c'
       - |
         echo "Copying coverage report to GCP bucket..."
-        gsutil -m cp -r ./ui/coverage/* gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/
+        gsutil -m cp -r ./coverage/* gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/
 
   - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
