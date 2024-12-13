@@ -5,11 +5,11 @@ steps:
     entrypoint: npm
     args: ['ci', '--no-optional']
 
-  # - id: 'Check types'
-  #   name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
-  #   dir: ui
-  #   entrypoint: npm
-  #   args: ['run', 'typecheck']
+  - id: 'Check types'
+    name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
+    dir: ui
+    entrypoint: npm
+    args: ['run', 'typecheck']
 
   - id: Test
     name: 'node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654'
@@ -17,117 +17,149 @@ steps:
     entrypoint: npm
     args: ['test']
 
-  - id: 'Upload test coverage to bucket'
+  - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     dir: ui
     entrypoint: bash
     args:
       - '-c'
       - |
-        # Install jq and bc 
+        # Install jq and bc
         apt-get update && apt-get install -y jq bc
 
+        # Generate a timestamp
+        export timestamp=$(date +%s)
+
+        # Get the last commit's coverage report from GCS
+        echo "Getting last commit's test coverage report..."
+        last_commit_on_this_branch=$(gsutil ls gs://test-outputs-go-here/test-coverage/ui/ | grep "$bRANCH_NAME" | sort | tail -n 1)
+
+        # If this isn't the first commit on this branch, then determine test coverage trend 
+        if [ "$last_commit_on_this_branch" ]; then
+            
+          # Download the last coverage report in order to be able to use jq
+          gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
+
+          # Extract current and last coverage percentages
+          this_coverage=$(jq -r '.total.statements.pct' coverage/coverage-summary.json)
+          last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
+
+          # Compare coverage
+          echo "Current coverage: $this_coverage%"
+          echo "Last coverage: $last_coverage%"
+          coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
+          echo "Coverage difference: $coverage_difference%"
+
+          echo "Updating report with the coverage difference..."
+          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" coverage/coverage-summary.json > coverage/updated-coverage-summary.json
+          mv coverage/updated-coverage-summary.json coverage/coverage-summary.json
+
+        else
+          echo "No previous coverage reports found on this branch."
+          echo "Skipping coverage trend calculations."
+        fi
+
         echo "formating file..."
-        jq '.' coverage/coverage-final.json > coverage/coverage-pretty.json
+        jq '.' coverage/coverage-summary.json > coverage/coverage-pretty.json
 
-        echo "Copying coverage report to GCP bucket..."
-        gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/${BRANCH_NAME}-${timestamp}-${SHORT_SHA}.json
+        echo "Copying coverage report to GCS bucket..."
+        gsutil -m cp -r ./coverage/coverage-pretty.json gs://test-outputs-go-here/test-coverage/ui/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
 
-  # - id: 'Axe a11y testing setup'
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   dir: ./
-  #   script: |
-  #     #!/bin/bash
-  #     set -o errexit
-  #     set -o pipefail
-  #     set -o nounset
+  - id: 'Axe a11y testing setup'
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    dir: ./
+    script: |
+      #!/bin/bash
+      set -o errexit
+      set -o pipefail
+      set -o nounset
 
-  #     # docker compose dev environment, detached mode, with ui-gql-codegen disabled because it a) doesn't need to run here, and
-  #     # b) has permissions issues when running in this context
-  #     docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
+      # docker compose dev environment, detached mode, with ui-gql-codegen disabled because it a) doesn't need to run here, and
+      # b) has permissions issues when running in this context
+      docker compose -f ./docker-compose.dev.yaml up -d --scale ui-gql-codegen=0
 
-  #     docker build -t axe ./devsecops/axe-testing
+      docker build -t axe ./devsecops/axe-testing
 
-  #     # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
-  #     mkdir -p /workspace/axe-results
-  #     chmod -R 777 /workspace/axe-results
+      # fix for a permission issues when running the axe tests, need to be able to write to ./axe-results/*.json
+      mkdir -p /workspace/axe-results
+      chmod -R 777 /workspace/axe-results
 
-  #     # make sure the ui server is ready before continuing
-  #     docker run \
-  #       --volume "${PWD}":/home/project \
-  #       --workdir /home/project \
-  #       --network host \
-  #       --entrypoint node \
-  #       node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
-  #       ./wait_for_service.cjs http://localhost:8080/signin
+      # make sure the ui server is ready before continuing
+      docker run \
+        --volume "${PWD}":/home/project \
+        --workdir /home/project \
+        --network host \
+        --entrypoint node \
+        node:lts-alpine3.19@sha256:2d8c24d9104bda27e07dced6d7110aa728dd917dde8255d8af3678e532b339d6 \
+        ./wait_for_service.cjs http://localhost:8080/signin
 
-  # - id: 'Axe a11y testing'
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   args: [
-  #       'run',
-  #       '--network',
-  #       'host', # to access the dev environment
-  #       '--rm',
-  #       '--volume',
-  #       '/workspace/axe-results:/app/axe-results',
-  #       '--env',
-  #       '${COMMIT_SHA}',
-  #       'axe',
-  #     ]
+  - id: 'Axe a11y testing'
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    args: [
+        'run',
+        '--network',
+        'host', # to access the dev environment
+        '--rm',
+        '--volume',
+        '/workspace/axe-results:/app/axe-results',
+        '--env',
+        '${COMMIT_SHA}',
+        'axe',
+      ]
 
-  # - id: upload-axe-results-gcs
-  #   name: 'gcr.io/cloud-builders/gsutil@sha256:3cb717eb2b8e1e8140868a08d31af752f7ec99949f78023743df2fc6bd41512e'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       gsutil cp /workspace/axe-results/ci_axe_results_*.json \
-  #       gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
+  - id: upload-axe-results-gcs
+    name: 'gcr.io/cloud-builders/gsutil@sha256:3cb717eb2b8e1e8140868a08d31af752f7ec99949f78023743df2fc6bd41512e'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gsutil cp /workspace/axe-results/ci_axe_results_*.json \
+        gs://safe-inputs-devsecops-outputs-for-dashboard/axe-ci-results/$BRANCH_NAME-$COMMIT_SHA.json
 
-  # - id: docker-compose-down-dev-environment
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       docker compose -f ./docker-compose.dev.yaml down -v
+  - id: docker-compose-down-dev-environment
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker compose -f ./docker-compose.dev.yaml down -v
 
-  # - id: generate-image-name
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   entrypoint: 'bash'
-  #   dir: ui
-  #   args:
-  #     - '-c'
-  #     - |
-  #       echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
+  - id: generate-image-name
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    entrypoint: 'bash'
+    dir: ui
+    args:
+      - '-c'
+      - |
+        echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/phx-01j1tbke0ax-safeinputs/ui:$BRANCH_NAME-$COMMIT_SHA-$(date +%s)" > /workspace/imagename
 
-  # - id: build-if-main
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   entrypoint: 'bash'
-  #   dir: ui
-  #   args:
-  #     - '-c'
-  #     - |
-  #       if [[ "$BRANCH_NAME" == "main" ]]
-  #       then
-  #         image=$(cat /workspace/imagename)
-  #         docker build -t $image -f ./Dockerfile.prod .
-  #       else
-  #         exit 0
-  #       fi
+  - id: build-if-main
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    entrypoint: 'bash'
+    dir: ui
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "main" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker build -t $image -f ./Dockerfile.prod .
+        else
+          exit 0
+        fi
 
-  # - id: push-if-main
-  #   name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       if [[ "$BRANCH_NAME" == "main" ]]
-  #       then
-  #         image=$(cat /workspace/imagename)
-  #         docker push $image
-  #       else
-  #         exit 0
-  #       fi
+  - id: push-if-main
+    name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "main" ]]
+        then
+          image=$(cat /workspace/imagename)
+          docker push $image
+        else
+          exit 0
+        fi
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
