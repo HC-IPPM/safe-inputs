@@ -7,7 +7,7 @@ steps:
       - '-c'
       - |
         docker build -t axe-e2e . && \
-        docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
+        docker run --rm --network host -v ./coverage:/app/coverage axe-e2e npm run test:all
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
@@ -21,6 +21,9 @@ steps:
 
         # Generate a timestamp
         export timestamp=$(date +%s)
+
+        echo ls
+        echo ls ./coverage
 
         # Get the last commit's coverage report from GCS
         echo "Getting last commit's test coverage report..."
