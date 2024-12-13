@@ -10,7 +10,7 @@
     "start": "node --experimental-vm-modules index.js",
     "prestart:docker": "mkdir -p axe-results && sudo chmod 777 axe-results && docker build -t axe .",
     "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results -e COMMIT_SHA=$(git rev-parse HEAD) axe",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.unit.config.cjs --coverage",
+    "test:unit": "NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.unit.config.cjs --coverage --coverageReporters=text --coverageReporters=json-summary --coverageDirectory=./coverage",
     "pretest:e2e": "npx http-server ./e2e-tests/test-pages -p 8080 & echo $! > server.pid && for i in {1..10}; do nc -z localhost 8080 && break || echo 'Waiting for server to be ready...'; sleep 1; done",
     "test:e2e": "NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.e2e.config.cjs",
     "posttest:e2e": "kill $(cat server.pid) || true",
