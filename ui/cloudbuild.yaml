@@ -63,7 +63,7 @@ steps:
         jq '.' coverage/coverage-summary.json > coverage/coverage-pretty.json
 
         echo "Copying coverage report to GCS bucket..."
-        gsutil -m cp -r ./coverage/coverage-pretty.json gs://test-outputs-go-here/test-coverage/ui/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+        gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
 
   - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
