@@ -11,7 +11,7 @@ steps:
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
-    dir: ui
+    dir: 'devsecops/axe-testing'
     entrypoint: bash
     args:
       - '-c'
