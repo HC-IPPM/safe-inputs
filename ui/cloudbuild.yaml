@@ -30,9 +30,12 @@ steps:
         # Generate a timestamp
         export timestamp=$(date +%s)
 
+        echo $BRANCH_NAME
+        echo $SHORT_SHA
+
         # Get the last commit's coverage report from GCS
         echo "Getting last commit's test coverage report..."
-        last_commit_on_this_branch=$(gsutil ls gs://test-outputs-go-here/test-coverage/ui/ | grep "$bRANCH_NAME" | sort | tail -n 1)
+        last_commit_on_this_branch=$(gsutil ls gs://test-outputs-go-here/test-coverage/ui/ | grep "$BRANCH_NAME" | sort | tail -n 1)
 
         # If this isn't the first commit on this branch, then determine test coverage trend 
         if [ "$last_commit_on_this_branch" ]; then
@@ -64,6 +67,8 @@ steps:
 
         echo "Copying coverage report to GCS bucket..."
         gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+
+        echo ${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
 
   - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
