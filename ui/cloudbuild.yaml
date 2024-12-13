@@ -35,7 +35,7 @@ steps:
 
         # Get the last commit's coverage report from GCS
         echo "Getting last commit's test coverage report..."
-        last_commit_on_this_branch=$(gsutil ls gs://test-outputs-go-here/test-coverage/ui/ | grep "$BRANCH_NAME" | sort | tail -n 1)
+        last_commit_on_this_branch=$(gsutil ls gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/ | grep "$BRANCH_NAME" | sort | tail -n 1)
 
         # If this isn't the first commit on this branch, then determine test coverage trend 
         if [ "$last_commit_on_this_branch" ]; then
