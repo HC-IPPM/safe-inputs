@@ -21,6 +21,9 @@ RUN apk update && apk add --no-cache \
 COPY package*.json ./
 RUN npm ci
 
+# Create and set permissions for the coverage directory
+RUN mkdir -p /app/coverage && chmod -R 777 /app/coverage
+
 # Copy the rest of the source code for building (and testing)
 COPY ./axeignore.json .
 COPY ./src ./src
