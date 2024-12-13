@@ -7,7 +7,7 @@ steps:
       - '-c'
       - |
         docker build -t axe-e2e . && \
-        docker run --rm --network host -v ${PWD}/coverage:/app/coverage axe-e2e npm run test:all
+        docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
