@@ -6,29 +6,13 @@ steps:
     args:
       - '-c'
       - |
-        # Create the coverage directory on the host
+        # Create the coverage directory 
         mkdir -p /workspace/coverage
         chmod -R 777 /workspace/coverage
 
-        # mkdir -p ./coverage
-        # chmod -R 777 ./coverage
-        # docker run --rm --network host -v ./coverage:/app/coverage axe-e2e npm run test:all
-
-        # Build the Docker image
+        # Run tests in the Docker container with volume mounting for coverage report 
         docker build -t axe-e2e .
-
-        # Run tests in the Docker container with volume mounting
         docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
-
-        # List the coverage directory to confirm files exist
-        echo "Listing files in /workspace/coverage:"
-        ls -la /workspace/coverage
-
-        # Check for the presence of the coverage report
-        if [ ! -f /workspace/coverage/coverage-summary.json ]; then
-          echo "Error: coverage-summary.json not found in /workspace/coverage"
-          exit 1
-        fi
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
@@ -37,12 +21,6 @@ steps:
     args:
       - '-c'
       - |
-
-        echo "files found"
-        ls -la /workspace/coverage
-
-        echo $pwd
-
         # Install jq and bc
         apt-get update && apt-get install -y jq bc
 
