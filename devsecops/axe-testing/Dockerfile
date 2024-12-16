@@ -21,9 +21,6 @@ RUN apk update && apk add --no-cache \
 COPY package*.json ./
 RUN npm ci
 
-# Create and set permissions for the coverage directory
-RUN mkdir -p /app/coverage && chmod -R 777 /app/coverage
-
 # Copy the rest of the source code for building (and testing)
 COPY ./axeignore.json .
 COPY ./src ./src
@@ -43,6 +40,9 @@ EXPOSE 8080
 
 # Create a non-root user
 RUN addgroup -g 1001 -S puppeteer && adduser -u 1001 -S puppeteer -G puppeteer
+
+# Create and set permissions for the coverage directory
+RUN mkdir -p /app/coverage && chmod -R 777 /app/coverage && chown -R puppeteer:puppeteer /app/coverage
 
 # Set ownership of the working directory to puppeteer user
 RUN chown -R puppeteer:puppeteer /app

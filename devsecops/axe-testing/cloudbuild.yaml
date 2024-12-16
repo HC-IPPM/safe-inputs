@@ -6,10 +6,29 @@ steps:
     args:
       - '-c'
       - |
-        mkdir -p /workspace/coverage && \
-        docker build -t axe-e2e . && \
+        # Create the coverage directory on the host
+        mkdir -p /workspace/coverage
+        chmod -R 777 /workspace/coverage
+
+        # mkdir -p ./coverage
+        # chmod -R 777 ./coverage
+        # docker run --rm --network host -v ./coverage:/app/coverage axe-e2e npm run test:all
+
+        # Build the Docker image
+        docker build -t axe-e2e .
+
+        # Run tests in the Docker container with volume mounting
         docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
-        ls /workspace/coverage
+
+        # List the coverage directory to confirm files exist
+        echo "Listing files in /workspace/coverage:"
+        ls -la /workspace/coverage
+
+        # Check for the presence of the coverage report
+        if [ ! -f /workspace/coverage/coverage-summary.json ]; then
+          echo "Error: coverage-summary.json not found in /workspace/coverage"
+          exit 1
+        fi
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
@@ -18,6 +37,12 @@ steps:
     args:
       - '-c'
       - |
+
+        echo "files found"
+        ls -la /workspace/coverage
+
+        echo $pwd
+
         # Install jq and bc
         apt-get update && apt-get install -y jq bc
 
@@ -35,7 +60,7 @@ steps:
           gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
 
           # Extract current and last coverage percentages
-          this_coverage=$(jq -r '.total.statements.pct' coverage/coverage-summary.json)
+          this_coverage=$(jq -r '.total.statements.pct' /workspace/coverage/coverage-summary.json)
           last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
 
           # Compare coverage
@@ -44,9 +69,9 @@ steps:
           coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
           echo "Coverage difference: $coverage_difference%"
 
-          echo "Updating report with the coverage difference..."
-          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" coverage/coverage-summary.json > coverage/updated-coverage-summary.json
-          mv coverage/updated-coverage-summary.json coverage/coverage-summary.json
+          echo "Apending report with the coverage difference..."
+          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" /workspace/coverage/coverage-summary.json > /workspace/coverage/updated-coverage-summary.json
+          mv /workspace/coverage/updated-coverage-summary.json  /workspace/coverage/coverage-summary.json
 
         else
           echo "No previous coverage reports found on this branch."
@@ -54,9 +79,9 @@ steps:
         fi
 
         echo "formating file..."
-        jq '.' coverage/coverage-summary.json > coverage/coverage-pretty.json
+        jq '.' /workspace/coverage/coverage-summary.json > /workspace/coverage/coverage-pretty.json
 
         echo "Copying coverage report to GCS bucket..."
-        gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/a11y/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+        gsutil -m cp -r /workspace/coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/a11y/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
