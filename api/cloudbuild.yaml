@@ -19,9 +19,17 @@ steps:
       set -o pipefail
       set -o nounset
 
+      # Create the coverage directory 
+      mkdir -p /workspace/coverage
+      chmod -R 777 /workspace/coverage
+
       # disable TTY output for the compose environment, the ansi characters printed when a TTY is attached
       # are just junk characters to the GCP cloudbuild logs
       DOCKER_NETWORK=cloudbuild DOCKER_TTY=false docker compose -f api/docker-compose.dev-test.yaml up --exit-code-from api-test
+
+      # List the coverage directory contents to confirm files exist
+      echo "Listing files in /workspace/coverage:"
+      ls -la /workspace/coverage
 
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
@@ -43,11 +51,11 @@ steps:
         # If this isn't the first commit on this branch, then determine test coverage trend 
         if [ "$last_commit_on_this_branch" ]; then
             
-          # Download the last coverage report in order to be able to use jq
+          # Download the last coverage report in order to be able to use jq to search
           gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
 
           # Extract current and last coverage percentages
-          this_coverage=$(jq -r '.total.statements.pct' coverage/coverage-summary.json)
+          this_coverage=$(jq -r '.total.statements.pct' /workspace/coverage/coverage-summary.json)
           last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
 
           # Compare coverage
@@ -56,9 +64,9 @@ steps:
           coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
           echo "Coverage difference: $coverage_difference%"
 
-          echo "Updating report with the coverage difference..."
-          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" coverage/coverage-summary.json > coverage/updated-coverage-summary.json
-          mv coverage/updated-coverage-summary.json coverage/coverage-summary.json
+          echo "Apending report with the coverage difference..."
+          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" /workspace/coverage/coverage-summary.json > /workspace/coverage/updated-coverage-summary.json
+          mv /workspace/coverage/updated-coverage-summary.json  /workspace/coverage/coverage-summary.json
 
         else
           echo "No previous coverage reports found on this branch."
@@ -66,10 +74,10 @@ steps:
         fi
 
         echo "formating file..."
-        jq '.' coverage/coverage-summary.json > coverage/coverage-pretty.json
+        jq '.' /workspace/coverage/coverage-summary.json > /workspace/coverage/coverage-pretty.json
 
         echo "Copying coverage report to GCS bucket..."
-        gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/api/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+        gsutil -m cp -r /workspace/coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/api/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
 
   - id: generate-image-name
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
