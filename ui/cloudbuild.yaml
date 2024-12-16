@@ -27,7 +27,7 @@ steps:
         set -o errexit
         set -o pipefail
         set -o nounset
-        
+
         # Install jq and bc
         apt-get update && apt-get install -y jq bc
 
