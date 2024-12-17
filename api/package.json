@@ -21,7 +21,7 @@
     "dev:docker-debug": "nodemon --exec tsx --inspect='0.0.0.0:9229' ./src/index.ts",
     "pretest": "npm run test:down",
     "test": "docker compose -f ./docker-compose.dev-test.yaml up --exit-code-from api-test",
-    "jest:docker": "jest --coverage --coverageReporters text",
+    "jest:docker": "jest --coverage --coverageReporters=text --coverageReporters=json-summary --coverageDirectory ./coverage",
     "pretest:watch": "npm run test:down",
     "test:watch": "DOCKER_API_COMMAND=docker-watch docker compose -f ./docker-compose.dev-test.yaml up",
     "jest:docker-watch": "jest --coverage --coverageReporters text --watchAll",
