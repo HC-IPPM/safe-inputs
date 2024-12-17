@@ -17,7 +17,7 @@ export timestamp=$(date +%s)
 
 # Get the last commit's coverage report from GCS
 echo "Getting last commit's test coverage report..."
-last_commit_on_this_branch=$(gsutil ls "${GCS_BUCKET}/test-coverage/a11y/" | grep "$BRANCH_NAME" | sort | tail -n 1 || true)
+last_commit_on_this_branch=$(gsutil ls "${GCS_BUCKET}" | grep "$BRANCH_NAME" | sort | tail -n 1 || true)
 # last_commit_on_this_branch=$(gsutil ls gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/a11y/ | grep "$BRANCH_NAME" | sort | tail -n 1)
 
 # If this isn't the first commit on this branch, then determine test coverage trend 
@@ -54,4 +54,4 @@ jq '.' "${COVERAGE_DIR}/coverage-summary.json" > "${COVERAGE_DIR}/coverage-prett
 
 echo "Copying coverage report to GCS bucket..."
 gsutil -m cp -r "${COVERAGE_DIR}/coverage-pretty.json" \
-  "${GCS_BUCKET}/test-coverage/a11y/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json"
+  "${GCS_BUCKET}/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json"

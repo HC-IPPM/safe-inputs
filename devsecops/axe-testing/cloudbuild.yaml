@@ -16,6 +16,19 @@ steps:
       docker build -t axe-e2e .
       docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
 
+  - id: 'Debug build context'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    dir: 'devsecops/axe-testing'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        echo "Current working directory: $(pwd)"
+        echo "Listing files in ../:"
+        ls -l ../
+        echo "Listing files in ../code-coverage-reporting:"
+        ls -l ../code-coverage-reporting
+        
   - id: 'Upload test coverage report to bucket'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     dir: 'devsecops/axe-testing'
@@ -23,49 +36,11 @@ steps:
     args:
       - '-c'
       - |
-        set -o errexit
-        set -o pipefail
-        set -o nounset
-
-        # Install jq and bc
-        apt-get update && apt-get install -y jq bc
-
-        # Generate a timestamp
-        export timestamp=$(date +%s)
-
-        # Get the last commit's coverage report from GCS
-        echo "Getting last commit's test coverage report..."
-        last_commit_on_this_branch=$(gsutil ls gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/a11y/ | grep "$BRANCH_NAME" | sort | tail -n 1)
-
-        # If this isn't the first commit on this branch, then determine test coverage trend 
-        if [ "$last_commit_on_this_branch" ]; then
-            
-          # Download the last coverage report in order to be able to use jq
-          gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
-
-          # Extract current and last coverage percentages
-          this_coverage=$(jq -r '.total.statements.pct' /workspace/coverage/coverage-summary.json)
-          last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
-
-          # Compare coverage
-          echo "Current coverage: $this_coverage%"
-          echo "Last coverage: $last_coverage%"
-          coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
-          echo "Coverage difference: $coverage_difference%"
-
-          echo "Apending report with the coverage difference..."
-          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" /workspace/coverage/coverage-summary.json > /workspace/coverage/updated-coverage-summary.json
-          mv /workspace/coverage/updated-coverage-summary.json  /workspace/coverage/coverage-summary.json
-
-        else
-          echo "No previous coverage reports found on this branch."
-          echo "Skipping coverage trend calculations."
-        fi
-
-        echo "formating file..."
-        jq '.' /workspace/coverage/coverage-summary.json > /workspace/coverage/coverage-pretty.json
-
-        echo "Copying coverage report to GCS bucket..."
-        gsutil -m cp -r /workspace/coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/a11y/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+        cp ../code-coverage-reporting/upload-coverage-to-gcs.sh upload-coverage-to-gcs.sh
+        ./upload-coverage-to-gcs.sh \
+          /workspace/coverage \
+          $BRANCH_NAME \
+          gs://test-outputs-go-here/test-coverage/a11y/ \
+          $SHORT_SHA
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
