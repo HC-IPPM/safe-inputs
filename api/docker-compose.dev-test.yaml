@@ -55,6 +55,7 @@ services:
     volumes:
       - .:/home/node-dev/project
       - ./.env.dev-public:/home/node-dev/project/.env
+      - /workspace/coverage:/home/node-dev/project/coverage
     entrypoint:
       - ../node-dev-entrypoint.once.sh
     command: npm run jest:${DOCKER_API_COMMAND:-docker}

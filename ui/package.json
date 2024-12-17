@@ -9,7 +9,7 @@
     "precompile": "npm run extract",
     "compile": "lingui compile --typescript",
     "dev": "rspack serve",
-    "test": "jest --coverage --coverageReporters text",
+    "test": "jest --coverage --coverageReporters=json-summary --coverageReporters=text --coverageDirectory ./coverage",
     "test:debug": "node --inspect='0.0.0.0:9229' node_modules/.bin/jest --runInBand --no-cache",
     "typecheck": "tsc --noEmit"
   },

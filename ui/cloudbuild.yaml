@@ -17,6 +17,58 @@ steps:
     entrypoint: npm
     args: ['test']
 
+  - id: 'Upload test coverage report to bucket'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    dir: ui
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        set -o errexit
+        set -o pipefail
+        set -o nounset
+
+        # Install jq and bc
+        apt-get update && apt-get install -y jq bc
+
+        # Generate a timestamp
+        export timestamp=$(date +%s)
+
+        # Get the last commit's coverage report from GCS
+        echo "Getting last commit's test coverage report..."
+        last_commit_on_this_branch=$(gsutil ls gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/ | grep "$BRANCH_NAME" | sort | tail -n 1)
+
+        # If this isn't the first commit on this branch, then determine test coverage trend 
+        if [ "$last_commit_on_this_branch" ]; then
+            
+          # Download the last coverage report in order to be able to use jq
+          gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
+
+          # Extract current and last coverage percentages
+          this_coverage=$(jq -r '.total.statements.pct' coverage/coverage-summary.json)
+          last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
+
+          # Compare coverage
+          echo "Current coverage: $this_coverage%"
+          echo "Last coverage: $last_coverage%"
+          coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
+          echo "Coverage difference: $coverage_difference%"
+
+          echo "Updating report with the coverage difference..."
+          jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" coverage/coverage-summary.json > coverage/updated-coverage-summary.json
+          mv coverage/updated-coverage-summary.json coverage/coverage-summary.json
+
+        else
+          echo "No previous coverage reports found on this branch."
+          echo "Skipping coverage trend calculations."
+        fi
+
+        echo "formating file..."
+        jq '.' coverage/coverage-summary.json > coverage/coverage-pretty.json
+
+        echo "Copying coverage report to GCS bucket..."
+        gsutil -m cp -r ./coverage/coverage-pretty.json gs://safe-inputs-devsecops-outputs-for-dashboard/test-coverage/ui/${BRANCH_NAME}__${timestamp}__${SHORT_SHA}.json
+
   - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
     dir: ./
