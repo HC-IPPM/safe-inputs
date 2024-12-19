@@ -12,13 +12,7 @@ COVERAGE_DIR=${2:-"/workspace/coverage"}
 BRANCH_NAME=${3:-"unknown_branch"}
 SHORT_SHA=${4:-"unknown_sha"}
 
-echo "Arguments passed: $@"
-echo "CLOUDBUILD_DIR: $CLOUDBUILD_DIR"
-echo "BRANCH_NAME: $BRANCH_NAME"
-echo "SHORT_SHA: $SHORT_SHA"
-echo "COVERAGE_DIR: $COVERAGE_DIR"
-
-BUCKET_NAME="test-outputs-go-here"
+BUCKET_NAME="safe-inputs-devsecops-outputs-for-dashboard"
 
 # Generate a timestamp
 export timestamp=$(date +%s)
