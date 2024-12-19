@@ -27,9 +27,6 @@ steps:
         # Copy upload script
         cp ../devsecops/code-coverage-reporting/upload-coverage-to-gcs.sh upload-coverage-to-gcs.sh
 
-        echo "short sha in cloudbuild: $SHORT_SHA"
-        echo "branch_name in cloudbuild: $BRANCH_NAME"
-
         # Upload upload coverage to GCS
         ./upload-coverage-to-gcs.sh \
           --cloudbuild-dir ui \
@@ -56,6 +53,11 @@ steps:
       mkdir -p /workspace/axe-results
       chmod -R 777 /workspace/axe-results
 
+      # ensure env_variable when running locally 
+      if [[ -z "${COMMIT_SHA:-}" ]]; then
+          export COMMIT_SHA="unknown_sha"
+      fi
+
       # make sure the ui server is ready before continuing
       docker run \
         --volume "${PWD}":/home/project \
@@ -75,7 +77,7 @@ steps:
         '--volume',
         '/workspace/axe-results:/app/axe-results',
         '--env',
-        '${COMMIT_SHA}',
+        "COMMIT_SHA=${COMMIT_SHA:-unknown_sha}",
         'axe',
       ]
 
