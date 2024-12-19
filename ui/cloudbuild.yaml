@@ -26,13 +26,13 @@ steps:
       - |
         # Copy upload script
         cp ../devsecops/code-coverage-reporting/upload-coverage-to-gcs.sh upload-coverage-to-gcs.sh
-
-        # Run upload coverage to gcs
+        
+        # Run upload coverage to GCS
         ./upload-coverage-to-gcs.sh \
-          ui \
-          ./coverage \
-          $BRANCH_NAME \
-          $SHORT_SHA \
+          --cloudbuild-dir ui \
+          --coverage-dir ./coverage \
+          --branch-name ${BRANCH_NAME:-"unknown_branch"} \
+          --short-sha ${SHORT_SHA:-"unknown_sha"}
 
   - id: 'Axe a11y testing setup'
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'
