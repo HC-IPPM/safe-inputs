@@ -74,8 +74,8 @@ echo "Coverage Directory: $COVERAGE_DIR"
 echo "Branch Name: $BRANCH_NAME"
 echo "Short SHA: $SHORT_SHA"
 
-# BUCKET_NAME=safe-inputs-devsecops-outputs-for-dashboard
-BUCKET_NAME=test-outputs-go-here
+BUCKET_NAME=safe-inputs-devsecops-outputs-for-dashboard
+# BUCKET_NAME=test-outputs-go-here
 
 # Generate a timestamp
 export timestamp=$(date +%s)
