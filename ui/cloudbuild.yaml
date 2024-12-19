@@ -77,7 +77,7 @@ steps:
         '--volume',
         '/workspace/axe-results:/app/axe-results',
         '--env',
-        "COMMIT_SHA=${COMMIT_SHA:-unknown_sha}",
+        'COMMIT_SHA=${COMMIT_SHA:-unknown_sha}',
         'axe',
       ]
 
