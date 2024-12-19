@@ -12,24 +12,6 @@ COVERAGE_DIR="/workspace/coverage"
 BRANCH_NAME="unknown_branch"
 SHORT_SHA="unknown_sha"
 
-# # Check if Git is available (for local runs where these are not built in)
-# if command -v git &>/dev/null && [[ -d .git ]]; then
-#     BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD || echo "unknown_branch")
-#     SHORT_SHA=$(git rev-parse --short HEAD || echo "unknown_sha")
-# fi
-
-# # Parse arguments
-# while [[ "$#" -gt 0 ]]; do
-#     case $1 in
-#         --cloudbuild-dir) CLOUDBUILD_DIR="$2"; shift ;;
-#         --coverage-dir) COVERAGE_DIR="$2"; shift ;;
-#         --branch-name) BRANCH_NAME="$2"; shift ;;
-#         --short-sha) SHORT_SHA="$2"; shift ;;
-#         *) echo "Unknown parameter: $1"; exit 1 ;;
-#     esac
-#     shift
-# done
-
 #  Parse arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -68,14 +50,7 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Debug: Log final values
-echo "Cloud Build Directory: $CLOUDBUILD_DIR"
-echo "Coverage Directory: $COVERAGE_DIR"
-echo "Branch Name: $BRANCH_NAME"
-echo "Short SHA: $SHORT_SHA"
-
 BUCKET_NAME=safe-inputs-devsecops-outputs-for-dashboard
-# BUCKET_NAME=test-outputs-go-here
 
 # Generate a timestamp
 export timestamp=$(date +%s)
