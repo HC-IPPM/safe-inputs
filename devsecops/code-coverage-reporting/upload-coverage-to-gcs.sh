@@ -6,28 +6,28 @@ set -o nounset
 # Install jq and bc
 apt-get update && apt-get install -y jq bc
 
-# Input parameters
-CLOUDBUILD_DIR=${1:-"error-occured"}
-COVERAGE_DIR=${2:-"/workspace/coverage"}
-BRANCH_NAME=${3:-"unknown_branch"}
-SHORT_SHA=${4:-"unknown_sha"}
+# Default values
+CLOUDBUILD_DIR="error-occured"
+COVERAGE_DIR="/workspace/coverage"
+BRANCH_NAME="unknown_branch"
+SHORT_SHA="unknown_sha"
 
-BUCKET_NAME="safe-inputs-devsecops-outputs-for-dashboard"
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --cloudbuild-dir) CLOUDBUILD_DIR="$2"; shift ;;
+        --coverage-dir) COVERAGE_DIR="$2"; shift ;;
+        --branch-name) BRANCH_NAME="$2"; shift ;;
+        --short-sha) SHORT_SHA="$2"; shift ;;
+        *) echo "Unknown parameter: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+BUCKET_NAME=safe-inputs-devsecops-outputs-for-dashboard
 
 # Generate a timestamp
 export timestamp=$(date +%s)
-
-# Log the coverage directory
-echo "Coverage directory: $COVERAGE_DIR"
-
-# Check if coverage directory exists
-if [[ ! -d "$COVERAGE_DIR" ]]; then
-    echo "Error: Coverage directory $COVERAGE_DIR does not exist!"
-    exit 1
-else
-    echo "Contents of $COVERAGE_DIR:"
-    ls -la "$COVERAGE_DIR"
-fi
 
 # Get the last commit's coverage report from GCS
 echo "Getting last commit's test coverage report..."

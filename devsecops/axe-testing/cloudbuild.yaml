@@ -26,11 +26,11 @@ steps:
         # Copy upload script
         cp ../code-coverage-reporting/upload-coverage-to-gcs.sh upload-coverage-to-gcs.sh
 
-        # Run upload coverage to gcs
+        # Run upload coverage to GCS
         ./upload-coverage-to-gcs.sh \
-          a11y \
-          /workspace/coverage \
-          $BRANCH_NAME \
-          $SHORT_SHA
+          --cloudbuild-dir a11y \
+          --coverage-dir /workspace/coverage \
+          --branch-name ${BRANCH_NAME:-"unknown_branch"} \
+          --short-sha ${SHORT_SHA:-"unknown_sha"}
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
