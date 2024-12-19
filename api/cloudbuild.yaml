@@ -45,8 +45,8 @@ steps:
         ./upload-coverage-to-gcs.sh \
           --cloudbuild-dir api \
           --coverage-dir /workspace/coverage \
-          --branch-name ${BRANCH_NAME:-"unknown_branch"} \
-          --short-sha ${SHORT_SHA:-"unknown_sha"}
+          --branch-name $BRANCH_NAME \
+          --short-sha $SHORT_SHA
 
   - id: generate-image-name
     name: 'gcr.io/cloud-builders/docker@sha256:8a9bff005803926fbc760f9528b708c259ac170b5e93082a9c2342a731945f66'

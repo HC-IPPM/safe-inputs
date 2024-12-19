@@ -30,7 +30,7 @@ steps:
         ./upload-coverage-to-gcs.sh \
           --cloudbuild-dir a11y \
           --coverage-dir /workspace/coverage \
-          --branch-name ${BRANCH_NAME:-"unknown_branch"} \
-          --short-sha ${SHORT_SHA:-"unknown_sha"}
+          --branch-name $BRANCH_NAME \
+          --short-sha $SHORT_SHA
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
