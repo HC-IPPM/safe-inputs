@@ -12,7 +12,7 @@ COVERAGE_DIR="/workspace/coverage"
 BRANCH_NAME="unknown_branch"
 SHORT_SHA="unknown_sha"
 
-#  Parse arguments
+#  Parse arguments and replace missing branch_name and short_sha in the case where this is run locally
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --cloudbuild-dir) 
