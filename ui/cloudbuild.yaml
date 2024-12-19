@@ -30,7 +30,7 @@ steps:
         echo "short sha in cloudbuild: $SHORT_SHA"
         echo "branch_name in cloudbuild: $BRANCH_NAME"
 
-        # Run upload coverage to GCS
+        # Upload upload coverage to GCS
         ./upload-coverage-to-gcs.sh \
           --cloudbuild-dir ui \
           --coverage-dir ./coverage \

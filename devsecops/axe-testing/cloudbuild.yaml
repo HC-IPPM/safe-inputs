@@ -26,7 +26,7 @@ steps:
         # Copy upload script
         cp ../code-coverage-reporting/upload-coverage-to-gcs.sh upload-coverage-to-gcs.sh
 
-        # Run upload coverage to GCS
+        # Upload coverage to GCS
         ./upload-coverage-to-gcs.sh \
           --cloudbuild-dir a11y \
           --coverage-dir /workspace/coverage \
