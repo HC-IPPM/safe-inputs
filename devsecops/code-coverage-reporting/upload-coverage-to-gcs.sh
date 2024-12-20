@@ -53,35 +53,38 @@ done
 BUCKET_NAME=safe-inputs-devsecops-outputs-for-dashboard
 
 # Generate a timestamp
-export timestamp=$(date +%s)
+timestamp=$(date +%s)
 
-# Get the last commit's coverage report from GCS
 echo "Getting last commit's test coverage report..."
-last_commit_on_this_branch=$(gsutil ls "gs://${BUCKET_NAME}/test-coverage/${CLOUDBUILD_DIR}" 2>/dev/null | grep "$BRANCH_NAME" | sort | tail -n 1 || true)
 
-if [[ -z "$last_commit_on_this_branch" ]]; then
-    echo "No previous coverage reports found for branch: $BRANCH_NAME"
-    echo "Skipping coverage trend calculations."
+if gsutil ls "gs://${BUCKET_NAME}/test-coverage/${CLOUDBUILD_DIR}/" >/dev/null 2>&1; then
+    last_commit_on_this_branch=$(gsutil ls "gs://${BUCKET_NAME}/test-coverage/${CLOUDBUILD_DIR}/" | grep "$BRANCH_NAME" | sort | tail -n 1 || echo "")
+    if [[ -z "$last_commit_on_this_branch" ]]; then
+        echo "No previous coverage reports found for branch: $BRANCH_NAME, Skipping coverage trend calculations."
+    else
+        echo "Last commit coverage report found: $last_commit_on_this_branch"
+
+        # Download the last coverage report
+        gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
+
+        # Extract current and last coverage percentages
+        this_coverage=$(jq -r '.total.statements.pct' "$COVERAGE_DIR/coverage-summary.json")
+        last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
+
+        # Compare coverage
+        echo "Current coverage: $this_coverage%"
+        echo "Last coverage: $last_coverage%"
+        coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
+        echo "Coverage difference: $coverage_difference%"
+
+        # Append the report with the coverage difference
+        jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" \
+            "$COVERAGE_DIR/coverage-summary.json" > "$COVERAGE_DIR/updated-coverage-summary.json"
+        mv "$COVERAGE_DIR/updated-coverage-summary.json" "$COVERAGE_DIR/coverage-summary.json"
+    fi
 else
-    echo "Last commit coverage report found: $last_commit_on_this_branch"
-
-    # Download the last coverage report
-    gsutil cp "$last_commit_on_this_branch" last_commit_coverage.json
-
-    # Extract current and last coverage percentages
-    this_coverage=$(jq -r '.total.statements.pct' "$COVERAGE_DIR/coverage-summary.json")
-    last_coverage=$(jq -r '.total.statements.pct' last_commit_coverage.json)
-
-    # Compare coverage
-    echo "Current coverage: $this_coverage%"
-    echo "Last coverage: $last_coverage%"
-    coverage_difference=$(echo "$this_coverage - $last_coverage" | bc)
-    echo "Coverage difference: $coverage_difference%"
-
-    # Append the report with the coverage difference
-    jq ". + {\"difference_from_last_commit\": {\"statements_pct\": $coverage_difference}}" \
-        "$COVERAGE_DIR/coverage-summary.json" > "$COVERAGE_DIR/updated-coverage-summary.json"
-    mv "$COVERAGE_DIR/updated-coverage-summary.json" "$COVERAGE_DIR/coverage-summary.json"
+    echo "The path gs://${BUCKET_NAME}/test-coverage/${CLOUDBUILD_DIR}/ does not exist."
+    echo "Skipping coverage trend calculations."
 fi
 
 # Format the report
