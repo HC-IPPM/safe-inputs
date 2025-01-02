@@ -30,7 +30,7 @@ COPY ./index.js .
 COPY ./e2e-tests .
 
 # Install project dependencies
-RUN npm install --include=dev 
+RUN npm ci
 
 # Copy the rest of the project files
 COPY . .
