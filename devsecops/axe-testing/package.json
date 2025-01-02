@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "^22.0.0"
+  },
   "scripts": {
     "lint": "eslint src",
     "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
