@@ -32,7 +32,7 @@ steps:
       ls -la /workspace/coverage
 
   - id: 'Upload test coverage report to bucket'
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:e0246385c6f43e997bb49541de7c684846ee9c2baa738a68613f14cab987feb8'
     dir: api
     entrypoint: bash
     args:
