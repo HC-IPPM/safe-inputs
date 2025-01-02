@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src",
-    "dbg": "node --experimental-vm-modules --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
-    "start": "node --experimental-vm-modules index.js",
+    "dbg": "node --inspect-brk node_modules/.bin/jest --runInBand --no-cache",
+    "start": "node index.js",
     "prestart:docker": "mkdir -p axe-results && sudo chmod 777 axe-results && docker build -t axe .",
     "start:docker": "docker run --rm --network host -v ${PWD}/axe-results:/app/axe-results -e COMMIT_SHA=$(git rev-parse HEAD) axe",
     "test:unit": "NODE_OPTIONS=--experimental-vm-modules npx jest --config=jest.unit.config.cjs --coverage --coverageReporters=text --coverageReporters=json-summary --coverageDirectory=./coverage",
