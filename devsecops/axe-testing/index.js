@@ -51,7 +51,11 @@ export async function runAccessibilityScan(
   const browser = await puppeteer.launch({
     executablePath: executablePath || undefined, // To work in both docker with local chrome path
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    // As of alpine 3.20, the --disable-gpu flag is necessary to avoid hanging on browser.newPage()
+    // (https://github.com/puppeteer/puppeteer/issues/11640#issuecomment-2264826162).
+    // Unless webGL etc is specifically required, disabling the GPU is fine in headless
+    // (used to be the default behaviour https://github.com/puppeteer/puppeteer/issues/1260)
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
   });
 
   const page = await browser.newPage();
