@@ -1,4 +1,4 @@
-import type { LinkProps as ChakraLinkProps, As } from '@chakra-ui/react';
+import type { LinkProps as ChakraLinkProps } from '@chakra-ui/react';
 import { Link as ChakraLink, forwardRef } from '@chakra-ui/react';
 
 import type { LinkProps as ReactRouterLinkProps } from 'react-router-dom';
@@ -23,10 +23,12 @@ const is_props_for_external_link = (
 export const Link: {
   (props: ExternalLinkProps): JSX.Element;
   (props: InAppLinkProps): JSX.Element;
-} = forwardRef<InAppLinkProps | ExternalLinkProps, As>((props, ref) =>
+} = forwardRef<
+  InAppLinkProps | ExternalLinkProps,
+  typeof ChakraLink | typeof ReactRouterLink
+>((props, ref) =>
   is_props_for_external_link(props) ? (
-    // typesystem quirk, things don't resolve correctly without the redundant `as={ChakraLink}` here
-    <ChakraLink {...props} ref={ref} isExternal={true} as={ChakraLink} />
+    <ChakraLink {...props} ref={ref} isExternal={true} />
   ) : (
     <ChakraLink {...props} ref={ref} as={ReactRouterLink} />
   ),
