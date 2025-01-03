@@ -15,21 +15,4 @@ spec:
     encoding: PKCS8
     size: 4096
   secretName: tlskeys
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: dev-mesh-gateway-cert
-  namespace: istio-ingress
-spec:
-  # this will be patched within ../../clusters/gke/components.yaml
-  dnsNames: []
-  issuerRef:
-    kind: ClusterIssuer
-    name: issuer
-  privateKey:
-    algorithm: RSA
-    encoding: PKCS8
-    rotationPolicy: Always
-    size: 4096
-  secretName: dev-tlskeys
+
