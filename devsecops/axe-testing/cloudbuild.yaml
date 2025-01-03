@@ -1,7 +1,7 @@
 steps:
   - id: 'Run tests for a11y scanning'
     dir: 'devsecops/axe-testing'
-    name: 'gcr.io/cloud-builders/docker@sha256:12a042c896f65aa5bb89dc99470029d293dc8569da1baf77c6ff8d4142b267d4'
+    name: 'gcr.io/cloud-builders/docker@sha256:3906d54c3c317606bd6806c9f7677f1ccb809175331e5b276024b1bf3dbf2570'
     script: |
       #!/usr/bin/env bash
       set -o errexit
