@@ -15,4 +15,3 @@ spec:
     encoding: PKCS8
     size: 4096
   secretName: tlskeys
-
