@@ -171,14 +171,15 @@ export const get_auth_router = (passport: PassportStatic) => {
       // @ts-expect-error magiclink's "action" parameterisn't part of passport.js's typing. Extending pasport.js' types is complicated by their export pattern
       action: 'requestToken',
     }),
-    (req, res) =>
+    (req, res) => {
       res
         .status(200)
         .send(
           should_send_token_via_email()
             ? {}
             : { verification_url: req.locals?.verification_url },
-        ),
+        );
+    },
   );
 
   auth_router.get(
@@ -201,7 +202,7 @@ export const get_auth_router = (passport: PassportStatic) => {
     }),
   );
 
-  auth_router.get('/session', (req, res) =>
+  auth_router.get('/session', (req, res) => {
     res.send({
       email: req.user?.email,
       is_super_user:
@@ -209,8 +210,8 @@ export const get_auth_router = (passport: PassportStatic) => {
       can_own_collections:
         req.user &&
         check_authz_rules(req.user, user_email_can_own_collections_rule),
-    }),
-  );
+    });
+  });
 
   return auth_router;
 };
