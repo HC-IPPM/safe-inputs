@@ -30,7 +30,7 @@
     "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.51.5",
     "react-icons": "^5.0.0",
-    "react-router-dom": "^6.7.0",
+    "react-router-dom": "^7.0.0",
     "spin-delay": "^2.0.0",
     "xlsx": "^0.18.5",
     "yup": "^1.2.0"
