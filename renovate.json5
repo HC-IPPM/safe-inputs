@@ -34,7 +34,7 @@
       pinDigests: false,
     },
     {
-      matchFileNames: ['kubernetes/**/gotk-components.yaml'],
+      matchFileNames: ['kubernetes/**/flux-system/gotk-components.yaml'],
       matchDepNames: ['ghcr.io/fluxcd/**'],
       digest: {
         description: 'Allow and group image digest updating for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
