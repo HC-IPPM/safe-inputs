@@ -36,20 +36,24 @@
     {
       matchFileNames: ['kubernetes/**/gotk-components.yaml'],
       matchDepNames: ['ghcr.io/fluxcd/**'],
+      digest: {
+        description: 'Allow and group image digest updating for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        groupName: 'Pin Flux Component Image Digests',
+      },
       pinDigest: {
-        description: 'Group image digest pinning updates for Flux component updates. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: 'Allow and group image digest pinning for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         groupName: 'Pin Flux Component Image Digests',
       },
       major: {
-        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
       patch: {
-        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
       minor: {
-        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
     },
