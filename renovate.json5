@@ -33,5 +33,29 @@
       matchPackageNames: ['ghcr.io/gimlet-io/capacitor-manifests'],
       pinDigests: false,
     },
+    {
+      matchFileNames: ['kubernetes/**/flux-system/gotk-components.yaml'],
+      matchDepNames: ['ghcr.io/fluxcd/**'],
+      digest: {
+        description: 'Allow and group image digest updating for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        groupName: 'Pin Flux Component Image Digests',
+      },
+      pinDigest: {
+        description: 'Allow and group image digest pinning for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        groupName: 'Pin Flux Component Image Digests',
+      },
+      patch: {
+        description: 'Allow patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
+      major: {
+        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
+      minor: {
+        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
+    },
   ],
 }
