@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.19@sha256:40dc4b415c17b85bea9be05314b4a753f45a4e1716bb31c01182e6c53d51a654
+FROM node:22-alpine3.21@sha256:6e80991f69cc7722c561e5d14d5e72ab47c0d6b6cfb3ae50fb9cf9a7b30fdf97
 
 WORKDIR /app
 
@@ -30,7 +30,7 @@ COPY ./index.js .
 COPY ./e2e-tests .
 
 # Install project dependencies
-RUN npm install --include=dev 
+RUN npm ci
 
 # Copy the rest of the project files
 COPY . .
