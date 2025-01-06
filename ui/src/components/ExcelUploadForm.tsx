@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/react/macro';
 import { FormControl, FormLabel, Button, Center } from '@chakra-ui/react';
+import { Trans } from '@lingui/react/macro';
 import type { FormikHelpers, FieldProps } from 'formik';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';

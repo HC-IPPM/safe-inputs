@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/react/macro';
 import { LinkIcon } from '@chakra-ui/icons';
 
 import {
@@ -9,6 +8,7 @@ import {
   Text,
   UnorderedList,
 } from '@chakra-ui/react';
+import { Trans } from '@lingui/react/macro';
 
 import { Link } from 'src/components/Link.tsx';
 

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/react/macro';
 import { Box, Container, Heading } from '@chakra-ui/react';
 
 import { useLingui } from '@lingui/react';
+import { Trans } from '@lingui/react/macro';
 
 import React, { memo } from 'react';
 

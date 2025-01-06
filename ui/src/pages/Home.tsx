@@ -1,5 +1,3 @@
-import { t } from '@lingui/core/macro';
-import { Trans } from '@lingui/react/macro';
 import { AddIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -19,8 +17,10 @@ import {
   Text,
   Tag,
 } from '@chakra-ui/react';
+import { t } from '@lingui/core/macro';
 
 import { useLingui } from '@lingui/react';
+import { Trans } from '@lingui/react/macro';
 
 import _ from 'lodash';
 
