@@ -1,8 +1,8 @@
 import type { LinkProps as ChakraLinkProps } from '@chakra-ui/react';
 import { Link as ChakraLink, forwardRef } from '@chakra-ui/react';
 
-import type { LinkProps as ReactRouterLinkProps } from 'react-router-dom';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import type { LinkProps as ReactRouterLinkProps } from 'react-router';
+import { Link as ReactRouterLink } from 'react-router';
 
 import type { SetRequired } from 'type-fest';
 

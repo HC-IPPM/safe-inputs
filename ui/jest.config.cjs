@@ -4,6 +4,7 @@ const { compilerOptions } = require('./tsconfig.json');
 
 module.exports = {
   // ui specific
+  setupFiles: ['<rootDir>/jest.setup.cjs'],
   testEnvironment: 'jsdom',
   transform: {
     '\\.(ts|tsx)$': 'babel-jest',

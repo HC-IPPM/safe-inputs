@@ -26,7 +26,7 @@ import _ from 'lodash';
 
 import { memo } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { get_sign_in_path } from 'src/components/auth/auth_utils.ts';

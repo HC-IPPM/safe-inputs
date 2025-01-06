@@ -4,7 +4,7 @@ import { Box, Container } from '@chakra-ui/react';
 
 import { memo } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';

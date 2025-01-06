@@ -20,7 +20,7 @@ import { useLingui } from '@lingui/react';
 import _ from 'lodash';
 
 import React, { memo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import type { Session } from 'src/components/auth/auth_utils.ts';
 import { useSession } from 'src/components/auth/session.tsx';

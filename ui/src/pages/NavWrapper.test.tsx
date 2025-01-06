@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { Routes, Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route, MemoryRouter } from 'react-router';
 
 import NavWrapper from 'src/pages/NavWrapper.tsx';
 import { TestProviders } from 'src/test_utils/TestProviders.tsx';
