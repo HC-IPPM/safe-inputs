@@ -34,15 +34,24 @@
       pinDigests: false,
     },
     {
-      description: 'Ignore docker updates for Flux images due to https://github.com/HC-IPPM/safe-inputs/pull/655#issuecomment-2377463287',
-      ignoreDeps: [
-        'ghcr.io/fluxcd/notification-controller',
-        'ghcr.io/fluxcd/image-reflector-controller',
-        'ghcr.io/fluxcd/image-automation-controller',
-        'ghcr.io/fluxcd/helm-controller',
-        'ghcr.io/fluxcd/kustomize-controller',
-        'ghcr.io/fluxcd/source-controller',
-      ],
+      matchFileNames: ['kubernetes/**/gotk-components.yaml'],
+      matchDepNames: ['ghcr.io/fluxcd/**'],
+      pinDigest: {
+        description: 'Group image digest pinning updates for Flux component updates. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        groupName: 'Pin Flux Component Image Digests',
+      },
+      major: {
+        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
+      patch: {
+        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
+      minor: {
+        description: 'Disable non-pin digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        enabled: false,
+      },
     },
   ],
 }
