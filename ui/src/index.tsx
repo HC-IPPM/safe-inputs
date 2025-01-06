@@ -30,7 +30,8 @@ import {
   ScrollRestoration,
 } from 'react-router';
 
-import { RouterProvider } from 'react-router/dom';
+// react-router/dom does resolve, but false-positive from the eslint import/no-unresolved rule. Check if that's changed now and then!
+import { RouterProvider } from 'react-router/dom'; // eslint-disable-line import/no-unresolved
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
 import { SessionProvider } from './components/auth/session.tsx';
