@@ -44,16 +44,16 @@
         description: 'Allow and group image digest pinning for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         groupName: 'Pin Flux Component Image Digests',
       },
-      major: {
-        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+      patch: {
+        description: 'Allow patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
-      patch: {
-        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+      major: {
+        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
       minor: {
-        description: 'Disable non-digest updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
         enabled: false,
       },
     },
