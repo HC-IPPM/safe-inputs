@@ -2,7 +2,7 @@ import { Trans } from '@lingui/react/macro';
 
 import { Box, Container } from '@chakra-ui/react';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useSession } from 'src/components/auth/session.tsx';
 import SignInForm from 'src/components/auth/SignInForm.tsx';

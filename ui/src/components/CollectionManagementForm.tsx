@@ -26,7 +26,7 @@ import { useEffect } from 'react';
 import type { Control, FieldErrors } from 'react-hook-form';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { CollectionDefInput } from 'src/graphql/__generated__/graphql.ts';
 import {

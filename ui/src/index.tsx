@@ -24,12 +24,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import {
   createBrowserRouter,
-  RouterProvider,
   Routes,
   Route,
   Navigate,
   ScrollRestoration,
-} from 'react-router-dom';
+} from 'react-router';
+
+import { RouterProvider } from 'react-router/dom';
 
 import { get_csrf_token, csrf_header } from './components/auth/auth_utils.ts';
 import { SessionProvider } from './components/auth/session.tsx';

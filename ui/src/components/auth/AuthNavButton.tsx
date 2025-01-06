@@ -1,9 +1,9 @@
-import { t } from '@lingui/core/macro';
-import { Trans } from '@lingui/react/macro';
 import type { ButtonProps } from '@chakra-ui/react';
 import { Text, Button } from '@chakra-ui/react';
+import { t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { useSpinDelay } from 'spin-delay';
 

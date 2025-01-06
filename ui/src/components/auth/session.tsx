@@ -8,7 +8,7 @@ import {
   useLayoutEffect,
 } from 'react';
 
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 
 import type { Session } from './auth_utils.ts';
 import {

@@ -1,5 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import AppErrorFallback from 'src/components/error/AppErrorFallback.tsx';
 import Footer from 'src/components/layout/Footer.tsx';
