@@ -1,5 +1,3 @@
-import { t } from '@lingui/core/macro';
-import { Trans } from '@lingui/react/macro';
 import {
   FormErrorMessage,
   FormLabel,
@@ -12,6 +10,8 @@ import {
   Heading,
   Divider,
 } from '@chakra-ui/react';
+import { t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
 
 import { useState } from 'react';
 

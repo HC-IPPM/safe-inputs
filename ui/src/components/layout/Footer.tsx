@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/react/macro';
 import { Box, Text, SimpleGrid, Container, Spacer } from '@chakra-ui/react';
+import { Trans } from '@lingui/react/macro';
 
 import { Link } from 'src/components/Link.tsx';
 
