@@ -30,12 +30,15 @@
     "gql-codegen:check": "graphql-codegen --check"
   },
   "devDependencies": {
+    "@eslint/compat": "1.2.4",
+    "@eslint/eslintrc": "3.2.0",
+    "@eslint/js": "9.17.0",
     "@graphql-codegen/cli": "5.0.3",
     "@microsoft/eslint-plugin-sdl": "1.0.1",
     "@parcel/watcher": "2.5.0",
     "@typescript-eslint/eslint-plugin": "8.4.0",
     "@typescript-eslint/parser": "8.4.0",
-    "eslint": "9.9.1",
+    "eslint": "9.17.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-typescript": "3.7.0",
     "eslint-plugin-import": "2.31.0",
