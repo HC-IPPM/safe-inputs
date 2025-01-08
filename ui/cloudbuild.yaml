@@ -18,7 +18,7 @@ steps:
     args: ['test']
 
   - id: 'Upload test coverage report to bucket'
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:e0246385c6f43e997bb49541de7c684846ee9c2baa738a68613f14cab987feb8'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:3a24ff5f089d9ce3627306873ef1e1061488a63ae12c0bd0b5c24ec5ee594798'
     dir: ui
     entrypoint: bash
     args:
