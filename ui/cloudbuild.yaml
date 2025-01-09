@@ -1,18 +1,18 @@
 steps:
   - id: 'Install dependencies'
-    name: 'node:22-alpine3.21@sha256:6e80991f69cc7722c561e5d14d5e72ab47c0d6b6cfb3ae50fb9cf9a7b30fdf97'
+    name: 'node:22-alpine3.21@sha256:f2dc6eea95f787e25f173ba9904c9d0647ab2506178c7b5b7c5a3d02bc4af145'
     dir: ui
     entrypoint: npm
     args: ['ci', '--no-optional']
 
   - id: 'Check types'
-    name: 'node:22-alpine3.21@sha256:6e80991f69cc7722c561e5d14d5e72ab47c0d6b6cfb3ae50fb9cf9a7b30fdf97'
+    name: 'node:22-alpine3.21@sha256:f2dc6eea95f787e25f173ba9904c9d0647ab2506178c7b5b7c5a3d02bc4af145'
     dir: ui
     entrypoint: npm
     args: ['run', 'typecheck']
 
   - id: Test
-    name: 'node:22-alpine3.21@sha256:6e80991f69cc7722c561e5d14d5e72ab47c0d6b6cfb3ae50fb9cf9a7b30fdf97'
+    name: 'node:22-alpine3.21@sha256:f2dc6eea95f787e25f173ba9904c9d0647ab2506178c7b5b7c5a3d02bc4af145'
     dir: ui
     entrypoint: npm
     args: ['test']
