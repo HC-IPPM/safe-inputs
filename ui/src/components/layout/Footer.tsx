@@ -5,9 +5,9 @@ import { Link } from 'src/components/Link.tsx';
 
 // import CanadaWhiteFont from 'src/assets/wmms-blk.svg'
 
-type CanadaWithFlagProps = {
+interface CanadaWithFlagProps {
   textColor?: 'black' | 'white';
-};
+}
 
 export const CanadaWithFlag = ({
   textColor = 'black',

@@ -19,7 +19,7 @@ import {
 } from './auth_utils.ts';
 
 export type SessionStatus = 'authenticated' | 'unauthenticated' | 'syncing';
-export type SessionContextValue = {
+export interface SessionContextValue {
   session: Session | null;
   status: SessionStatus;
   authBaseURL: string;
@@ -29,7 +29,7 @@ export type SessionContextValue = {
     post_auth_redirect?: string,
   ) => Promise<Awaited<ReturnType<typeof email_sign_in>>>;
   signOut: () => Promise<Awaited<ReturnType<typeof sign_out>>>;
-};
+}
 
 export const SessionContext = createContext<SessionContextValue | undefined>(
   undefined,

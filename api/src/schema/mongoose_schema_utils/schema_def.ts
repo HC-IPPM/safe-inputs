@@ -5,10 +5,10 @@ import type { LangSuffixedKeyUnion } from 'src/schema/lang_utils.ts';
 
 import { validation_messages_by_lang_to_error_string } from './validation_utils.ts';
 
-type SchemaDefTypeWithCastMessageMixin<SchemaDefType> = {
+interface SchemaDefTypeWithCastMessageMixin<SchemaDefType> {
   type: SchemaDefType;
   cast: [null, (value: any) => string]; // eslint-disable-line @typescript-eslint/no-explicit-any
-};
+}
 
 export const string_type_schema_def_mixin: SchemaDefTypeWithCastMessageMixin<StringConstructor> =
   {
@@ -87,11 +87,11 @@ export const created_at_schema_def = {
   },
 };
 
-type ForeignTypeOptions = {
+interface ForeignTypeOptions {
   make_sparse?: boolean;
   make_index?: boolean;
   make_immutable?: boolean;
-};
+}
 const use_foreign_type_options = (
   options?: ForeignTypeOptions,
 ): (
@@ -132,6 +132,6 @@ export const make_lang_suffixed_schema_defs = <
   key: Key,
   type: SchemaDefTypeDef,
 ) =>
-  Object.fromEntries(get_lang_suffixed_keys(key).map((key) => [key, type])) as {
-    [k in LangSuffixedKeyUnion<Key>]: SchemaDefTypeDef;
-  };
+  Object.fromEntries(
+    get_lang_suffixed_keys(key).map((key) => [key, type]),
+  ) as Record<LangSuffixedKeyUnion<Key>, SchemaDefTypeDef>;

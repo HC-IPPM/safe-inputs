@@ -30,9 +30,9 @@ export default function SignInForm({
     allow_unauthenticated: true,
   });
 
-  type FormFieldValues = {
+  interface FormFieldValues {
     email: string;
-  };
+  }
 
   const {
     handleSubmit,

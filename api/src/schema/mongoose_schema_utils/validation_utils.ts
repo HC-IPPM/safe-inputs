@@ -7,9 +7,7 @@ import type { PartialDeep } from 'type-fest';
 import { langs } from 'src/schema/lang_utils.ts';
 import type { LangsUnion } from 'src/schema/lang_utils.ts';
 
-export type ValidationMessagesByLang = {
-  [key in LangsUnion]: string;
-};
+export type ValidationMessagesByLang = Record<LangsUnion, string>;
 
 export const validation_messages_by_lang_to_error_string = (
   validation_messages_by_lang: ValidationMessagesByLang,
@@ -126,11 +124,11 @@ export const get_validation_errors = async <ModelInterface>(
             .reverse()
             .value();
 
-          type ValidationMessagesByExpandedPath = {
+          interface ValidationMessagesByExpandedPath {
             [key_in_path: string]:
               | ValidationMessagesByExpandedPath
               | ValidationMessagesByLang;
-          };
+          }
 
           return _.reduce(
             _.tail(reversed_path_keys),

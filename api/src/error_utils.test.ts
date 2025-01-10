@@ -1,6 +1,6 @@
 import express from 'express';
 import { GraphQLError } from 'graphql';
-import request from 'supertest'; // eslint-disable-line n/no-unpublished-import
+import request from 'supertest';
 
 import {
   AppError,

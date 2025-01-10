@@ -178,7 +178,7 @@ const user_can_edit_records: RecordLevelAuthzRule = (
   collection.meta.is_current_version &&
   user_can_view_records(user, collection, records);
 
-type CollectionDefInput = {
+interface CollectionDefInput {
   name_en: string;
   name_fr: string;
   description_en: string;
@@ -186,8 +186,8 @@ type CollectionDefInput = {
   is_locked: boolean;
   owner_emails: string[];
   uploader_emails: string[];
-};
-type ColumnDefInput = {
+}
+interface ColumnDefInput {
   header: string;
   name_en: string;
   name_fr: string;
@@ -195,11 +195,11 @@ type ColumnDefInput = {
   description_fr: string;
   data_type: string;
   conditions: ConditionInput[];
-};
-type ConditionInput = {
+}
+interface ConditionInput {
   condition_type: string;
   parameters: string[];
-};
+}
 
 const add_user_to_collection_def_input_owners = (
   collection_input: CollectionDefInput,
