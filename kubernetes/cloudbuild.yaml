@@ -1,6 +1,6 @@
 steps:
   - id: 'Generate manifests'
-    name: 'gcr.io/cloud-builders/gcloud@sha256:91dcecb6eca079e15b9c77a8cddbefec909314fb9fb61db58c4c598df2e6350e'
+    name: 'gcr.io/cloud-builders/gcloud@sha256:427779d0d9c19d337388a99ce48645b6c0b46b47139464809d39a89f42cf3aa3'
     dir: kubernetes
     script: |
       #!/usr/bin/env bash
