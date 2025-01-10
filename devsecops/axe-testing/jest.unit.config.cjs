@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'unit',
-  testMatch: ['<rootDir>/src/*.test.unit.js'],
+  testMatch: ['<rootDir>/src/*.unit.test.js'],
   transform: {
     '.*\\.js$': 'babel-jest',
   },

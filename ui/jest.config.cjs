@@ -17,8 +17,8 @@ module.exports = {
     'test_utils',
   ],
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': '<rootDir>/src/test_utils/mocks/styleMock.js',
-    '\\.svg$': '<rootDir>/src/test_utils/mocks/svgMock.js',
+    '\\.(css|less|scss|sass)$': '<rootDir>/src/test_utils/mocks/styleMock.cjs',
+    '\\.svg$': '<rootDir>/src/test_utils/mocks/svgMock.cjs',
     // next line is also common between /ui and /api
     ...pathsToModuleNameMapper(compilerOptions.paths, {
       prefix: '<rootDir>',
