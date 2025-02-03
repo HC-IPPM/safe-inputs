@@ -85,5 +85,19 @@ steps:
         else
           exit 0
         fi
+
+  - id: save-current-commit-sha-to-gcs-bucket
+    # This is a workaround to be used to filter vulnerabilities for dashboard
+    name: 'gcr.io/cloud-builders/gsutil@sha256:386bf19745cfa9976fc9e7f979857090be9152b30bf3f50527c6ace1de9d2673'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" = "main" ]]; then
+          # Pipe the commit SHA directly to gsutil cp, which will create the file in the bucket.
+          echo "$COMMIT_SHA" | gsutil cp - gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/api__$COMMIT_SHA.txt
+        else
+          exit 0
+        fi
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
