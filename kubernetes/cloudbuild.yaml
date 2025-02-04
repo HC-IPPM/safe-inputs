@@ -36,29 +36,53 @@ steps:
       -summary \
       /tmp/resources.yaml
 
-  # - id: Validate compliance
-  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-  #   args:
-  #     - apply
-  #     - ./policies/
-  #     - -r=/workspace/resources.yaml
-  #     - --table
-  #     - --detailed-results -o json | tee /workspace/compliance-results.json
-  #   env:
-  #     # avoid disk writes from cosign
-  #     - SIGSTORE_NO_CACHE=true
+  - id: Validate compliance
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+    args:
+      - apply
+      - ./policies/
+      - -r=/workspace/resources.yaml
+      - --table
+      - --detailed-results -o json | tee /workspace/compliance-results.json
+    env:
+      # avoid disk writes from cosign
+      - SIGSTORE_NO_CACHE=true
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-    entrypoint: "sh"
+    args:
+      - "apply"
+      - "./policies/"
+      - "-r=/workspace/resources.yaml"
+      - "--table"
+      - "--detailed-results"
+      - "-o"
+      - "json"
     env:
-      # avoid disk writes from cosign
-      - SIGSTORE_NO_CACHE=true 
+      - SIGSTORE_NO_CACHE=true
+    entrypoint: "sh"
     args:
       - "-c"
       - |
         mkdir -p /workspace
-        kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results -o json > /workspace/compliance-results.json
+        while true; do
+          echo "Running Kyverno Compliance Check..."
+          kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results -o json | tee /workspace/compliance-results.json
+          sleep 60  # ✅ Runs every 60 seconds, adjust as needed
+        done
+
+
+  # - id: Validate compliance
+  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+  #   entrypoint: "sh"
+  #   env:
+  #     # avoid disk writes from cosign
+  #     - SIGSTORE_NO_CACHE=true 
+  #   args:
+  #     - "-c"
+  #     - |
+  #       mkdir -p /workspace
+  #       kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results -o json > /workspace/compliance-results.json
 
 
   # - id: Extract control annotations
