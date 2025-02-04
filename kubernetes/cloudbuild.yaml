@@ -49,7 +49,7 @@ steps:
   #     - SIGSTORE_NO_CACHE=true
 
   - id: Validate compliance
-    name: 'cgr.dev/chainguard/kyverno-cli:latest'
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
     entrypoint: "sh"
     args:
       - "-c"
