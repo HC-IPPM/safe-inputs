@@ -43,7 +43,7 @@ steps:
       - ./policies/
       - -r=/workspace/resources.yaml
       - --table
-      - --detailed-results -o json  
+      - --detailed-results
     env:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
