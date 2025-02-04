@@ -43,12 +43,11 @@ steps:
       - ./policies/
       - -r=/workspace/resources.yaml
       - --table
-      - --detailed-results
-      - -o json > compliance-results.json
+      - --detailed-results -o json | tee /workspace/compliance-results.json
     env:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
-  
+
   # - id: Extract control annotations
   #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   #   entrypoint: "bash"
@@ -57,14 +56,13 @@ steps:
   #     - |
   #       jq '.results[] | {policy: .policy, status: .status, control: .policyAnnotations["phac.gc.ca/control-number"] // "N/A"}' /workspace/compliance-results.json > /workspace/compliance-summary.json
 
-
   - id: Upload compliance summary
     name: 'gcr.io/cloud-builders/gsutil@sha256:386bf19745cfa9976fc9e7f979857090be9152b30bf3f50527c6ace1de9d2673'
-    entrypoint: "bash"
+    entrypoint: 'bash'
     args:
-      - "-c"
+      - '-c'
       - |
-        gsutil cp compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/$SHORT_SHA.json
+        gsutil cp /workspace/compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/$SHORT_SHA.json
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
