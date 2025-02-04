@@ -44,7 +44,7 @@ steps:
       - -r=/workspace/resources.yaml
       - --table
       - --detailed-results
-      - -o json > /workspace/compliance-results.json
+      - -o json > compliance-results.json
     env:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
@@ -64,7 +64,7 @@ steps:
     args:
       - "-c"
       - |
-        gsutil cp /workspace/compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/$SHORT_SHA.json
+        gsutil cp compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/$SHORT_SHA.json
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
