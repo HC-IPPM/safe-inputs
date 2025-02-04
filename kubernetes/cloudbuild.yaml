@@ -43,16 +43,12 @@ steps:
     args:
       - "-c"
       - |
-        mkdir -p /workspace
         touch /workspace/report.yaml
         chmod 777 /workspace/report.yaml  
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
     dir: kubernetes
-    volumes:
-      - name: workspace
-        path: /workspace 
     args:
       - apply
       - ./policies/
