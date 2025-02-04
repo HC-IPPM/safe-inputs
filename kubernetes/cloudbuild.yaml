@@ -36,6 +36,16 @@ steps:
       -summary \
       /tmp/resources.yaml
 
+  - id: Prepare compliance report file
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        mkdir -p /workspace
+        touch /workspace/report.yaml
+        chmod 777 /workspace/report.yaml  
+
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
     args:
@@ -45,7 +55,7 @@ steps:
       - --table
       - --detailed-results
       - --policy-report
-      - -o report.yaml
+      - -o /workspace/report.yaml
     env:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
