@@ -46,21 +46,46 @@ steps:
         touch /workspace/report.yaml
         chmod 777 /workspace/report.yaml  
 
+  # - id: Validate compliance
+  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+  #   dir: kubernetes
+  #   volumes: 
+  #     - name: kyverno-tmp
+  #       path: /kyverno-tmp
+  #   args:
+  #     - apply
+  #     - ./policies/
+  #     - -r=/workspace/resources.yaml
+  #     - --table
+  #     - --detailed-results
+  #     - --policy-report
+  #     - -o /kyverno-tmp/report.yaml
+  #   env:
+  #     # avoid disk writes from cosign
+  #     - SIGSTORE_NO_CACHE=tru
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-    dir: kubernetes
+    volumes:
+      - name: kyverno-tmp  
+        path: /kyverno-tmp
+    entrypoint: "sh"
     args:
-      - apply
-      - ./policies/
-      - -r=/workspace/resources.yaml
-      - --table
-      - --detailed-results
-      - --policy-report
-      - -o /workspace/report.yaml
-    env:
-      # avoid disk writes from cosign
-      - SIGSTORE_NO_CACHE=true
+      - "-c"
+      - |
+        mkdir -p /kyverno-tmp  
+        kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results --policy-report -o /kyverno-tmp/report.yaml
 
+  - id: Move compliance report to workspace
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    volumes:
+      - name: kyverno-tmp  
+        path: /kyverno-tmp
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        mkdir -p /workspace
+        mv /kyverno-tmp/report.yaml /workspace/report.yaml  
   - id: Verify compliance report
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: "bash"
@@ -69,6 +94,7 @@ steps:
       - |
         ls -lah /workspace
         cat /workspace/report.yaml
+
 
   # - id: Extract control annotations
   #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
