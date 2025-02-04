@@ -36,17 +36,30 @@ steps:
       -summary \
       /tmp/resources.yaml
 
+  # - id: Validate compliance
+  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+  #   args:
+  #     - apply
+  #     - ./policies/
+  #     - -r=/workspace/resources.yaml
+  #     - --table
+  #     - --detailed-results -o json | tee /workspace/compliance-results.json
+  #   env:
+  #     # avoid disk writes from cosign
+  #     - SIGSTORE_NO_CACHE=true
+
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-    args:
-      - apply
-      - ./policies/
-      - -r=/workspace/resources.yaml
-      - --table
-      - --detailed-results -o json | tee /workspace/compliance-results.json
+    entrypoint: "sh"
     env:
       # avoid disk writes from cosign
-      - SIGSTORE_NO_CACHE=true
+      - SIGSTORE_NO_CACHE=true 
+    args:
+      - "-c"
+      - |
+        mkdir -p /workspace
+        kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results -o json > /workspace/compliance-results.json
+
 
   # - id: Extract control annotations
   #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -62,7 +75,7 @@ steps:
     args:
       - '-c'
       - |
-        gsutil cp /workspace/compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/$SHORT_SHA.json
+        gsutil cp /workspace/compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/control-compliance/$SHORT_SHA.json
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
