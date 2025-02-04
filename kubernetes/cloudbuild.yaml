@@ -45,6 +45,7 @@ steps:
       - --table
       - --detailed-results
       - --policy-report
+      - -o report.yaml
     env:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
