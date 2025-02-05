@@ -36,6 +36,18 @@ steps:
       -summary \
       /tmp/resources.yaml
 
+  # - id: Validate compliance
+  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+  #   args:
+  #     - apply
+  #     - ./policies/
+  #     - -r=/workspace/resources.yaml
+  #     - --table
+  #     - --detailed-results
+  #   env:
+  #     # avoid disk writes from cosign
+  #     - SIGSTORE_NO_CACHE=true
+
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
     args:
@@ -45,8 +57,11 @@ steps:
       - --table
       - --detailed-results
     env:
-      # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - "kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results | tee /workspace/kyverno-results.txt"
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
