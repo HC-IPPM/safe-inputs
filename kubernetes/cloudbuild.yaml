@@ -36,15 +36,17 @@ steps:
       -summary \
       /tmp/resources.yaml
 
-  # - id: Prepare compliance report file
-  #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   dir: kubernetes
-  #   entrypoint: "bash"
+  # - id: Validate compliance
+  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
   #   args:
-  #     - "-c"
-  #     - |
-  #       touch /workspace/report.yaml
-  #       chmod 777 /workspace/report.yaml  
+  #     - apply
+  #     - ./policies/
+  #     - -r=/workspace/resources.yaml
+  #     - --table
+  #     - --detailed-results
+  #   env:
+  #     # avoid disk writes from cosign
+  #     - SIGSTORE_NO_CACHE=true
 
   - id: Validate compliance
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
@@ -55,57 +57,11 @@ steps:
       - --table
       - --detailed-results
     env:
-      # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
-
-  # - id: Validate compliance
-  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-  #   volumes:
-  #     - name: kyverno-tmp  
-  #       path: /kyverno-tmp
-  #   entrypoint: "sh"
-  #   args:
-  #     - "-c"
-  #     - |
-  #       mkdir -p /kyverno-tmp  
-  #       kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results --policy-report -o /kyverno-tmp/report.yaml
-
-  # - id: Move compliance report to workspace
-  #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   volumes:
-  #     - name: kyverno-tmp  
-  #       path: /kyverno-tmp
-  #   entrypoint: "bash"
-  #   args:
-  #     - "-c"
-  #     - |
-  #       mkdir -p /workspace
-  #       mv /kyverno-tmp/report.yaml /workspace/report.yaml  
-  # - id: Verify compliance report
-  #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: "bash"
-  #   args:
-  #     - "-c"
-  #     - |
-  #       ls -lah /workspace
-  #       cat /workspace/report.yaml
-
-
-  # - id: Extract control annotations
-  #   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: "bash"
-  #   args:
-  #     - "-c"
-  #     - |
-  #       jq '.results[] | {policy: .policy, status: .status, control: .policyAnnotations["phac.gc.ca/control-number"] // "N/A"}' /workspace/compliance-results.json > /workspace/compliance-summary.json
-
-  # - id: Upload compliance summary
-  #   name: 'gcr.io/cloud-builders/gsutil@sha256:386bf19745cfa9976fc9e7f979857090be9152b30bf3f50527c6ace1de9d2673'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       gsutil cp /workspace/compliance-summary.json gs://safe-inputs-devsecops-outputs-for-dashboard/control-compliance/$SHORT_SHA.json
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - "kyverno apply ./policies/ -r=/workspace/resources.yaml --table --detailed-results | tee /workspace/kyverno-results.txt"
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
