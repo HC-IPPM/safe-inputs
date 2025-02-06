@@ -137,7 +137,7 @@ steps:
         fi
 
   - id: get-and-save-artifact-registry-image-digest-if-main
-    # This is a workaround to help filter only current image vulnerabilities for dashboard - we need the AR image digest for this.  
+    # This is a workaround to help filter only current image vulnerabilities for dashboard - we need the AR image digest for this.
     name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
     entrypoint: 'bash'
     args:
@@ -152,7 +152,7 @@ steps:
           --package=ui \
           --tag=$BRANCH_NAME-$SHORT_SHA-$(date +%s) \
           --format="value(name)" | awk -F'sha256:' '{print substr($2, 1, 12)}')
-        
+
           echo "$short_digest" | gsutil cp - gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/ui__$short_digest.txt
         else
           exit 0
