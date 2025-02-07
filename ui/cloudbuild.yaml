@@ -143,17 +143,17 @@ steps:
     args:
       - '-c'
       - |
-        if [[ "$BRANCH_NAME" == "main" ]]
+        if [[ "${BRANCH_NAME}" == "main" ]]
         then
-        short_digest=$(gcloud artifacts files list \
+        short_digest="$(gcloud artifacts files list \
           --project=phx-01j1tbke0ax \
           --repository=phx-01j1tbke0ax-safeinputs \
           --location=northamerica-northeast1 \
           --package=ui \
-          --tag=$BRANCH_NAME-$SHORT_SHA-$(date +%s) \
-          --format="value(name)" | awk -F'sha256:' '{print substr($2, 1, 12)}')
+          --tag="${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)" \
+          --format="value(name)" | awk -F'sha256:' '{print substr($2, 1, 12)}')"
 
-          echo "$short_digest" | gsutil cp - gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/ui__$short_digest.txt
+          echo "${short_digest}" | gsutil cp - "gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/ui__${short_digest}.txt"
         else
           exit 0
         fi
