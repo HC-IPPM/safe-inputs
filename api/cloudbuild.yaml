@@ -88,7 +88,7 @@ steps:
 
   - id: get-and-save-artifact-registry-image-digest-if-main
     # This is a workaround to help filter only current image vulnerabilities for dashboard - we need the AR image digest for this.
-    name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:3a24ff5f089d9ce3627306873ef1e1061488a63ae12c0bd0b5c24ec5ee594798'
     entrypoint: 'bash'
     args:
       - '-c'
