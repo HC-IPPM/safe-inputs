@@ -1,0 +1,324 @@
+direction: right
+
+user: App User {
+  icon: ./icons/general/person.svg
+  shape: image
+  style: {
+    font-color: green
+  }
+}
+
+letsencrypt: Let's Encrypt {
+  icon: ./icons/letsencrypt/logo.svg
+  shape: image
+}
+
+gcp: HC/PHAC Google Cloud Org {
+  icon: ./icons/gcp/logo.svg
+  style: {
+    stroke: "#000000"
+    fill: "#f1f3f4"
+  }
+
+  project: Safe Inputs Google Cloud Project {
+    icon: ./icons/general/folder.svg
+    style: {
+      stroke: "#ffffff"
+      fill: "#e1f6fe"
+    }
+
+    clouddns: Cloud DNS {
+      icon: ./icons/gcp/cloud_dns.svg
+      shape: image
+    }
+
+    region: northamerica-northeast1 GCP Region (Montreal) {
+      style: {
+        stroke: grey
+        font-color: blue
+        stroke-dash: 3
+        fill: transparent
+      }
+
+      loadbalancer: HTTPS Load Balancer \nClient TLS Termination \nHTTP-HTTPS Redirect {
+        icon: ./icons/gcp/cloud_load_balancer.svg
+        shape: image
+      }
+
+      vpc: VPC / Regional Subnet - 10.162.0.0/20 {
+        icon: ./icons/gcp/virtual_private_cloud.svg
+        style: {
+          stroke: blue
+          font-color: blue
+          stroke-dash: 3
+          fill: transparent
+        }
+
+        k8s: Google Kubernetes Engine Autopilot Cluster/Managed PaaS with ASM {
+          icon: ./icons/gcp/anthos_service_mesh.svg
+          style: {
+            stroke: blue
+            font-color: blue
+            fill: transparent
+          }
+
+          cert-manager: cert-manager {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            certmanager-op: Cert Manager {
+              icon: ./icons/certmanager/logo.svg
+              shape: image
+            }
+          }
+
+          istio_ingress: istio-ingress\nnamespace {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            tls-cert: TLS Certificate Secret {
+              icon: ./icons/kubernetes/secret.svg
+              shape: image
+            }
+
+            ingress: Mesh Ingress Gateway {
+              icon: ./icons/kubernetes/pod.svg
+              shape: image
+            }
+          }
+
+          ui-namespace: UI namespace {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            ui-container: UI Pod {
+              icon: ./icons/kubernetes/pod.svg
+              icon.near: bottom-right
+              style: {
+                fill: transparent
+              }
+
+              positioning-fix: "" {
+                style: {
+                  stroke: transparent
+                  fill: transparent
+                }
+
+                width: 1
+                height: 1
+              }
+
+              nginx: "" {
+                icon: ./icons/general/nginx.svg
+                shape: image
+                width: 100
+                height: 100
+              }
+
+              react: "" {
+                icon: ./icons/general/React-icon.svg
+                shape: image
+                width: 100
+                height: 100
+              }
+            }
+          }
+
+          mongodb-community-system: MongoDB\nnamespace {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            mongodb-community-op: MongoDB\nCommunity Operator {
+              icon: ./icons/general/mongodb.svg
+              shape: image
+            }
+          }
+
+          api-namespace: API Pod {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            api-secrets: App Secrets,\ninjected in containers\nas env vars at run-time {
+              icon: ./icons/kubernetes/secret.svg
+              shape: image
+            }
+
+            api-container: API Pod {
+              icon: ./icons/kubernetes/pod.svg
+              icon.near: bottom-right
+              style: {
+                fill: transparent
+              }
+
+              nodejs: "" {
+                icon: ./icons/general/nodejs.svg
+                shape: image
+                width: 100
+                height: 100
+              }
+
+              gql: "" {
+                icon: ./icons/graphql/logo-pink.svg
+                shape: image
+                width: 100
+                height: 100
+              }
+            }
+
+            mongodb-1: MongoDB\nreplica set\nprimary {
+              shape: cylinder
+              style: {
+                fill: transparent
+              }
+            }
+            mongodb-2: MongoDB\nreplica set\nread-only {
+              shape: cylinder
+              style: {
+                fill: transparent
+              }
+            }
+            mongodb-3: MongoDB\nreplica set\nread-only {
+              shape: cylinder
+              style: {
+                fill: transparent
+              }
+            }
+          }
+
+          flux_system: flux-system\nnamespace {
+            icon: ./icons/kubernetes/ns.svg
+            style: {
+              stroke: brown
+              stroke-dash: 10
+              font-color: blue
+              fill: transparent
+            }
+
+            flux: Flux GitOps operators,\nreconcile cluster\nconfiguration to\nsource of truth (GitHub) {
+              icon: ./icons/flux/logo.svg
+              shape: image
+            }
+          }
+        }
+      }
+
+      registry: Artifact Registry {
+        icon: ./icons/gcp/artifact_registry.svg
+        shape: image
+      }
+
+      cloud_build: Cloud Build {
+        icon: ./icons/gcp/cloud_build.svg
+        shape: image
+      }
+
+      cloudkms: Cloud KMS {
+        icon: ./icons/gcp/key_management_service.svg
+        shape: image
+      }
+    }
+
+    observability: Observability Solutions {
+      style: {
+        stroke: transparent
+        fill: transparent
+        font-color: blue
+      }
+
+      project-logs: Log Explorer {
+        icon: ./icons/gcp/cloud_logging.svg
+        shape: image
+      }
+
+      project-scc: Security Command\nCenter {
+        icon: ./icons/gcp/security_command_center.svg
+        shape: image
+      }
+
+      project-nic: Network Intelligence\nCenter {
+        icon: ./icons/gcp/network_intelligence_center.svg
+        shape: image
+      }
+    }
+  }
+
+  org-scc: Org-level Security\nCommand Center\n(relevant project\nlogs, events, and\nsecurity posture alerts) {
+    icon: ./icons/gcp/security_command_center.svg
+    shape: image
+  }
+}
+
+gh: GitHub {
+  icon: ./icons/github/logo.svg
+  shape: image
+}
+
+devs: Developers {
+  icon: ./icons/general/Developer_(94088)_-_The_Noun_Project.svg
+  shape: image
+}
+
+# user traffic flow
+user -> gcp.project.clouddns: Client DNS\nlookup {style: {stroke: green}}
+user -> gcp.project.region.loadbalancer: Client request\n(HTTPS) {style: {stroke: green}}
+gcp.project.region.loadbalancer -> gcp.project.region.vpc.k8s.istio_ingress.ingress : "" {style: {stroke: green}}
+gcp.project.region.vpc.k8s.istio_ingress.ingress -> gcp.project.region.vpc.k8s.ui-namespace.ui-container: Get UI (React SPA)\nresources {style: {stroke: green}}
+gcp.project.region.vpc.k8s.istio_ingress.ingress -> gcp.project.region.vpc.k8s.api-namespace.api-container: Make API requests,\ninitiated by client JS {style: {stroke: green}}
+gcp.project.region.vpc.k8s.api-namespace.api-container -> gcp.project.region.vpc.k8s.api-namespace.mongodb-1: MongoDB protocol\nwith mutual TLS {style: {stroke: green}}
+gcp.project.region.vpc.k8s.api-namespace.api-container -> gcp.project.region.vpc.k8s.api-namespace.mongodb-2: "" {style: {stroke: green}}
+gcp.project.region.vpc.k8s.api-namespace.api-container -> gcp.project.region.vpc.k8s.api-namespace.mongodb-3: "" {style: {stroke: green}}
+
+# cert management
+letsencrypt <-> gcp.project.region.vpc.k8s.cert-manager.certmanager-op: ACME over HTTPS {style: {stroke: orange}}
+letsencrypt -> gcp.project.clouddns: ACME over HTTPS {style: {stroke: orange}}
+gcp.project.region.vpc.k8s.cert-manager.certmanager-op -> gcp.project.clouddns: Least priviledge service\naccount manages DNS records\n for Let's Encrypt verification (HTTPS) {style: {stroke: orange}}
+gcp.project.region.vpc.k8s.cert-manager.certmanager-op -> gcp.project.region.vpc.k8s.istio_ingress.tls-cert: Refresh certificate {style: {stroke: orange}}
+gcp.project.region.vpc.k8s.istio_ingress.tls-cert -> gcp.project.region.vpc.k8s.istio_ingress.ingress: TLS Cert {style: {stroke: orange}}
+gcp.project.region.vpc.k8s.istio_ingress.tls-cert -> gcp.project.region.loadbalancer: TLS Cert {style: {stroke: orange}}
+
+# api pod management
+gcp.project.region.vpc.k8s.api-namespace.api-secrets -> gcp.project.region.vpc.k8s.api-namespace.api-container: "" {style: {stroke: grey}}
+
+# mongodb pod management
+gcp.project.region.vpc.k8s.mongodb-community-system.mongodb-community-op -> gcp.project.region.vpc.k8s.api-namespace.mongodb-1: "Provisions and manages\nMongoDB replica set" {style: {stroke: grey}}
+gcp.project.region.vpc.k8s.mongodb-community-system.mongodb-community-op -> gcp.project.region.vpc.k8s.api-namespace.mongodb-2: "" {style: {stroke: grey}}
+gcp.project.region.vpc.k8s.mongodb-community-system.mongodb-community-op -> gcp.project.region.vpc.k8s.api-namespace.mongodb-3: "" {style: {stroke: grey}}
+
+
+# ci / cd
+devs <-> gh: "" {style: {stroke: green}}
+gcp.project.region.vpc.k8s.flux_system -> gh: Pull cluster configuration\n(HTTPS) {style: {stroke: blue}}
+gcp.project.region.vpc.k8s.api-namespace.api-container -> gcp.project.region.registry: Pull API image as triggered by\nFlux-managed configuration\nchanges (HTTPS) {style: {stroke: blue}}
+gcp.project.region.vpc.k8s.ui-namespace.ui-container -> gcp.project.region.registry: Pull UI image as triggered by\nFlux-managed configuration\nchanges (HTTPS) {style: {stroke: blue}}
+gh -> gcp.project.region.cloud_build: Cloud Build trigger\non "main" branch (HTTPS) {style: {stroke: blue}}
+gcp.project.region.cloud_build -> gcp.project.region.registry: Push built\nUI and API\nimages (HTTPS) {style: {stroke: blue}}
+gcp.project.region.vpc.k8s.flux_system -> gcp.project.region.cloudkms: Use KMS Crypto to decrypt \nsecrets from git repository {style: {stroke: blue}}
+gcp.project.region.cloudkms -> gcp.project.region.vpc.k8s.api-namespace.api-secrets: Create/Update API secrets {style: {stroke: blue}}
+
+# observability
+devs -> gcp.project.observability: Read access via the Google Cloud Console {style: {stroke: skyBlue}}
