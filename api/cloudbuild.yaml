@@ -95,15 +95,17 @@ steps:
       - |
         if [[ "${BRANCH_NAME}" == "main" ]]
         then
-        short_digest=$(gcloud artifacts files list \
+        artifact_registry_digests="$(gcloud artifacts files list \
           --project=phx-01j1tbke0ax \
           --repository=phx-01j1tbke0ax-safeinputs \
           --location=northamerica-northeast1 \
           --package=api \
-          --tag="${BRANCH_NAME}-${SHORT_SHA}-$(date +%s)" \
-          --format="value(name)" | awk -F'sha256:' '{print substr($2, 1, 12)}')
+          --sort-by=~CREATE_TIME)"
 
-          echo "${short_digest}" | gsutil cp - "gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/api__${short_digest}.txt"
+        most_recent_sha=$(echo "${artifact_registry_digests}" | sed -n 's/.*sha256:\([a-f0-9]\{12\}\).*/\1/p' | head -n 1)
+        file_name="gs://safe-inputs-devsecops-outputs-for-dashboard/COMMIT_SHAs/api__${most_recent_sha}.txt"
+        echo "${most_recent_sha}" | gsutil cp - "${file_name}"
+
         else
           exit 0
         fi
