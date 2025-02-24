@@ -36,17 +36,17 @@ steps:
       -summary \
       /tmp/resources.yaml
 
-  # - id: Validate compliance (table in logs)
-  #   name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
-  #   args:
-  #     - apply
-  #     - ./policies/
-  #     - -r=/workspace/resources.yaml
-  #     - --table
-  #     - --detailed-results
-  #   env:
-  #     # avoid disk writes from cosign
-  #     - SIGSTORE_NO_CACHE=true
+  - id: Validate compliance (table in logs)
+    name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
+    args:
+      - apply
+      - ./policies/
+      - -r=/workspace/resources.yaml
+      - --table
+      - --detailed-results
+    env:
+      # avoid disk writes from cosign
+      - SIGSTORE_NO_CACHE=true
 
   - id: Validate compliance (save yaml file)
     # run again in order to save as file
@@ -67,10 +67,6 @@ steps:
       echo "Converting YAML to JSON"
       docker run --rm -v /workspace:/workspace mikefarah/yq eval -o=json /workspace/policy-report.yaml > /workspace/policy-report.json
       # cat /workspace/policy-report.json
-
-  # - id: Upload policy compliance report to gcs
-  #   name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ["cp", "/workspace/policy-report.json", "gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/"]
 
   - id: Extract any controls attached to policies
     name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
@@ -111,18 +107,6 @@ steps:
 
       echo "Policies with controls:"
       cat "/workspace/control-summary.json"
-
-  # - id: Upload controls attached to policies
-  #   name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ["cp", "/workspace/control-summary.json", "gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/"]
-
-  # - id: TEMP download control-summary.json
-  #   name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ["cp", "gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/control-summary.json", "/workspace/control-summary.json"]
-
-  # - id: TEMP download policy-report.json
-  #   name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ["cp", "gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/policy-report.json", "/workspace/policy-report.json"]
 
   - id: Extract Control Results
     name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
