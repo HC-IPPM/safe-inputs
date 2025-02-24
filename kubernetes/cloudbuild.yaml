@@ -106,7 +106,7 @@ steps:
         fi
       done
       # End JSON array
-      
+
       echo "]" >> "/workspace/control-summary.json"
 
       echo "Policies with controls:"
@@ -142,7 +142,7 @@ steps:
 
       # echo "policy-report.json:"
       # cat "$POLICY_REPORT"
-    
+
       echo "Extracting controls and merging with policy results..."
 
       # Start JSON array
@@ -182,14 +182,16 @@ steps:
       echo "Control results saved to $OUTPUT_FILE"
       cat "$OUTPUT_FILE"
 
-
   - id: Upload Control Compliance Results
     name: 'gcr.io/cloud-builders/gsutil'
-    args: ["cp", "/workspace/final-control-results.json", "gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/"]
-
+    args:
+      [
+        'cp',
+        '/workspace/final-control-results.json',
+        'gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/',
+      ]
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-
 
   # gcloud builds submit --config kubernetes/cloudbuild.yaml
