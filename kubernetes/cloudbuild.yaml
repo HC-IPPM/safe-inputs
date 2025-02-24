@@ -36,7 +36,7 @@ steps:
       -summary \
       /tmp/resources.yaml
 
-  - id: Validate compliance
+  - id: Validate compliance (table in logs)
     name: 'cgr.dev/chainguard/kyverno-cli:latest@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383'
     args:
       - apply
@@ -48,5 +48,134 @@ steps:
       # avoid disk writes from cosign
       - SIGSTORE_NO_CACHE=true
 
+  - id: Validate compliance (save yaml file)
+    # run again in order to save as file
+    name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
+    script: |
+      #!/bin/sh
+      set -e
+      # mkdir -p /workspace/reports  
+      # chmod 777 /workspace/reports 
+      docker run --rm -v /workspace:/workspace cgr.dev/chainguard/kyverno-cli@sha256:2283bf8f11cb6946c0fc204d057ac35bafc1c429d50842896e17d3151cd1d383 \
+        apply /workspace/policies/ -r /workspace/resources.yaml --policy-report > /workspace/policy-report.yaml
+
+  - id: Convert compliance report from YAML to JSON
+    name: 'gcr.io/cloud-builders/docker'
+    script: |
+      #!/bin/sh
+      set -e
+      echo "Converting YAML to JSON"
+      docker run --rm -v /workspace:/workspace mikefarah/yq eval -o=json /workspace/policy-report.yaml > /workspace/policy-report.json
+      # cat /workspace/policy-report.json
+
+  - id: Extract any controls attached to policies
+    name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
+    script: |
+      #!/bin/sh
+      set -e
+      echo "Installing yq..."
+      curl -Ls "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64" -o /usr/local/bin/yq
+      chmod +x /usr/local/bin/yq
+      yq --version
+
+      echo "Checking which policies contain the 'phac.gc.ca/control-number' annotation (from the policies dir)..."
+      # output_file="/workspace/control-summary.json"
+
+      # Start JSON array
+      echo "[" > "/workspace/control-summary.json"
+      first_entry=true
+
+      for file in /workspace/policies/*.yaml; do
+        # Extract policy name
+        name=$(yq eval '.metadata.name' "$file")
+        # Extract control number
+        control=$(yq eval '.metadata.annotations."phac.gc.ca/control-number"' "$file")
+
+        # Only add if control number exists
+        if [ "$control" != "null" ] && [ -n "$control" ]; then
+          if [ "$first_entry" = true ]; then
+            first_entry=false
+          else
+            echo "," >> "/workspace/control-summary.json"
+          fi
+          echo "{\"policy\": \"$name\", \"controls\": \"$control\" }" >> "/workspace/control-summary.json"
+        fi
+      done
+      # End JSON array
+
+      echo "]" >> "/workspace/control-summary.json"
+
+      echo "Policies with controls:"
+      cat "/workspace/control-summary.json"
+
+  - id: Extract Control Results
+    name: 'gcr.io/cloud-builders/docker@sha256:b991d50960b337f581ad77ea2a59259a786d177019aa64d8b3acb01f65dbc154'
+    script: |
+      #!/bin/bash
+      set -e
+
+      echo "Installing jq..."
+      apt-get update && apt-get install -y jq
+
+      CONTROL_SUMMARY="/workspace/control-summary.json"
+      POLICY_REPORT="/workspace/policy-report.json"
+      OUTPUT_FILE="/workspace/final-control-results.json"
+
+      # echo "control-summary.json:"
+      # cat "$CONTROL_SUMMARY"
+
+      # echo "policy-report.json:"
+      # cat "$POLICY_REPORT"
+
+      echo "Extracting controls and merging with policy results..."
+
+      # Start JSON array
+      echo "[" > "$OUTPUT_FILE"
+      first_entry=true
+
+      # Read each policy entry in the control-summary.json
+      for entry in $(jq -c '.[]' "$CONTROL_SUMMARY"); do
+          policy_name=$(echo "$entry" | jq -r '.policy')  # Extract policy name
+          controls=$(echo "$entry" | jq -r '.controls')  # Extract control numbers
+
+          # Extract policy results from policy-report.json (inside .results[])
+          results=$(jq -c --arg policy "$policy_name" '[.results[] | select(.policy == $policy)]' "$POLICY_REPORT")
+
+          if [[ -z "$results" || "$results" == "[]" ]]; then
+              echo "No results found for policy: $policy_name"
+              continue  # Skip this entry and move to the next one
+          fi
+
+          if [ "$first_entry" = true ]; then
+              first_entry=false
+          else
+              echo "," >> "$OUTPUT_FILE"
+          fi
+
+          # Build JSON object
+          echo "{
+              \"policy\": \"$policy_name\",
+              \"controls\": \"$controls\",
+              \"results\": $results
+          }" >> "$OUTPUT_FILE"
+      done
+
+      # End JSON array
+      echo "]" >> "$OUTPUT_FILE"
+
+      echo "Control results saved to $OUTPUT_FILE"
+      cat "$OUTPUT_FILE"
+
+  - id: Upload Control Compliance Results
+    name: 'gcr.io/cloud-builders/gsutil'
+    args:
+      [
+        'cp',
+        '/workspace/final-control-results.json',
+        'gs://safe-inputs-devsecops-outputs-for-dashboard/policy-reports/',
+      ]
+
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
+  # gcloud builds submit --config kubernetes/cloudbuild.yaml
