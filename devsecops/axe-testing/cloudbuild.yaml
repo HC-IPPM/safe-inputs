@@ -17,7 +17,7 @@ steps:
       docker run --rm --network host -v /workspace/coverage:/app/coverage axe-e2e npm run test:all
 
   - id: 'Upload test coverage report to bucket'
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:3a24ff5f089d9ce3627306873ef1e1061488a63ae12c0bd0b5c24ec5ee594798'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:484e8266c1cfc84b283bc6d4eec1f6b61223115178cce76fb59f77b223f26e8e'
     dir: 'devsecops/axe-testing'
     entrypoint: bash
     args:
