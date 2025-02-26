@@ -82,7 +82,7 @@ steps:
       ]
 
   - id: upload-axe-results-gcs
-    name: 'gcr.io/cloud-builders/gsutil@sha256:386bf19745cfa9976fc9e7f979857090be9152b30bf3f50527c6ace1de9d2673'
+    name: 'gcr.io/cloud-builders/gsutil@sha256:10fbb04411b804cef8d5b7e4f9a29423c75d589b945b0376ef5d115d30a506c0'
     entrypoint: 'bash'
     args:
       - '-c'
