@@ -1,59 +1,59 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    'config:best-practices',
-    ':dependencyDashboard',
-    ':semanticCommits',
-    ':semanticCommitScopeDisabled',
+    "config:best-practices",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":semanticCommitScopeDisabled",
   ],
-  dependencyDashboardTitle: 'Renovate Dashboard 🤖',
+  dependencyDashboardTitle: "Renovate Dashboard 🤖",
   flux: {
-    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
   },
   kubernetes: {
-    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
   },
-  'helm-values': {
-    fileMatch: ['(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$'],
+  "helm-values": {
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
   },
   packageRules: [
     {
-      description: 'Ignore pinning for images managed by Flux. See https://github.com/PHACDataHub/safe-inputs/pull/187#discussion_r1658905664',
+      description: "Ignore pinning for images managed by Flux. See https://github.com/PHACDataHub/safe-inputs/pull/187#discussion_r1658905664",
       matchPackageNames: [
-        'northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api',
-        'northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui',
+        "northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/api",
+        "northamerica-northeast1-docker.pkg.dev/phx-01j1tbke0ax/phx-01j1tbke0ax-safeinputs/ui",
       ],
-      matchUpdateTypes: ['pinDigest'],
+      matchUpdateTypes: ["pinDigest"],
       pinDigest: {
         enabled: false,
       },
     },
     {
-      description: 'Ignore pinning for capacitor OCI repository tag. See https://github.com/PHACDataHub/safe-inputs/pull/505#issue-2478144189',
-      matchPackageNames: ['ghcr.io/gimlet-io/capacitor-manifests'],
+      description: "Ignore pinning for capacitor OCI repository tag. See https://github.com/PHACDataHub/safe-inputs/pull/505#issue-2478144189",
+      matchPackageNames: ["ghcr.io/gimlet-io/capacitor-manifests"],
       pinDigests: false,
     },
     {
-      matchFileNames: ['kubernetes/**/flux-system/gotk-components.yaml'],
-      matchDepNames: ['ghcr.io/fluxcd/**'],
+      matchFileNames: ["kubernetes/**/flux-system/gotk-components.yaml"],
+      matchDepNames: ["ghcr.io/fluxcd/**"],
       digest: {
-        description: 'Allow and group image digest updating for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
-        groupName: 'Pin Flux Component Image Digests',
+        description: "Allow and group image digest updating for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676",
+        groupName: "Pin Flux Component Image Digests",
       },
       pinDigest: {
-        description: 'Allow and group image digest pinning for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
-        groupName: 'Pin Flux Component Image Digests',
+        description: "Allow and group image digest pinning for Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676",
+        groupName: "Pin Flux Component Image Digests",
       },
       patch: {
-        description: 'Allow patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: "Allow patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676",
         enabled: false,
       },
       major: {
-        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: "Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676",
         enabled: false,
       },
       minor: {
-        description: 'Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676',
+        description: "Disable non-digest/patch updates on Flux component images. See https://github.com/HC-IPPM/safe-inputs/pull/676",
         enabled: false,
       },
     },
