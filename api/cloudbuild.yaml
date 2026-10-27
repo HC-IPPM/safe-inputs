@@ -32,7 +32,7 @@ steps:
       ls -la /workspace/coverage
 
   - id: 'Upload test coverage report to bucket'
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:3a24ff5f089d9ce3627306873ef1e1061488a63ae12c0bd0b5c24ec5ee594798'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:aa2b2728a6f3eaf1d6d37409133fde8220b28460282f6983e3055b1b2c792228'
     dir: api
     entrypoint: bash
     args:
@@ -88,7 +88,7 @@ steps:
 
   - id: get-and-save-artifact-registry-image-digest-if-main
     # This is a workaround to help filter only current image vulnerabilities for dashboard - we need the AR image digest for this.
-    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:3a24ff5f089d9ce3627306873ef1e1061488a63ae12c0bd0b5c24ec5ee594798'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest@sha256:aa2b2728a6f3eaf1d6d37409133fde8220b28460282f6983e3055b1b2c792228'
     entrypoint: 'bash'
     args:
       - '-c'
